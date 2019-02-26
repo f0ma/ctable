@@ -14,7 +14,7 @@ CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.
 
 ## Documentation
 
-See documentation in /doc/ directory (made with [YUIDoc](https://yui.github.io/yuidoc/)).
+See documentation in https://f0ma.github.io/ctable/index.html directory (made with [YUIDoc](https://yui.github.io/yuidoc/)).
 
 ## Quick start
 
