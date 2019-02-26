@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-yuidoc -o doc --themedir doc-theme ctable
+yuidoc -o docs --themedir doc-theme ctable
