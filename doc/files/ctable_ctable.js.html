@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ctable/ctable.js - CTable</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            <h1><a href="index.html">CTable</a></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>Version: 0.3</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/CColumn.html">CColumn</a></li>
+                                <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
+                                <li><a href="../classes/CDivEditorRecord.html">CDivEditorRecord</a></li>
+                                <li><a href="../classes/CPagination.html">CPagination</a></li>
+                                <li><a href="../classes/CRecord.html">CRecord</a></li>
+                                <li><a href="../classes/CSelectColumn.html">CSelectColumn</a></li>
+                                <li><a href="../classes/CSubtableColumn.html">CSubtableColumn</a></li>
+                                <li><a href="../classes/CTable.html">CTable</a></li>
+                                <li><a href="../classes/CTextDataColumn.html">CTextDataColumn</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/ctable.html">ctable</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: ctable/ctable.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x27;use strict&#x27;;
+
+/**
+ * Provides the base CTable classes.
+ * 
+ * @module ctable
+ */
+
+/**
+ * Base column class.
+ * 
+ * See {{#crossLink &quot;CColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CColumn
+ * @constructor
+ * 
+ * @example
+ *     table.add_column_class(CColumn, {column:&#x27;id&#x27;, title:&#x27;ID&#x27;, visible_editor:false});
+ */
+
+class CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} [options] Column options.
+     * @param {Boolean} [options.visible_column] Show column in table.
+     * @param {Boolean} [options.visible_editor] Show editor for this column.
+     * @param {int} [options.width] Column width in percents.
+     * @param {String} [options.title] Column title.
+     * @param {String} [options.column] Column name in record.
+     * @param {String} [options.footnote] Footnote text (if record class supported).
+     * 
+     */
+    
+    constructor(table, record, options = {}) {
+        this.table = table;
+        this.record = record;
+        this.options = options;
+        
+        this.title_elem = null;
+        this.options_elem = null;
+        this.cell_elem = null;
+        this.editor_elem = null;
+        this.summary_elem = null;
+        
+        this.editor = null;
+    }
+    
+    /**
+     * Return visibility status of this column.
+     * @method visible_column
+     * @return {Boolean} Is visible?
+     *
+     */
+    
+    visible_column(){
+        if(typeof(this.options.visible_column) != &quot;undefined&quot;){
+            return this.options.visible_column;
+        }
+        return true;
+    }
+
+    /**
+     * Return editor visibility status of this column.
+     * @method visible_editor
+     * @return {Boolean} Show editor?
+     *
+     */
+    
+    visible_editor(){
+        if(typeof(this.options.visible_editor) != &quot;undefined&quot;){
+            return this.options.visible_editor;
+        }
+        return true;
+    }
+    
+    /**
+     * Return width of this column, or 0 if undefined.
+     * @method width
+     * @return {Int} Width
+     *
+     */
+    
+    width(){
+        if(typeof(this.options.width) != &quot;undefined&quot;){
+            return this.options.width;
+        }
+        return 0;
+    }
+
+    /**
+     * Build title part of column.
+     * @method build_title
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_title(elem){
+        this.title_elem = elem;
+        if(typeof(this.options.title) != &quot;undefined&quot;){
+            this.title_elem.text(this.options.title);
+        }        
+    }
+    
+    /**
+     * Build options part of column.
+     * @method build_options
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_options(elem){
+        this.options_elem = elem;
+    }
+    
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_cell(elem){
+        this.cell_elem = elem;
+        this.cell_elem.text(this.record.record_field(this.options.column));
+    }
+    
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+    
+    build_editor(elem, is_new_record = false){
+        this.editor_elem = elem;
+        this.editor = $(&#x27;&lt;input class=&quot;input&quot;&gt;&lt;/input&gt;&#x27;).appendTo(this.editor_elem);
+        if (is_new_record){
+            this.editor.val(&quot;&quot;);
+        } else {
+            this.editor.val(this.record.record_field(this.options.column));
+        }
+       
+        this.editor.change($.proxy(this.value_changed, this));
+    }
+
+    /**
+     * Build summary part of column.
+     * @method build_summary
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_summary(elem){
+        this.summary_elem = elem;
+    }
+    
+    /**
+     * On editor change value handler.
+     * @method value_changed
+     *
+     */
+    
+    value_changed(){
+        if(typeof(this.options.column) != &quot;undefined&quot; &amp;&amp; this.is_valid()){
+            this.record.on_change_in_editor(this.options.column, this.editor.val());
+        }
+    }
+
+    /**
+     * Validate editor value.
+     * @method is_valid
+     * @return {Boolean} Always true.
+     *
+     */
+    
+    is_valid(){
+        return true;
+    }
+    
+    /**
+     * On record changed (in another column) handler.
+     * @method record_changed
+     *
+     */
+    
+    record_changed(column_name, value){
+    }
+    
+    /**
+     * Get editor value.
+     * @method editor_value
+     * @return {Array} Column name and value as [String, String] or [null, null]
+     *
+     */
+    
+    editor_value(){
+        if(typeof(this.options.column) != &quot;undefined&quot;){
+             if(this.editor != null){
+                 return [this.options.column, this.editor.val()];
+             } else {
+                 if(! this.record.record_is_new()) {
+                     return [this.options.column, this.record.record_field(this.options.column)];
+                 }
+             }
+        }
+        return [null, null];
+    }
+    
+}
+
+/**
+ * Text input column class.
+ * 
+ * See {{#crossLink &quot;CTextDataColumn/constructor&quot;}}{{/crossLink}} for options list.
+ * 
+ * @class CTextDataColumn
+ * @constructor
+ * @extends CColumn
+ * 
+ * @example
+ *     table.add_column_class(CTextDataColumn,{column:&#x27;firstname&#x27;, title:&#x27;Firstname&#x27;, validate:&quot;\\S+&quot;});
+ */
+
+class CTextDataColumn extends CColumn {
+    
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {String} options.column Column name in record.
+     * @param {Boolean} [options.visible_column] Show column in table.
+     * @param {Boolean} [options.visible_editor] Show editor for this column.
+     * @param {int} [options.width] Column width in percents.
+     * @param {String} [options.title] Column title.
+     * @param {Boolean} [options.no_sort] Disable sorting in this column.
+     * @param {Boolean} [options.no_search] Disable search field by this column.
+     * @param {String} [options.input] Input type: &quot;input&quot; (default) or &quot;textarea&quot;.
+     * @param {String} [options.validate] Validate input by this Regexp. Default no validate.
+     * @param {String} [options.default_value] Default value for new record.
+     * @param {String} [options.footnote] Footnote text (if record class supported).
+     * 
+     */
+    
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        
+        this.sort_button = null;
+        this.search_field = null;
+    }
+    
+    /**
+     * Build title part of column with sorting.
+     * @method build_title
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_title(elem){
+        this.title_elem = elem;
+        if(typeof(this.options.title) != &quot;undefined&quot;){
+            this.title_elem.text(this.options.title);
+        }
+        
+        if(typeof(this.options.no_sort) == &quot;undefined&quot; || !this.options.no_sort){
+        
+            this.sort_button = $(&#x27;&lt;a class=&quot;button is-small is-pulled-right&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;/&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;/&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.title_elem);
+            
+            this.sort_button.click($.proxy(this.sort_button_click, this));
+        }
+    }
+    
+    /**
+     * Sort button click handler.
+     * @method sort_button_click
+     * @private
+     *
+     */
+    
+    sort_button_click(){
+        if(this.sort_button.find(&#x27;span i.xtable-sort-none&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
+                this.sort_button.find(&#x27;span i.xtable-sort-none&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+                this.sort_button.find(&#x27;span i.xtable-sort-up&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
+                this.table.set_order(this.options.column, &#x27;ASC&#x27;);
+                this.table.select();
+                return
+            }
+            if(this.sort_button.find(&#x27;span i.xtable-sort-up&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
+                this.sort_button.find(&#x27;span i.xtable-sort-up&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+                this.sort_button.find(&#x27;span i.xtable-sort-down&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
+                this.table.set_order(this.options.column, &#x27;DESC&#x27;);
+                this.table.select();
+                return
+            }
+            if(this.sort_button.find(&#x27;span i.xtable-sort-down&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
+                this.sort_button.find(&#x27;span i.xtable-sort-down&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+                this.sort_button.find(&#x27;span i.xtable-sort-none&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
+                this.table.set_order(this.options.column, &#x27;&#x27;);
+                this.table.select();
+                return
+            }
+    }
+    
+    /**
+     * Build options part of column with search input.
+     * @method build_options
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_options(elem){
+        this.options_elem = elem;
+        
+        if(typeof(this.options.no_search) == &quot;undefined&quot; || !this.options.no_search){
+            this.search_field = $(&#x27;&lt;input class=&quot;input&quot;&gt;&lt;/input&gt;&#x27;).appendTo(this.options_elem);
+            this.search_field.change($.proxy(this.set_search_filter, this));
+        }
+    }
+    
+    /**
+     * Search input change handler.
+     * @method set_search_filter
+     * @private
+     *
+     */
+    
+    set_search_filter(){
+        this.table.set_search(this.options.column, this.search_field.val());
+        this.table.select();        
+    }
+    
+    /**
+     * Validate editor value.
+     * @method is_valid
+     * @return {Boolean} If options.validate is set return true if re.test is true.
+     *
+     */
+    
+    is_valid(){
+        if(typeof(this.options.validate) != &quot;undefined&quot; &amp;&amp; this.editor != null){
+            var re = new RegExp(this.options.validate);
+            if (!re.test(this.editor.val())) {
+                this.editor.removeClass( &quot;is-success&quot; );
+                this.editor.addClass( &quot;is-danger&quot; );
+                return false;
+            } else {
+                this.editor.removeClass( &quot;is-danger&quot; );
+                this.editor.addClass( &quot;is-success&quot; );
+                return true;
+            }
+        
+        }
+        return true;
+    }
+    
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+    
+    build_editor(elem, is_new_record = false){
+        this.editor_elem = elem;
+        if(typeof(this.options.input) != &quot;undefined&quot; &amp;&amp; this.options.input == &quot;textarea&quot;){
+            this.editor = $(&#x27;&lt;textarea class=&quot;textarea&quot;&gt;&lt;/textarea&gt;&#x27;).appendTo(this.editor_elem);
+        } else {
+            this.editor = $(&#x27;&lt;input class=&quot;input&quot;&gt;&lt;/input&gt;&#x27;).appendTo(this.editor_elem);
+        }
+        
+        if (is_new_record){
+            if(typeof(this.options.default_value) != &quot;undefined&quot;){            
+                this.editor.val(this.options.default_value);
+            } else {
+                this.editor.val(&quot;&quot;);
+            }
+        } else {
+            this.editor.val(this.record.record_field(this.options.column));
+        }
+       
+        this.editor.change($.proxy(this.value_changed, this));
+    }
+    
+}
+
+/**
+ * Selector column
+ * 
+ * See {{#crossLink &quot;CSelectColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CSelectColumn
+ * @constructor
+ * @extends CTextDataColumn
+ * 
+ * @example
+ *     table.add_column_class(CSelectColumn, {column:&#x27;group_id&#x27;, title:&#x27;Group&#x27;, load:&#x27;group_id&#x27;,
+ *                                            endpoint:&#x27;/groups.php&#x27;, width:&#x27;10%&#x27;,
+ *                                            default_value: 3});
+ */
+
+class CSelectColumn extends CTextDataColumn {
+
+    /**
+     * Constructor, if &#x60;options.load&#x60; is set, options value will be set with &#x60;fill_options&#x60; after ajax call
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {String} options.column Column name in record.
+     * @param {Boolean} [options.visible_column] Show column in table.
+     * @param {Boolean} [options.visible_editor] Show editor for this column.
+     * @param {int} [options.width] Column width in percents.
+     * @param {String} [options.title] Column title.
+     * @param {Boolean} [options.no_sort] Disable sorting in this column.
+     * @param {Boolean} [options.no_filter] Disable filter field by this column.
+     * @param {String} [options.default_value] Default value for new record.
+     * @param {Object} [options.options] Options dict.
+     * @param {String} [options.load] Load options from server. Value will be sended as &#x27;load&#x27; parameter.
+     * @param {String} [options.endpoint] Load options from another endpoint.
+     * @param {String} [options.footnote] Footnote text (if record class supported).
+     * 
+     */
+    
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        
+        if(typeof(this.options.load) != &quot;undefined&quot;){
+            this.table.load_from_options_cache(this.options.endpoint, {load:this.options.load}, $.proxy(this.fill_options, this));
+        }
+    }
+
+    /**
+     * Deferred set options for async ajax call.
+     * @method fill_options
+     * @param {Object} options Options dict.
+     *
+     */
+    
+    fill_options(options){
+        this.options.options = options;
+
+        if (this.cell_elem != null){
+            for (var opt in this.options.options){
+                if(this.options.options[opt][0] == this.record.record_field(this.options.column)){
+                    this.cell_elem.text(this.options.options[opt][1]);
+                }
+            }
+        }
+        
+        if (this.editor_elem != null){
+            for (var opt in this.options.options) {
+                var selected = &quot;&quot;;
+                if (! this.record.record_is_new() &amp;&amp; this.record.record_field(this.options.column) == this.options.options[opt][0]){
+                    selected = &quot;selected&quot;;
+                }
+                $(&#x27;&lt;option value=&quot;&#x27;+this.options.options[opt][0]+&#x27;&quot; &#x27;+selected+&#x27;&gt;&#x27;+this.options.options[opt][1]+&#x27;&lt;/option&gt;&#x27;).appendTo(this.editor);
+            }
+        }
+        
+        if (this.options_elem != null){
+            for (var opt in this.options.options) {
+                $(&#x27;&lt;option value=&quot;&#x27;+this.options.options[opt][0]+&#x27;&quot;&gt;&#x27;+this.options.options[opt][1]+&#x27;&lt;/option&gt;&#x27;).appendTo(this.search_field);
+            }
+
+        }
+    }
+
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_cell(elem){
+        this.cell_elem = elem;
+        if(typeof(this.options.options) != &quot;undefined&quot;){
+            for (var opt in this.options.options){
+                if(this.options.options[opt][0] == this.record.record_field(this.options.column)){
+                    this.cell_elem.text(this.options.options[opt][1]);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+    
+    build_editor(elem, is_new_record = false){
+        this.editor_elem = elem;
+        
+        var div_select = $(&#x27;&lt;div class=&quot;select&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.editor_elem);
+        this.editor = $(&#x27;&lt;select&gt;&lt;/select&gt;&#x27;).appendTo(div_select);
+        
+        if(is_new_record){
+            if(typeof(this.options.default_value) == &quot;undefined&quot; || typeof(this.options.options) == &quot;undefined&quot;){
+                $(&#x27;&lt;option value=&quot;&quot; selected&gt;&#x27;+this.table.lang.no_select+&#x27;&lt;/option&gt;&#x27;).appendTo(this.editor);
+            }
+        }
+        
+        if(typeof(this.options.options) != &quot;undefined&quot;){
+            for (var opt in this.options.options) {
+                var selected = &quot;&quot;;
+                if (! this.record.record_is_new() &amp;&amp; this.record.record_field(this.options.column) == this.options.options[opt][0]){
+                    selected = &quot;selected&quot;;
+                }
+                if (this.record.record_is_new() &amp;&amp; this.options.default_value == this.options.options[opt][0]){
+                    selected = &quot;selected&quot;;
+                }
+                $(&#x27;&lt;option value=&quot;&#x27;+this.options.options[opt][0]+&#x27;&quot; &#x27;+selected+&#x27;&gt;&#x27;+this.options.options[opt][1]+&#x27;&lt;/option&gt;&#x27;).appendTo(this.editor);
+            }
+
+        }
+       
+        this.editor.change($.proxy(this.value_changed, this));
+    }
+    
+    /**
+     * Build options part of column.
+     * @method build_options
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_options(elem){
+        this.options_elem = elem;
+        
+        if(typeof(this.options.no_filter) == &quot;undefined&quot; || !this.options.no_filter){
+            
+            var div_select = $(&#x27;&lt;div class=&quot;select&quot; style=&quot;max-width: 10em;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.options_elem);
+            this.search_field = $(&#x27;&lt;select&gt;&lt;/select&gt;&#x27;).appendTo(div_select);
+            $(&#x27;&lt;option value=&quot;&quot; selected&gt;&#x27;+this.table.lang.no_select+&#x27;&lt;/option&gt;&#x27;).appendTo(this.search_field);
+            
+            if(typeof(this.options.options) != &quot;undefined&quot;){
+                for (var opt in this.options.options) {
+                    $(&#x27;&lt;option value=&quot;&#x27;+this.options.options[opt][0]+&#x27;&quot;&gt;&#x27;+this.options.options[opt][1]+&#x27;&lt;/option&gt;&#x27;).appendTo(this.search_field);
+                }
+            }
+            
+            this.search_field.change($.proxy(this.set_search_filter, this));
+        }
+    }
+    
+    /**
+     * Change filter handler.
+     * @method set_search_filter
+     * @private
+     *
+     */
+    
+    set_search_filter(){
+        this.table.set_filter(this.options.column, this.search_field.val());
+        this.table.select();        
+    }
+    
+    /**
+     * Validate input.
+     * @method is_valid
+     * @return {Boolean} If &#x60;options.validate&#x60; is true return false if no value selected.
+     *
+     */
+    
+    is_valid(){
+        if(typeof(this.options.validate) != &quot;undefined&quot; &amp;&amp; this.editor != null){
+            if (this.editor.val() == &quot;&quot;) {
+                this.editor.parent().removeClass( &quot;is-success&quot; );
+                this.editor.parent().addClass( &quot;is-danger&quot; );
+                return false;
+            } else {
+                this.editor.parent().removeClass( &quot;is-danger&quot; );
+                this.editor.parent().addClass( &quot;is-success&quot; );
+                return true;
+            }
+        
+        }
+        return true;
+    }
+    
+}
+
+/**
+ * Command control column (add, edit, delete buttons)
+ *
+ * See {{#crossLink &quot;CCommandColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CCommandColumn
+ * @constructor
+ * @extends CColumn
+ * 
+ * @example
+ *     table.add_column_class(CCommandColumn,{no_add: true});
+ */
+
+class CCommandColumn extends CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     * @param {Boolean} [options.no_add] No add button.
+     * @param {Boolean} [options.no_edit] No edit button.
+     * @param {Boolean} [options.no_commit] Show editor without save button.
+     * @param {Boolean} [options.no_delete] No delete button.
+     * @param {Array} [options.item_actions] Additional actions.
+     * @param {String} [options.item_actions.button_class] Bulma buttom class.
+     * @param {String} [options.item_actions.fa_class] FA image class.
+     * @param {Function} [options.item_actions.action] Click handler (record as argument).
+     * @param {Array} [options.common_actions] Additional actions.
+     * @param {String} [options.common_actions.button_class] Bulma buttom class.
+     * @param {String} [options.common_actions.fa_class] FA image class.
+     * @param {Function} [options.common_actions.action] Click handler (record as argument).
+     */
+    
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        
+        this.new_record = null;
+        this.edit_record = null;
+        
+        this.show_editor_button = null;
+        this.close_editor_button = null;
+    }
+    
+    /**
+     * Show record editor toggle handler for new record.
+     * @method build_new_record_editor
+     * @private
+     *
+     */
+    
+    build_new_record_editor(){
+        if (this.new_record !== null){
+            this.new_record.row.remove();
+            this.new_record = null;
+        } else {
+            this.new_record = new this.table.record_class(this.table, this.record_options);
+            var editor_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;).prependTo(this.table.tbody);
+            this.new_record.set_row(editor_row);
+            this.new_record.set_data_index(this.record.data_index);
+            this.new_record.set_parent_column(this);
+            this.new_record.build_editor(true);
+        }
+    }
+    
+    /**
+     * Build title part of column.
+     * @method build_title
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_title(elem){
+        this.title_elem = elem;
+        
+        var buttons_div = $(&#x27;&lt;div class=&quot;buttons is-right&quot; style=&quot;flex-wrap: nowrap;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.title_elem);
+        
+        if(typeof(this.options.no_add) == &quot;undefined&quot; || this.options.no_add == false){
+            $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-plus-square&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
+        }
+
+        if(typeof(this.options.no_refresh) == &quot;undefined&quot; || this.options.no_refresh == false){
+            $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;fa fa-sync&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.refresh_table, this));
+        }
+        
+        if(typeof(this.options.common_actions) != &quot;undefined&quot;){
+            for (var i in this.options.common_actions){
+                var bstyle = &#x27;is-info is-outlined&#x27;;
+                var istyle = &#x27;far fa-plus-square&#x27;;
+                if (typeof(this.options.common_actions[i].button_class) != &quot;undefined&quot;){
+                    bstyle = this.options.common_actions[i].button_class;
+                }
+                if (typeof(this.options.common_actions[i].fa_class) != &quot;undefined&quot;){
+                    istyle = this.options.common_actions[i].fa_class;
+                }
+                $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click({record:this.record}, this.options.common_actions[i].action);
+            }
+        }
+    }
+
+    /**
+     * Open editor button handler.
+     * @method open_edit_record_editor(
+     * @private
+     *
+     */
+    
+    open_edit_record_editor(){
+        this.show_editor_button.hide();
+        this.close_editor_button.show();
+        this.edit_record = new this.table.record_class(this.table, this.record_options);
+        var editor_row = this.record.open_subrecord($.proxy(this.close_editor, this));
+        this.edit_record.set_row(editor_row);
+        this.edit_record.set_data_index(this.record.data_index);
+        this.edit_record.set_parent_column(this);
+        this.edit_record.build_editor();
+    }
+
+    /**
+     * Close editor button handler.
+     * @method close_edit_record_editor
+     * @private
+     *
+     */
+    
+    close_edit_record_editor(){
+        this.show_editor_button.show();
+        this.close_editor_button.hide();
+        this.record.close_subrecord();
+        this.edit_record = null;
+    }
+    
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        this.cell_elem = elem;
+        
+        var buttons_div = $(&#x27;&lt;div class=&quot;buttons is-right&quot; style=&quot;flex-wrap: nowrap;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.cell_elem);
+
+        if(typeof(this.options.no_edit) == &quot;undefined&quot; || this.options.no_edit == false){
+            this.show_editor_button = $(&#x27;&lt;a class=&quot;button is-warning is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-edit&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
+            this.close_editor_button = $(&#x27;&lt;a class=&quot;button is-warning&quot; style=&quot;display:none;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-edit&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.close_edit_record_editor, this));
+        }
+
+        if(typeof(this.options.no_delete) == &quot;undefined&quot; || this.options.no_delete == false){
+            $(&#x27;&lt;a class=&quot;button is-danger is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-trash-alt&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.delete_record, this));
+        }
+
+        if(typeof(this.options.item_actions) != &quot;undefined&quot;){
+            for (var i in this.options.item_actions){
+                var bstyle = &#x27;is-info is-outlined&#x27;;
+                var istyle = &#x27;far fa-plus-square&#x27;;
+                if (typeof(this.options.item_actions[i].button_class) != &quot;undefined&quot;){
+                    bstyle = this.options.item_actions[i].button_class;
+                }
+                if (typeof(this.options.item_actions[i].fa_class) != &quot;undefined&quot;){
+                    istyle = this.options.item_actions[i].fa_class;
+                }
+                $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
+            }
+        }
+
+
+    }
+
+    /**
+     * Close editor handler.
+     * @method close_editor
+     * @private
+     *
+     */
+    
+    close_editor() {
+        
+        if (this.edit_record !== null){
+            this.close_edit_record_editor();
+        }
+        
+        if(this.record.parent_column !== null){
+            if (this.record.parent_column.edit_record !== null){
+                this.record.parent_column.close_edit_record_editor();
+            }
+            
+            if (this.record.parent_column.new_record !== null){
+                this.record.parent_column.new_record.row.remove();
+                this.record.parent_column.new_record = null;
+            }
+        }
+    }
+    
+    /**
+     * Column is visible?.
+     * @method visible_column
+     * @return {Boolean} Always true
+     *
+     */
+    
+    visible_column(){
+        return true;
+    }
+    
+    /**
+     * Editor is visible?.
+     * @method visible_editor
+     * @return {Boolean} Always true
+     *
+     */
+    
+    visible_editor(){
+        return true;
+    }
+    
+    /**
+     * Build panel with commit/cancel buttons.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Is new record?
+     *
+     */
+    
+    build_editor(elem, is_new_record = false){
+        this.editor_elem = elem;
+        
+        var buttons_div = $(&#x27;&lt;div class=&quot;buttons is-right&quot; style=&quot;flex-wrap: nowrap;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.editor_elem);
+        
+        if(typeof(this.options.no_commit) == &quot;undefined&quot; || this.options.no_commit == false){
+            if(is_new_record) {
+                $(&#x27;&lt;a class=&quot;button is-primary is-outlined&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;far fa-check-circle&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.add_record+&#x27;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.add_record, this));
+            } else {
+                $(&#x27;&lt;a class=&quot;button is-primary is-outlined&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;far fa-check-circle&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.save_record+&#x27;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.save_record, this));
+            }
+        }
+        
+        $(&#x27;&lt;a class=&quot;button is-warning is-outlined&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-ban&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.cancel+&#x27;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.close_editor, this));
+
+    }
+    
+    /**
+     * Add record button handler.
+     * @method add_record
+     * @private
+     */
+    
+    add_record(){
+        this.table.insert(this.record);
+    }
+
+    /**
+     * Save record button handler.
+     * @method save_record
+     * @private
+     */
+    
+    save_record(){
+        this.table.update(this.record);
+    }
+
+    /**
+     * Delete record button handler.
+     * @method delete_record
+     * @private
+     */
+    
+    delete_record(){
+        if (confirm(this.table.lang.delete_confirm)){
+            this.table.remove(this.record);
+        }
+    }
+    
+    /**
+     * Refresh button handler.
+     * @method refresh_table
+     * @private
+     */
+    
+    refresh_table(){
+        this.table.select();
+    }
+}
+
+/**
+ * Show subtable button column
+ * 
+ * See {{#crossLink &quot;CSubtableColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CSubtableColumn
+ * @constructor
+ * @extends CColumn
+ * 
+ * @example
+ *     parent_table.add_column_class(CSubtableColumn, {title:&#x27;Ext&#x27;,
+ *     table: function(record){
+ *     
+ *            var child_table = new CTable({endpoint: &quot;/call.php&quot;});
+ * 
+ *            child_table.set_record_class(CDivEditorRecord);
+ *            child_table.add_column_class(CColumn,{column:&#x27;id&#x27;, title:&#x27;ID&#x27;, visible_editor:false});
+ *            child_table.add_column_class(CSelectColumn, {column:&#x27;name&#x27;, title: &#x27;Name&#x27;, load:&#x27;person_id&#x27;, endpoint:&#x27;/person.php&#x27;});
+ *            child_table.add_column_class(CCommandColumn,{});
+ *            child_table.set_filter(&#x27;person_id&#x27;, record.record_field(&#x27;id&#x27;));
+ *            
+ *            return child_table;
+ *      }});
+ */
+
+class CSubtableColumn extends CColumn {
+    
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {Function} options.table Function(record) returns new &#x60;CTable&#x60; object.
+     * @param {int} [options.width] Column width in percents.
+     * 
+     */
+    
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        
+        this.show_subtable_button = null;
+        this.hide_subtable_button = null;
+        this.subtable_row = null;
+        this.subtable_cell = null;
+        this.subtable = null;
+    }
+    
+    /**
+     * Column is visible?.
+     * @method visible_column
+     * @return {Boolean} Always true
+     *
+     */
+
+    visible_column(){
+        return true;
+    }
+    
+    /**
+     * Editor is visible?.
+     * @method visible_editor
+     * @return {Boolean} Always false
+     *
+     */
+    
+    visible_editor(){
+        return false;
+    }
+    
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        this.cell_elem = elem;
+        this.show_subtable_button = $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-caret-square-down&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
+        this.hide_subtable_button = $(&#x27;&lt;a class=&quot;button is-info&quot; style=&quot;display:none;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-minus-square&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
+    }
+
+    /**
+     * Show subtable button handler.
+     * @method show_subtable
+     * @private
+     *
+     */
+
+    open_subtable(){
+        this.show_subtable_button.hide();
+        this.hide_subtable_button.show();
+        var subtable_row = this.record.open_subrecord($.proxy(this.close_subtable, this));
+        this.subtable_cell = $(&#x27;&lt;td colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(subtable_row);
+        this.subtable = this.options.table(this.record);
+        this.subtable.build_table(this.subtable_cell);
+        this.subtable.select();
+    }
+
+    /**
+     * Hide subtable button handler.
+     * @method hide_subtable
+     * @private
+     *
+     */
+
+    close_subtable(){
+        this.record.close_subrecord();
+        this.subtable = null;
+        this.show_subtable_button.show();
+        this.hide_subtable_button.hide();
+    }
+
+}
+
+/**
+ * Base record class
+ *
+ * See {{#crossLink &quot;CRecord/constructor&quot;}}{{/crossLink}} for options list.
+ * 
+ * @class CRecord
+ * @constructor
+ * 
+ * @example
+ *     table.set_record_class(CRecord, {});
+ */
+
+class CRecord {
+
+    /**
+     * Create record object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} [options] Column options.
+     * 
+     */
+    
+    constructor(table, options = {}) {
+        this.table = table;
+        this.options = options;
+        this.columns = [];
+        this.data_index = -1;
+        this.parent_column = null;
+        this.row = null;
+        
+        this.subrecord_row = null;
+        this.subrecord_close_handler = null;
+        
+        for (var i in this.table.columns_classes) {
+            this.columns.push(new this.table.columns_classes[i](this.table, this, this.table.columns_options[i]));
+        }
+    }
+    
+    /**
+     * Create table head.
+     * @method set_head
+     * @param {JQueryNode} thead Container element.
+     * @private
+     *
+     */
+    
+    set_head(thead) {
+        this.thead = thead;
+        this.header_row = $(&quot;&lt;tr&gt;&lt;/tr&gt;&quot;).appendTo(this.thead);
+        this.options_row = $(&quot;&lt;tr&gt;&lt;/tr&gt;&quot;).appendTo(this.thead);
+    }
+    
+    /**
+     * Create table colgroups.
+     * @method set_colgroup
+     * @param {JQueryNode} colgroup Container element.
+     * @private
+     *
+     */
+    
+    set_colgroup(colgroup){
+        this.colgroup = colgroup;
+    }
+
+    /**
+     * Create table foots.
+     * @method set_foot
+     * @param {JQueryNode} tfoot Container element.
+     * @private
+     *
+     */
+    
+    set_foot(tfoot){
+        this.tfoot = tfoot;
+        this.footer_row = $(&quot;&lt;tr&gt;&lt;/tr&gt;&quot;).appendTo(this.tfoot);
+    }
+
+    /**
+     * Set parent column for record.
+     * @method set_parent_column
+     * @param {CColumn} column Column.
+     *
+     */
+    
+    set_parent_column(column){
+        this.parent_column = column;
+    }
+
+    /**
+     * Set row container.
+     * @method set_row
+     * @param {JQueryNode} row Row node.
+     *
+     */
+    
+    set_row(row){
+        this.row = row;
+    }
+
+    /**
+     * Set data index in table.
+     * @method set_data_index
+     * @param {Int} index Data index in table.
+     *
+     */
+    
+    set_data_index(index){
+        this.data_index = index;
+    }
+
+    /**
+     * Get field from record.
+     * @method record_field
+     * @param {String} field Field name. If null, return {Object} of all record data.
+     *
+     */
+    
+    record_field(field = null){
+        if (field == null){
+            return this.table.data[this.data_index];
+        }
+        return this.table.data[this.data_index][field];
+    }
+
+    /**
+     * This record is new?.
+     * @method record_is_new
+     * @return {Boolean}
+     *
+     */
+    
+    record_is_new(){
+        return this.data_index == -1;
+    }
+
+    /**
+     * Build headers for columns.
+     * @method build_header
+     *
+     */
+
+    build_header(){
+        for (var i in this.columns){
+            if (this.columns[i].visible_column()){
+                if (this.columns[i].width() != 0){
+                    $(&#x27;&lt;col style=&quot;width: &#x27;+this.columns[i].width()+&#x27;;&quot;&gt;&lt;/col&gt;&#x27;).appendTo(this.colgroup);
+                } else {
+                    $(&#x27;&lt;col&gt;&lt;/col&gt;&#x27;).appendTo(this.colgroup);
+                }
+            
+                var head_cell = $(&#x27;&lt;th&gt;&lt;/th&gt;&#x27;).appendTo(this.header_row);
+                this.columns[i].build_title(head_cell);
+                
+                var options_cell = $(&#x27;&lt;th&gt;&lt;/th&gt;&#x27;).appendTo(this.options_row);
+                this.columns[i].build_options(options_cell);
+                
+            }
+        }
+    }
+    
+    /**
+     * Build footers for columns.
+     * @method build_header
+     *
+     */
+    
+    build_footer(){
+        for (var i in this.columns){
+            if (this.columns[i].visible_column()){
+                var summary_cell = $(&#x27;&lt;th&gt;&lt;/th&gt;&#x27;).appendTo(this.footer_row);
+                this.columns[i].build_summary(summary_cell);
+            }
+        }
+    }
+    
+    /**
+     * Build table row.
+     * @method build_record
+     *
+     */
+    
+    build_record(){
+        for (var i in this.columns){
+            if (this.columns[i].visible_column()){
+                var data_cell = $(&#x27;&lt;td&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
+                this.columns[i].build_cell(data_cell);
+            }
+        }
+    }
+
+    /**
+     * Build editor row.
+     * @method build_editor
+     *
+     */
+    
+    build_editor(is_new_record = false){
+        for (var i in this.columns){
+            if (this.columns[i].visible_column() &amp;&amp; this.columns[i].visible_editor()){
+                var editor_cell = $(&#x27;&lt;td&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
+                this.columns[i].build_editor(editor_cell, is_new_record);
+            }
+        }
+    }
+
+    /**
+     * Create subrecord row.
+     * @method open_subrecord
+     * @return {JQueryNode} Subrow container element.
+     *
+     */
+    
+    open_subrecord(close_handler){
+        console.log(&quot;open_subrecord&quot;);
+        console.log(close_handler);
+        if (this.subrecord_row != null){
+            this.close_subrecord();
+        }
+        this.subrecord_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;).insertAfter(this.row);
+        this.row.addClass(&#x27;is-selected&#x27;);
+        this.subrecord_close_handler = close_handler;
+        return this.subrecord_row;
+    }
+
+    /**
+     * Remove subrecord row.
+     * @method close_subrecord
+     *
+     */
+    
+    close_subrecord(){
+        console.log(&quot;close_subrecord&quot;);
+        if (this.subrecord_row != null){
+            this.subrecord_row.remove();
+            this.subrecord_row = null;
+            this.row.removeClass(&#x27;is-selected&#x27;);
+            if(this.subrecord_close_handler != null)
+            {
+                console.log(&quot;subrecord_close_handler&quot;);
+                this.subrecord_close_handler();
+                this.subrecord_close_handler = null;
+            }
+        }
+    }
+    
+    /**
+     * If changes in any editors callback.
+     * @method on_change_in_editor
+     * @private
+     *
+     */
+    
+    on_change_in_editor(column_name, value){
+        for (var i in this.columns){
+            this.columns[i].record_changed(column_name, value);
+        }
+    }
+    
+    /**
+     * Get all editors values.
+     * @method editor_values
+     * @return {Object} Record dictionary or null if validation failed.
+     *
+     */
+    
+    editor_values(){
+        var record = {};
+        for (var i in this.columns){
+            if (!this.columns[i].is_valid()) return null;
+            var [column, value] = this.columns[i].editor_value();
+            if (column != null){
+                record[column] = value;
+            }
+        }
+        return record;
+    }
+        
+}
+
+/**
+ * Div-based editor with floats and footnotes.
+ * 
+ * See {{#crossLink &quot;CDivEditorRecord/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CDivEditorRecord
+ * @constructor
+ * @extends CRecord
+ * 
+ * @example
+ *     table.set_record_class(CDivEditorRecord, {});
+ */
+
+class CDivEditorRecord extends CRecord {
+    
+    /**
+     * Create record object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} [options] Column options:
+     * @param {String} [options.width_class] Column width style (Bulma &#x60;is-4&#x60; for default)
+     * 
+     */
+    
+    build_editor(is_new_record = false){
+        var editor_row = $(&#x27;&lt;td colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
+        var editor_cell = $(&#x27;&lt;div style=&quot;columns&quot;&gt;&lt;/td&gt;&#x27;).appendTo(editor_row);
+        
+        var width_class = &#x27;is-4&#x27;;
+        if (typeof(this.options.width_class) != &#x27;undefined&#x27;){
+            width_class = this.options.width_class;
+        }
+        
+        for (var i in this.columns){
+            if (this.columns[i].visible_editor()){
+                var rightfloat = &quot;&quot;;
+                if(typeof(this.columns[i].save_record) != &#x27;undefined&#x27;){
+                    rightfloat = &quot;float: right;&quot;
+                }
+
+                var div = $(&#x27;&lt;div class=&quot;field column &#x27;+width_class+&#x27;&quot; style=&quot;display: inline-block; vertical-align:top;&#x27;+rightfloat+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_cell);
+                if(typeof(this.columns[i].options.title) != &quot;undefined&quot;){
+                    var lab = $(&#x27;&lt;label class=&quot;label&quot;&gt;&lt;/label&gt;&#x27;).appendTo(div);
+                    lab.text(this.columns[i].options.title+&quot;:&quot;);
+
+                }
+                
+                this.columns[i].build_editor(div, is_new_record);
+                
+                if(typeof(this.columns[i].options.footnote) != &quot;undefined&quot;){ 
+                    var footnote = $(&#x27;&lt;p class=&quot;is-size-7 has-text-grey-light&quot;&gt;&lt;/p&gt;&#x27;).appendTo(div);
+                    footnote.text(this.columns[i].options.footnote);
+                }
+            }
+        }
+    }
+        
+}
+
+/**
+ * Pagination class.
+ * 
+ * See {{#crossLink &quot;CPagination/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CPagination
+ * @constructor
+ * 
+ * @example
+ *     table.set_pagination_class(CPagination,{});
+ */
+
+class CPagination{
+    
+    /**
+     * Create pagination object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} [options] Column options:
+     * @param {Array} [options.page_sizes] Variants of page size (list of integers).
+     * @param {Int} [options.default_page_size] Default page size.
+     * @param {Boolean} [options.hide_all_records] Hide option show all record.
+     * 
+     */
+    
+    constructor(table, options = {}) {
+        this.table = table;
+        this.options = options;
+        this.container = null;
+        this.page_selector = null;
+        this.page_size_selector = null;
+        this.page_info = null;
+        
+        this.table.start_record = 0;
+        this.table.page_size = 25;
+    }
+    
+    /**
+     * Go to first page.
+     * @method go_first
+     * @private
+     *
+     */
+    
+    go_first() {
+        this.table.start_record = 0;
+        this.table.select();
+    }
+
+    /**
+     * Go to prev page.
+     * @method go_prev
+     * @private
+     *
+     */
+    
+    go_prev() {
+        this.table.start_record = this.table.start_record - this.table.page_size;
+        if (this.table.start_record &lt; 0) {
+            this.table.start_record = 0;
+        }
+        this.table.select();
+    }
+    
+    /**
+     * Page changed handler.
+     * @method page_change
+     * @private
+     *
+     */
+    
+    page_change() {
+        this.table.start_record = parseInt(this.page_selector.val())*this.table.page_size;
+        this.table.select();
+    }
+    
+    /**
+     * Go to next page.
+     * @method go_next
+     * @private
+     *
+     */
+    
+    go_next() {
+        this.table.start_record = this.table.start_record + this.table.page_size;
+        if (this.table.start_record &gt;= this.table.total_records_count) {
+            this.table.start_record = ~~(this.table.total_records_count / this.table.page_size)*this.table.page_size;
+        }
+        this.table.select();
+    }
+    
+    /**
+     * Go to last page.
+     * @method go_last
+     * @private
+     *
+     */
+    
+    go_last() {
+        this.table.start_record = ~~(this.table.total_records_count / this.table.page_size)*this.table.page_size;
+        this.table.select();
+    }
+    
+    /**
+     * Page size change handler.
+     * @method page_size_change
+     * @private
+     *
+     */
+    
+    page_size_change() {
+        this.table.page_size = parseInt(this.page_size_selector.val());
+        this.table.start_record = 0;
+        this.table.select();
+    }
+    
+    /**
+     * Table reloaded handler.
+     * @method on_table_reloaded
+     *
+     */
+    
+    on_table_reloaded(){
+        this.page_selector.empty();
+        var s = 0;
+        if (this.table.page_size &gt; 0) {
+            for (var i = 0; i &lt;= this.table.total_records_count; i+= this.table.page_size) {
+                if (this.table.start_record == i){
+                    $(&#x27;&lt;option value=&quot;&#x27; + s + &#x27;&quot; selected&gt;&#x27;+(s+1)+&#x27;&lt;/option&gt;&#x27;).appendTo(this.page_selector);
+                } else {
+                    $(&#x27;&lt;option value=&quot;&#x27; + s + &#x27;&quot;&gt;&#x27;+(s+1)+&#x27;&lt;/option&gt;&#x27;).appendTo(this.page_selector);
+                }
+                s += 1;
+            }
+        } else {
+            $(&#x27;&lt;option value=&quot;0&quot; selected&gt;1&lt;/option&gt;&#x27;).appendTo(this.page_selector);    
+        }
+        this.set_page_info();
+    }
+    
+    /**
+     * Update pagination text info.
+     * @method set_page_info
+     * @private
+     *
+     */
+    
+    set_page_info() {
+        this.page_info.text(&#x27; &#x27;+this.table.lang.records+&#x27; [ &#x27;+(this.table.start_record+1)+&#x27;-&#x27;+(this.table.start_record+this.table.data.length)+&#x27; ] &#x27;+this.table.lang.from+&#x27; &#x27;+this.table.total_records_count+&#x27;.&#x27;);         
+    }
+    
+    /**
+     * Build pagination.
+     * @method build_pagination
+     * @param {JQueryNode} elem Container node.
+     *
+     */
+    
+    build_pagination(elem) {
+        
+        this.container = elem;
+        
+        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-fast-backward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_first, this));
+    
+        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-step-backward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_prev, this));
+    
+    
+        var page_select_div = $(&#x27;&lt;div class=&quot;select&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.container);
+        this.page_selector = $(&#x27;&lt;select class=&quot;page-selection&quot;&gt;&lt;/select&gt;&#x27;).appendTo(page_select_div);
+        
+        this.page_selector.change($.proxy(this.page_change, this));
+    
+    
+        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-step-forward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_next, this));
+    
+        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-fast-forward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_last, this));
+    
+        var on_one_page_span = $(&#x27;&lt;span style=&quot;vertical-align:sub;&quot;&gt;&lt;/span&gt;&#x27;).appendTo(this.container);
+        
+        on_one_page_span.text(this.table.lang.on_one_page);
+        
+        var page_size_div = $(&#x27;&lt;div class=&quot;select&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.container);
+        
+        this.page_size_selector = $(&#x27;&lt;select&gt;&lt;/select&gt;&#x27;).appendTo(page_size_div);
+        
+        var page_sizes = [5,10,25,50,100,0];
+        var default_page_size = 25;
+        
+        if(typeof(this.options.page_sizes) != &quot;undefined&quot;){
+            page_sizes = this.options.page_sizes;
+        }
+        
+        if(typeof(this.options.default_page_sizes) != &quot;undefined&quot;){
+            default_page_size = this.options.default_page_sizes;
+        }
+        
+        for(var i in page_sizes) {
+            var page_name = page_sizes[i];
+            var selected = &#x27;&#x27;;
+            if (page_sizes[i] == 0) {
+                if(typeof(this.options.hide_all_records) != &#x27;undefined&#x27; &amp;&amp; this.options.hide_all_records == true){
+                    continue;
+                }
+                page_name = this.table.lang.all_records;
+            }
+            if (page_sizes[i] == default_page_size) {
+                selected = &#x27;selected&#x27;
+            }
+            $(&#x27;&lt;option value=&quot;&#x27;+page_sizes[i]+&#x27;&quot; &#x27;+selected+&#x27;&gt;&#x27;+page_name+&#x27;&lt;/option&gt;&#x27;).appendTo(this.page_size_selector);
+        }
+
+        this.page_size_selector.change($.proxy(this.page_size_change, this));
+        
+        this.page_info = $(&#x27;&lt;span style=&quot;vertical-align:sub;&quot;&gt;&lt;/span&gt;&#x27;).appendTo(this.container);
+        
+        this.page_info.text(&#x27; &#x27;+this.table.lang.records+&#x27; 0 &#x27;+this.table.lang.from+&#x27; 0 &#x27;);         
+    }
+}
+
+
+/**
+ * Table class
+ * 
+ * See {{#crossLink &quot;CTable/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CTable
+ * @constructor
+ * 
+ * @example
+ *      var table = new CTable({endpoint: &quot;/demo.php&quot;});
+ *      
+ *      table.set_record_class(CDivEditorRecord);
+ *      table.add_column_class(CColumn,{column:&#x27;id&#x27;,
+ *                                      title:&#x27;ID&#x27;,
+ *                                      visible_editor:false,
+ *                                      visible_column:false});
+ *          
+ *      table.add_column_class(CTextDataColumn,{column:&#x27;firstname&#x27;,
+ *                                              title:&#x27;Firstname&#x27;,
+ *                                              validate:&quot;\\S+&quot;});
+ *          
+ *      table.add_column_class(CCommandColumn,{});
+ *          
+ *      table.set_pagination_class(CPagination,{});
+ *          
+ *      table.build_table($(&#x27;#mainbox&#x27;));
+ *          
+ *      table.select();
+ */
+
+class CTable {
+
+    /**
+     * Create table object
+     *
+     * @method constructor
+     * @param {Object} options Column options:
+     * @param {String} options.endpoint Ajax requests endpoint.
+     * 
+     */
+
+    constructor(options = {}) {
+        
+        this.options = options;
+        
+        this.table = $(&#x27;&lt;table class=&quot;table is-narrow is-bordered is-fullwidth is-hoverable&quot;&gt;&lt;/table&gt;&#x27;);
+
+        this.colgroup = $(&quot;&lt;colgroup&gt;&lt;/colgroup&gt;&quot;).appendTo(this.table);
+        this.thead = $(&quot;&lt;thead&gt;&lt;/thead&gt;&quot;).appendTo(this.table);
+        this.tfoot = $(&quot;&lt;tfoot&gt;&lt;/tfoot&gt;&quot;).appendTo(this.table);
+        this.tbody = $(&quot;&lt;tbody&gt;&lt;/tbody&gt;&quot;).appendTo(this.table);
+        
+        this.data = [];
+        this.total_records_count = 0;
+        this.start_record = 0;
+        this.page_size = 0;
+        
+        this.columns_classes = [];
+        this.columns_options = [];
+        
+        this.record_class = null;
+        this.record_options = null;
+        
+        this.head_record = null;
+        this.body_records = [];
+        this.foot_record = null;
+        
+        this.pagination_class = null;
+        this.pagination_options = null;
+        
+        this.pagination = null;
+        
+        this.column_orders = {};
+        this.column_filters = {};
+        this.column_searches = {};
+        
+        this.options_url_cache = {};
+        
+        this.elem = null;
+        
+        this.lang = {};
+        this.lang.no_records = &quot;Нет записей&quot;;
+        this.lang.edit_cell = &quot;Правка&quot;;
+        this.lang.delete_cell = &quot;Удалить&quot;;
+        this.lang.add_record = &quot;Добавить&quot;;
+        this.lang.save_record = &quot;Сохранить&quot;;
+        this.lang.cancel = &quot;Отменить&quot;;
+        this.lang.delete_confirm = &quot;Удалить запись?&quot;;
+        this.lang.no_select = &quot;[Другой]&quot;;
+        this.lang.on_one_page = &quot; На одной странице: &quot;;
+        this.lang.records = &quot;Записи&quot;;
+        this.lang.from = &quot;из&quot;;
+        this.lang.all_records = &quot;Все&quot;
+    }
+    
+    /**
+     * Get visible columns count.
+     * @method visible_columns
+     * @return {Int} Count.
+     *
+     */
+    
+    visible_columns(){
+        var cont = 0;
+        for (var i in this.columns_options){
+            if(typeof(this.columns_options[i].visible_column) != &quot;undefined&quot; &amp;&amp; this.columns_options[i].visible_column == false){
+                cont += 0;
+            } else {
+                cont += 1;
+            }
+            
+        }
+        return cont;        
+    }
+    
+    /**
+     * Set table record class.
+     * @method set_record_class
+     * @param {Class} record_class CRecord or child class.
+     * @param {Object} options Options for class constuctor.
+     *
+     */
+    
+    set_record_class(record_class, options){
+        this.record_class = record_class;
+        this.record_options = options;
+    }
+    
+    /**
+     * Set table pagination class.
+     * @method set_pagination_class
+     * @param {Class} pagination_class CPagination or child class.
+     * @param {Object} options Options for class constuctor.
+     *
+     */
+    
+    set_pagination_class(pagination_class, options){
+        this.pagination_class = pagination_class;
+        this.pagination_options = options;
+    }
+    
+    /**
+     * Add table column class.
+     * @method add_column_class
+     * @param {Class} column_class CColumn or child class.
+     * @param {Object} options Options for class constuctor.
+     *
+     */
+    
+    add_column_class(column_class, options){
+        this.columns_classes.push(column_class);
+        this.columns_options.push(options);
+    }
+    
+    /**
+     * Build table.
+     * @method build_table
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_table(elem){
+        this.elem = elem;
+        this.table.appendTo(this.elem);
+        
+        this.head_record = new this.record_class(this, this.record_options);
+        this.head_record.set_head(this.thead);
+        this.head_record.set_colgroup(this.colgroup);
+        this.head_record.build_header();
+        
+        this.foot_record = new this.record_class(this, this.record_options);
+        this.foot_record.set_foot(this.tfoot);
+        this.foot_record.build_footer();
+        
+        if(this.pagination_class !== null){
+            this.pagination = new this.pagination_class(this, this.pagination_options);        
+
+            var pagination_cell = $(&#x27;&lt;td colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;);
+            var pagination_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;);
+            pagination_cell.appendTo(pagination_row);
+            pagination_row.appendTo(this.tfoot);
+            
+            this.pagination.build_pagination(pagination_cell);
+        }
+        
+    }
+    
+    /**
+     * Fill table with values after ajax call.
+     * @method fill_table
+     * @private
+     *
+     */
+
+    fill_table(){
+        this.body_records = [];
+        this.tbody.empty();
+
+        if(this.data.length == 0){
+            $(&#x27;&lt;tr&gt;&lt;td style=&quot;text-align:center;&quot; colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&#x27;+this.lang.no_records+&#x27;&lt;/td&gt;&lt;/tr&gt;&#x27;).appendTo(this.tbody);
+            return;
+        }
+
+        for (var i in this.data){
+            this.body_records.push(new this.record_class(this, this.record_options));
+            var data_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;).appendTo(this.tbody);
+            this.body_records[i].set_row(data_row);
+            this.body_records[i].set_data_index(i);
+            this.body_records[i].build_record();
+        }
+        
+        if (this.pagination != null){
+            this.pagination.on_table_reloaded();
+        }
+    }
+    
+    /**
+     * Add order for column.
+     * @method set_order
+     * @param {String} column Column name.
+     * @param {String} type Sort order &#x60;ASC&#x60;, &#x60;DESC&#x60; or &#x60;&#x27;&#x27;&#x60; for remove sorting.
+     *
+     */
+    
+    set_order(column, type) {
+        if(type == &#x27;&#x27;){
+            delete this.column_orders[column];
+        } else {
+            this.column_orders[column] = type;
+        }
+    }
+    
+    /**
+     * Add search for column.
+     * @method set_search
+     * @param {String} column Column name.
+     * @param {String} value Search value (LIKE in SQL), &#x60;&#x27;&#x27;&#x60; for remove.
+     *
+     */
+    
+    set_search(column, value) {
+        if(value == &#x27;&#x27;){
+            delete this.column_searches[column];
+        } else {
+            this.column_searches[column] = value;
+        }
+    }
+    
+    /**
+     * Add filter for column.
+     * @method set_filter
+     * @param {String} column Column name.
+     * @param {String} value Filter value, &#x60;&#x27;&#x27;&#x60; for remove.
+     *
+     */
+    
+    set_filter(column, value) {
+        if(value == &#x27;&#x27;){
+            delete this.column_filters[column];
+        } else {
+            this.column_filters[column] = value;
+        }
+    }
+    
+    /**
+     * Get data from server.
+     * 
+     * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;select&#x60;)
+     * 
+     * Request fields (json):
+     * 
+     * &#x60;start&#x60; {Int} Start record index (0 if no pagination)
+     * 
+     * &#x60;page&#x60; {Int} Page size (0 if no pagination)
+     * 
+     * &#x60;column_filters&#x60; {Object} Pairs column_name =&gt; filter_value
+     * 
+     * &#x60;column_searches&#x60; {Object} Pairs column_name =&gt; search_value
+     * 
+     * &#x60;column_orders&#x60; {Object} Pairs column_name =&gt; sort_order
+     * 
+     * Expected responce (json):
+     * 
+     * &#x60;Result&#x60; {String} &#x60;&#x27;OK&#x27;&#x60; if success or &#x60;&#x27;Error&#x27;&#x60; if falure.
+     * 
+     * &#x60;Message&#x60; {String} if falure, message to user.
+     * 
+     * &#x60;Records&#x60; {Array} Result record set: array of {Object}.
+     * 
+     * &#x60;TotalRecordCount&#x60; {Int} Total records count for pagination.
+     * 
+     * @method select
+     *
+     */
+    
+    select(){
+        var self = this;
+        this.data = [];
+        
+        $.ajax({
+            type: &quot;POST&quot;,
+            url: this.options.endpoint,
+            data: {&quot;select&quot;:JSON.stringify({&#x27;start&#x27;:this.start_record,
+                                            &#x27;page&#x27;:this.page_size,
+                                            &#x27;column_filters&#x27;:this.column_filters,
+                                            &#x27;column_searches&#x27;:this.column_searches,
+                                            &#x27;column_orders&#x27;:this.column_orders})},
+            dataType: &#x27;json&#x27; })
+         .done(function(data) {
+            if (data.Result == &#x27;OK&#x27;) {
+                self.data = data.Records;
+                self.total_records_count = data.TotalRecordCount;
+                self.fill_table();
+            } else {
+                alert(&quot;Server-side Error: &quot; + data.Message);
+            }
+         })
+         .fail(function() {
+             alert(&quot;Connection error&quot;);
+         })
+         .always(function() {
+             
+         });
+    }
+    
+    /**
+     * Insert record request.
+     * 
+     * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;insert&#x60;)
+     * 
+     * Request is record object (json).
+     * 
+     * Expected responce (json):
+     * 
+     * &#x60;Result&#x60; {String} &#x60;&#x27;OK&#x27;&#x60; if success or &#x60;&#x27;Error&#x27;&#x60; if falure.
+     * 
+     * &#x60;Message&#x60; {String} if falure, message to user.
+     * 
+     * Make &#x60;select()&#x60; if success.
+     * 
+     * @method insert
+     * @param {Object} record CRecord object.
+     *
+     */
+    
+    insert(record){
+      
+        var self = this;
+        
+        var record_data = record.editor_values();
+        if (record_data == null) return;
+        
+        $.ajax({
+            type: &quot;POST&quot;,
+            url: this.options.endpoint,
+            data: {&quot;insert&quot;:JSON.stringify(record_data)},
+            dataType: &#x27;json&#x27;
+        })    
+        .done(function(data) {
+            if (data.Result == &#x27;OK&#x27;) {
+                self.select();
+            } else {
+                alert(&quot;Server-side Error: &quot; + data.Message);
+            }
+        
+        }, &quot;json&quot;)
+        .fail(function() {
+            alert(&quot;Connection error&quot;);
+        })
+        .always(function() {
+            
+        });
+
+    }
+  
+    /**
+     * Update record request.
+     * 
+     * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;update&#x60;)
+     * 
+     * Request is record object (json).
+     * 
+     * Expected responce (json):
+     * 
+     * &#x60;Result&#x60; {String} &#x60;&#x27;OK&#x27;&#x60; if success or &#x60;&#x27;Error&#x27;&#x60; if falure.
+     * 
+     * &#x60;Message&#x60; {String} if falure, message to user.
+     * 
+     * Make &#x60;select()&#x60; if success.
+     * 
+     * @method update
+     * @param {Object} record CRecord object.
+     *
+     */  
+  
+    update(record){
+
+        var self = this;
+
+        var updated_record_data = record.editor_values();
+        if (updated_record_data == null) return;
+
+        var source_record_data = record.record_field();
+
+        var record_data = Object.assign({}, source_record_data, updated_record_data);
+
+        $.ajax({
+            type: &quot;POST&quot;,
+            url: this.options.endpoint,
+            data: {&quot;update&quot;:JSON.stringify(record_data)},
+            dataType: &#x27;json&#x27;
+        })
+        .done(function(data) {
+            if (data.Result == &#x27;OK&#x27;) {
+                self.select();                
+            } else {
+                alert(&quot;Server-side Error: &quot; + data.Message);
+            }
+        
+        }, &quot;json&quot;)
+        .fail(function() {
+            alert(&quot;Connection error&quot;);
+        })
+        .always(function() {
+            
+        });
+        
+    }
+    
+    /**
+     * Delete record request.
+     * 
+     * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;delete&#x60;)
+     * 
+     * Request is record object (json).
+     * 
+     * Expected responce (json):
+     * 
+     * &#x60;Result&#x60; {String} &#x60;&#x27;OK&#x27;&#x60; if success or &#x60;&#x27;Error&#x27;&#x60; if falure.
+     * 
+     * &#x60;Message&#x60; {String} if falure, message to user.
+     * 
+     * Make &#x60;select()&#x60; if success.
+     * 
+     * @method remove
+     * @param {Object} record CRecord object.
+     *
+     */ 
+    
+    remove(record){
+        
+        var self = this;
+        
+        $.ajax({
+            type: &quot;POST&quot;,
+            url: this.options.endpoint,
+            data: {&quot;delete&quot;:JSON.stringify(self.data[record.data_index])},
+            dataType: &#x27;json&#x27;
+        })    
+        .done(function(data) {
+            if (data.Result == &#x27;OK&#x27;) {
+                self.select();                
+            } else {
+                alert(&quot;Server-side Error: &quot; + data.Message);
+            }
+        
+        }, &quot;json&quot;)
+        .fail(function() {
+            alert(&quot;Connection error&quot;);
+        })
+        .always(function() {
+            
+        });
+    }
+    
+    /**
+     * Table level options cache routine.
+     * 
+     * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;options&#x60;)
+     * 
+     * Request is &#x60;params&#x60; object (json). Requried field &#x60;params.load&#x60;.
+     * 
+     * Expected responce (json):
+     * 
+     * &#x60;Result&#x60; {String} &#x60;&#x27;OK&#x27;&#x60; if success or &#x60;&#x27;Error&#x27;&#x60; if falure.
+     * 
+     * &#x60;Message&#x60; {String} if falure, message to user.
+     * 
+     * &#x60;Options&#x60; {Object} Result options dict.
+     * 
+     * If &#x60;params&#x60; in cache call &#x60;on_options_loaded&#x60; and returns immediately.
+     * Else make AJAX call and call &#x60;on_options_loaded&#x60; after data is loaded.
+     * 
+     * @method load_from_options_cache
+     * @param {String} endpoint Override table endpoint. If undefined, table endpoint will be used.
+     * @param {Object} params Params array.
+     * @param {String} params.load Requried param.
+     * @param {Function} on_options_loaded Called when request complete. Options object will be first parameter.
+     *
+     */ 
+    
+    load_from_options_cache(endpoint, params, on_options_loaded){
+        
+        var str_params = JSON.stringify(params);
+        var self = this;
+        var query_endpoint = this.options.endpoint;
+        
+        if(typeof(endpoint) != &#x27;undefined&#x27;){
+            query_endpoint = endpoint;
+        }
+        
+        if (this.options_url_cache[str_params] != undefined){
+            on_options_loaded(this.options_url_cache[str_params]);
+        } else {
+            $.ajax({
+                type: &quot;POST&quot;,
+                url: query_endpoint,
+                data: {&quot;options&quot;:str_params},
+                dataType: &#x27;json&#x27;
+            })    
+            .done(function(data) {
+                if (data.Result == &#x27;OK&#x27;) {
+                    self.options_url_cache[str_params] = data.Options;
+                    on_options_loaded(self.options_url_cache[str_params]);
+                } else {
+                    alert(&quot;Server-side Error: &quot; + data.Message);
+                }
+            
+            }, &quot;json&quot;)
+            .fail(function() {
+                alert(&quot;Connection error&quot;);
+            })
+            .always(function() {
+                
+            });
+        }
+        
+    }
+    
+}
+
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

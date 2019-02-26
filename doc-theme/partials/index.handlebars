@@ -1,0 +1,86 @@
+    <div class="apidocs">
+        <div id="docs-main" class="content">
+            <h1>CTable JavaScript CRUD Framework</h1>
+            
+            <p>CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.</p>
+            
+            <h4>Key features</h4>
+            
+            <ul>
+            <li>Modern browsers support (ES6 Javascript with <a href="http://jquery.com">jQuery</a>)</li>
+            <li>Asynchronous (AJAX based)</li>
+            <li>Server technology agnostic</li>
+            <li>Server-side sorting and pagination</li>
+            <li>Sub-table support</li>
+            <li>Easily extends by column class inheritance</li>
+            <li>Good looking and mobile-ready with <a href="http://bulma.io">Bulma CSS</a> and <a href="https://fontawesome.com/">Font Awesome</a> icons</li>
+            </ul>
+            
+            <h4>Standart column classes</h4>
+            <ul>
+            <li>Text field {{#crossLink "CTextDataColumn"}}{{/crossLink}}</li>
+            <li>Combobox {{#crossLink "CSelectColumn"}}{{/crossLink}}</li>
+            <li>Control buttons {{#crossLink "CCommandColumn"}}{{/crossLink}}</li>
+            </ul>
+            
+            <h4>Helper classes</h4>
+            <ul>
+            <li>Pagination {{#crossLink "CPagination"}}{{/crossLink}}</li>
+            <li>Div based record editor {{#crossLink "CDivEditorRecord"}}{{/crossLink}}</li>
+            </ul>
+            
+            <h4>Usage exapmle</h4>
+            <p>1. Add to page header:</p>
+            
+            <pre class="code prettyprint prettyprinted">
+            &lt;script type="text/javascript" src="query/jquery.min.js"&gt;&lt;/script&gt;
+            &lt;script type="text/javascript" src="ctable/ctable.js"&gt;&lt;/script&gt;
+            &lt;link rel="stylesheet" href="css/bulma.min.css"&gt;
+            &lt;link rel="stylesheet" href="fa/css/all.min.css"&gt;</pre>
+            
+            <p>2. After documet ready:</p>
+            
+            <pre class="code prettyprint prettyprinted">
+            var t = new CTable({endpoint: "/demo.php"});
+            t.set_record_class(CDivEditorRecord);
+            t.add_column_class(CSubtableColumn,{title:'Exp', table: function(parent_record){
+            
+                var tt = new CTable({endpoint: "/demo.php"});
+            
+                tt.set_record_class(CDivEditorRecord);
+                tt.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false, visible_column:false});
+                tt.add_column_class(CTextDataColumn,{column:'firstname', title:'Имя', validate:"\\S+"});
+                tt.add_column_class(CTextDataColumn,{column:'lastname', title:'Фамилия', validate:"\\S+"});
+                
+                return tt;
+            }});
+            
+            t.add_column_class(CColumn,{column:'id',
+                                        title:'ID',
+                                        visible_editor:false,
+                                        visible_column:false});
+            
+            t.add_column_class(CTextDataColumn,{column:'firstname',
+                                                title:'Firstname',
+                                                validate:"\\S+"});
+            
+            t.add_column_class(CTextDataColumn,{column:'lastname',
+                                                title:'Lastname',
+                                                validate:"\\S+"});
+            
+            t.add_column_class(CSelectColumn,{column:'sex',
+                                              title:'Sex',
+                                              options:[['m','М'], ['f':'F']],
+                                              validate: true});
+            
+            t.add_column_class(CCommandColumn,{});
+            
+            t.set_pagination_class(CPagination,{});
+            
+            t.build_table($('#mainbox'));
+            
+            t.select();</pre>
+        </div>
+    </div>
+
+

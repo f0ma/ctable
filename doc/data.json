@@ -1,0 +1,1900 @@
+{
+    "project": {
+        "name": "CTable",
+        "description": "CTable JavaScript CRUD Framework",
+        "version": "0.3",
+        "url": "http://example.com/"
+    },
+    "files": {
+        "ctable/ctable.js": {
+            "name": "ctable/ctable.js",
+            "modules": {
+                "ctable": 1
+            },
+            "classes": {
+                "CColumn": 1,
+                "CTextDataColumn": 1,
+                "CSelectColumn": 1,
+                "CCommandColumn": 1,
+                "CSubtableColumn": 1,
+                "CRecord": 1,
+                "CDivEditorRecord": 1,
+                "CPagination": 1,
+                "CTable": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "ctable": {
+            "name": "ctable",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "CColumn": 1,
+                "CTextDataColumn": 1,
+                "CSelectColumn": 1,
+                "CCommandColumn": 1,
+                "CSubtableColumn": 1,
+                "CRecord": 1,
+                "CDivEditorRecord": 1,
+                "CPagination": 1,
+                "CTable": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "ctable/ctable.js",
+            "line": 1562,
+            "description": "Provides the base CTable classes."
+        }
+    },
+    "classes": {
+        "CColumn": {
+            "name": "CColumn",
+            "shortname": "CColumn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 9,
+            "description": "Base column class.\n\nSee {{#crossLink \"CColumn/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "example": [
+                "\n    table.add_column_class(CColumn, {column:'id', title:'ID', visible_editor:false});"
+            ]
+        },
+        "CTextDataColumn": {
+            "name": "CTextDataColumn",
+            "shortname": "CTextDataColumn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 217,
+            "description": "Text input column class.\n\nSee {{#crossLink \"CTextDataColumn/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "extends": "CColumn",
+            "example": [
+                "\n    table.add_column_class(CTextDataColumn,{column:'firstname', title:'Firstname', validate:\"\\\\S+\"});"
+            ]
+        },
+        "CSelectColumn": {
+            "name": "CSelectColumn",
+            "shortname": "CSelectColumn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 395,
+            "description": "Selector column\n\nSee {{#crossLink \"CSelectColumn/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "extends": "CTextDataColumn",
+            "example": [
+                "\n    table.add_column_class(CSelectColumn, {column:'group_id', title:'Group', load:'group_id',\n                                           endpoint:'/groups.php', width:'10%',\n                                           default_value: 3});"
+            ]
+        },
+        "CCommandColumn": {
+            "name": "CCommandColumn",
+            "shortname": "CCommandColumn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 596,
+            "description": "Command control column (add, edit, delete buttons)\n\nSee {{#crossLink \"CCommandColumn/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "extends": "CColumn",
+            "example": [
+                "\n    table.add_column_class(CCommandColumn,{no_add: true});"
+            ]
+        },
+        "CSubtableColumn": {
+            "name": "CSubtableColumn",
+            "shortname": "CSubtableColumn",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 884,
+            "description": "Show subtable button column\n\nSee {{#crossLink \"CSubtableColumn/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "extends": "CColumn",
+            "example": [
+                "\n    parent_table.add_column_class(CSubtableColumn, {title:'Ext',\n    table: function(record){\n    \n           var child_table = new CTable({endpoint: \"/call.php\"});\n\n           child_table.set_record_class(CDivEditorRecord);\n           child_table.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false});\n           child_table.add_column_class(CSelectColumn, {column:'name', title: 'Name', load:'person_id', endpoint:'/person.php'});\n           child_table.add_column_class(CCommandColumn,{});\n           child_table.set_filter('person_id', record.record_field('id'));\n           \n           return child_table;\n     }});"
+            ]
+        },
+        "CRecord": {
+            "name": "CRecord",
+            "shortname": "CRecord",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 1001,
+            "description": "Base record class\n\nSee {{#crossLink \"CRecord/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "example": [
+                "\n    table.set_record_class(CRecord, {});"
+            ]
+        },
+        "CDivEditorRecord": {
+            "name": "CDivEditorRecord",
+            "shortname": "CDivEditorRecord",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 1281,
+            "description": "Div-based editor with floats and footnotes.\n\nSee {{#crossLink \"CDivEditorRecord/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "extends": "CRecord",
+            "example": [
+                "\n    table.set_record_class(CDivEditorRecord, {});"
+            ]
+        },
+        "CPagination": {
+            "name": "CPagination",
+            "shortname": "CPagination",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 1341,
+            "description": "Pagination class.\n\nSee {{#crossLink \"CPagination/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "example": [
+                "\n    table.set_pagination_class(CPagination,{});"
+            ]
+        },
+        "CTable": {
+            "name": "CTable",
+            "shortname": "CTable",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ctable",
+            "namespace": "",
+            "file": "ctable/ctable.js",
+            "line": 1562,
+            "description": "Table class\n\nSee {{#crossLink \"CTable/constructor\"}}{{/crossLink}} for options list.",
+            "is_constructor": 1,
+            "example": [
+                "\n     var table = new CTable({endpoint: \"/demo.php\"});\n     \n     table.set_record_class(CDivEditorRecord);\n     table.add_column_class(CColumn,{column:'id',\n                                     title:'ID',\n                                     visible_editor:false,\n                                     visible_column:false});\n         \n     table.add_column_class(CTextDataColumn,{column:'firstname',\n                                             title:'Firstname',\n                                             validate:\"\\\\S+\"});\n         \n     table.add_column_class(CCommandColumn,{});\n         \n     table.set_pagination_class(CPagination,{});\n         \n     table.build_table($('#mainbox'));\n         \n     table.select();"
+            ]
+        }
+    },
+    "elements": {},
+    "classitems": [
+        {
+            "file": "ctable/ctable.js",
+            "line": 23,
+            "description": "Create column object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "record",
+                    "description": "Parent CRecord object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options.",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "visible_column",
+                            "description": "Show column in table.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "visible_editor",
+                            "description": "Show editor for this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "width",
+                            "description": "Column width in percents.",
+                            "type": "Int",
+                            "optional": true
+                        },
+                        {
+                            "name": "title",
+                            "description": "Column title.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "column",
+                            "description": "Column name in record.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "footnote",
+                            "description": "Footnote text (if record class supported).",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 53,
+            "description": "Return visibility status of this column.",
+            "itemtype": "method",
+            "name": "visible_column",
+            "return": {
+                "description": "Is visible?",
+                "type": "Boolean"
+            },
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 67,
+            "description": "Return editor visibility status of this column.",
+            "itemtype": "method",
+            "name": "visible_editor",
+            "return": {
+                "description": "Show editor?",
+                "type": "Boolean"
+            },
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 81,
+            "description": "Return width of this column, or 0 if undefined.",
+            "itemtype": "method",
+            "name": "width",
+            "return": {
+                "description": "Width",
+                "type": "Int"
+            },
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 95,
+            "description": "Build title part of column.",
+            "itemtype": "method",
+            "name": "build_title",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 109,
+            "description": "Build options part of column.",
+            "itemtype": "method",
+            "name": "build_options",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 120,
+            "description": "Build cell part of column.",
+            "itemtype": "method",
+            "name": "build_cell",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 132,
+            "description": "Build editor part of column.",
+            "itemtype": "method",
+            "name": "build_editor",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                },
+                {
+                    "name": "is_new_record",
+                    "description": "Create editor for new record.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 152,
+            "description": "Build summary part of column.",
+            "itemtype": "method",
+            "name": "build_summary",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 163,
+            "description": "On editor change value handler.",
+            "itemtype": "method",
+            "name": "value_changed",
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 175,
+            "description": "Validate editor value.",
+            "itemtype": "method",
+            "name": "is_valid",
+            "return": {
+                "description": "Always true.",
+                "type": "Boolean"
+            },
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 186,
+            "description": "On record changed (in another column) handler.",
+            "itemtype": "method",
+            "name": "record_changed",
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 195,
+            "description": "Get editor value.",
+            "itemtype": "method",
+            "name": "editor_value",
+            "return": {
+                "description": "Column name and value as [String, String] or [null, null]",
+                "type": "Array"
+            },
+            "class": "CColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 232,
+            "description": "Create column object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "record",
+                    "description": "Parent CRecord object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "column",
+                            "description": "Column name in record.",
+                            "type": "String"
+                        },
+                        {
+                            "name": "visible_column",
+                            "description": "Show column in table.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "visible_editor",
+                            "description": "Show editor for this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "width",
+                            "description": "Column width in percents.",
+                            "type": "Int",
+                            "optional": true
+                        },
+                        {
+                            "name": "title",
+                            "description": "Column title.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_sort",
+                            "description": "Disable sorting in this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_search",
+                            "description": "Disable search field by this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "input",
+                            "description": "Input type: \"input\" (default) or \"textarea\".",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "validate",
+                            "description": "Validate input by this Regexp. Default no validate.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "default_value",
+                            "description": "Default value for new record.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "footnote",
+                            "description": "Footnote text (if record class supported).",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 260,
+            "description": "Build title part of column with sorting.",
+            "itemtype": "method",
+            "name": "build_title",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 281,
+            "description": "Sort button click handler.",
+            "itemtype": "method",
+            "name": "sort_button_click",
+            "access": "private",
+            "tagname": "",
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 312,
+            "description": "Build options part of column with search input.",
+            "itemtype": "method",
+            "name": "build_options",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 328,
+            "description": "Search input change handler.",
+            "itemtype": "method",
+            "name": "set_search_filter",
+            "access": "private",
+            "tagname": "",
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 340,
+            "description": "Validate editor value.",
+            "itemtype": "method",
+            "name": "is_valid",
+            "return": {
+                "description": "If options.validate is set return true if re.test is true.",
+                "type": "Boolean"
+            },
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 364,
+            "description": "Build editor part of column.",
+            "itemtype": "method",
+            "name": "build_editor",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                },
+                {
+                    "name": "is_new_record",
+                    "description": "Create editor for new record.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "CTextDataColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 412,
+            "description": "Constructor, if `options.load` is set, options value will be set with `fill_options` after ajax call",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "record",
+                    "description": "Parent CRecord object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "column",
+                            "description": "Column name in record.",
+                            "type": "String"
+                        },
+                        {
+                            "name": "visible_column",
+                            "description": "Show column in table.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "visible_editor",
+                            "description": "Show editor for this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "width",
+                            "description": "Column width in percents.",
+                            "type": "Int",
+                            "optional": true
+                        },
+                        {
+                            "name": "title",
+                            "description": "Column title.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_sort",
+                            "description": "Disable sorting in this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_filter",
+                            "description": "Disable filter field by this column.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "default_value",
+                            "description": "Default value for new record.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "options",
+                            "description": "Options dict.",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "load",
+                            "description": "Load options from server. Value will be sended as 'load' parameter.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "endpoint",
+                            "description": "Load options from another endpoint.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "footnote",
+                            "description": "Footnote text (if record class supported).",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 442,
+            "description": "Deferred set options for async ajax call.",
+            "itemtype": "method",
+            "name": "fill_options",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "Options dict.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 478,
+            "description": "Build cell part of column.",
+            "itemtype": "method",
+            "name": "build_cell",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 496,
+            "description": "Build editor part of column.",
+            "itemtype": "method",
+            "name": "build_editor",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                },
+                {
+                    "name": "is_new_record",
+                    "description": "Create editor for new record.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 533,
+            "description": "Build options part of column.",
+            "itemtype": "method",
+            "name": "build_options",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 559,
+            "description": "Change filter handler.",
+            "itemtype": "method",
+            "name": "set_search_filter",
+            "access": "private",
+            "tagname": "",
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 571,
+            "description": "Validate input.",
+            "itemtype": "method",
+            "name": "is_valid",
+            "return": {
+                "description": "If `options.validate` is true return false if no value selected.",
+                "type": "Boolean"
+            },
+            "class": "CSelectColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 611,
+            "description": "Create column object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "record",
+                    "description": "Parent CRecord object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "width",
+                            "description": "Column width in percents.",
+                            "type": "Int",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_add",
+                            "description": "No add button.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_edit",
+                            "description": "No edit button.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_commit",
+                            "description": "Show editor without save button.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "no_delete",
+                            "description": "No delete button.",
+                            "type": "Boolean",
+                            "optional": true
+                        },
+                        {
+                            "name": "item_actions",
+                            "description": "Additional actions.",
+                            "type": "Array",
+                            "optional": true,
+                            "props": [
+                                {
+                                    "name": "button_class",
+                                    "description": "Bulma buttom class.",
+                                    "type": "String",
+                                    "optional": true
+                                },
+                                {
+                                    "name": "fa_class",
+                                    "description": "FA image class.",
+                                    "type": "String",
+                                    "optional": true
+                                },
+                                {
+                                    "name": "action",
+                                    "description": "Click handler (record as argument).",
+                                    "type": "Function",
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "common_actions",
+                            "description": "Additional actions.",
+                            "type": "Array",
+                            "optional": true,
+                            "props": [
+                                {
+                                    "name": "button_class",
+                                    "description": "Bulma buttom class.",
+                                    "type": "String",
+                                    "optional": true
+                                },
+                                {
+                                    "name": "fa_class",
+                                    "description": "FA image class.",
+                                    "type": "String",
+                                    "optional": true
+                                },
+                                {
+                                    "name": "action",
+                                    "description": "Click handler (record as argument).",
+                                    "type": "Function",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 643,
+            "description": "Show record editor toggle handler for new record.",
+            "itemtype": "method",
+            "name": "build_new_record_editor",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 664,
+            "description": "Build title part of column.",
+            "itemtype": "method",
+            "name": "build_title",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 699,
+            "description": "Open editor button handler.",
+            "itemtype": "method",
+            "name": "open_edit_record_editor(",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 717,
+            "description": "Close editor button handler.",
+            "itemtype": "method",
+            "name": "close_edit_record_editor",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 731,
+            "description": "Build cell part of column.",
+            "itemtype": "method",
+            "name": "build_cell",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 769,
+            "description": "Close editor handler.",
+            "itemtype": "method",
+            "name": "close_editor",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 794,
+            "description": "Column is visible?.",
+            "itemtype": "method",
+            "name": "visible_column",
+            "return": {
+                "description": "Always true",
+                "type": "Boolean"
+            },
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 805,
+            "description": "Editor is visible?.",
+            "itemtype": "method",
+            "name": "visible_editor",
+            "return": {
+                "description": "Always true",
+                "type": "Boolean"
+            },
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 816,
+            "description": "Build panel with commit/cancel buttons.",
+            "itemtype": "method",
+            "name": "build_editor",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                },
+                {
+                    "name": "is_new_record",
+                    "description": "Is new record?",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 841,
+            "description": "Add record button handler.",
+            "itemtype": "method",
+            "name": "add_record",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 851,
+            "description": "Save record button handler.",
+            "itemtype": "method",
+            "name": "save_record",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 861,
+            "description": "Delete record button handler.",
+            "itemtype": "method",
+            "name": "delete_record",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 873,
+            "description": "Refresh button handler.",
+            "itemtype": "method",
+            "name": "refresh_table",
+            "access": "private",
+            "tagname": "",
+            "class": "CCommandColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 911,
+            "description": "Create column object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "record",
+                    "description": "Parent CRecord object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "table",
+                            "description": "Function(record) returns new `CTable` object.",
+                            "type": "Function"
+                        },
+                        {
+                            "name": "width",
+                            "description": "Column width in percents.",
+                            "type": "Int",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "CSubtableColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 933,
+            "description": "Column is visible?.",
+            "itemtype": "method",
+            "name": "visible_column",
+            "return": {
+                "description": "Always true",
+                "type": "Boolean"
+            },
+            "class": "CSubtableColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 944,
+            "description": "Editor is visible?.",
+            "itemtype": "method",
+            "name": "visible_editor",
+            "return": {
+                "description": "Always false",
+                "type": "Boolean"
+            },
+            "class": "CSubtableColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 955,
+            "description": "Build cell part of column.",
+            "itemtype": "method",
+            "name": "build_cell",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CSubtableColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 968,
+            "description": "Show subtable button handler.",
+            "itemtype": "method",
+            "name": "show_subtable",
+            "access": "private",
+            "tagname": "",
+            "class": "CSubtableColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 985,
+            "description": "Hide subtable button handler.",
+            "itemtype": "method",
+            "name": "hide_subtable",
+            "access": "private",
+            "tagname": "",
+            "class": "CSubtableColumn",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1015,
+            "description": "Create record object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options.",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1040,
+            "description": "Create table head.",
+            "itemtype": "method",
+            "name": "set_head",
+            "params": [
+                {
+                    "name": "thead",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1054,
+            "description": "Create table colgroups.",
+            "itemtype": "method",
+            "name": "set_colgroup",
+            "params": [
+                {
+                    "name": "colgroup",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1066,
+            "description": "Create table foots.",
+            "itemtype": "method",
+            "name": "set_foot",
+            "params": [
+                {
+                    "name": "tfoot",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1079,
+            "description": "Set parent column for record.",
+            "itemtype": "method",
+            "name": "set_parent_column",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "Column.",
+                    "type": "CColumn"
+                }
+            ],
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1090,
+            "description": "Set row container.",
+            "itemtype": "method",
+            "name": "set_row",
+            "params": [
+                {
+                    "name": "row",
+                    "description": "Row node.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1101,
+            "description": "Set data index in table.",
+            "itemtype": "method",
+            "name": "set_data_index",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "Data index in table.",
+                    "type": "Int"
+                }
+            ],
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1112,
+            "description": "Get field from record.",
+            "itemtype": "method",
+            "name": "record_field",
+            "params": [
+                {
+                    "name": "field",
+                    "description": "Field name. If null, return {Object} of all record data.",
+                    "type": "String"
+                }
+            ],
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1126,
+            "description": "This record is new?.",
+            "itemtype": "method",
+            "name": "record_is_new",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1137,
+            "description": "Build headers for columns.",
+            "itemtype": "method",
+            "name": "build_header",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1162,
+            "description": "Build footers for columns.",
+            "itemtype": "method",
+            "name": "build_header",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1177,
+            "description": "Build table row.",
+            "itemtype": "method",
+            "name": "build_record",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1192,
+            "description": "Build editor row.",
+            "itemtype": "method",
+            "name": "build_editor",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1207,
+            "description": "Create subrecord row.",
+            "itemtype": "method",
+            "name": "open_subrecord",
+            "return": {
+                "description": "Subrow container element.",
+                "type": "JQueryNode"
+            },
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1226,
+            "description": "Remove subrecord row.",
+            "itemtype": "method",
+            "name": "close_subrecord",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1247,
+            "description": "If changes in any editors callback.",
+            "itemtype": "method",
+            "name": "on_change_in_editor",
+            "access": "private",
+            "tagname": "",
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1260,
+            "description": "Get all editors values.",
+            "itemtype": "method",
+            "name": "editor_values",
+            "return": {
+                "description": "Record dictionary or null if validation failed.",
+                "type": "Object"
+            },
+            "class": "CRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1296,
+            "description": "Create record object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "width_class",
+                            "description": "Column width style (Bulma `is-4` for default)",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "CDivEditorRecord",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1355,
+            "description": "Create pagination object. Should not be called directly.",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "Parent CTable object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "page_sizes",
+                            "description": "Variants of page size (list of integers).",
+                            "type": "Array",
+                            "optional": true
+                        },
+                        {
+                            "name": "default_page_size",
+                            "description": "Default page size.",
+                            "type": "Int",
+                            "optional": true
+                        },
+                        {
+                            "name": "hide_all_records",
+                            "description": "Hide option show all record.",
+                            "type": "Boolean",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1379,
+            "description": "Go to first page.",
+            "itemtype": "method",
+            "name": "go_first",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1391,
+            "description": "Go to prev page.",
+            "itemtype": "method",
+            "name": "go_prev",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1406,
+            "description": "Page changed handler.",
+            "itemtype": "method",
+            "name": "page_change",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1418,
+            "description": "Go to next page.",
+            "itemtype": "method",
+            "name": "go_next",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1433,
+            "description": "Go to last page.",
+            "itemtype": "method",
+            "name": "go_last",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1445,
+            "description": "Page size change handler.",
+            "itemtype": "method",
+            "name": "page_size_change",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1458,
+            "description": "Table reloaded handler.",
+            "itemtype": "method",
+            "name": "on_table_reloaded",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1482,
+            "description": "Update pagination text info.",
+            "itemtype": "method",
+            "name": "set_page_info",
+            "access": "private",
+            "tagname": "",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1493,
+            "description": "Build pagination.",
+            "itemtype": "method",
+            "name": "build_pagination",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container node.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1594,
+            "description": "Create table object",
+            "itemtype": "method",
+            "name": "constructor",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "Column options:",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "endpoint",
+                            "description": "Ajax requests endpoint.",
+                            "type": "String"
+                        }
+                    ]
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1657,
+            "description": "Get visible columns count.",
+            "itemtype": "method",
+            "name": "visible_columns",
+            "return": {
+                "description": "Count.",
+                "type": "Int"
+            },
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1677,
+            "description": "Set table record class.",
+            "itemtype": "method",
+            "name": "set_record_class",
+            "params": [
+                {
+                    "name": "record_class",
+                    "description": "CRecord or child class.",
+                    "type": "Class"
+                },
+                {
+                    "name": "options",
+                    "description": "Options for class constuctor.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1690,
+            "description": "Set table pagination class.",
+            "itemtype": "method",
+            "name": "set_pagination_class",
+            "params": [
+                {
+                    "name": "pagination_class",
+                    "description": "CPagination or child class.",
+                    "type": "Class"
+                },
+                {
+                    "name": "options",
+                    "description": "Options for class constuctor.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1703,
+            "description": "Add table column class.",
+            "itemtype": "method",
+            "name": "add_column_class",
+            "params": [
+                {
+                    "name": "column_class",
+                    "description": "CColumn or child class.",
+                    "type": "Class"
+                },
+                {
+                    "name": "options",
+                    "description": "Options for class constuctor.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1716,
+            "description": "Build table.",
+            "itemtype": "method",
+            "name": "build_table",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "Container element.",
+                    "type": "JQueryNode"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1749,
+            "description": "Fill table with values after ajax call.",
+            "itemtype": "method",
+            "name": "fill_table",
+            "access": "private",
+            "tagname": "",
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1778,
+            "description": "Add order for column.",
+            "itemtype": "method",
+            "name": "set_order",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "Column name.",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "Sort order `ASC`, `DESC` or `''` for remove sorting.",
+                    "type": "String"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1794,
+            "description": "Add search for column.",
+            "itemtype": "method",
+            "name": "set_search",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "Column name.",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "Search value (LIKE in SQL), `''` for remove.",
+                    "type": "String"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1810,
+            "description": "Add filter for column.",
+            "itemtype": "method",
+            "name": "set_filter",
+            "params": [
+                {
+                    "name": "column",
+                    "description": "Column name.",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "Filter value, `''` for remove.",
+                    "type": "String"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1826,
+            "description": "Get data from server.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `select`)\n\nRequest fields (json):\n\n`start` {Int} Start record index (0 if no pagination)\n\n`page` {Int} Page size (0 if no pagination)\n\n`column_filters` {Object} Pairs column_name => filter_value\n\n`column_searches` {Object} Pairs column_name => search_value\n\n`column_orders` {Object} Pairs column_name => sort_order\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Records` {Array} Result record set: array of {Object}.\n\n`TotalRecordCount` {Int} Total records count for pagination.",
+            "itemtype": "method",
+            "name": "select",
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1887,
+            "description": "Insert record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `insert`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
+            "itemtype": "method",
+            "name": "insert",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "CRecord object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1937,
+            "description": "Update record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `update`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "CRecord object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 1991,
+            "description": "Delete record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
+            "itemtype": "method",
+            "name": "remove",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "CRecord object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 2037,
+            "description": "Table level options cache routine.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `options`)\n\nRequest is `params` object (json). Requried field `params.load`.\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Options` {Object} Result options dict.\n\nIf `params` in cache call `on_options_loaded` and returns immediately.\nElse make AJAX call and call `on_options_loaded` after data is loaded.",
+            "itemtype": "method",
+            "name": "load_from_options_cache",
+            "params": [
+                {
+                    "name": "endpoint",
+                    "description": "Override table endpoint. If undefined, table endpoint will be used.",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "description": "Params array.",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "load",
+                            "description": "Requried param.",
+                            "type": "String"
+                        }
+                    ]
+                },
+                {
+                    "name": "on_options_loaded",
+                    "description": "Called when request complete. Options object will be first parameter.",
+                    "type": "Function"
+                }
+            ],
+            "class": "CTable",
+            "module": "ctable"
+        }
+    ],
+    "warnings": []
+}

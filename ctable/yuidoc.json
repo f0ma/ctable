@@ -1,0 +1,9 @@
+{
+    "name": "CTable",
+    "description": "CTable JavaScript CRUD Framework",
+    "version": "0.3",
+    "url": "http://example.com/",
+    "options": {
+        "outdir": "doc"
+    }
+}
