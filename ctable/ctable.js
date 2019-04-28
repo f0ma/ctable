@@ -30,6 +30,9 @@ class CColumn {
      * @param {Boolean} [options.visible_column] Show column in table.
      * @param {Boolean} [options.visible_editor] Show editor for this column.
      * @param {int} [options.width] Column width in percents.
+     * @param {int} [options.max_width] Column width in px.
+     * @param {Boolean} [options.break_words] Set word wrap in cell to break-words.
+     * @param {Boolean} [options.html] Render content as html.
      * @param {String} [options.title] Column title.
      * @param {String} [options.column] Column name in record.
      * @param {String} [options.footnote] Footnote text (if record class supported).
@@ -126,7 +129,21 @@ class CColumn {
     
     build_cell(elem){
         this.cell_elem = elem;
-        this.cell_elem.text(this.record.record_field(this.options.column));
+        
+        if(typeof(this.options.max_width) != "undefined"){
+            this.cell_elem.css({'max-width':this.options.max_width+'px'});    
+        }
+        
+        if(typeof(this.options.break_words) != "undefined" && this.options.break_words){
+            this.cell_elem.css({'word-wrap':'break-word'});    
+        }
+        
+        if(typeof(this.options.html) != "undefined" && this.options.html){
+            this.cell_elem.html(this.record.record_field(this.options.column));
+        } else {
+            this.cell_elem.text(this.record.record_field(this.options.column));
+        }
+        
     }
     
     /**
@@ -240,6 +257,9 @@ class CTextDataColumn extends CColumn {
      * @param {Boolean} [options.visible_column] Show column in table.
      * @param {Boolean} [options.visible_editor] Show editor for this column.
      * @param {int} [options.width] Column width in percents.
+     * @param {int} [options.max_width] Column width in px.
+     * @param {Boolean} [options.break_words] Set word wrap in cell to break-words.
+     * @param {Boolean} [options.html] Render content as html.
      * @param {String} [options.title] Column title.
      * @param {Boolean} [options.no_sort] Disable sorting in this column.
      * @param {Boolean} [options.no_search] Disable search field by this column.
