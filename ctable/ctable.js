@@ -1335,7 +1335,7 @@ class CDivEditorRecord extends CRecord {
         for (var i in this.columns){
             var column_width_class = width_class;
             if(typeof(this.columns[i].options.editor_width_class) != "undefined"){
-                width_class = this.columns[i].options.editor_width_class;
+                column_width_class = this.columns[i].options.editor_width_class;
             }
 
             if (this.columns[i].visible_editor()){
