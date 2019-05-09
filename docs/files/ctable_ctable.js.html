@@ -127,6 +127,7 @@ class CColumn {
      * @param {String} [options.title] Column title.
      * @param {String} [options.column] Column name in record.
      * @param {String} [options.footnote] Footnote text (if record class supported).
+     * @param {String} [options.editor_width_class] Editor width class (if record class supported).
      *
      */
 
@@ -1423,13 +1424,18 @@ class CDivEditorRecord extends CRecord {
         }
 
         for (var i in this.columns){
+            var column_width_class = width_class;
+            if(typeof(this.columns[i].editor_width_class) != &quot;undefined&quot;){
+                width_class = this.columns[i].editor_width_class
+            }
+
             if (this.columns[i].visible_editor()){
                 var rightfloat = &quot;&quot;;
                 if(typeof(this.columns[i].save_record) != &#x27;undefined&#x27;){
                     rightfloat = &quot;float: right;&quot;
                 }
 
-                var div = $(&#x27;&lt;div class=&quot;field column &#x27;+width_class+&#x27;&quot; style=&quot;display: inline-block; vertical-align:top;&#x27;+rightfloat+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_cell);
+                var div = $(&#x27;&lt;div class=&quot;field column &#x27;+column_width_class+&#x27;&quot; style=&quot;display: inline-block; vertical-align:top;&#x27;+rightfloat+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_cell);
                 if(typeof(this.columns[i].options.title) != &quot;undefined&quot;){
                     var lab = $(&#x27;&lt;label class=&quot;label&quot;&gt;&lt;/label&gt;&#x27;).appendTo(div);
                     lab.text(this.columns[i].options.title+&quot;:&quot;);

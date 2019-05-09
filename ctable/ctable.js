@@ -36,6 +36,7 @@ class CColumn {
      * @param {String} [options.title] Column title.
      * @param {String} [options.column] Column name in record.
      * @param {String} [options.footnote] Footnote text (if record class supported).
+     * @param {String} [options.editor_width_class] Editor width class (if record class supported).
      *
      */
 
@@ -1332,13 +1333,18 @@ class CDivEditorRecord extends CRecord {
         }
 
         for (var i in this.columns){
+            var column_width_class = width_class;
+            if(typeof(this.columns[i].editor_width_class) != "undefined"){
+                width_class = this.columns[i].editor_width_class
+            }
+
             if (this.columns[i].visible_editor()){
                 var rightfloat = "";
                 if(typeof(this.columns[i].save_record) != 'undefined'){
                     rightfloat = "float: right;"
                 }
 
-                var div = $('<div class="field column '+width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(editor_cell);
+                var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(editor_cell);
                 if(typeof(this.columns[i].options.title) != "undefined"){
                     var lab = $('<label class="label"></label>').appendTo(div);
                     lab.text(this.columns[i].options.title+":");
