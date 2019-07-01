@@ -1129,6 +1129,7 @@ class CRecord {
      * @method constructor
      * @param {Object} table Parent CTable object.
      * @param {Object} [options] Column options.
+     * @param {Function} options.on_build_record Fuction on_build_record(row_elem, row_data) called on every data row created.
      * 
      */
 
@@ -1298,6 +1299,9 @@ class CRecord {
                 this.columns[i].build_cell(data_cell);
             }
         }
+        if(typeof(this.options.on_build_record) != &quot;undefined&quot;){
+            this.options.on_build_record(this.row, this.record_field());
+        }
     }
 
     /**
@@ -1425,8 +1429,8 @@ class CDivEditorRecord extends CRecord {
 
         for (var i in this.columns){
             var column_width_class = width_class;
-            if(typeof(this.columns[i].editor_width_class) != &quot;undefined&quot;){
-                width_class = this.columns[i].editor_width_class
+            if(typeof(this.columns[i].options.editor_width_class) != &quot;undefined&quot;){
+                column_width_class = this.columns[i].options.editor_width_class;
             }
 
             if (this.columns[i].visible_editor()){

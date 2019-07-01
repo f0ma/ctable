@@ -1038,6 +1038,7 @@ class CRecord {
      * @method constructor
      * @param {Object} table Parent CTable object.
      * @param {Object} [options] Column options.
+     * @param {Function} options.on_build_record Fuction on_build_record(row_elem, row_data) called on every data row created.
      * 
      */
 
@@ -1206,6 +1207,9 @@ class CRecord {
                 var data_cell = $('<td></td>').appendTo(this.row);
                 this.columns[i].build_cell(data_cell);
             }
+        }
+        if(typeof(this.options.on_build_record) != "undefined"){
+            this.options.on_build_record(this.row, this.record_field());
         }
     }
 
