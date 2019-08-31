@@ -1686,6 +1686,11 @@
                             "name": "lang",
                             "description": "Table language: 'en' or 'ru'. Default is 'en'.",
                             "type": "String"
+                        },
+                        {
+                            "name": "select_method",
+                            "description": "Method of select query. Default is 'GET'.",
+                            "type": "String"
                         }
                     ]
                 }
@@ -1695,7 +1700,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1714,
+            "line": 1715,
             "description": "Get visible columns count.",
             "itemtype": "method",
             "name": "visible_columns",
@@ -1708,7 +1713,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1734,
+            "line": 1735,
             "description": "Set table record class.",
             "itemtype": "method",
             "name": "set_record_class",
@@ -1729,7 +1734,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1747,
+            "line": 1748,
             "description": "Set table pagination class.",
             "itemtype": "method",
             "name": "set_pagination_class",
@@ -1750,7 +1755,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1760,
+            "line": 1761,
             "description": "Add table column class.",
             "itemtype": "method",
             "name": "add_column_class",
@@ -1771,7 +1776,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1773,
+            "line": 1774,
             "description": "Build table.",
             "itemtype": "method",
             "name": "build_table",
@@ -1787,7 +1792,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1806,
+            "line": 1807,
             "description": "Fill table with values after ajax call.",
             "itemtype": "method",
             "name": "fill_table",
@@ -1798,7 +1803,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1835,
+            "line": 1836,
             "description": "Add order for column.",
             "itemtype": "method",
             "name": "set_order",
@@ -1819,7 +1824,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1851,
+            "line": 1852,
             "description": "Add search for column.",
             "itemtype": "method",
             "name": "set_search",
@@ -1840,7 +1845,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1867,
+            "line": 1868,
             "description": "Add filter for column.",
             "itemtype": "method",
             "name": "set_filter",
@@ -1861,7 +1866,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1883,
+            "line": 1884,
             "description": "Get data from server.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `select`)\n\nRequest fields (json):\n\n`start` {Int} Start record index (0 if no pagination)\n\n`page` {Int} Page size (0 if no pagination)\n\n`column_filters` {Object} Pairs column_name => filter_value\n\n`column_searches` {Object} Pairs column_name => search_value\n\n`column_orders` {Object} Pairs column_name => sort_order\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Records` {Array} Result record set: array of {Object}.\n\n`TotalRecordCount` {Int} Total records count for pagination.",
             "itemtype": "method",
             "name": "select",
@@ -1870,7 +1875,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1944,
+            "line": 1948,
             "description": "Insert record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `insert`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "insert",
@@ -1886,7 +1891,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1994,
+            "line": 1995,
             "description": "Update record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `update`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "update",
@@ -1902,7 +1907,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2048,
+            "line": 2046,
             "description": "Delete record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "remove",
@@ -1918,7 +1923,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2094,
+            "line": 2089,
             "description": "Table level options cache routine.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `options`)\n\nRequest is `params` object (json). Requried field `params.load`.\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Options` {Object} Result options dict.\n\nIf `params` in cache call `on_options_loaded` and returns immediately.\nElse make AJAX call and call `on_options_loaded` after data is loaded.",
             "itemtype": "method",
             "name": "load_from_options_cache",

@@ -1718,6 +1718,7 @@ class CTable {
      * @param {Object} options Column options:
      * @param {String} options.endpoint Ajax requests endpoint.
      * @param {String} options.lang Table language: &#x27;en&#x27; or &#x27;ru&#x27;. Default is &#x27;en&#x27;.
+     * @param {String} options.select_method Method of select query. Default is &#x27;GET&#x27;.
      *
      */
 
@@ -2006,8 +2007,14 @@ class CTable {
         var self = this;
         this.data = [];
 
+        var select_method = &quot;GET&quot;;
+        
+        if(typeof(this.options.select_method) != &quot;undefined&quot;){
+            select_method = this.options.select_method;
+        }
+
         $.ajax({
-            type: &quot;POST&quot;,
+            type: select_method,
             url: this.options.endpoint,
             data: {&quot;select&quot;:JSON.stringify({&#x27;start&#x27;:this.start_record,
                                             &#x27;page&#x27;:this.page_size,
@@ -2026,9 +2033,6 @@ class CTable {
          })
          .fail(function() {
              alert(self.lang.server_side_error);
-         })
-         .always(function() {
-
          });
     }
 
@@ -2075,9 +2079,6 @@ class CTable {
         }, &quot;json&quot;)
         .fail(function() {
             alert(self.lang.server_side_error);
-        })
-        .always(function() {
-
         });
 
     }
@@ -2129,9 +2130,6 @@ class CTable {
         }, &quot;json&quot;)
         .fail(function() {
             alert(self.lang.server_side_error);
-        })
-        .always(function() {
-
         });
 
     }
@@ -2176,9 +2174,6 @@ class CTable {
         }, &quot;json&quot;)
         .fail(function() {
             alert(self.lang.server_side_error);
-        })
-        .always(function() {
-
         });
     }
 
@@ -2221,8 +2216,15 @@ class CTable {
         if (this.options_url_cache[str_params] != undefined){
             on_options_loaded(this.options_url_cache[str_params]);
         } else {
+            
+            var select_method = &quot;GET&quot;;
+        
+            if(typeof(this.options.select_method) != &quot;undefined&quot;){
+                select_method = this.options.select_method;
+            }
+            
             $.ajax({
-                type: &quot;POST&quot;,
+                type: select_method,
                 url: query_endpoint,
                 data: {&quot;options&quot;:str_params},
                 dataType: &#x27;json&#x27;
@@ -2238,9 +2240,6 @@ class CTable {
             }, &quot;json&quot;)
             .fail(function() {
                 alert(self.lang.server_side_error);
-            })
-            .always(function() {
-
             });
         }
 
