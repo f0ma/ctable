@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CTable Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="ctable.js"></script>
+</head>
+<body>
+
+<div id="mainbox"></div>
+
+<script>
+$(function() {
+    var t = new CTable({endpoint: "demo.data.json"});
+    t.set_record_class(CDivEditorRecord);
+    t.add_column_class(CSubtableColumn,{title:'Exp', table: function(parent_record){
+    
+        var tt = new CTable({endpoint: "demo.data.byid.json"});
+    
+        tt.set_record_class(CDivEditorRecord);
+        tt.add_column_class(CTextDataColumn,{column:'workplace', title:'Workplace', validate:"\\S+"});
+        tt.add_column_class(CTextDataColumn,{column:'status', title:'Status', validate:"\\S+"});
+        
+        return tt;
+    }});
+    
+    t.add_column_class(CColumn,{column:'id',
+                                title:'ID',
+                                visible_editor:false,
+                                visible_column:false});
+    
+    t.add_column_class(CTextDataColumn,{column:'firstname',
+                                        title:'Firstname',
+                                        validate:"\\S+"});
+    
+    t.add_column_class(CTextDataColumn,{column:'lastname',
+                                        title:'Lastname',
+                                        validate:"\\S+"});
+    
+    t.add_column_class(CSelectColumn,{column:'sex',
+                                      title:'Sex',
+                                      options:[['m','М'], ['f','F']],
+                                      validate: true});
+    
+    t.add_column_class(CCommandColumn,{});
+    
+    t.set_pagination_class(CPagination,{});
+    
+    t.build_table($('#mainbox'));
+    
+    t.select();
+});
+</script>
+</body>

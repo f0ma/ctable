@@ -1,0 +1,14 @@
+{
+"Result":"OK",
+"Records":[
+    {
+    "workplace":"room 1",
+    "status":"in use"
+    },
+    {
+    "workplace":"room 2",
+    "status":"not in use"
+    }
+]
+} 
+ 

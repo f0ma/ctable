@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.3</em>
+            <em>Version: 0.3.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -2021,11 +2021,11 @@ class CTable {
                 self.total_records_count = data.TotalRecordCount;
                 self.fill_table();
             } else {
-                alert(this.lang.error + data.Message);
+                alert(self.lang.error + data.Message);
             }
          })
          .fail(function() {
-             alert(this.lang.server_side_error);
+             alert(self.lang.server_side_error);
          })
          .always(function() {
 
@@ -2069,12 +2069,12 @@ class CTable {
             if (data.Result == &#x27;OK&#x27;) {
                 self.select();
             } else {
-                alert(this.lang.error + data.Message);
+                alert(self.lang.error + data.Message);
             }
 
         }, &quot;json&quot;)
         .fail(function() {
-            alert(this.lang.server_side_error);
+            alert(self.lang.server_side_error);
         })
         .always(function() {
 
@@ -2123,12 +2123,12 @@ class CTable {
             if (data.Result == &#x27;OK&#x27;) {
                 self.select();
             } else {
-                alert(this.lang.error + data.Message);
+                alert(self.lang.error + data.Message);
             }
 
         }, &quot;json&quot;)
         .fail(function() {
-            alert(this.lang.server_side_error);
+            alert(self.lang.server_side_error);
         })
         .always(function() {
 
@@ -2170,12 +2170,12 @@ class CTable {
             if (data.Result == &#x27;OK&#x27;) {
                 self.select();
             } else {
-                alert(this.lang.error + data.Message);
+                alert(self.lang.error + data.Message);
             }
 
         }, &quot;json&quot;)
         .fail(function() {
-            alert(this.lang.server_side_error);
+            alert(self.lang.server_side_error);
         })
         .always(function() {
 
@@ -2232,12 +2232,12 @@ class CTable {
                     self.options_url_cache[str_params] = data.Options;
                     on_options_loaded(self.options_url_cache[str_params]);
                 } else {
-                    alert(this.lang.error + data.Message);
+                    alert(self.lang.error + data.Message);
                 }
 
             }, &quot;json&quot;)
             .fail(function() {
-                alert(this.lang.server_side_error);
+                alert(self.lang.server_side_error);
             })
             .always(function() {
 
