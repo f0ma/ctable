@@ -6,6 +6,17 @@
  * @module ctable
  */
 
+function TextRender(elem, record, column){
+    elem.text(record.record_field(column));
+}
+
+function HTMLRender(elem, record, column){
+    elem.html(record.record_field(column));
+}
+
+function EmptyRender(elem, record, column){
+}
+
 /**
  * Base column class.
  *
@@ -32,11 +43,11 @@ class CColumn {
      * @param {int} [options.width] Column width in percents.
      * @param {int} [options.max_width] Column width in px.
      * @param {Boolean} [options.break_words] Set word wrap in cell to break-words.
-     * @param {Boolean} [options.html] Render content as html.
      * @param {String} [options.title] Column title.
      * @param {String} [options.column] Column name in record.
      * @param {String} [options.footnote] Footnote text (if record class supported).
      * @param {String} [options.editor_width_class] Editor width class (if record class supported).
+     * @param {Function} [options.render] Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender, EmptyRender.
      *
      */
 
@@ -52,6 +63,12 @@ class CColumn {
         this.summary_elem = null;
 
         this.editor = null;
+        
+        if(typeof(this.options.render) != "undefined"){
+            this.render = this.options.render;
+        } else {
+            this.render = TextRender;
+        }
     }
 
     /**
@@ -130,7 +147,7 @@ class CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-
+        
         if(typeof(this.options.max_width) != "undefined"){
             this.cell_elem.css({'max-width':this.options.max_width+'px'});    
         }
@@ -139,12 +156,7 @@ class CColumn {
             this.cell_elem.css({'word-wrap':'break-word'});    
         }
 
-        if(typeof(this.options.html) != "undefined" && this.options.html){
-            this.cell_elem.html(this.record.record_field(this.options.column));
-        } else {
-            this.cell_elem.text(this.record.record_field(this.options.column));
-        }
-
+        this.render(elem, this.record, this.options.column);
     }
 
     /**
@@ -259,7 +271,7 @@ class CTextDataColumn extends CColumn {
      * @param {int} [options.width] Column width in percents.
      * @param {int} [options.max_width] Column width in px.
      * @param {Boolean} [options.break_words] Set word wrap in cell to break-words.
-     * @param {Boolean} [options.html] Render content as html.
+     * @param {Function} [options.render] Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender.
      * @param {String} [options.title] Column title.
      * @param {Boolean} [options.no_sort] Disable sorting in this column.
      * @param {Boolean} [options.no_search] Disable search field by this column.
@@ -902,6 +914,100 @@ class CCommandColumn extends CColumn {
 }
 
 /**
+ * Indication column (show status based on custom function call result)
+ *
+ * See {{#crossLink "CIndicatorColumn/constructor"}}{{/crossLink}} for options list.
+ *
+ * @class CIndicatorColumn
+ * @constructor
+ * @extends CColumn
+ * 
+ * @example
+ *     table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });
+ */
+
+
+class CIndicatorColumn extends CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     * @param {Function} [options.informer] function(record, column) returns one from "" or "none", "primary", "info", "success", "warning", "danger".
+     */
+
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        this.render = EmptyRender;
+    }
+
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        super.build_cell(elem);
+        if (typeof(this.options.informer) != "undefined"){
+            var state = this.options.informer(this.record, this.options.column);
+            if (state == "" || state == "none"){
+                elem.html('');
+                return;
+            }
+            if (state == "primary"){
+                elem.html('<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>');
+                return;
+            }
+            if (state == "info"){
+                elem.html('<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>');
+                return;
+            }
+            if (state == "success" || state == "ok"){
+                elem.html('<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>');
+                return;
+            }
+            if (state == "warning"){
+                elem.html('<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>');
+                return;
+            }
+            if (state == "danger" || state == "error"){
+                elem.html('<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>');
+                return;
+            }
+        }
+    }
+
+    /**
+     * Column is visible?.
+     * @method visible_column
+     * @return {Boolean} Always true
+     *
+     */
+
+    visible_column(){
+        return true;
+    }
+
+    /**
+     * Editor is visible?.
+     * @method visible_editor
+     * @return {Boolean} Always false
+     *
+     */
+
+    visible_editor(){
+        return false;
+    }
+}
+
+
+/**
  * Show subtable button column
  *
  * See {{#crossLink "CSubtableColumn/constructor"}}{{/crossLink}} for options list.
@@ -916,11 +1022,12 @@ class CCommandColumn extends CColumn {
  *
  *            var child_table = new CTable({endpoint: "/call.php"});
  *
- *            child_table.set_record_class(CDivEditorRecord);
+ *            child_table.set_record_class(CAdaptiveRecord);
  *            child_table.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false});
  *            child_table.add_column_class(CSelectColumn, {column:'name', title: 'Name', load:'person_id', endpoint:'/person.php'});
  *            child_table.add_column_class(CCommandColumn,{});
  *            child_table.set_filter('person_id', record.record_field('id'));
+ *            child_table.add_predefined_field('person_id', record.record_field('id'));
  *
  *            return child_table;
  *      }});
@@ -1236,8 +1343,6 @@ class CRecord {
      */
 
     open_subrecord(close_handler){
-        console.log("open_subrecord");
-        console.log(close_handler);
         if (this.subrecord_row != null){
             this.close_subrecord();
         }
@@ -1254,14 +1359,12 @@ class CRecord {
      */
 
     close_subrecord(){
-        console.log("close_subrecord");
         if (this.subrecord_row != null){
             this.subrecord_row.remove();
             this.subrecord_row = null;
             this.row.removeClass('is-selected');
             if(this.subrecord_close_handler != null)
             {
-                console.log("subrecord_close_handler");
                 this.subrecord_close_handler();
                 this.subrecord_close_handler = null;
             }
@@ -1305,17 +1408,17 @@ class CRecord {
 /**
  * Div-based editor with floats and footnotes.
  *
- * See {{#crossLink "CDivEditorRecord/constructor"}}{{/crossLink}} for options list.
+ * See {{#crossLink "CAdaptiveRecord/constructor"}}{{/crossLink}} for options list.
  *
- * @class CDivEditorRecord
+ * @class CAdaptiveRecord
  * @constructor
  * @extends CRecord
  *
  * @example
- *     table.set_record_class(CDivEditorRecord, {});
+ *     table.set_record_class(CAdaptiveRecord, {});
  */
 
-class CDivEditorRecord extends CRecord {
+class CAdaptiveRecord extends CRecord {
 
     /**
      * Create record object. Should not be called directly.
@@ -1323,17 +1426,76 @@ class CDivEditorRecord extends CRecord {
      * @method constructor
      * @param {Object} table Parent CTable object.
      * @param {Object} [options] Column options:
-     * @param {String} [options.width_class] Column width style (Bulma `is-4` for default)
+     * @param {String} [options.editor_width_class] Editor width class (Bulma `is-4` for default)
+     * @param {String} [options.record_width_class] Column width class (Bulma `is-4` for default)
+     * @param {Boolean} [options.non_adaptive_record] Disable adaptive records
+     * @param {Boolean} [options.non_adaptive_editor] Disable adaptive editors
+     *
+     */
+    
+    /**
+     * Build table row.
+     * @method build_record
      *
      */
 
+    build_record(){
+        
+        if (typeof(this.options.non_adaptive_record) != 'undefined' && this.options.non_adaptive_record){ 
+            super.build_record();
+            return;
+        }
+        
+        var record_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
+        var record_cell = $('<div style="columns"></div>').appendTo(record_row);
+        
+        var width_class = 'is-4';
+        if (typeof(this.options.record_width_class) != 'undefined'){
+            width_class = this.options.record_width_class;
+        }
+        
+        for (var i in this.columns){
+            if (this.columns[i].visible_column()){
+                
+                var column_width_class = width_class;
+                if(typeof(this.columns[i].options.record_width_class) != "undefined"){
+                    column_width_class = this.columns[i].options.editor_width_class;
+                }
+                
+                var rightfloat = "";
+                if(typeof(this.columns[i].save_record) != 'undefined'){
+                    rightfloat = "float: right;"
+                }
+                
+                var data_cell = $('<div class="column '+column_width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(record_cell);
+                this.columns[i].build_cell(data_cell);
+            }
+        }
+        if(typeof(this.options.on_build_record) != "undefined"){
+            this.options.on_build_record(this.row, this.record_field());
+        }
+    }
+    
+    /**
+     * Build editor row.
+     * @method build_editor
+     * @param {Boolean} is_new_record Build editor for new row.
+     *
+     */
+    
     build_editor(is_new_record = false){
+
+        if (typeof(this.options.non_adaptive_editor) != 'undefined' && this.options.non_adaptive_editor){ 
+            super.build_editor(is_new_record);
+            return;
+        }
+
         var editor_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
-        var editor_cell = $('<div style="columns"></td>').appendTo(editor_row);
+        var editor_cell = $('<div style="columns"></div>').appendTo(editor_row);
 
         var width_class = 'is-4';
-        if (typeof(this.options.width_class) != 'undefined'){
-            width_class = this.options.width_class;
+        if (typeof(this.options.editor_width_class) != 'undefined'){
+            width_class = this.options.editor_width_class;
         }
 
         for (var i in this.columns){
@@ -1599,7 +1761,7 @@ class CPagination{
  * @example
  *      var table = new CTable({endpoint: "/demo.php"});
  *
- *      table.set_record_class(CDivEditorRecord);
+ *      table.set_record_class(CAdaptiveRecord);
  *      table.add_column_class(CColumn,{column:'id',
  *                                      title:'ID',
  *                                      visible_editor:false,
@@ -1665,6 +1827,8 @@ class CTable {
         this.column_orders = {};
         this.column_filters = {};
         this.column_searches = {};
+        
+        this.predefined_fields = {};
 
         this.options_url_cache = {};
 
@@ -1882,6 +2046,18 @@ class CTable {
     }
 
     /**
+     * Add predefined field value for all insert, update and delete requests in this table.
+     * @method add_predefined_field
+     * @param {String} column Column name.
+     * @param {String} value Column value.
+     *
+     */
+    
+    add_predefined_field(column, value){
+        this.predefined_fields[column] = value;
+    }
+    
+    /**
      * Get data from server.
      *
      * Making AJAX POST request to `options.endpoint` URL (post field `select`)
@@ -1969,9 +2145,12 @@ class CTable {
 
         var self = this;
 
-        var record_data = record.editor_values();
-        if (record_data == null) return;
+        var editor_data = record.editor_values();
+        
+        if (editor_data == null) return;
 
+        var record_data = Object.assign({}, editor_data, this.predefined_fields);
+        
         $.ajax({
             type: "POST",
             url: this.options.endpoint,
@@ -2021,7 +2200,7 @@ class CTable {
 
         var source_record_data = record.record_field();
 
-        var record_data = Object.assign({}, source_record_data, updated_record_data);
+        var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
 
         $.ajax({
             type: "POST",
@@ -2066,11 +2245,13 @@ class CTable {
     remove(record){
 
         var self = this;
+        
+        var record_data = Object.assign({}, self.data[record.data_index], this.predefined_fields);
 
         $.ajax({
             type: "POST",
             url: this.options.endpoint,
-            data: {"delete":JSON.stringify(self.data[record.data_index])},
+            data: {"delete":JSON.stringify(record_data)},
             dataType: 'json'
         })
         .done(function(data) {

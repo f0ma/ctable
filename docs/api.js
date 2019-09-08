@@ -1,9 +1,10 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "CAdaptiveRecord",
         "CColumn",
         "CCommandColumn",
-        "CDivEditorRecord",
+        "CIndicatorColumn",
         "CPagination",
         "CRecord",
         "CSelectColumn",

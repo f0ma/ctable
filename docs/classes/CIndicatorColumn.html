@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CTextDataColumn - CTable</title>
+    <title>CIndicatorColumn - CTable</title>
     <link rel="stylesheet" href="https://yui-s.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,7 +86,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CTextDataColumn Class</h1>
+<h1>CIndicatorColumn Class</h1>
 <div class="box meta">
 
         <div class="extends">
@@ -94,7 +94,7 @@
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l246"><code>ctable&#x2F;ctable.js:246</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l916"><code>ctable&#x2F;ctable.js:916</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -103,15 +103,15 @@
 
 
 <div class="box intro">
-    <p>Text input column class.</p>
-<p>See <a href="../classes/CTextDataColumn.html#method_constructor" class="crosslink">constructor</a> for options list.</p>
+    <p>Indication column (show status based on custom function call result)</p>
+<p>See <a href="../classes/CIndicatorColumn.html#method_constructor" class="crosslink">constructor</a> for options list.</p>
 
 </div>
 
     <div class="constructor">
         <h2>Constructor</h2>
-<div id="method_CTextDataColumn" class="method item">
-    <h3 class="name"><code>CTextDataColumn</code></h3>
+<div id="method_CIndicatorColumn" class="method item">
+    <h3 class="name"><code>CIndicatorColumn</code></h3>
 
         <span class="paren">()</span>
 
@@ -125,7 +125,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l246"><code>ctable&#x2F;ctable.js:246</code></a>
+        <a href="../files/ctable_ctable.js.html#l916"><code>ctable&#x2F;ctable.js:916</code></a>
         </p>
 
 
@@ -143,7 +143,7 @@
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code>table.add_column_class(CTextDataColumn,{column:'firstname', title:'Firstname', validate:&quot;\\S+&quot;});</code></pre>
+                <pre class="code prettyprint"><code>table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });</code></pre>
 
             </div>
         </div>
@@ -201,14 +201,6 @@
                                 <a href="#method_record_changed">record_changed</a>
 
                             </li>
-                            <li class="index-item method private">
-                                <a href="#method_set_search_filter">set_search_filter</a>
-
-                            </li>
-                            <li class="index-item method private">
-                                <a href="#method_sort_button_click">sort_button_click</a>
-
-                            </li>
                             <li class="index-item method inherited">
                                 <a href="#method_value_changed">value_changed</a>
 
@@ -235,7 +227,7 @@
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_build_cell" class="method item inherited">
+<div id="method_build_cell" class="method item">
     <h3 class="name"><code>build_cell</code></h3>
 
         <div class="args">
@@ -254,9 +246,12 @@
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/CColumn.html#method_build_cell">CColumn</a>:
-        <a href="../files/ctable_ctable.js.html#l141"><code>ctable&#x2F;ctable.js:141</code></a>
+            <p>Inherited from
+            <a href="../classes/CColumn.html#method_build_cell">
+                CColumn
+            </a>
+            but overwritten in
+        <a href="../files/ctable_ctable.js.html#l948"><code>ctable&#x2F;ctable.js:948</code></a>
         </p>
 
 
@@ -289,7 +284,7 @@
 
 
 </div>
-<div id="method_build_editor" class="method item">
+<div id="method_build_editor" class="method item inherited">
     <h3 class="name"><code>build_editor</code></h3>
 
         <div class="args">
@@ -311,12 +306,9 @@
 
 
     <div class="meta">
-            <p>Inherited from
-            <a href="../classes/CColumn.html#method_build_editor">
-                CColumn
-            </a>
-            but overwritten in
-        <a href="../files/ctable_ctable.js.html#l396"><code>ctable&#x2F;ctable.js:396</code></a>
+                <p>Inherited from
+                <a href="../classes/CColumn.html#method_build_editor">CColumn</a>:
+        <a href="../files/ctable_ctable.js.html#l162"><code>ctable&#x2F;ctable.js:162</code></a>
         </p>
 
 
@@ -360,7 +352,7 @@
 
 
 </div>
-<div id="method_build_options" class="method item">
+<div id="method_build_options" class="method item inherited">
     <h3 class="name"><code>build_options</code></h3>
 
         <div class="args">
@@ -379,12 +371,9 @@
 
 
     <div class="meta">
-            <p>Inherited from
-            <a href="../classes/CColumn.html#method_build_options">
-                CColumn
-            </a>
-            but overwritten in
-        <a href="../files/ctable_ctable.js.html#l344"><code>ctable&#x2F;ctable.js:344</code></a>
+                <p>Inherited from
+                <a href="../classes/CColumn.html#method_build_options">CColumn</a>:
+        <a href="../files/ctable_ctable.js.html#l130"><code>ctable&#x2F;ctable.js:130</code></a>
         </p>
 
 
@@ -392,7 +381,7 @@
     </div>
 
     <div class="description">
-        <p>Build options part of column with search input.</p>
+        <p>Build options part of column.</p>
 
     </div>
 
@@ -471,7 +460,7 @@
 
 
 </div>
-<div id="method_build_title" class="method item">
+<div id="method_build_title" class="method item inherited">
     <h3 class="name"><code>build_title</code></h3>
 
         <div class="args">
@@ -490,12 +479,9 @@
 
 
     <div class="meta">
-            <p>Inherited from
-            <a href="../classes/CColumn.html#method_build_title">
-                CColumn
-            </a>
-            but overwritten in
-        <a href="../files/ctable_ctable.js.html#l292"><code>ctable&#x2F;ctable.js:292</code></a>
+                <p>Inherited from
+                <a href="../classes/CColumn.html#method_build_title">CColumn</a>:
+        <a href="../files/ctable_ctable.js.html#l116"><code>ctable&#x2F;ctable.js:116</code></a>
         </p>
 
 
@@ -503,7 +489,7 @@
     </div>
 
     <div class="description">
-        <p>Build title part of column with sorting.</p>
+        <p>Build title part of column.</p>
 
     </div>
 
@@ -558,7 +544,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l261"><code>ctable&#x2F;ctable.js:261</code></a>
+        <a href="../files/ctable_ctable.js.html#l932"><code>ctable&#x2F;ctable.js:932</code></a>
         </p>
 
 
@@ -608,38 +594,6 @@
 
                         <ul class="params-list">
                             <li class="param">
-                                    <code class="param-name">column</code>
-                                    <span class="type">String</span>
-
-                                <div class="param-description">
-                                    <p>Column name in record.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[visible_column]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Show column in table.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[visible_editor]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Show editor for this column.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
                                     <code class="param-name optional">[width]</code>
                                     <span class="type">Int</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
@@ -651,111 +605,12 @@
 
                             </li>
                             <li class="param">
-                                    <code class="param-name optional">[max_width]</code>
-                                    <span class="type">Int</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Column width in px.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[break_words]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Set word wrap in cell to break-words.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[render]</code>
+                                    <code class="param-name optional">[informer]</code>
                                     <span class="type">Function</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
-                                    <p>Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[title]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Column title.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[no_sort]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Disable sorting in this column.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[no_search]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Disable search field by this column.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[input]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Input type: &quot;input&quot; (default) or &quot;textarea&quot;.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[validate]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Validate input by this Regexp. Default no validate.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[default_value]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Default value for new record.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[footnote]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Footnote text (if record class supported).</p>
+                                    <p>function(record, column) returns one from &quot;&quot; or &quot;none&quot;, &quot;primary&quot;, &quot;info&quot;, &quot;success&quot;, &quot;warning&quot;, &quot;danger&quot;.</p>
 
                                 </div>
 
@@ -811,7 +666,7 @@
 
 
 </div>
-<div id="method_is_valid" class="method item">
+<div id="method_is_valid" class="method item inherited">
     <h3 class="name"><code>is_valid</code></h3>
 
         <span class="paren">()</span>
@@ -827,12 +682,9 @@
 
 
     <div class="meta">
-            <p>Inherited from
-            <a href="../classes/CColumn.html#method_is_valid">
-                CColumn
-            </a>
-            but overwritten in
-        <a href="../files/ctable_ctable.js.html#l372"><code>ctable&#x2F;ctable.js:372</code></a>
+                <p>Inherited from
+                <a href="../classes/CColumn.html#method_is_valid">CColumn</a>:
+        <a href="../files/ctable_ctable.js.html#l205"><code>ctable&#x2F;ctable.js:205</code></a>
         </p>
 
 
@@ -850,7 +702,7 @@
 
             <div class="returns-description">
                         <span class="type">Boolean</span>:
-                    <p>If options.validate is set return true if re.test is true.</p>
+                    <p>Always true.</p>
 
             </div>
         </div>
@@ -881,70 +733,6 @@
 
     <div class="description">
         <p>On record changed (in another column) handler.</p>
-
-    </div>
-
-
-
-
-</div>
-<div id="method_set_search_filter" class="method item private">
-    <h3 class="name"><code>set_search_filter</code></h3>
-
-        <span class="paren">()</span>
-
-
-
-        <span class="flag private">private</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/ctable_ctable.js.html#l360"><code>ctable&#x2F;ctable.js:360</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Search input change handler.</p>
-
-    </div>
-
-
-
-
-</div>
-<div id="method_sort_button_click" class="method item private">
-    <h3 class="name"><code>sort_button_click</code></h3>
-
-        <span class="paren">()</span>
-
-
-
-        <span class="flag private">private</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/ctable_ctable.js.html#l313"><code>ctable&#x2F;ctable.js:313</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Sort button click handler.</p>
 
     </div>
 
@@ -983,7 +771,7 @@
 
 
 </div>
-<div id="method_visible_column" class="method item inherited">
+<div id="method_visible_column" class="method item">
     <h3 class="name"><code>visible_column</code></h3>
 
         <span class="paren">()</span>
@@ -999,9 +787,12 @@
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/CColumn.html#method_visible_column">CColumn</a>:
-        <a href="../files/ctable_ctable.js.html#l74"><code>ctable&#x2F;ctable.js:74</code></a>
+            <p>Inherited from
+            <a href="../classes/CColumn.html#method_visible_column">
+                CColumn
+            </a>
+            but overwritten in
+        <a href="../files/ctable_ctable.js.html#l986"><code>ctable&#x2F;ctable.js:986</code></a>
         </p>
 
 
@@ -1009,7 +800,7 @@
     </div>
 
     <div class="description">
-        <p>Return visibility status of this column.</p>
+        <p>Column is visible?.</p>
 
     </div>
 
@@ -1019,14 +810,14 @@
 
             <div class="returns-description">
                         <span class="type">Boolean</span>:
-                    <p>Is visible?</p>
+                    <p>Always true</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_visible_editor" class="method item inherited">
+<div id="method_visible_editor" class="method item">
     <h3 class="name"><code>visible_editor</code></h3>
 
         <span class="paren">()</span>
@@ -1042,9 +833,12 @@
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/CColumn.html#method_visible_editor">CColumn</a>:
-        <a href="../files/ctable_ctable.js.html#l88"><code>ctable&#x2F;ctable.js:88</code></a>
+            <p>Inherited from
+            <a href="../classes/CColumn.html#method_visible_editor">
+                CColumn
+            </a>
+            but overwritten in
+        <a href="../files/ctable_ctable.js.html#l997"><code>ctable&#x2F;ctable.js:997</code></a>
         </p>
 
 
@@ -1052,7 +846,7 @@
     </div>
 
     <div class="description">
-        <p>Return editor visibility status of this column.</p>
+        <p>Editor is visible?.</p>
 
     </div>
 
@@ -1062,7 +856,7 @@
 
             <div class="returns-description">
                         <span class="type">Boolean</span>:
-                    <p>Show editor?</p>
+                    <p>Always false</p>
 
             </div>
         </div>

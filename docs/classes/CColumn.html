@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.3.1</em>
+            <em>Version: 0.3.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,9 +38,10 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/CAdaptiveRecord.html">CAdaptiveRecord</a></li>
                                 <li><a href="../classes/CColumn.html">CColumn</a></li>
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
-                                <li><a href="../classes/CDivEditorRecord.html">CDivEditorRecord</a></li>
+                                <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
                                 <li><a href="../classes/CPagination.html">CPagination</a></li>
                                 <li><a href="../classes/CRecord.html">CRecord</a></li>
                                 <li><a href="../classes/CSelectColumn.html">CSelectColumn</a></li>
@@ -90,7 +91,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l9"><code>ctable&#x2F;ctable.js:9</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l20"><code>ctable&#x2F;ctable.js:20</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -121,7 +122,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l9"><code>ctable&#x2F;ctable.js:9</code></a>
+        <a href="../files/ctable_ctable.js.html#l20"><code>ctable&#x2F;ctable.js:20</code></a>
         </p>
 
 
@@ -244,7 +245,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l124"><code>ctable&#x2F;ctable.js:124</code></a>
+        <a href="../files/ctable_ctable.js.html#l141"><code>ctable&#x2F;ctable.js:141</code></a>
         </p>
 
 
@@ -301,7 +302,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l150"><code>ctable&#x2F;ctable.js:150</code></a>
+        <a href="../files/ctable_ctable.js.html#l162"><code>ctable&#x2F;ctable.js:162</code></a>
         </p>
 
 
@@ -366,7 +367,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l113"><code>ctable&#x2F;ctable.js:113</code></a>
+        <a href="../files/ctable_ctable.js.html#l130"><code>ctable&#x2F;ctable.js:130</code></a>
         </p>
 
 
@@ -420,7 +421,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l170"><code>ctable&#x2F;ctable.js:170</code></a>
+        <a href="../files/ctable_ctable.js.html#l182"><code>ctable&#x2F;ctable.js:182</code></a>
         </p>
 
 
@@ -474,7 +475,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l99"><code>ctable&#x2F;ctable.js:99</code></a>
+        <a href="../files/ctable_ctable.js.html#l116"><code>ctable&#x2F;ctable.js:116</code></a>
         </p>
 
 
@@ -534,7 +535,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l23"><code>ctable&#x2F;ctable.js:23</code></a>
+        <a href="../files/ctable_ctable.js.html#l34"><code>ctable&#x2F;ctable.js:34</code></a>
         </p>
 
 
@@ -640,17 +641,6 @@
 
                             </li>
                             <li class="param">
-                                    <code class="param-name optional">[html]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Render content as html.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
                                     <code class="param-name optional">[title]</code>
                                     <span class="type">String</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
@@ -694,6 +684,17 @@
                                 </div>
 
                             </li>
+                            <li class="param">
+                                    <code class="param-name optional">[render]</code>
+                                    <span class="type">Function</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender, EmptyRender.</p>
+
+                                </div>
+
+                            </li>
                         </ul>
                 </li>
             </ul>
@@ -720,7 +721,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l213"><code>ctable&#x2F;ctable.js:213</code></a>
+        <a href="../files/ctable_ctable.js.html#l225"><code>ctable&#x2F;ctable.js:225</code></a>
         </p>
 
 
@@ -763,7 +764,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l193"><code>ctable&#x2F;ctable.js:193</code></a>
+        <a href="../files/ctable_ctable.js.html#l205"><code>ctable&#x2F;ctable.js:205</code></a>
         </p>
 
 
@@ -803,7 +804,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l204"><code>ctable&#x2F;ctable.js:204</code></a>
+        <a href="../files/ctable_ctable.js.html#l216"><code>ctable&#x2F;ctable.js:216</code></a>
         </p>
 
 
@@ -834,7 +835,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l181"><code>ctable&#x2F;ctable.js:181</code></a>
+        <a href="../files/ctable_ctable.js.html#l193"><code>ctable&#x2F;ctable.js:193</code></a>
         </p>
 
 
@@ -868,7 +869,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l57"><code>ctable&#x2F;ctable.js:57</code></a>
+        <a href="../files/ctable_ctable.js.html#l74"><code>ctable&#x2F;ctable.js:74</code></a>
         </p>
 
 
@@ -911,7 +912,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l71"><code>ctable&#x2F;ctable.js:71</code></a>
+        <a href="../files/ctable_ctable.js.html#l88"><code>ctable&#x2F;ctable.js:88</code></a>
         </p>
 
 
@@ -954,7 +955,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l85"><code>ctable&#x2F;ctable.js:85</code></a>
+        <a href="../files/ctable_ctable.js.html#l102"><code>ctable&#x2F;ctable.js:102</code></a>
         </p>
 
 
