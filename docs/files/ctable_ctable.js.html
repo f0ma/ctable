@@ -444,7 +444,7 @@ class CTextDataColumn extends CColumn {
         this.options_elem = elem;
 
         if(typeof(this.options.no_search) == &quot;undefined&quot; || !this.options.no_search){
-            this.search_field = $(&#x27;&lt;input class=&quot;input&quot;&gt;&lt;/input&gt;&#x27;).appendTo(this.options_elem);
+            this.search_field = $(&#x27;&lt;input class=&quot;input&quot; type=&quot;search&quot;&gt;&lt;/input&gt;&#x27;).appendTo(this.options_elem);
             this.search_field.change($.proxy(this.set_search_filter, this));
         }
     }

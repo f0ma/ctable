@@ -352,7 +352,7 @@ class CTextDataColumn extends CColumn {
         this.options_elem = elem;
 
         if(typeof(this.options.no_search) == "undefined" || !this.options.no_search){
-            this.search_field = $('<input class="input"></input>').appendTo(this.options_elem);
+            this.search_field = $('<input class="input" type="search"></input>').appendTo(this.options_elem);
             this.search_field.change($.proxy(this.set_search_filter, this));
         }
     }
