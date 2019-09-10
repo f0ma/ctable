@@ -96,7 +96,13 @@ $(function() {
                                       editor_width_class: 'is-2'});
     
     t.add_column_class(CCommandColumn,{title:'Actions', editor_width_class: 'is-2',
-                                            common_actions: [{action: function(record){console.log(record.table.selected_records())},
+                                            common_actions: [{action: function(record){
+                                                                  var textline = "Selected ID: ";
+                                                                  record.table.selected_records().forEach(function(item){
+                                                                      textline+=item.record_field('id')+" ";
+                                                                  });
+                                                                  alert(textline);
+                                                              },
                                                               tooltip: "Show selected records"}]});
     
     t.set_pagination_class(CPagination,{});
