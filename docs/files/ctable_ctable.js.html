@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.3.2</em>
+            <em>Version: 0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/CAdaptiveRecord.html">CAdaptiveRecord</a></li>
+                                <li><a href="../classes/CCheckboxColumn.html">CCheckboxColumn</a></li>
                                 <li><a href="../classes/CColumn.html">CColumn</a></li>
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
@@ -396,7 +397,7 @@ class CTextDataColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == &quot;undefined&quot; || !this.options.no_sort){
 
-            this.sort_button = $(&#x27;&lt;a class=&quot;button is-small is-pulled-right&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;/&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;/&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.title_elem);
+            this.sort_button = $(&#x27;&lt;a class=&quot;button is-small is-pulled-right&quot; title=&quot;&#x27;+this.table.lang.sort_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;/&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;/&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -798,24 +799,27 @@ class CCommandColumn extends CColumn {
         var buttons_div = $(&#x27;&lt;div class=&quot;buttons is-right&quot; style=&quot;flex-wrap: nowrap;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.title_elem);
 
         if(typeof(this.options.no_add) == &quot;undefined&quot; || this.options.no_add == false){
-            $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-plus-square&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
+            $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot; title=&quot;&#x27;+this.table.lang.add_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-plus-square&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
         }
 
         if(typeof(this.options.no_refresh) == &quot;undefined&quot; || this.options.no_refresh == false){
-            $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;fa fa-sync&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.refresh_table, this));
+            $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot; title=&quot;&#x27;+this.table.lang.reload_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;fa fa-sync&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.refresh_table, this));
         }
 
         if(typeof(this.options.common_actions) != &quot;undefined&quot;){
             for (var i in this.options.common_actions){
                 var bstyle = &#x27;is-info is-outlined&#x27;;
-                var istyle = &#x27;far fa-plus-square&#x27;;
+                var istyle = &#x27;fa fa-circle&#x27;;
                 if (typeof(this.options.common_actions[i].button_class) != &quot;undefined&quot;){
                     bstyle = this.options.common_actions[i].button_class;
                 }
                 if (typeof(this.options.common_actions[i].fa_class) != &quot;undefined&quot;){
                     istyle = this.options.common_actions[i].fa_class;
                 }
-                $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click({record:this.record}, this.options.common_actions[i].action);
+                
+                var self = this;
+                
+                $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot; title=&quot;&#x27;+this.options.common_actions[i].tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
             }
         }
     }
@@ -865,12 +869,12 @@ class CCommandColumn extends CColumn {
         var buttons_div = $(&#x27;&lt;div class=&quot;buttons is-right&quot; style=&quot;flex-wrap: nowrap;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.cell_elem);
 
         if(typeof(this.options.no_edit) == &quot;undefined&quot; || this.options.no_edit == false){
-            this.show_editor_button = $(&#x27;&lt;a class=&quot;button is-warning is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-edit&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
-            this.close_editor_button = $(&#x27;&lt;a class=&quot;button is-warning&quot; style=&quot;display:none;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-edit&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.close_edit_record_editor, this));
+            this.show_editor_button = $(&#x27;&lt;a class=&quot;button is-warning is-outlined&quot; title=&quot;&#x27;+this.table.lang.edit_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-edit&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
+            this.close_editor_button = $(&#x27;&lt;a class=&quot;button is-warning&quot; title=&quot;&#x27;+this.table.lang.edit_tooltip+&#x27;&quot; style=&quot;display:none;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-edit&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.close_edit_record_editor, this));
         }
 
         if(typeof(this.options.no_delete) == &quot;undefined&quot; || this.options.no_delete == false){
-            $(&#x27;&lt;a class=&quot;button is-danger is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-trash-alt&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.delete_record, this));
+            $(&#x27;&lt;a class=&quot;button is-danger is-outlined&quot; title=&quot;&#x27;+this.table.lang.delete_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-trash-alt&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.delete_record, this));
         }
 
         if(typeof(this.options.item_actions) != &quot;undefined&quot;){
@@ -883,7 +887,7 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.item_actions[i].fa_class) != &quot;undefined&quot;){
                     istyle = this.options.item_actions[i].fa_class;
                 }
-                $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
+                $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot; title=&quot;&#x27;+this.options.item_actions[i].tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
             }
         }
 
@@ -1034,7 +1038,6 @@ class CIndicatorColumn extends CColumn {
 
     constructor(table, record, options = {}) {
         super(table, record, options);
-        this.render = EmptyRender;
     }
 
     /**
@@ -1097,6 +1100,104 @@ class CIndicatorColumn extends CColumn {
         return false;
     }
 }
+
+/**
+ * Column for batch row selector 
+ *
+ * See {{#crossLink &quot;CCheckboxColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CCheckboxColumn
+ * @constructor
+ * @extends CColumn
+ * 
+ * @example
+ *     table.add_column_class(CCheckboxColumn);
+ */
+
+
+class CCheckboxColumn extends CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     */
+
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        this.checkbox_row = null;
+        this.checkbox_head = null;
+    }
+    
+    /**
+     * This row is selected?
+     * @method is_selected
+     * @param {Boolean}
+     *
+     */
+    
+    is_selected(){
+        return this.checkbox_row.prop(&#x27;checked&#x27;);
+    }
+
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        super.build_cell(elem);
+        elem.css(&#x27;vertical-align&#x27;,&#x27;middle&#x27;);
+        elem.html(&#x27;&lt;label class=&quot;checkbox&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;checkbox-column-sel&quot;&gt;&lt;/label&gt;&#x27;);
+        this.checkbox_row = elem.find(&#x27;input&#x27;);
+    }
+
+    /**
+     * Build options part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_options(elem){
+        super.build_options(elem);
+        elem.css(&#x27;vertical-align&#x27;,&#x27;middle&#x27;);
+        elem.html(&#x27;&lt;label class=&quot;checkbox&quot; title=&quot;&#x27;+this.table.lang.select_all_tooltip+&#x27;&quot;&gt;&lt;input type=&quot;checkbox&quot;&gt;&lt;/label&gt;&#x27;);
+        this.checkbox_head = elem.find(&#x27;input&#x27;);
+        this.checkbox_head.change(function() {
+            $(&#x27;.checkbox-column-sel&#x27;).prop(&#x27;checked&#x27;, this.checked);
+        });
+    }
+
+    /**
+     * Column is visible?.
+     * @method visible_column
+     * @return {Boolean} Always true
+     *
+     */
+
+    visible_column(){
+        return true;
+    }
+
+    /**
+     * Editor is visible?.
+     * @method visible_editor
+     * @return {Boolean} Always false
+     *
+     */
+
+    visible_editor(){
+        return false;
+    }
+}
+
 
 
 /**
@@ -1180,7 +1281,7 @@ class CSubtableColumn extends CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-        this.show_subtable_button = $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-caret-square-down&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
+        this.show_subtable_button = $(&#x27;&lt;a class=&quot;button is-info is-outlined&quot; title=&quot;&#x27;+this.table.lang.expand_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-caret-square-down&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
         this.hide_subtable_button = $(&#x27;&lt;a class=&quot;button is-info&quot; style=&quot;display:none;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;far fa-minus-square&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
     }
 
@@ -1343,6 +1444,25 @@ class CRecord {
         return this.table.data[this.data_index][field];
     }
 
+    /**
+     * Method to batch operation based on CCheckboxColumn.
+     * Always return false if no CCheckboxColumn presents.
+     * @method is_selected
+     * @return {Boolean}
+     *
+     */    
+    
+    is_selected(){
+        var result = false;
+        this.columns.forEach(function(column) {
+            if(typeof(column.is_selected) != &#x27;undefined&#x27;){
+                result = column.is_selected();
+                return;
+            }
+        });
+        return result;
+    }
+    
     /**
      * This record is new?.
      * @method record_is_new
@@ -1784,26 +1904,26 @@ class CPagination{
 
         this.container = elem;
 
-        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-fast-backward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_first, this));
+        $(&#x27;&lt;a class=&quot;button&quot; title=&quot;&#x27;+this.table.lang.to_first_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-fast-backward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_first, this));
 
-        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-step-backward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_prev, this));
+        $(&#x27;&lt;a class=&quot;button&quot; title=&quot;&#x27;+this.table.lang.to_prev_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-step-backward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_prev, this));
 
 
-        var page_select_div = $(&#x27;&lt;div class=&quot;select&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.container);
+        var page_select_div = $(&#x27;&lt;div class=&quot;select&quot; title=&quot;&#x27;+this.table.lang.current_page_tooltip+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.container);
         this.page_selector = $(&#x27;&lt;select class=&quot;page-selection&quot;&gt;&lt;/select&gt;&#x27;).appendTo(page_select_div);
 
         this.page_selector.change($.proxy(this.page_change, this));
 
 
-        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-step-forward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_next, this));
+        $(&#x27;&lt;a class=&quot;button&quot; title=&quot;&#x27;+this.table.lang.to_next_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-step-forward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_next, this));
 
-        $(&#x27;&lt;a class=&quot;button&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-fast-forward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_last, this));
+        $(&#x27;&lt;a class=&quot;button&quot; title=&quot;&#x27;+this.table.lang.to_last_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-fast-forward&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.container).click($.proxy(this.go_last, this));
 
         var on_one_page_span = $(&#x27;&lt;span style=&quot;vertical-align:sub;&quot;&gt;&lt;/span&gt;&#x27;).appendTo(this.container);
 
         on_one_page_span.text(this.table.lang.on_one_page);
 
-        var page_size_div = $(&#x27;&lt;div class=&quot;select&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.container);
+        var page_size_div = $(&#x27;&lt;div class=&quot;select&quot; title=&quot;&#x27;+this.table.lang.page_size_tooltip+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.container);
 
         this.page_size_selector = $(&#x27;&lt;select&gt;&lt;/select&gt;&#x27;).appendTo(page_size_div);
 
@@ -1941,12 +2061,25 @@ class CTable {
             this.lang.cancel = &quot;Cancel&quot;;
             this.lang.delete_confirm = &quot;Delete record?&quot;;
             this.lang.no_select = &quot;[Other]&quot;;
-            this.lang.on_one_page = &quot; Records per page: &quot;;
-            this.lang.records = &quot;Records&quot;;
+            this.lang.on_one_page = &quot; Show by &quot;;
+            this.lang.records = &quot;Records on current page&quot;;
             this.lang.from = &quot;from&quot;;
             this.lang.all_records = &quot;All&quot;;
             this.lang.server_side_error = &quot;Server side error&quot;;
             this.lang.error = &quot;Error: &quot;;
+            this.lang.add_tooltip = &quot;Add record&quot;;
+            this.lang.reload_tooltip = &quot;Reload table&quot;;
+            this.lang.expand_tooltip = &quot;Open subtable&quot;;
+            this.lang.sort_tooltip = &quot;Sort by this column&quot;;
+            this.lang.edit_tooltip = &quot;Change record&quot;;
+            this.lang.delete_tooltip = &quot;Delete record&quot;;
+            this.lang.select_all_tooltip = &quot;Select all&quot;;
+            this.lang.to_first_tooltip = &quot;To first page&quot;;
+            this.lang.to_prev_tooltip = &quot;To previous page&quot;;
+            this.lang.current_page_tooltip = &quot;This page&quot;;
+            this.lang.to_next_tooltip = &quot;To next page&quot;;
+            this.lang.to_last_tooltip = &quot;To last page&quot;;
+            this.lang.page_size_tooltip = &quot;Records per page&quot;;
         }
 
         if(this.options.lang == &quot;ru&quot;){
@@ -1959,11 +2092,25 @@ class CTable {
             this.lang.delete_confirm = &quot;Удалить запись?&quot;;
             this.lang.no_select = &quot;[Другой]&quot;;
             this.lang.on_one_page = &quot; На одной странице: &quot;;
-            this.lang.records = &quot;Записи&quot;;
+            this.lang.records = &quot;Записей на текущей странице&quot;;
             this.lang.from = &quot;из&quot;;
             this.lang.all_records = &quot;Все&quot;;
             this.lang.server_side_error = &quot;Ошибка на стороне сервера&quot;;
             this.lang.error = &quot;Ошибка: &quot;;
+            this.lang.add_tooltip = &quot;Добавить запись&quot;;
+            this.lang.reload_tooltip = &quot;Перезагрузить страницу&quot;;
+            this.lang.expand_tooltip = &quot;Открыть подтаблицу&quot;;
+            this.lang.sort_tooltip = &quot;Сортировать по этому столбцу&quot;;
+            this.lang.edit_tooltip = &quot;Изменить запись&quot;;
+            this.lang.delete_tooltip = &quot;Удалить запись&quot;;
+            this.lang.select_all_tooltip = &quot;Выбрать все&quot;;
+            this.lang.to_first_tooltip = &quot;На первую страницу&quot;;
+            this.lang.to_prev_tooltip = &quot;На предыдущую страницу&quot;;
+            this.lang.current_page_tooltip = &quot;Текущая страница&quot;;
+            this.lang.to_next_tooltip = &quot;На следующую страницу&quot;;
+            this.lang.to_last_tooltip = &quot;На последнюю страницу&quot;;
+            this.lang.page_size_tooltip = &quot;Записей на страницу&quot;;
+            
         }
 
     }
@@ -2057,6 +2204,10 @@ class CTable {
 
             this.pagination.build_pagination(pagination_cell);
         }
+        
+        if(this.data.length == 0){
+            $(&#x27;&lt;tr&gt;&lt;td style=&quot;text-align:center;&quot; colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;&#x27;).appendTo(this.tbody);
+        }
 
     }
 
@@ -2089,6 +2240,24 @@ class CTable {
         }
     }
 
+
+    /**
+     * Returns selected with CCheckboxColumn records list.
+     * @method selected_records
+     * @return {Array} of records
+     *
+     */
+    
+    selected_records(){
+        var selected_records = [];
+        this.body_records.forEach(function(record){
+            if (record.is_selected()){
+                selected_records.push(record);
+            }
+        });
+        return selected_records;
+    }
+    
     /**
      * Add order for column.
      * @method set_order
@@ -2150,6 +2319,27 @@ class CTable {
     }
     
     /**
+     * Loading cover control.
+     * @method loading_screen
+     * @param {Boolean} state Loading cover on/off.
+     *
+     */    
+    
+    loading_screen(state){
+        if(state){
+            if(this.elem.find(&#x27;.ctable-progress&#x27;).length != 0) return;
+            
+            var pos_tbody = this.tbody.offset();
+            var width_tbody = this.tbody.width();
+            var height_tbody = this.tbody.height();
+            
+            $(&#x27;&lt;div class=&quot;ctable-progress&quot; style=&quot;top:&#x27;+pos_tbody.top+&#x27;px; left:&#x27;+pos_tbody.left+&#x27;px; width:&#x27;+width_tbody+&#x27;px; height:&#x27;+height_tbody+&#x27;px;&quot; &gt;&lt;div class=&quot;lds-ellipsis&quot;&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&#x27;).appendTo($(this.elem));
+        } else {
+           this.elem.find(&#x27;.ctable-progress&#x27;).remove();
+        }
+    }
+    
+    /**
      * Get data from server.
      *
      * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;select&#x60;)
@@ -2190,6 +2380,8 @@ class CTable {
             select_method = this.options.select_method;
         }
 
+        this.loading_screen(true);
+        
         $.ajax({
             type: select_method,
             url: this.options.endpoint,
@@ -2210,6 +2402,9 @@ class CTable {
          })
          .fail(function() {
              alert(self.lang.server_side_error);
+         })
+         .always(function() {
+             self.loading_screen(false);
          });
     }
 
@@ -2242,6 +2437,8 @@ class CTable {
         if (editor_data == null) return;
 
         var record_data = Object.assign({}, editor_data, this.predefined_fields);
+        
+        this.loading_screen(true);
         
         $.ajax({
             type: &quot;POST&quot;,
@@ -2294,6 +2491,8 @@ class CTable {
 
         var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
 
+        this.loading_screen(true);
+        
         $.ajax({
             type: &quot;POST&quot;,
             url: this.options.endpoint,
@@ -2340,6 +2539,8 @@ class CTable {
         
         var record_data = Object.assign({}, self.data[record.data_index], this.predefined_fields);
 
+        this.loading_screen(true);
+        
         $.ajax({
             type: &quot;POST&quot;,
             url: this.options.endpoint,

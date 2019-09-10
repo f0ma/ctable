@@ -28,6 +28,8 @@ $table = $db->escapeString($_GET['table']);
 
 if(isset($_GET['select'])){
 
+    sleep(1.5);
+
     $opts = json_decode($_GET['select'], true);
     
     $whereword = '';
@@ -86,6 +88,8 @@ if(isset($_GET['select'])){
 }
 
 if(isset($_POST['insert'])){
+    sleep(0.5);
+
     $rec = json_decode($_POST['insert'], true);
     
     $intolist = [];
@@ -107,6 +111,8 @@ if(isset($_POST['insert'])){
 
 
 if(isset($_POST['update'])){
+    sleep(0.5);
+
     $rec = json_decode($_POST['update'], true);
     
     $setlist = [];
@@ -122,7 +128,8 @@ if(isset($_POST['update'])){
 
 
 if(isset($_POST['delete'])){
-    
+    sleep(0.5);
+        
     $rec = json_decode($_POST['delete'], true);
     $db->query('DELETE FROM '.$table.' WHERE id='.$db->escapeString($rec['id']));
     echo json_encode(['Result'=>'OK']);

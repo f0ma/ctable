@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.3.2</em>
+            <em>Version: 0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/CAdaptiveRecord.html">CAdaptiveRecord</a></li>
+                                <li><a href="../classes/CCheckboxColumn.html">CCheckboxColumn</a></li>
                                 <li><a href="../classes/CColumn.html">CColumn</a></li>
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
@@ -94,7 +95,7 @@
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l1408"><code>ctable&#x2F;ctable.js:1408</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l1527"><code>ctable&#x2F;ctable.js:1527</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -125,7 +126,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1408"><code>ctable&#x2F;ctable.js:1408</code></a>
+        <a href="../files/ctable_ctable.js.html#l1527"><code>ctable&#x2F;ctable.js:1527</code></a>
         </p>
 
 
@@ -187,6 +188,10 @@
                             </li>
                             <li class="index-item method inherited">
                                 <a href="#method_editor_values">editor_values</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#method_is_selected">is_selected</a>
 
                             </li>
                             <li class="index-item method private inherited">
@@ -263,7 +268,7 @@
                 CRecord
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1479"><code>ctable&#x2F;ctable.js:1479</code></a>
+        <a href="../files/ctable_ctable.js.html#l1598"><code>ctable&#x2F;ctable.js:1598</code></a>
         </p>
 
 
@@ -314,7 +319,7 @@
                 CRecord
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1265"><code>ctable&#x2F;ctable.js:1265</code></a>
+        <a href="../files/ctable_ctable.js.html#l1384"><code>ctable&#x2F;ctable.js:1384</code></a>
         </p>
 
 
@@ -348,7 +353,7 @@
                 CRecord
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1436"><code>ctable&#x2F;ctable.js:1436</code></a>
+        <a href="../files/ctable_ctable.js.html#l1555"><code>ctable&#x2F;ctable.js:1555</code></a>
         </p>
 
 
@@ -379,7 +384,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_close_subrecord">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1355"><code>ctable&#x2F;ctable.js:1355</code></a>
+        <a href="../files/ctable_ctable.js.html#l1474"><code>ctable&#x2F;ctable.js:1474</code></a>
         </p>
 
 
@@ -422,7 +427,7 @@
                 CRecord
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1423"><code>ctable&#x2F;ctable.js:1423</code></a>
+        <a href="../files/ctable_ctable.js.html#l1542"><code>ctable&#x2F;ctable.js:1542</code></a>
         </p>
 
 
@@ -531,7 +536,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_editor_values">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1387"><code>ctable&#x2F;ctable.js:1387</code></a>
+        <a href="../files/ctable_ctable.js.html#l1506"><code>ctable&#x2F;ctable.js:1506</code></a>
         </p>
 
 
@@ -556,6 +561,48 @@
 
 
 </div>
+<div id="method_is_selected" class="method item inherited">
+    <h3 class="name"><code>is_selected</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/CRecord.html#method_is_selected">CRecord</a>:
+        <a href="../files/ctable_ctable.js.html#l1354"><code>ctable&#x2F;ctable.js:1354</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Method to batch operation based on CCheckboxColumn.
+Always return false if no CCheckboxColumn presents.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Boolean</span>:
+            </div>
+        </div>
+
+
+</div>
 <div id="method_on_change_in_editor" class="method item private inherited">
     <h3 class="name"><code>on_change_in_editor</code></h3>
 
@@ -572,7 +619,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_on_change_in_editor">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1374"><code>ctable&#x2F;ctable.js:1374</code></a>
+        <a href="../files/ctable_ctable.js.html#l1493"><code>ctable&#x2F;ctable.js:1493</code></a>
         </p>
 
 
@@ -606,7 +653,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_open_subrecord">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1338"><code>ctable&#x2F;ctable.js:1338</code></a>
+        <a href="../files/ctable_ctable.js.html#l1457"><code>ctable&#x2F;ctable.js:1457</code></a>
         </p>
 
 
@@ -652,7 +699,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_record_field">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1240"><code>ctable&#x2F;ctable.js:1240</code></a>
+        <a href="../files/ctable_ctable.js.html#l1340"><code>ctable&#x2F;ctable.js:1340</code></a>
         </p>
 
 
@@ -703,7 +750,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_record_is_new">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1254"><code>ctable&#x2F;ctable.js:1254</code></a>
+        <a href="../files/ctable_ctable.js.html#l1373"><code>ctable&#x2F;ctable.js:1373</code></a>
         </p>
 
 
@@ -748,7 +795,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_set_colgroup">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1182"><code>ctable&#x2F;ctable.js:1182</code></a>
+        <a href="../files/ctable_ctable.js.html#l1282"><code>ctable&#x2F;ctable.js:1282</code></a>
         </p>
 
 
@@ -802,7 +849,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_set_data_index">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1229"><code>ctable&#x2F;ctable.js:1229</code></a>
+        <a href="../files/ctable_ctable.js.html#l1329"><code>ctable&#x2F;ctable.js:1329</code></a>
         </p>
 
 
@@ -857,7 +904,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_set_foot">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1194"><code>ctable&#x2F;ctable.js:1194</code></a>
+        <a href="../files/ctable_ctable.js.html#l1294"><code>ctable&#x2F;ctable.js:1294</code></a>
         </p>
 
 
@@ -912,7 +959,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_set_head">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1168"><code>ctable&#x2F;ctable.js:1168</code></a>
+        <a href="../files/ctable_ctable.js.html#l1268"><code>ctable&#x2F;ctable.js:1268</code></a>
         </p>
 
 
@@ -966,7 +1013,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_set_parent_column">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1207"><code>ctable&#x2F;ctable.js:1207</code></a>
+        <a href="../files/ctable_ctable.js.html#l1307"><code>ctable&#x2F;ctable.js:1307</code></a>
         </p>
 
 
@@ -1020,7 +1067,7 @@
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/CRecord.html#method_set_row">CRecord</a>:
-        <a href="../files/ctable_ctable.js.html#l1218"><code>ctable&#x2F;ctable.js:1218</code></a>
+        <a href="../files/ctable_ctable.js.html#l1318"><code>ctable&#x2F;ctable.js:1318</code></a>
         </p>
 
 

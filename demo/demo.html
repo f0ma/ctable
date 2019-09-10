@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"/>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="progress.css"/>
     <script src="ctable.js"></script>
 </head>
 <body>
@@ -22,19 +23,24 @@
 
 </div>
 
+
+
 <div id="mainbox"></div>
 
 <script>
 $(function() {
     var t = new CTable({endpoint: "http://localhost:8000/demo.php?table=account"});
     t.set_record_class(CAdaptiveRecord, {non_adaptive_record: true});
-    t.add_column_class(CSubtableColumn,{title:'Exp', record_width_class: 'is-1', table: function(parent_record){
+
+    t.add_column_class(CCheckboxColumn, {});
+    
+    t.add_column_class(CSubtableColumn,{record_width_class: 'is-1', table: function(parent_record){
     
         var tt = new CTable({endpoint: "http://localhost:8000/demo.php?table=bill"});
     
         tt.set_record_class(CAdaptiveRecord, {non_adaptive_record: true});
         tt.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false});
-
+        
         tt.add_column_class(CIndicatorColumn,{title:'Ok?',
                                       informer:function(record, column){if (record.record_field('state') == 3) {return 'ok';} return 'warning';},
                                       visible_editor:false});
@@ -89,13 +95,24 @@ $(function() {
                                       options:[[0,'Unknown'],[1,'OK'], [2,'Blocked']],
                                       editor_width_class: 'is-2'});
     
-    t.add_column_class(CCommandColumn,{title:'Actions', editor_width_class: 'is-2'});
+    t.add_column_class(CCommandColumn,{title:'Actions', editor_width_class: 'is-2',
+                                            common_actions: [{action: function(record){
+                                                                  var textline = "Selected ID: ";
+                                                                  record.table.selected_records().forEach(function(item){
+                                                                      textline+=item.record_field('id')+" ";
+                                                                  });
+                                                                  alert(textline);
+                                                              },
+                                                              tooltip: "Show selected records"}]});
     
     t.set_pagination_class(CPagination,{});
     
     t.build_table($('#mainbox'));
     
     t.select();
+    
+    
+
 });
 </script>
 </body>

@@ -304,7 +304,7 @@ class CTextDataColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == "undefined" || !this.options.no_sort){
 
-            this.sort_button = $('<a class="button is-small is-pulled-right"><span class="icon"><i class="fas fa-sort xtable-sort-none"/><i class="fas fa-sort-up xtable-sort-up" style="display: none;"/><i class="fas fa-sort-down xtable-sort-down" style="display: none;"/></span></a>').appendTo(this.title_elem);
+            this.sort_button = $('<a class="button is-small is-pulled-right" title="'+this.table.lang.sort_tooltip+'"><span class="icon"><i class="fas fa-sort xtable-sort-none"/><i class="fas fa-sort-up xtable-sort-up" style="display: none;"/><i class="fas fa-sort-down xtable-sort-down" style="display: none;"/></span></a>').appendTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -706,24 +706,27 @@ class CCommandColumn extends CColumn {
         var buttons_div = $('<div class="buttons is-right" style="flex-wrap: nowrap;"></div>').appendTo(this.title_elem);
 
         if(typeof(this.options.no_add) == "undefined" || this.options.no_add == false){
-            $('<a class="button is-info is-outlined"><span class="icon is-small"><i class="far fa-plus-square"></i></span></a>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
+            $('<a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><i class="far fa-plus-square"></i></span></a>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
         }
 
         if(typeof(this.options.no_refresh) == "undefined" || this.options.no_refresh == false){
-            $('<a class="button is-info is-outlined"><span class="icon is-small"><i class="fa fa-sync"></i></span></a>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
+            $('<a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><i class="fa fa-sync"></i></span></a>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
         }
 
         if(typeof(this.options.common_actions) != "undefined"){
             for (var i in this.options.common_actions){
                 var bstyle = 'is-info is-outlined';
-                var istyle = 'far fa-plus-square';
+                var istyle = 'fa fa-circle';
                 if (typeof(this.options.common_actions[i].button_class) != "undefined"){
                     bstyle = this.options.common_actions[i].button_class;
                 }
                 if (typeof(this.options.common_actions[i].fa_class) != "undefined"){
                     istyle = this.options.common_actions[i].fa_class;
                 }
-                $('<a class="button '+bstyle+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click({record:this.record}, this.options.common_actions[i].action);
+                
+                var self = this;
+                
+                $('<a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
             }
         }
     }
@@ -773,12 +776,12 @@ class CCommandColumn extends CColumn {
         var buttons_div = $('<div class="buttons is-right" style="flex-wrap: nowrap;"></div>').appendTo(this.cell_elem);
 
         if(typeof(this.options.no_edit) == "undefined" || this.options.no_edit == false){
-            this.show_editor_button = $('<a class="button is-warning is-outlined"><span class="icon is-small"><i class="far fa-edit"></i></span></a>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
-            this.close_editor_button = $('<a class="button is-warning" style="display:none;"><span class="icon is-small"><i class="far fa-edit"></i></span></a>').appendTo(buttons_div).click($.proxy(this.close_edit_record_editor, this));
+            this.show_editor_button = $('<a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><i class="far fa-edit"></i></span></a>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
+            this.close_editor_button = $('<a class="button is-warning" title="'+this.table.lang.edit_tooltip+'" style="display:none;"><span class="icon is-small"><i class="far fa-edit"></i></span></a>').appendTo(buttons_div).click($.proxy(this.close_edit_record_editor, this));
         }
 
         if(typeof(this.options.no_delete) == "undefined" || this.options.no_delete == false){
-            $('<a class="button is-danger is-outlined"><span class="icon is-small"><i class="far fa-trash-alt"></i></span></a>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
+            $('<a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><i class="far fa-trash-alt"></i></span></a>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
         }
 
         if(typeof(this.options.item_actions) != "undefined"){
@@ -791,7 +794,7 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.item_actions[i].fa_class) != "undefined"){
                     istyle = this.options.item_actions[i].fa_class;
                 }
-                $('<a class="button '+bstyle+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
+                $('<a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
             }
         }
 
@@ -942,7 +945,6 @@ class CIndicatorColumn extends CColumn {
 
     constructor(table, record, options = {}) {
         super(table, record, options);
-        this.render = EmptyRender;
     }
 
     /**
@@ -1005,6 +1007,104 @@ class CIndicatorColumn extends CColumn {
         return false;
     }
 }
+
+/**
+ * Column for batch row selector 
+ *
+ * See {{#crossLink "CCheckboxColumn/constructor"}}{{/crossLink}} for options list.
+ *
+ * @class CCheckboxColumn
+ * @constructor
+ * @extends CColumn
+ * 
+ * @example
+ *     table.add_column_class(CCheckboxColumn);
+ */
+
+
+class CCheckboxColumn extends CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     */
+
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        this.checkbox_row = null;
+        this.checkbox_head = null;
+    }
+    
+    /**
+     * This row is selected?
+     * @method is_selected
+     * @param {Boolean}
+     *
+     */
+    
+    is_selected(){
+        return this.checkbox_row.prop('checked');
+    }
+
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        super.build_cell(elem);
+        elem.css('vertical-align','middle');
+        elem.html('<label class="checkbox"><input type="checkbox" class="checkbox-column-sel"></label>');
+        this.checkbox_row = elem.find('input');
+    }
+
+    /**
+     * Build options part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+    
+    build_options(elem){
+        super.build_options(elem);
+        elem.css('vertical-align','middle');
+        elem.html('<label class="checkbox" title="'+this.table.lang.select_all_tooltip+'"><input type="checkbox"></label>');
+        this.checkbox_head = elem.find('input');
+        this.checkbox_head.change(function() {
+            $('.checkbox-column-sel').prop('checked', this.checked);
+        });
+    }
+
+    /**
+     * Column is visible?.
+     * @method visible_column
+     * @return {Boolean} Always true
+     *
+     */
+
+    visible_column(){
+        return true;
+    }
+
+    /**
+     * Editor is visible?.
+     * @method visible_editor
+     * @return {Boolean} Always false
+     *
+     */
+
+    visible_editor(){
+        return false;
+    }
+}
+
 
 
 /**
@@ -1088,7 +1188,7 @@ class CSubtableColumn extends CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-        this.show_subtable_button = $('<a class="button is-info is-outlined"><span class="icon is-small"><i class="far fa-caret-square-down"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
+        this.show_subtable_button = $('<a class="button is-info is-outlined" title="'+this.table.lang.expand_tooltip+'"><span class="icon is-small"><i class="far fa-caret-square-down"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
         this.hide_subtable_button = $('<a class="button is-info" style="display:none;"><span class="icon is-small"><i class="far fa-minus-square"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
     }
 
@@ -1251,6 +1351,25 @@ class CRecord {
         return this.table.data[this.data_index][field];
     }
 
+    /**
+     * Method to batch operation based on CCheckboxColumn.
+     * Always return false if no CCheckboxColumn presents.
+     * @method is_selected
+     * @return {Boolean}
+     *
+     */    
+    
+    is_selected(){
+        var result = false;
+        this.columns.forEach(function(column) {
+            if(typeof(column.is_selected) != 'undefined'){
+                result = column.is_selected();
+                return;
+            }
+        });
+        return result;
+    }
+    
     /**
      * This record is new?.
      * @method record_is_new
@@ -1692,26 +1811,26 @@ class CPagination{
 
         this.container = elem;
 
-        $('<a class="button"><span class="icon"><i class="fas fa-fast-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_first, this));
+        $('<a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_first, this));
 
-        $('<a class="button"><span class="icon"><i class="fas fa-step-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_prev, this));
+        $('<a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_prev, this));
 
 
-        var page_select_div = $('<div class="select"></div>').appendTo(this.container);
+        var page_select_div = $('<div class="select" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(this.container);
         this.page_selector = $('<select class="page-selection"></select>').appendTo(page_select_div);
 
         this.page_selector.change($.proxy(this.page_change, this));
 
 
-        $('<a class="button"><span class="icon"><i class="fas fa-step-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_next, this));
+        $('<a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_next, this));
 
-        $('<a class="button"><span class="icon"><i class="fas fa-fast-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_last, this));
+        $('<a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_last, this));
 
         var on_one_page_span = $('<span style="vertical-align:sub;"></span>').appendTo(this.container);
 
         on_one_page_span.text(this.table.lang.on_one_page);
 
-        var page_size_div = $('<div class="select"></div>').appendTo(this.container);
+        var page_size_div = $('<div class="select" title="'+this.table.lang.page_size_tooltip+'"></div>').appendTo(this.container);
 
         this.page_size_selector = $('<select></select>').appendTo(page_size_div);
 
@@ -1849,12 +1968,25 @@ class CTable {
             this.lang.cancel = "Cancel";
             this.lang.delete_confirm = "Delete record?";
             this.lang.no_select = "[Other]";
-            this.lang.on_one_page = " Records per page: ";
-            this.lang.records = "Records";
+            this.lang.on_one_page = " Show by ";
+            this.lang.records = "Records on current page";
             this.lang.from = "from";
             this.lang.all_records = "All";
             this.lang.server_side_error = "Server side error";
             this.lang.error = "Error: ";
+            this.lang.add_tooltip = "Add record";
+            this.lang.reload_tooltip = "Reload table";
+            this.lang.expand_tooltip = "Open subtable";
+            this.lang.sort_tooltip = "Sort by this column";
+            this.lang.edit_tooltip = "Change record";
+            this.lang.delete_tooltip = "Delete record";
+            this.lang.select_all_tooltip = "Select all";
+            this.lang.to_first_tooltip = "To first page";
+            this.lang.to_prev_tooltip = "To previous page";
+            this.lang.current_page_tooltip = "This page";
+            this.lang.to_next_tooltip = "To next page";
+            this.lang.to_last_tooltip = "To last page";
+            this.lang.page_size_tooltip = "Records per page";
         }
 
         if(this.options.lang == "ru"){
@@ -1867,11 +1999,25 @@ class CTable {
             this.lang.delete_confirm = "Удалить запись?";
             this.lang.no_select = "[Другой]";
             this.lang.on_one_page = " На одной странице: ";
-            this.lang.records = "Записи";
+            this.lang.records = "Записей на текущей странице";
             this.lang.from = "из";
             this.lang.all_records = "Все";
             this.lang.server_side_error = "Ошибка на стороне сервера";
             this.lang.error = "Ошибка: ";
+            this.lang.add_tooltip = "Добавить запись";
+            this.lang.reload_tooltip = "Перезагрузить страницу";
+            this.lang.expand_tooltip = "Открыть подтаблицу";
+            this.lang.sort_tooltip = "Сортировать по этому столбцу";
+            this.lang.edit_tooltip = "Изменить запись";
+            this.lang.delete_tooltip = "Удалить запись";
+            this.lang.select_all_tooltip = "Выбрать все";
+            this.lang.to_first_tooltip = "На первую страницу";
+            this.lang.to_prev_tooltip = "На предыдущую страницу";
+            this.lang.current_page_tooltip = "Текущая страница";
+            this.lang.to_next_tooltip = "На следующую страницу";
+            this.lang.to_last_tooltip = "На последнюю страницу";
+            this.lang.page_size_tooltip = "Записей на страницу";
+            
         }
 
     }
@@ -1965,6 +2111,10 @@ class CTable {
 
             this.pagination.build_pagination(pagination_cell);
         }
+        
+        if(this.data.length == 0){
+            $('<tr><td style="text-align:center;" colspan="'+this.visible_columns()+'">&nbsp;</td></tr>').appendTo(this.tbody);
+        }
 
     }
 
@@ -1997,6 +2147,24 @@ class CTable {
         }
     }
 
+
+    /**
+     * Returns selected with CCheckboxColumn records list.
+     * @method selected_records
+     * @return {Array} of records
+     *
+     */
+    
+    selected_records(){
+        var selected_records = [];
+        this.body_records.forEach(function(record){
+            if (record.is_selected()){
+                selected_records.push(record);
+            }
+        });
+        return selected_records;
+    }
+    
     /**
      * Add order for column.
      * @method set_order
@@ -2058,6 +2226,27 @@ class CTable {
     }
     
     /**
+     * Loading cover control.
+     * @method loading_screen
+     * @param {Boolean} state Loading cover on/off.
+     *
+     */    
+    
+    loading_screen(state){
+        if(state){
+            if(this.elem.find('.ctable-progress').length != 0) return;
+            
+            var pos_tbody = this.tbody.offset();
+            var width_tbody = this.tbody.width();
+            var height_tbody = this.tbody.height();
+            
+            $('<div class="ctable-progress" style="top:'+pos_tbody.top+'px; left:'+pos_tbody.left+'px; width:'+width_tbody+'px; height:'+height_tbody+'px;" ><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>').appendTo($(this.elem));
+        } else {
+           this.elem.find('.ctable-progress').remove();
+        }
+    }
+    
+    /**
      * Get data from server.
      *
      * Making AJAX POST request to `options.endpoint` URL (post field `select`)
@@ -2098,6 +2287,8 @@ class CTable {
             select_method = this.options.select_method;
         }
 
+        this.loading_screen(true);
+        
         $.ajax({
             type: select_method,
             url: this.options.endpoint,
@@ -2118,6 +2309,9 @@ class CTable {
          })
          .fail(function() {
              alert(self.lang.server_side_error);
+         })
+         .always(function() {
+             self.loading_screen(false);
          });
     }
 
@@ -2150,6 +2344,8 @@ class CTable {
         if (editor_data == null) return;
 
         var record_data = Object.assign({}, editor_data, this.predefined_fields);
+        
+        this.loading_screen(true);
         
         $.ajax({
             type: "POST",
@@ -2202,6 +2398,8 @@ class CTable {
 
         var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
 
+        this.loading_screen(true);
+        
         $.ajax({
             type: "POST",
             url: this.options.endpoint,
@@ -2248,6 +2446,8 @@ class CTable {
         
         var record_data = Object.assign({}, self.data[record.data_index], this.predefined_fields);
 
+        this.loading_screen(true);
+        
         $.ajax({
             type: "POST",
             url: this.options.endpoint,

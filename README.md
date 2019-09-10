@@ -11,8 +11,9 @@ CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.
 * Server technology agnostic (JSON based communications)
 * Server-side sorting and pagination
 * Sub-table support
+* Multilanguage (currently English and Russian)
 * Easily extends by column class inheritance
-* Good looking and mobile-ready with [Bulma CSS](http://bulma.io) and [Font Awesome](https://fontawesome.com/) icons
+* Good looking and mobile-ready with [Bulma CSS](http://bulma.io), [Font Awesome](https://fontawesome.com/) icons and [loading.io](https://loading.io/css/) CSS loader
 
 ## Documentation
 
@@ -26,6 +27,7 @@ Add to page header:
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"/>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<link rel="stylesheet" href="progress.css"/>
 <script src="ctable.js"></script>
 ```
 
@@ -48,11 +50,6 @@ t.add_column_class(CTextDataColumn,{column:'firstname',
 t.add_column_class(CTextDataColumn,{column:'lastname',
                                     title:'Lastname',
                                     validate:"\\S+"});
-
-t.add_column_class(CSelectColumn,{column:'sex',
-                                  title:'Sex',
-                                  options:[['m','М'], ['f','F']],
-                                  validate: true});
 
 t.add_column_class(CCommandColumn,{});
 

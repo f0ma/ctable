@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.3.2</em>
+            <em>Version: 0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/CAdaptiveRecord.html">CAdaptiveRecord</a></li>
+                                <li><a href="../classes/CCheckboxColumn.html">CCheckboxColumn</a></li>
                                 <li><a href="../classes/CColumn.html">CColumn</a></li>
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
@@ -91,7 +92,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l1128"><code>ctable&#x2F;ctable.js:1128</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l1228"><code>ctable&#x2F;ctable.js:1228</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -122,7 +123,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1128"><code>ctable&#x2F;ctable.js:1128</code></a>
+        <a href="../files/ctable_ctable.js.html#l1228"><code>ctable&#x2F;ctable.js:1228</code></a>
         </p>
 
 
@@ -190,6 +191,10 @@
                                 <a href="#method_editor_values">editor_values</a>
 
                             </li>
+                            <li class="index-item method">
+                                <a href="#method_is_selected">is_selected</a>
+
+                            </li>
                             <li class="index-item method private">
                                 <a href="#method_on_change_in_editor">on_change_in_editor</a>
 
@@ -255,7 +260,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1323"><code>ctable&#x2F;ctable.js:1323</code></a>
+        <a href="../files/ctable_ctable.js.html#l1442"><code>ctable&#x2F;ctable.js:1442</code></a>
         </p>
 
 
@@ -286,7 +291,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1290"><code>ctable&#x2F;ctable.js:1290</code></a>
+        <a href="../files/ctable_ctable.js.html#l1409"><code>ctable&#x2F;ctable.js:1409</code></a>
         </p>
 
 
@@ -317,7 +322,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1265"><code>ctable&#x2F;ctable.js:1265</code></a>
+        <a href="../files/ctable_ctable.js.html#l1384"><code>ctable&#x2F;ctable.js:1384</code></a>
         </p>
 
 
@@ -348,7 +353,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1305"><code>ctable&#x2F;ctable.js:1305</code></a>
+        <a href="../files/ctable_ctable.js.html#l1424"><code>ctable&#x2F;ctable.js:1424</code></a>
         </p>
 
 
@@ -379,7 +384,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1355"><code>ctable&#x2F;ctable.js:1355</code></a>
+        <a href="../files/ctable_ctable.js.html#l1474"><code>ctable&#x2F;ctable.js:1474</code></a>
         </p>
 
 
@@ -419,7 +424,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1142"><code>ctable&#x2F;ctable.js:1142</code></a>
+        <a href="../files/ctable_ctable.js.html#l1242"><code>ctable&#x2F;ctable.js:1242</code></a>
         </p>
 
 
@@ -494,7 +499,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1387"><code>ctable&#x2F;ctable.js:1387</code></a>
+        <a href="../files/ctable_ctable.js.html#l1506"><code>ctable&#x2F;ctable.js:1506</code></a>
         </p>
 
 
@@ -519,6 +524,48 @@
 
 
 </div>
+<div id="method_is_selected" class="method item">
+    <h3 class="name"><code>is_selected</code></h3>
+
+        <span class="paren">()</span>
+
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ctable_ctable.js.html#l1354"><code>ctable&#x2F;ctable.js:1354</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Method to batch operation based on CCheckboxColumn.
+Always return false if no CCheckboxColumn presents.</p>
+
+    </div>
+
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Boolean</span>:
+            </div>
+        </div>
+
+
+</div>
 <div id="method_on_change_in_editor" class="method item private">
     <h3 class="name"><code>on_change_in_editor</code></h3>
 
@@ -535,7 +582,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1374"><code>ctable&#x2F;ctable.js:1374</code></a>
+        <a href="../files/ctable_ctable.js.html#l1493"><code>ctable&#x2F;ctable.js:1493</code></a>
         </p>
 
 
@@ -569,7 +616,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1338"><code>ctable&#x2F;ctable.js:1338</code></a>
+        <a href="../files/ctable_ctable.js.html#l1457"><code>ctable&#x2F;ctable.js:1457</code></a>
         </p>
 
 
@@ -615,7 +662,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1240"><code>ctable&#x2F;ctable.js:1240</code></a>
+        <a href="../files/ctable_ctable.js.html#l1340"><code>ctable&#x2F;ctable.js:1340</code></a>
         </p>
 
 
@@ -666,7 +713,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1254"><code>ctable&#x2F;ctable.js:1254</code></a>
+        <a href="../files/ctable_ctable.js.html#l1373"><code>ctable&#x2F;ctable.js:1373</code></a>
         </p>
 
 
@@ -711,7 +758,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1182"><code>ctable&#x2F;ctable.js:1182</code></a>
+        <a href="../files/ctable_ctable.js.html#l1282"><code>ctable&#x2F;ctable.js:1282</code></a>
         </p>
 
 
@@ -765,7 +812,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1229"><code>ctable&#x2F;ctable.js:1229</code></a>
+        <a href="../files/ctable_ctable.js.html#l1329"><code>ctable&#x2F;ctable.js:1329</code></a>
         </p>
 
 
@@ -820,7 +867,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1194"><code>ctable&#x2F;ctable.js:1194</code></a>
+        <a href="../files/ctable_ctable.js.html#l1294"><code>ctable&#x2F;ctable.js:1294</code></a>
         </p>
 
 
@@ -875,7 +922,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1168"><code>ctable&#x2F;ctable.js:1168</code></a>
+        <a href="../files/ctable_ctable.js.html#l1268"><code>ctable&#x2F;ctable.js:1268</code></a>
         </p>
 
 
@@ -929,7 +976,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1207"><code>ctable&#x2F;ctable.js:1207</code></a>
+        <a href="../files/ctable_ctable.js.html#l1307"><code>ctable&#x2F;ctable.js:1307</code></a>
         </p>
 
 
@@ -983,7 +1030,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1218"><code>ctable&#x2F;ctable.js:1218</code></a>
+        <a href="../files/ctable_ctable.js.html#l1318"><code>ctable&#x2F;ctable.js:1318</code></a>
         </p>
 
 
