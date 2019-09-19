@@ -27,7 +27,7 @@ Add to page header:
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"/>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<link rel="stylesheet" href="progress.css"/>
+<link rel="stylesheet" href="ctable.css"/>
 <script src="ctable.js"></script>
 ```
 
