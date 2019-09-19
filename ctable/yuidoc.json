@@ -1,7 +1,7 @@
 {
     "name": "CTable",
     "description": "CTable JavaScript CRUD Framework",
-    "version": "0.4",
+    "version": "0.4.1",
     "url": "https://f0ma.github.io/ctable/index.html",
     "options": {
         "outdir": "doc"

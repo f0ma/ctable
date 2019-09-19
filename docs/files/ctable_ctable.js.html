@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.4</em>
+            <em>Version: 0.4.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -583,6 +583,7 @@ class CSelectColumn extends CTextDataColumn {
         }
 
         if (this.editor_elem != null){
+            this.editor.empty();
             for (var opt in this.options.options) {
                 var selected = &quot;&quot;;
                 if (! this.record.record_is_new() &amp;&amp; this.record.record_field(this.options.column) == this.options.options[opt][0]){
@@ -1136,7 +1137,7 @@ class CCheckboxColumn extends CColumn {
     /**
      * This row is selected?
      * @method is_selected
-     * @param {Boolean}
+     * @return {Boolean}
      *
      */
     
@@ -1153,7 +1154,6 @@ class CCheckboxColumn extends CColumn {
 
     build_cell(elem){
         super.build_cell(elem);
-        elem.css(&#x27;vertical-align&#x27;,&#x27;middle&#x27;);
         elem.html(&#x27;&lt;label class=&quot;checkbox&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;checkbox-column-sel&quot;&gt;&lt;/label&gt;&#x27;);
         this.checkbox_row = elem.find(&#x27;input&#x27;);
     }
@@ -1167,7 +1167,6 @@ class CCheckboxColumn extends CColumn {
     
     build_options(elem){
         super.build_options(elem);
-        elem.css(&#x27;vertical-align&#x27;,&#x27;middle&#x27;);
         elem.html(&#x27;&lt;label class=&quot;checkbox&quot; title=&quot;&#x27;+this.table.lang.select_all_tooltip+&#x27;&quot;&gt;&lt;input type=&quot;checkbox&quot;&gt;&lt;/label&gt;&#x27;);
         this.checkbox_head = elem.find(&#x27;input&#x27;);
         this.checkbox_head.change(function() {
@@ -1543,6 +1542,13 @@ class CRecord {
             if (this.columns[i].visible_column() &amp;&amp; this.columns[i].visible_editor()){
                 var editor_cell = $(&#x27;&lt;td&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
                 this.columns[i].build_editor(editor_cell, is_new_record);
+            }
+        }
+
+        for (var i in this.columns){
+            var col_val = this.columns[i].editor_value();
+            for (var j in this.columns){    
+                this.columns[j].record_changed(col_val[0], col_val[1]);
             }
         }
     }
@@ -2009,7 +2015,7 @@ class CTable {
 
         this.options = options;
 
-        this.table = $(&#x27;&lt;table class=&quot;table is-narrow is-bordered is-fullwidth is-hoverable&quot;&gt;&lt;/table&gt;&#x27;);
+        this.table = $(&#x27;&lt;table class=&quot;table is-narrow is-bordered is-fullwidth is-hoverable ctable-table&quot;&gt;&lt;/table&gt;&#x27;);
 
         this.colgroup = $(&quot;&lt;colgroup&gt;&lt;/colgroup&gt;&quot;).appendTo(this.table);
         this.thead = $(&quot;&lt;thead&gt;&lt;/thead&gt;&quot;).appendTo(this.table);

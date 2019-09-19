@@ -2,7 +2,7 @@
     "project": {
         "name": "CTable",
         "description": "CTable JavaScript CRUD Framework",
-        "version": "0.4",
+        "version": "0.4.1",
         "url": "https://f0ma.github.io/ctable/index.html"
     },
     "files": {
@@ -50,7 +50,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "ctable/ctable.js",
-            "line": 1872,
+            "line": 1878,
             "description": "Provides the base CTable classes."
         }
     },
@@ -122,7 +122,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 628,
+            "line": 629,
             "description": "Command control column (add, edit, delete buttons)\n\nSee {{#crossLink \"CCommandColumn/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "extends": "CColumn",
@@ -141,7 +141,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 919,
+            "line": 920,
             "description": "Indication column (show status based on custom function call result)\n\nSee {{#crossLink \"CIndicatorColumn/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "extends": "CColumn",
@@ -160,7 +160,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 1011,
+            "line": 1012,
             "description": "Column for batch row selector \n\nSee {{#crossLink \"CCheckboxColumn/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "extends": "CColumn",
@@ -179,7 +179,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 1110,
+            "line": 1109,
             "description": "Show subtable button column\n\nSee {{#crossLink \"CSubtableColumn/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "extends": "CColumn",
@@ -198,7 +198,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 1228,
+            "line": 1227,
             "description": "Base record class\n\nSee {{#crossLink \"CRecord/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "example": [
@@ -216,7 +216,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 1527,
+            "line": 1533,
             "description": "Div-based editor with floats and footnotes.\n\nSee {{#crossLink \"CAdaptiveRecord/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "extends": "CRecord",
@@ -235,7 +235,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 1651,
+            "line": 1657,
             "description": "Pagination class.\n\nSee {{#crossLink \"CPagination/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "example": [
@@ -253,7 +253,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 1872,
+            "line": 1878,
             "description": "Table class\n\nSee {{#crossLink \"CTable/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "example": [
@@ -836,7 +836,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 510,
+            "line": 511,
             "description": "Build cell part of column.",
             "itemtype": "method",
             "name": "build_cell",
@@ -852,7 +852,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 528,
+            "line": 529,
             "description": "Build editor part of column.",
             "itemtype": "method",
             "name": "build_editor",
@@ -873,7 +873,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 565,
+            "line": 566,
             "description": "Build options part of column.",
             "itemtype": "method",
             "name": "build_options",
@@ -889,7 +889,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 591,
+            "line": 592,
             "description": "Change filter handler.",
             "itemtype": "method",
             "name": "set_search_filter",
@@ -900,7 +900,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 603,
+            "line": 604,
             "description": "Validate input.",
             "itemtype": "method",
             "name": "is_valid",
@@ -913,7 +913,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 643,
+            "line": 644,
             "description": "Create column object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1023,7 +1023,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 675,
+            "line": 676,
             "description": "Show record editor toggle handler for new record.",
             "itemtype": "method",
             "name": "build_new_record_editor",
@@ -1034,7 +1034,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 696,
+            "line": 697,
             "description": "Build title part of column.",
             "itemtype": "method",
             "name": "build_title",
@@ -1050,7 +1050,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 734,
+            "line": 735,
             "description": "Open editor button handler.",
             "itemtype": "method",
             "name": "open_edit_record_editor(",
@@ -1061,7 +1061,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 752,
+            "line": 753,
             "description": "Close editor button handler.",
             "itemtype": "method",
             "name": "close_edit_record_editor",
@@ -1072,7 +1072,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 766,
+            "line": 767,
             "description": "Build cell part of column.",
             "itemtype": "method",
             "name": "build_cell",
@@ -1088,7 +1088,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 804,
+            "line": 805,
             "description": "Close editor handler.",
             "itemtype": "method",
             "name": "close_editor",
@@ -1099,7 +1099,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 829,
+            "line": 830,
             "description": "Column is visible?.",
             "itemtype": "method",
             "name": "visible_column",
@@ -1112,7 +1112,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 840,
+            "line": 841,
             "description": "Editor is visible?.",
             "itemtype": "method",
             "name": "visible_editor",
@@ -1125,7 +1125,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 851,
+            "line": 852,
             "description": "Build panel with commit/cancel buttons.",
             "itemtype": "method",
             "name": "build_editor",
@@ -1146,7 +1146,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 876,
+            "line": 877,
             "description": "Add record button handler.",
             "itemtype": "method",
             "name": "add_record",
@@ -1157,7 +1157,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 886,
+            "line": 887,
             "description": "Save record button handler.",
             "itemtype": "method",
             "name": "save_record",
@@ -1168,7 +1168,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 896,
+            "line": 897,
             "description": "Delete record button handler.",
             "itemtype": "method",
             "name": "delete_record",
@@ -1179,7 +1179,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 908,
+            "line": 909,
             "description": "Refresh button handler.",
             "itemtype": "method",
             "name": "refresh_table",
@@ -1190,7 +1190,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 935,
+            "line": 936,
             "description": "Create column object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1230,7 +1230,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 950,
+            "line": 951,
             "description": "Build cell part of column.",
             "itemtype": "method",
             "name": "build_cell",
@@ -1246,7 +1246,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 988,
+            "line": 989,
             "description": "Column is visible?.",
             "itemtype": "method",
             "name": "visible_column",
@@ -1259,7 +1259,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 999,
+            "line": 1000,
             "description": "Editor is visible?.",
             "itemtype": "method",
             "name": "visible_editor",
@@ -1272,7 +1272,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1027,
+            "line": 1028,
             "description": "Create column object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1306,23 +1306,20 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1043,
+            "line": 1044,
             "description": "This row is selected?",
             "itemtype": "method",
             "name": "is_selected",
-            "params": [
-                {
-                    "name": "UNKNOWN",
-                    "description": "",
-                    "type": "Boolean"
-                }
-            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
             "class": "CCheckboxColumn",
             "module": "ctable"
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1054,
+            "line": 1055,
             "description": "Build cell part of column.",
             "itemtype": "method",
             "name": "build_cell",
@@ -1354,7 +1351,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1085,
+            "line": 1084,
             "description": "Column is visible?.",
             "itemtype": "method",
             "name": "visible_column",
@@ -1367,7 +1364,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1096,
+            "line": 1095,
             "description": "Editor is visible?.",
             "itemtype": "method",
             "name": "visible_editor",
@@ -1380,7 +1377,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1138,
+            "line": 1137,
             "description": "Create column object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1419,7 +1416,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1160,
+            "line": 1159,
             "description": "Column is visible?.",
             "itemtype": "method",
             "name": "visible_column",
@@ -1432,7 +1429,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1171,
+            "line": 1170,
             "description": "Editor is visible?.",
             "itemtype": "method",
             "name": "visible_editor",
@@ -1445,7 +1442,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1182,
+            "line": 1181,
             "description": "Build cell part of column.",
             "itemtype": "method",
             "name": "build_cell",
@@ -1461,7 +1458,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1195,
+            "line": 1194,
             "description": "Show subtable button handler.",
             "itemtype": "method",
             "name": "show_subtable",
@@ -1472,7 +1469,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1212,
+            "line": 1211,
             "description": "Hide subtable button handler.",
             "itemtype": "method",
             "name": "hide_subtable",
@@ -1483,7 +1480,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1242,
+            "line": 1241,
             "description": "Create record object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1512,7 +1509,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1268,
+            "line": 1267,
             "description": "Create table head.",
             "itemtype": "method",
             "name": "set_head",
@@ -1530,7 +1527,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1282,
+            "line": 1281,
             "description": "Create table colgroups.",
             "itemtype": "method",
             "name": "set_colgroup",
@@ -1548,7 +1545,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1294,
+            "line": 1293,
             "description": "Create table foots.",
             "itemtype": "method",
             "name": "set_foot",
@@ -1566,7 +1563,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1307,
+            "line": 1306,
             "description": "Set parent column for record.",
             "itemtype": "method",
             "name": "set_parent_column",
@@ -1582,7 +1579,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1318,
+            "line": 1317,
             "description": "Set row container.",
             "itemtype": "method",
             "name": "set_row",
@@ -1598,7 +1595,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1329,
+            "line": 1328,
             "description": "Set data index in table.",
             "itemtype": "method",
             "name": "set_data_index",
@@ -1614,7 +1611,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1340,
+            "line": 1339,
             "description": "Get field from record.",
             "itemtype": "method",
             "name": "record_field",
@@ -1630,7 +1627,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1354,
+            "line": 1353,
             "description": "Method to batch operation based on CCheckboxColumn.\nAlways return false if no CCheckboxColumn presents.",
             "itemtype": "method",
             "name": "is_selected",
@@ -1643,7 +1640,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1373,
+            "line": 1372,
             "description": "This record is new?.",
             "itemtype": "method",
             "name": "record_is_new",
@@ -1656,7 +1653,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1384,
+            "line": 1383,
             "description": "Build headers for columns.",
             "itemtype": "method",
             "name": "build_header",
@@ -1665,7 +1662,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1409,
+            "line": 1408,
             "description": "Build footers for columns.",
             "itemtype": "method",
             "name": "build_header",
@@ -1674,7 +1671,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1424,
+            "line": 1423,
             "description": "Build table row.",
             "itemtype": "method",
             "name": "build_record",
@@ -1683,7 +1680,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1442,
+            "line": 1441,
             "description": "Build editor row.",
             "itemtype": "method",
             "name": "build_editor",
@@ -1692,7 +1689,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1457,
+            "line": 1463,
             "description": "Create subrecord row.",
             "itemtype": "method",
             "name": "open_subrecord",
@@ -1705,7 +1702,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1474,
+            "line": 1480,
             "description": "Remove subrecord row.",
             "itemtype": "method",
             "name": "close_subrecord",
@@ -1714,7 +1711,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1493,
+            "line": 1499,
             "description": "If changes in any editors callback.",
             "itemtype": "method",
             "name": "on_change_in_editor",
@@ -1725,7 +1722,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1506,
+            "line": 1512,
             "description": "Get all editors values.",
             "itemtype": "method",
             "name": "editor_values",
@@ -1738,7 +1735,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1542,
+            "line": 1548,
             "description": "Create record object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1786,7 +1783,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1555,
+            "line": 1561,
             "description": "Build table row.",
             "itemtype": "method",
             "name": "build_record",
@@ -1795,7 +1792,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1598,
+            "line": 1604,
             "description": "Build editor row.",
             "itemtype": "method",
             "name": "build_editor",
@@ -1811,7 +1808,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1665,
+            "line": 1671,
             "description": "Create pagination object. Should not be called directly.",
             "itemtype": "method",
             "name": "constructor",
@@ -1853,7 +1850,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1689,
+            "line": 1695,
             "description": "Go to first page.",
             "itemtype": "method",
             "name": "go_first",
@@ -1864,7 +1861,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1701,
+            "line": 1707,
             "description": "Go to prev page.",
             "itemtype": "method",
             "name": "go_prev",
@@ -1875,7 +1872,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1716,
+            "line": 1722,
             "description": "Page changed handler.",
             "itemtype": "method",
             "name": "page_change",
@@ -1886,7 +1883,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1728,
+            "line": 1734,
             "description": "Go to next page.",
             "itemtype": "method",
             "name": "go_next",
@@ -1897,7 +1894,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1743,
+            "line": 1749,
             "description": "Go to last page.",
             "itemtype": "method",
             "name": "go_last",
@@ -1908,7 +1905,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1755,
+            "line": 1761,
             "description": "Page size change handler.",
             "itemtype": "method",
             "name": "page_size_change",
@@ -1919,7 +1916,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1768,
+            "line": 1774,
             "description": "Table reloaded handler.",
             "itemtype": "method",
             "name": "on_table_reloaded",
@@ -1928,7 +1925,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1792,
+            "line": 1798,
             "description": "Update pagination text info.",
             "itemtype": "method",
             "name": "set_page_info",
@@ -1939,7 +1936,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1803,
+            "line": 1809,
             "description": "Build pagination.",
             "itemtype": "method",
             "name": "build_pagination",
@@ -1955,7 +1952,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 1904,
+            "line": 1910,
             "description": "Create table object",
             "itemtype": "method",
             "name": "constructor",
@@ -1988,7 +1985,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2025,
+            "line": 2031,
             "description": "Get visible columns count.",
             "itemtype": "method",
             "name": "visible_columns",
@@ -2001,7 +1998,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2045,
+            "line": 2051,
             "description": "Set table record class.",
             "itemtype": "method",
             "name": "set_record_class",
@@ -2022,7 +2019,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2058,
+            "line": 2064,
             "description": "Set table pagination class.",
             "itemtype": "method",
             "name": "set_pagination_class",
@@ -2043,7 +2040,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2071,
+            "line": 2077,
             "description": "Add table column class.",
             "itemtype": "method",
             "name": "add_column_class",
@@ -2064,7 +2061,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2084,
+            "line": 2090,
             "description": "Build table.",
             "itemtype": "method",
             "name": "build_table",
@@ -2080,7 +2077,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2121,
+            "line": 2127,
             "description": "Fill table with values after ajax call.",
             "itemtype": "method",
             "name": "fill_table",
@@ -2091,7 +2088,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2151,
+            "line": 2157,
             "description": "Returns selected with CCheckboxColumn records list.",
             "itemtype": "method",
             "name": "selected_records",
@@ -2104,7 +2101,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2168,
+            "line": 2174,
             "description": "Add order for column.",
             "itemtype": "method",
             "name": "set_order",
@@ -2125,7 +2122,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2184,
+            "line": 2190,
             "description": "Add search for column.",
             "itemtype": "method",
             "name": "set_search",
@@ -2146,7 +2143,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2200,
+            "line": 2206,
             "description": "Add filter for column.",
             "itemtype": "method",
             "name": "set_filter",
@@ -2167,7 +2164,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2216,
+            "line": 2222,
             "description": "Add predefined field value for all insert, update and delete requests in this table.",
             "itemtype": "method",
             "name": "add_predefined_field",
@@ -2188,7 +2185,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2228,
+            "line": 2234,
             "description": "Loading cover control.",
             "itemtype": "method",
             "name": "loading_screen",
@@ -2204,7 +2201,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2249,
+            "line": 2255,
             "description": "Get data from server.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `select`)\n\nRequest fields (json):\n\n`start` {Int} Start record index (0 if no pagination)\n\n`page` {Int} Page size (0 if no pagination)\n\n`column_filters` {Object} Pairs column_name => filter_value\n\n`column_searches` {Object} Pairs column_name => search_value\n\n`column_orders` {Object} Pairs column_name => sort_order\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Records` {Array} Result record set: array of {Object}.\n\n`TotalRecordCount` {Int} Total records count for pagination.",
             "itemtype": "method",
             "name": "select",
@@ -2213,7 +2210,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2318,
+            "line": 2324,
             "description": "Insert record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `insert`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "insert",
@@ -2229,7 +2226,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2370,
+            "line": 2376,
             "description": "Update record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `update`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "update",
@@ -2245,7 +2242,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2423,
+            "line": 2429,
             "description": "Delete record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "remove",
@@ -2261,7 +2258,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2470,
+            "line": 2476,
             "description": "Table level options cache routine.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `options`)\n\nRequest is `params` object (json). Requried field `params.load`.\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Options` {Object} Result options dict.\n\nIf `params` in cache call `on_options_loaded` and returns immediately.\nElse make AJAX call and call `on_options_loaded` after data is loaded.",
             "itemtype": "method",
             "name": "load_from_options_cache",
@@ -2293,10 +2290,5 @@
             "module": "ctable"
         }
     ],
-    "warnings": [
-        {
-            "message": "param name missing: {Boolean}",
-            "line": " ctable/ctable.js:1043"
-        }
-    ]
+    "warnings": []
 }

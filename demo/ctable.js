@@ -490,6 +490,7 @@ class CSelectColumn extends CTextDataColumn {
         }
 
         if (this.editor_elem != null){
+            this.editor.empty();
             for (var opt in this.options.options) {
                 var selected = "";
                 if (! this.record.record_is_new() && this.record.record_field(this.options.column) == this.options.options[opt][0]){
@@ -1043,7 +1044,7 @@ class CCheckboxColumn extends CColumn {
     /**
      * This row is selected?
      * @method is_selected
-     * @param {Boolean}
+     * @return {Boolean}
      *
      */
     
@@ -1060,7 +1061,6 @@ class CCheckboxColumn extends CColumn {
 
     build_cell(elem){
         super.build_cell(elem);
-        elem.css('vertical-align','middle');
         elem.html('<label class="checkbox"><input type="checkbox" class="checkbox-column-sel"></label>');
         this.checkbox_row = elem.find('input');
     }
@@ -1074,7 +1074,6 @@ class CCheckboxColumn extends CColumn {
     
     build_options(elem){
         super.build_options(elem);
-        elem.css('vertical-align','middle');
         elem.html('<label class="checkbox" title="'+this.table.lang.select_all_tooltip+'"><input type="checkbox"></label>');
         this.checkbox_head = elem.find('input');
         this.checkbox_head.change(function() {
@@ -1450,6 +1449,13 @@ class CRecord {
             if (this.columns[i].visible_column() && this.columns[i].visible_editor()){
                 var editor_cell = $('<td></td>').appendTo(this.row);
                 this.columns[i].build_editor(editor_cell, is_new_record);
+            }
+        }
+
+        for (var i in this.columns){
+            var col_val = this.columns[i].editor_value();
+            for (var j in this.columns){    
+                this.columns[j].record_changed(col_val[0], col_val[1]);
             }
         }
     }
@@ -1916,7 +1922,7 @@ class CTable {
 
         this.options = options;
 
-        this.table = $('<table class="table is-narrow is-bordered is-fullwidth is-hoverable"></table>');
+        this.table = $('<table class="table is-narrow is-bordered is-fullwidth is-hoverable ctable-table"></table>');
 
         this.colgroup = $("<colgroup></colgroup>").appendTo(this.table);
         this.thead = $("<thead></thead>").appendTo(this.table);
