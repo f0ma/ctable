@@ -1650,6 +1650,13 @@ class CAdaptiveRecord extends CRecord {
                 }
             }
         }
+        
+        for (var i in this.columns){
+            var col_val = this.columns[i].editor_value();
+            for (var j in this.columns){    
+                this.columns[j].record_changed(col_val[0], col_val[1]);
+            }
+        }
     }
 
 }
