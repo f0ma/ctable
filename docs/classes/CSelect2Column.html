@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CTextDataColumn - CTable</title>
+    <title>CSelect2Column - CTable</title>
     <link rel="stylesheet" href="https://yui-s.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -89,15 +89,15 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CTextDataColumn Class</h1>
+<h1>CSelect2Column Class</h1>
 <div class="box meta">
 
         <div class="extends">
-            Extends <a href="../classes/CColumn.html" class="crosslink">CColumn</a>
+            Extends <a href="../classes/CSelectColumn.html" class="crosslink">CSelectColumn</a>
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l246"><code>ctable&#x2F;ctable.js:246</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l688"><code>ctable&#x2F;ctable.js:688</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -106,17 +106,27 @@
 
 
 <div class="box intro">
-    <p>Text input column class.</p>
-<p>See <a href="../classes/CTextDataColumn.html#method_constructor" class="crosslink">constructor</a> for options list.</p>
+    <p>Select2 (<a href="https://select2.org/">https://select2.org/</a>) selector column.</p>
+<p>See <a href="../classes/CSelectColumn.html#method_constructor" class="crosslink">constructor</a> for options list.
+Select2 js and css files should be included.</p>
 
 </div>
 
     <div class="constructor">
         <h2>Constructor</h2>
-<div id="method_CTextDataColumn" class="method item">
-    <h3 class="name"><code>CTextDataColumn</code></h3>
+<div id="method_CSelect2Column" class="method item">
+    <h3 class="name"><code>CSelect2Column</code></h3>
 
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code class="optional">[options.select2]</code>
+                </li>
+                <li class="arg">
+                        <code class="optional">[options.no_select2_for_options]</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
 
 
 
@@ -128,7 +138,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l246"><code>ctable&#x2F;ctable.js:246</code></a>
+        <a href="../files/ctable_ctable.js.html#l688"><code>ctable&#x2F;ctable.js:688</code></a>
         </p>
 
 
@@ -139,17 +149,39 @@
         
     </div>
 
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name optional">[options.select2]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
 
 
+                    <div class="param-description">
+                        <p>Select2 constructor parameters.</p>
 
-        <div class="example">
-            <h4>Example:</h4>
+                    </div>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code>table.add_column_class(CTextDataColumn,{column:'firstname', title:'Firstname', validate:&quot;\\S+&quot;});</code></pre>
+                </li>
+                <li class="param">
+                        <code class="param-name optional">[options.no_select2_for_options]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
 
-            </div>
+
+                    <div class="param-description">
+                        <p>No select2 control for options.</p>
+
+                    </div>
+
+                </li>
+            </ul>
         </div>
+
+
+
 </div>
     </div>
 
@@ -168,7 +200,7 @@
                     <h3>Methods</h3>
 
                     <ul class="index-list methods extends">
-                            <li class="index-item method inherited">
+                            <li class="index-item method inherited inherited">
                                 <a href="#method_build_cell">build_cell</a>
 
                             </li>
@@ -184,11 +216,11 @@
                                 <a href="#method_build_summary">build_summary</a>
 
                             </li>
-                            <li class="index-item method inherited">
+                            <li class="index-item method inherited inherited">
                                 <a href="#method_build_title">build_title</a>
 
                             </li>
-                            <li class="index-item method inherited">
+                            <li class="index-item method inherited inherited">
                                 <a href="#method_constructor">constructor</a>
 
                             </li>
@@ -197,6 +229,10 @@
 
                             </li>
                             <li class="index-item method inherited">
+                                <a href="#method_fill_options">fill_options</a>
+
+                            </li>
+                            <li class="index-item method inherited inherited">
                                 <a href="#method_is_valid">is_valid</a>
 
                             </li>
@@ -204,11 +240,11 @@
                                 <a href="#method_record_changed">record_changed</a>
 
                             </li>
-                            <li class="index-item method private">
+                            <li class="index-item method private inherited inherited">
                                 <a href="#method_set_search_filter">set_search_filter</a>
 
                             </li>
-                            <li class="index-item method private">
+                            <li class="index-item method private inherited">
                                 <a href="#method_sort_button_click">sort_button_click</a>
 
                             </li>
@@ -257,9 +293,12 @@
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/CColumn.html#method_build_cell">CColumn</a>:
-        <a href="../files/ctable_ctable.js.html#l141"><code>ctable&#x2F;ctable.js:141</code></a>
+            <p>Inherited from
+            <a href="../classes/CColumn.html#method_build_cell">
+                CColumn
+            </a>
+            but overwritten in
+        <a href="../files/ctable_ctable.js.html#l570"><code>ctable&#x2F;ctable.js:570</code></a>
         </p>
 
 
@@ -319,7 +358,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l396"><code>ctable&#x2F;ctable.js:396</code></a>
+        <a href="../files/ctable_ctable.js.html#l704"><code>ctable&#x2F;ctable.js:704</code></a>
         </p>
 
 
@@ -387,7 +426,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l344"><code>ctable&#x2F;ctable.js:344</code></a>
+        <a href="../files/ctable_ctable.js.html#l722"><code>ctable&#x2F;ctable.js:722</code></a>
         </p>
 
 
@@ -395,7 +434,7 @@
     </div>
 
     <div class="description">
-        <p>Build options part of column with search input.</p>
+        <p>Build options part of column.</p>
 
     </div>
 
@@ -474,7 +513,7 @@
 
 
 </div>
-<div id="method_build_title" class="method item">
+<div id="method_build_title" class="method item inherited">
     <h3 class="name"><code>build_title</code></h3>
 
         <div class="args">
@@ -531,7 +570,7 @@
 
 
 </div>
-<div id="method_constructor" class="method item">
+<div id="method_constructor" class="method item inherited">
     <h3 class="name"><code>constructor</code></h3>
 
         <div class="args">
@@ -561,7 +600,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l261"><code>ctable&#x2F;ctable.js:261</code></a>
+        <a href="../files/ctable_ctable.js.html#l503"><code>ctable&#x2F;ctable.js:503</code></a>
         </p>
 
 
@@ -569,7 +608,7 @@
     </div>
 
     <div class="description">
-        <p>Create column object. Should not be called directly.</p>
+        <p>Constructor, if <code>options.load</code> is set, options value will be set with <code>fill_options</code> after ajax call</p>
 
     </div>
 
@@ -654,39 +693,6 @@
 
                             </li>
                             <li class="param">
-                                    <code class="param-name optional">[max_width]</code>
-                                    <span class="type">Int</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Column width in px.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[break_words]</code>
-                                    <span class="type">Boolean</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Set word wrap in cell to break-words.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[render]</code>
-                                    <span class="type">Function</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
                                     <code class="param-name optional">[title]</code>
                                     <span class="type">String</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
@@ -709,34 +715,12 @@
 
                             </li>
                             <li class="param">
-                                    <code class="param-name optional">[no_search]</code>
+                                    <code class="param-name optional">[no_filter]</code>
                                     <span class="type">Boolean</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
-                                    <p>Disable search field by this column.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[input]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Input type: &quot;input&quot; (default) or &quot;textarea&quot;.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
-                                    <code class="param-name optional">[validate]</code>
-                                    <span class="type">String</span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-
-                                <div class="param-description">
-                                    <p>Validate input by this Regexp. Default no validate.</p>
+                                    <p>Disable filter field by this column.</p>
 
                                 </div>
 
@@ -748,6 +732,39 @@
 
                                 <div class="param-description">
                                     <p>Default value for new record.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[options]</code>
+                                    <span class="type">Object</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Options dict.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[load]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Load options from server. Value will be sended as 'load' parameter.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[endpoint]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Load options from another endpoint.</p>
 
                                 </div>
 
@@ -814,7 +831,61 @@
 
 
 </div>
-<div id="method_is_valid" class="method item">
+<div id="method_fill_options" class="method item inherited">
+    <h3 class="name"><code>fill_options</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>options</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>Inherited from
+                <a href="../classes/CSelectColumn.html#method_fill_options">CSelectColumn</a>:
+        <a href="../files/ctable_ctable.js.html#l533"><code>ctable&#x2F;ctable.js:533</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Deferred set options for async ajax call.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">options</code>
+                        <span class="type">Object</span>
+
+
+                    <div class="param-description">
+                        <p>Options dict.</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+
+
+</div>
+<div id="method_is_valid" class="method item inherited">
     <h3 class="name"><code>is_valid</code></h3>
 
         <span class="paren">()</span>
@@ -835,7 +906,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l372"><code>ctable&#x2F;ctable.js:372</code></a>
+        <a href="../files/ctable_ctable.js.html#l663"><code>ctable&#x2F;ctable.js:663</code></a>
         </p>
 
 
@@ -843,7 +914,7 @@
     </div>
 
     <div class="description">
-        <p>Validate editor value.</p>
+        <p>Validate input.</p>
 
     </div>
 
@@ -853,7 +924,7 @@
 
             <div class="returns-description">
                         <span class="type">Boolean</span>:
-                    <p>If options.validate is set return true if re.test is true.</p>
+                    <p>If <code>options.validate</code> is true return false if no value selected.</p>
 
             </div>
         </div>
@@ -891,7 +962,7 @@
 
 
 </div>
-<div id="method_set_search_filter" class="method item private">
+<div id="method_set_search_filter" class="method item private inherited">
     <h3 class="name"><code>set_search_filter</code></h3>
 
         <span class="paren">()</span>
@@ -905,9 +976,12 @@
 
 
     <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/ctable_ctable.js.html#l360"><code>ctable&#x2F;ctable.js:360</code></a>
+            <p>Inherited from
+            <a href="../classes/CTextDataColumn.html#method_set_search_filter">
+                CTextDataColumn
+            </a>
+            but overwritten in
+        <a href="../files/ctable_ctable.js.html#l651"><code>ctable&#x2F;ctable.js:651</code></a>
         </p>
 
 
@@ -915,7 +989,7 @@
     </div>
 
     <div class="description">
-        <p>Search input change handler.</p>
+        <p>Change filter handler.</p>
 
     </div>
 
@@ -923,7 +997,7 @@
 
 
 </div>
-<div id="method_sort_button_click" class="method item private">
+<div id="method_sort_button_click" class="method item private inherited">
     <h3 class="name"><code>sort_button_click</code></h3>
 
         <span class="paren">()</span>
@@ -937,8 +1011,8 @@
 
 
     <div class="meta">
-                <p>
-                Defined in
+                <p>Inherited from
+                <a href="../classes/CTextDataColumn.html#method_sort_button_click">CTextDataColumn</a>:
         <a href="../files/ctable_ctable.js.html#l313"><code>ctable&#x2F;ctable.js:313</code></a>
         </p>
 

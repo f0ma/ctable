@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.4.1</em>
+            <em>Version: 0.4.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -42,9 +42,11 @@
                                 <li><a href="../classes/CCheckboxColumn.html">CCheckboxColumn</a></li>
                                 <li><a href="../classes/CColumn.html">CColumn</a></li>
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
+                                <li><a href="../classes/CDateTimePickerColumn.html">CDateTimePickerColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
                                 <li><a href="../classes/CPagination.html">CPagination</a></li>
                                 <li><a href="../classes/CRecord.html">CRecord</a></li>
+                                <li><a href="../classes/CSelect2Column.html">CSelect2Column</a></li>
                                 <li><a href="../classes/CSelectColumn.html">CSelectColumn</a></li>
                                 <li><a href="../classes/CSubtableColumn.html">CSubtableColumn</a></li>
                                 <li><a href="../classes/CTable.html">CTable</a></li>
@@ -156,7 +158,7 @@ class CColumn {
         this.summary_elem = null;
 
         this.editor = null;
-        
+
         if(typeof(this.options.render) != &quot;undefined&quot;){
             this.render = this.options.render;
         } else {
@@ -240,13 +242,13 @@ class CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-        
+
         if(typeof(this.options.max_width) != &quot;undefined&quot;){
-            this.cell_elem.css({&#x27;max-width&#x27;:this.options.max_width+&#x27;px&#x27;});    
+            this.cell_elem.css({&#x27;max-width&#x27;:this.options.max_width+&#x27;px&#x27;});
         }
 
         if(typeof(this.options.break_words) != &quot;undefined&quot; &amp;&amp; this.options.break_words){
-            this.cell_elem.css({&#x27;word-wrap&#x27;:&#x27;break-word&#x27;});    
+            this.cell_elem.css({&#x27;word-wrap&#x27;:&#x27;break-word&#x27;});
         }
 
         this.render(elem, this.record, this.options.column);
@@ -503,7 +505,7 @@ class CTextDataColumn extends CColumn {
         }
 
         if (is_new_record){
-            if(typeof(this.options.default_value) != &quot;undefined&quot;){            
+            if(typeof(this.options.default_value) != &quot;undefined&quot;){
                 this.editor.val(this.options.default_value);
             } else {
                 this.editor.val(&quot;&quot;);
@@ -516,6 +518,65 @@ class CTextDataColumn extends CColumn {
     }
 
 }
+
+/**
+ * DateTimePicker (https://xdsoft.net/jqplugins/datetimepicker/) column.
+ *
+ * See {{#crossLink &quot;CTextDataColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * DateTimePicker js and css files should be included.
+ *
+ * @class CDateTimePickerColumn
+ * @extends CSelectColumn
+ * @constructor
+ * @param {String} [options.datetimepicker] DateTimePicker constructor parameters.
+ * @param {String} [options.no_picker_for_options] Disable DateTimePicker for options bar.
+ *
+ */
+
+class CDateTimePickerColumn extends CTextDataColumn{
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+
+    build_options(elem){
+        super.build_options(elem);
+
+        if(typeof(this.options.no_picker_for_options) != &quot;undefined&quot; &amp;&amp; this.options.no_picker_for_options){
+            return;
+        }
+
+        if(typeof(this.options.datetimepicker) != &quot;undefined&quot;){
+            this.search_field.datetimepicker(this.options.datetimepicker);
+        } else {
+            this.search_field.datetimepicker();
+        }
+    }
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+
+    build_editor(elem, is_new_record = false){
+        super.build_editor(elem, is_new_record);
+
+        if(typeof(this.options.datetimepicker) != &quot;undefined&quot;){
+            this.editor.datetimepicker(this.options.datetimepicker);
+        } else {
+            this.editor.datetimepicker();
+        }
+    }
+}
+
 
 /**
  * Selector column
@@ -720,6 +781,62 @@ class CSelectColumn extends CTextDataColumn {
 }
 
 /**
+ * Select2 (https://select2.org/) selector column.
+ *
+ * See {{#crossLink &quot;CSelectColumn/constructor&quot;}}{{/crossLink}} for options list.
+ * Select2 js and css files should be included.
+ *
+ * @class CSelect2Column
+ * @extends CSelectColumn
+ * @constructor
+ * @param {String} [options.select2] Select2 constructor parameters.
+ * @param {String} [options.no_select2_for_options] No select2 control for options.
+ *
+ */
+
+class CSelect2Column extends CSelectColumn {
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+
+    build_editor(elem, is_new_record = false){
+        super.build_editor(elem, is_new_record);
+
+        if(typeof(this.options.select2) != &quot;undefined&quot;){
+            this.editor.select2(this.options.select2);
+        } else {
+            this.editor.select2();
+        }
+    }
+
+    /**
+     * Build options part of column.
+     * @method build_options
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_options(elem){
+        super.build_options(elem);
+
+        if(typeof(this.options.no_select2_for_options) != &quot;undefined&quot; &amp;&amp; this.options.no_select2_for_options){
+            return;
+        }
+
+        if(typeof(this.options.select2) != &quot;undefined&quot;){
+            this.search_field.select2(this.options.select2);
+        } else {
+            this.search_field.select2();
+        }
+    }
+}
+
+/**
  * Command control column (add, edit, delete buttons)
  *
  * See {{#crossLink &quot;CCommandColumn/constructor&quot;}}{{/crossLink}} for options list.
@@ -727,7 +844,7 @@ class CSelectColumn extends CTextDataColumn {
  * @class CCommandColumn
  * @constructor
  * @extends CColumn
- * 
+ *
  * @example
  *     table.add_column_class(CCommandColumn,{no_add: true});
  */
@@ -817,9 +934,9 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.common_actions[i].fa_class) != &quot;undefined&quot;){
                     istyle = this.options.common_actions[i].fa_class;
                 }
-                
+
                 var self = this;
-                
+
                 $(&#x27;&lt;a class=&quot;button &#x27;+bstyle+&#x27;&quot; title=&quot;&#x27;+this.options.common_actions[i].tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon is-small&quot;&gt;&lt;i class=&quot;&#x27;+istyle+&#x27;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
             }
         }
@@ -1018,7 +1135,7 @@ class CCommandColumn extends CColumn {
  * @class CIndicatorColumn
  * @constructor
  * @extends CColumn
- * 
+ *
  * @example
  *     table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });
  */
@@ -1103,14 +1220,14 @@ class CIndicatorColumn extends CColumn {
 }
 
 /**
- * Column for batch row selector 
+ * Column for batch row selector
  *
  * See {{#crossLink &quot;CCheckboxColumn/constructor&quot;}}{{/crossLink}} for options list.
  *
  * @class CCheckboxColumn
  * @constructor
  * @extends CColumn
- * 
+ *
  * @example
  *     table.add_column_class(CCheckboxColumn);
  */
@@ -1133,14 +1250,14 @@ class CCheckboxColumn extends CColumn {
         this.checkbox_row = null;
         this.checkbox_head = null;
     }
-    
+
     /**
      * This row is selected?
      * @method is_selected
      * @return {Boolean}
      *
      */
-    
+
     is_selected(){
         return this.checkbox_row.prop(&#x27;checked&#x27;);
     }
@@ -1164,7 +1281,7 @@ class CCheckboxColumn extends CColumn {
      * @param {JQueryNode} elem Container element.
      *
      */
-    
+
     build_options(elem){
         super.build_options(elem);
         elem.html(&#x27;&lt;label class=&quot;checkbox&quot; title=&quot;&#x27;+this.table.lang.select_all_tooltip+&#x27;&quot;&gt;&lt;input type=&quot;checkbox&quot;&gt;&lt;/label&gt;&#x27;);
@@ -1236,7 +1353,7 @@ class CSubtableColumn extends CColumn {
      * @param {Object} options Column options:
      * @param {Function} options.table Function(record) returns new &#x60;CTable&#x60; object.
      * @param {int} [options.width] Column width in percents.
-     * 
+     *
      */
 
     constructor(table, record, options = {}) {
@@ -1321,10 +1438,10 @@ class CSubtableColumn extends CColumn {
  * Base record class
  *
  * See {{#crossLink &quot;CRecord/constructor&quot;}}{{/crossLink}} for options list.
- * 
+ *
  * @class CRecord
  * @constructor
- * 
+ *
  * @example
  *     table.set_record_class(CRecord, {});
  */
@@ -1338,7 +1455,7 @@ class CRecord {
      * @param {Object} table Parent CTable object.
      * @param {Object} [options] Column options.
      * @param {Function} options.on_build_record Fuction on_build_record(row_elem, row_data) called on every data row created.
-     * 
+     *
      */
 
     constructor(table, options = {}) {
@@ -1449,8 +1566,8 @@ class CRecord {
      * @method is_selected
      * @return {Boolean}
      *
-     */    
-    
+     */
+
     is_selected(){
         var result = false;
         this.columns.forEach(function(column) {
@@ -1461,7 +1578,7 @@ class CRecord {
         });
         return result;
     }
-    
+
     /**
      * This record is new?.
      * @method record_is_new
@@ -1487,6 +1604,7 @@ class CRecord {
                 } else {
                     $(&#x27;&lt;col&gt;&lt;/col&gt;&#x27;).appendTo(this.colgroup);
                 }
+
 
                 var head_cell = $(&#x27;&lt;th&gt;&lt;/th&gt;&#x27;).appendTo(this.header_row);
                 this.columns[i].build_title(head_cell);
@@ -1547,7 +1665,7 @@ class CRecord {
 
         for (var i in this.columns){
             var col_val = this.columns[i].editor_value();
-            for (var j in this.columns){    
+            for (var j in this.columns){
                 this.columns[j].record_changed(col_val[0], col_val[1]);
             }
         }
@@ -1646,11 +1764,11 @@ class CAdaptiveRecord extends CRecord {
      * @param {Object} [options] Column options:
      * @param {String} [options.editor_width_class] Editor width class (Bulma &#x60;is-4&#x60; for default)
      * @param {String} [options.record_width_class] Column width class (Bulma &#x60;is-4&#x60; for default)
-     * @param {Boolean} [options.non_adaptive_record] Disable adaptive records
+     * @param {Boolean} [options.adaptive_record] Enable adaptive records
      * @param {Boolean} [options.non_adaptive_editor] Disable adaptive editors
      *
      */
-    
+
     /**
      * Build table row.
      * @method build_record
@@ -1658,58 +1776,64 @@ class CAdaptiveRecord extends CRecord {
      */
 
     build_record(){
-        
-        if (typeof(this.options.non_adaptive_record) != &#x27;undefined&#x27; &amp;&amp; this.options.non_adaptive_record){ 
+
+        if (typeof(this.options.adaptive_record) != &#x27;undefined&#x27; ||  !this.options.adaptive_record){
             super.build_record();
             return;
         }
-        
+
         var record_row = $(&#x27;&lt;td colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
-        var record_cell = $(&#x27;&lt;div style=&quot;columns&quot;&gt;&lt;/div&gt;&#x27;).appendTo(record_row);
-        
+        var record_cell = $(&#x27;&lt;div class=&quot;columns is-multiline&quot;&gt;&lt;/div&gt;&#x27;).appendTo(record_row);
+
         var width_class = &#x27;is-4&#x27;;
         if (typeof(this.options.record_width_class) != &#x27;undefined&#x27;){
             width_class = this.options.record_width_class;
         }
-        
+
         for (var i in this.columns){
             if (this.columns[i].visible_column()){
-                
+
                 var column_width_class = width_class;
                 if(typeof(this.columns[i].options.record_width_class) != &quot;undefined&quot;){
-                    column_width_class = this.columns[i].options.editor_width_class;
+                    column_width_class = this.columns[i].options.record_width_class;
                 }
-                
+
                 var rightfloat = &quot;&quot;;
                 if(typeof(this.columns[i].save_record) != &#x27;undefined&#x27;){
                     rightfloat = &quot;float: right;&quot;
                 }
-                
+
                 var data_cell = $(&#x27;&lt;div class=&quot;column &#x27;+column_width_class+&#x27;&quot; style=&quot;display: inline-block; vertical-align:top;&#x27;+rightfloat+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(record_cell);
+
                 this.columns[i].build_cell(data_cell);
+
+                if(typeof(this.columns[i].options.title) != &quot;undefined&quot;){
+                    var lab = $(&#x27;&lt;label class=&quot;label&quot;&gt;&lt;/label&gt;&#x27;).prependTo(data_cell);
+                    lab.text(this.columns[i].options.title+&quot;:&quot;);
+                }
             }
         }
         if(typeof(this.options.on_build_record) != &quot;undefined&quot;){
             this.options.on_build_record(this.row, this.record_field());
         }
     }
-    
+
     /**
      * Build editor row.
      * @method build_editor
      * @param {Boolean} is_new_record Build editor for new row.
      *
      */
-    
+
     build_editor(is_new_record = false){
 
-        if (typeof(this.options.non_adaptive_editor) != &#x27;undefined&#x27; &amp;&amp; this.options.non_adaptive_editor){ 
+        if (typeof(this.options.non_adaptive_editor) != &#x27;undefined&#x27; &amp;&amp; this.options.non_adaptive_editor){
             super.build_editor(is_new_record);
             return;
         }
 
         var editor_row = $(&#x27;&lt;td colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
-        var editor_cell = $(&#x27;&lt;div style=&quot;columns&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_row);
+        var editor_cell = $(&#x27;&lt;div class=&quot;columns is-multiline&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_row);
 
         var width_class = &#x27;is-4&#x27;;
         if (typeof(this.options.editor_width_class) != &#x27;undefined&#x27;){
@@ -1729,25 +1853,59 @@ class CAdaptiveRecord extends CRecord {
                 }
 
                 var div = $(&#x27;&lt;div class=&quot;field column &#x27;+column_width_class+&#x27;&quot; style=&quot;display: inline-block; vertical-align:top;&#x27;+rightfloat+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_cell);
+
+                this.columns[i].build_editor(div, is_new_record);
+
                 if(typeof(this.columns[i].options.title) != &quot;undefined&quot;){
-                    var lab = $(&#x27;&lt;label class=&quot;label&quot;&gt;&lt;/label&gt;&#x27;).appendTo(div);
+                    var lab = $(&#x27;&lt;label class=&quot;label&quot;&gt;&lt;/label&gt;&#x27;).prependTo(div);
                     lab.text(this.columns[i].options.title+&quot;:&quot;);
 
                 }
 
-                this.columns[i].build_editor(div, is_new_record);
-
-                if(typeof(this.columns[i].options.footnote) != &quot;undefined&quot;){ 
+                if(typeof(this.columns[i].options.footnote) != &quot;undefined&quot;){
                     var footnote = $(&#x27;&lt;p class=&quot;is-size-7 has-text-grey-light&quot;&gt;&lt;/p&gt;&#x27;).appendTo(div);
                     footnote.text(this.columns[i].options.footnote);
                 }
             }
         }
-        
+
         for (var i in this.columns){
             var col_val = this.columns[i].editor_value();
-            for (var j in this.columns){    
+            for (var j in this.columns){
                 this.columns[j].record_changed(col_val[0], col_val[1]);
+            }
+        }
+    }
+
+
+    build_header(){
+
+        if (typeof(this.options.adaptive_record) != &#x27;undefined&#x27; ||  !this.options.adaptive_record){
+            super.build_header();
+            return;
+        }
+
+        var head_row = $(&#x27;&lt;th colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/th&gt;&#x27;).appendTo(this.header_row);
+        var options_row = $(&#x27;&lt;th colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/th&gt;&#x27;).appendTo(this.options_row);
+
+        var head_div = $(&#x27;&lt;div class=&quot;columns is-multiline&quot;&gt;&lt;/div&gt;&#x27;).appendTo(head_row);
+        var options_div = $(&#x27;&lt;div class=&quot;columns is-multiline&quot;&gt;&lt;/div&gt;&#x27;).appendTo(options_row);
+
+        for (var i in this.columns){
+            if (this.columns[i].visible_column()){
+                if (this.columns[i].width() != 0){
+                    $(&#x27;&lt;col style=&quot;width: &#x27;+this.columns[i].width()+&#x27;;&quot;&gt;&lt;/col&gt;&#x27;).appendTo(this.colgroup);
+                } else {
+                    $(&#x27;&lt;col&gt;&lt;/col&gt;&#x27;).appendTo(this.colgroup);
+                }
+
+
+                var head_cell = $(&#x27;&lt;div class=&quot;column&quot;&gt;&lt;/div&gt;&#x27;).appendTo(head_div);
+                this.columns[i].build_title(head_cell);
+
+                var options_cell = $(&#x27;&lt;div class=&quot;column&quot;&gt;&lt;/div&gt;&#x27;).appendTo(options_div);
+                this.columns[i].build_options(options_cell);
+
             }
         }
     }
@@ -1777,7 +1935,7 @@ class CPagination{
      * @param {Array} [options.page_sizes] Variants of page size (list of integers).
      * @param {Int} [options.default_page_size] Default page size.
      * @param {Boolean} [options.hide_all_records] Hide option show all record.
-     * 
+     *
      */
 
     constructor(table, options = {}) {
@@ -2052,7 +2210,7 @@ class CTable {
         this.column_orders = {};
         this.column_filters = {};
         this.column_searches = {};
-        
+
         this.predefined_fields = {};
 
         this.options_url_cache = {};
@@ -2073,7 +2231,7 @@ class CTable {
             this.lang.save_record = &quot;Save&quot;;
             this.lang.cancel = &quot;Cancel&quot;;
             this.lang.delete_confirm = &quot;Delete record?&quot;;
-            this.lang.no_select = &quot;[Other]&quot;;
+            this.lang.no_select = &quot;[Any]&quot;;
             this.lang.on_one_page = &quot; Show by &quot;;
             this.lang.records = &quot;Records on current page&quot;;
             this.lang.from = &quot;from&quot;;
@@ -2103,7 +2261,7 @@ class CTable {
             this.lang.save_record = &quot;Сохранить&quot;;
             this.lang.cancel = &quot;Отменить&quot;;
             this.lang.delete_confirm = &quot;Удалить запись?&quot;;
-            this.lang.no_select = &quot;[Другой]&quot;;
+            this.lang.no_select = &quot;[Любой]&quot;;
             this.lang.on_one_page = &quot; На одной странице: &quot;;
             this.lang.records = &quot;Записей на текущей странице&quot;;
             this.lang.from = &quot;из&quot;;
@@ -2123,7 +2281,11 @@ class CTable {
             this.lang.to_next_tooltip = &quot;На следующую страницу&quot;;
             this.lang.to_last_tooltip = &quot;На последнюю страницу&quot;;
             this.lang.page_size_tooltip = &quot;Записей на страницу&quot;;
-            
+
+        }
+
+        if(typeof(jQuery.datetimepicker) != &#x27;undefined&#x27;){
+            jQuery.datetimepicker.setLocale(this.options.lang);
         }
 
     }
@@ -2196,6 +2358,7 @@ class CTable {
 
     build_table(elem){
         this.elem = elem;
+        elem.css(&#x27;overflow-x&#x27;,&#x27;auto&#x27;);
         this.table.appendTo(this.elem);
 
         this.head_record = new this.record_class(this, this.record_options);
@@ -2208,7 +2371,7 @@ class CTable {
         this.foot_record.build_footer();
 
         if(this.pagination_class !== null){
-            this.pagination = new this.pagination_class(this, this.pagination_options);        
+            this.pagination = new this.pagination_class(this, this.pagination_options);
 
             var pagination_cell = $(&#x27;&lt;td colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;);
             var pagination_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;);
@@ -2217,7 +2380,7 @@ class CTable {
 
             this.pagination.build_pagination(pagination_cell);
         }
-        
+
         if(this.data.length == 0){
             $(&#x27;&lt;tr&gt;&lt;td style=&quot;text-align:center;&quot; colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;&#x27;).appendTo(this.tbody);
         }
@@ -2260,7 +2423,7 @@ class CTable {
      * @return {Array} of records
      *
      */
-    
+
     selected_records(){
         var selected_records = [];
         this.body_records.forEach(function(record){
@@ -2270,7 +2433,7 @@ class CTable {
         });
         return selected_records;
     }
-    
+
     /**
      * Add order for column.
      * @method set_order
@@ -2326,32 +2489,32 @@ class CTable {
      * @param {String} value Column value.
      *
      */
-    
+
     add_predefined_field(column, value){
         this.predefined_fields[column] = value;
     }
-    
+
     /**
      * Loading cover control.
      * @method loading_screen
      * @param {Boolean} state Loading cover on/off.
      *
-     */    
-    
+     */
+
     loading_screen(state){
         if(state){
             if(this.elem.find(&#x27;.ctable-progress&#x27;).length != 0) return;
-            
+
             var pos_tbody = this.tbody.offset();
             var width_tbody = this.tbody.width();
             var height_tbody = this.tbody.height();
-            
+
             $(&#x27;&lt;div class=&quot;ctable-progress&quot; style=&quot;top:&#x27;+pos_tbody.top+&#x27;px; left:&#x27;+pos_tbody.left+&#x27;px; width:&#x27;+width_tbody+&#x27;px; height:&#x27;+height_tbody+&#x27;px;&quot; &gt;&lt;div class=&quot;lds-ellipsis&quot;&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&#x27;).appendTo($(this.elem));
         } else {
            this.elem.find(&#x27;.ctable-progress&#x27;).remove();
         }
     }
-    
+
     /**
      * Get data from server.
      *
@@ -2388,13 +2551,13 @@ class CTable {
         this.data = [];
 
         var select_method = &quot;GET&quot;;
-        
+
         if(typeof(this.options.select_method) != &quot;undefined&quot;){
             select_method = this.options.select_method;
         }
 
         this.loading_screen(true);
-        
+
         $.ajax({
             type: select_method,
             url: this.options.endpoint,
@@ -2446,13 +2609,13 @@ class CTable {
         var self = this;
 
         var editor_data = record.editor_values();
-        
+
         if (editor_data == null) return;
 
         var record_data = Object.assign({}, editor_data, this.predefined_fields);
-        
+
         this.loading_screen(true);
-        
+
         $.ajax({
             type: &quot;POST&quot;,
             url: this.options.endpoint,
@@ -2505,7 +2668,7 @@ class CTable {
         var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
 
         this.loading_screen(true);
-        
+
         $.ajax({
             type: &quot;POST&quot;,
             url: this.options.endpoint,
@@ -2549,11 +2712,11 @@ class CTable {
     remove(record){
 
         var self = this;
-        
+
         var record_data = Object.assign({}, self.data[record.data_index], this.predefined_fields);
 
         this.loading_screen(true);
-        
+
         $.ajax({
             type: &quot;POST&quot;,
             url: this.options.endpoint,
@@ -2612,13 +2775,13 @@ class CTable {
         if (this.options_url_cache[str_params] != undefined){
             on_options_loaded(this.options_url_cache[str_params]);
         } else {
-            
+
             var select_method = &quot;GET&quot;;
-        
+
             if(typeof(this.options.select_method) != &quot;undefined&quot;){
                 select_method = this.options.select_method;
             }
-            
+
             $.ajax({
                 type: select_method,
                 url: query_endpoint,

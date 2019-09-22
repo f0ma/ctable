@@ -63,7 +63,7 @@ class CColumn {
         this.summary_elem = null;
 
         this.editor = null;
-        
+
         if(typeof(this.options.render) != "undefined"){
             this.render = this.options.render;
         } else {
@@ -147,13 +147,13 @@ class CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-        
+
         if(typeof(this.options.max_width) != "undefined"){
-            this.cell_elem.css({'max-width':this.options.max_width+'px'});    
+            this.cell_elem.css({'max-width':this.options.max_width+'px'});
         }
 
         if(typeof(this.options.break_words) != "undefined" && this.options.break_words){
-            this.cell_elem.css({'word-wrap':'break-word'});    
+            this.cell_elem.css({'word-wrap':'break-word'});
         }
 
         this.render(elem, this.record, this.options.column);
@@ -410,7 +410,7 @@ class CTextDataColumn extends CColumn {
         }
 
         if (is_new_record){
-            if(typeof(this.options.default_value) != "undefined"){            
+            if(typeof(this.options.default_value) != "undefined"){
                 this.editor.val(this.options.default_value);
             } else {
                 this.editor.val("");
@@ -423,6 +423,65 @@ class CTextDataColumn extends CColumn {
     }
 
 }
+
+/**
+ * DateTimePicker (https://xdsoft.net/jqplugins/datetimepicker/) column.
+ *
+ * See {{#crossLink "CTextDataColumn/constructor"}}{{/crossLink}} for options list.
+ *
+ * DateTimePicker js and css files should be included.
+ *
+ * @class CDateTimePickerColumn
+ * @extends CSelectColumn
+ * @constructor
+ * @param {String} [options.datetimepicker] DateTimePicker constructor parameters.
+ * @param {String} [options.no_picker_for_options] Disable DateTimePicker for options bar.
+ *
+ */
+
+class CDateTimePickerColumn extends CTextDataColumn{
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+
+    build_options(elem){
+        super.build_options(elem);
+
+        if(typeof(this.options.no_picker_for_options) != "undefined" && this.options.no_picker_for_options){
+            return;
+        }
+
+        if(typeof(this.options.datetimepicker) != "undefined"){
+            this.search_field.datetimepicker(this.options.datetimepicker);
+        } else {
+            this.search_field.datetimepicker();
+        }
+    }
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+
+    build_editor(elem, is_new_record = false){
+        super.build_editor(elem, is_new_record);
+
+        if(typeof(this.options.datetimepicker) != "undefined"){
+            this.editor.datetimepicker(this.options.datetimepicker);
+        } else {
+            this.editor.datetimepicker();
+        }
+    }
+}
+
 
 /**
  * Selector column
@@ -627,6 +686,62 @@ class CSelectColumn extends CTextDataColumn {
 }
 
 /**
+ * Select2 (https://select2.org/) selector column.
+ *
+ * See {{#crossLink "CSelectColumn/constructor"}}{{/crossLink}} for options list.
+ * Select2 js and css files should be included.
+ *
+ * @class CSelect2Column
+ * @extends CSelectColumn
+ * @constructor
+ * @param {String} [options.select2] Select2 constructor parameters.
+ * @param {String} [options.no_select2_for_options] No select2 control for options.
+ *
+ */
+
+class CSelect2Column extends CSelectColumn {
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     * @param {Boolean} is_new_record Create editor for new record.
+     *
+     */
+
+    build_editor(elem, is_new_record = false){
+        super.build_editor(elem, is_new_record);
+
+        if(typeof(this.options.select2) != "undefined"){
+            this.editor.select2(this.options.select2);
+        } else {
+            this.editor.select2();
+        }
+    }
+
+    /**
+     * Build options part of column.
+     * @method build_options
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_options(elem){
+        super.build_options(elem);
+
+        if(typeof(this.options.no_select2_for_options) != "undefined" && this.options.no_select2_for_options){
+            return;
+        }
+
+        if(typeof(this.options.select2) != "undefined"){
+            this.search_field.select2(this.options.select2);
+        } else {
+            this.search_field.select2();
+        }
+    }
+}
+
+/**
  * Command control column (add, edit, delete buttons)
  *
  * See {{#crossLink "CCommandColumn/constructor"}}{{/crossLink}} for options list.
@@ -634,7 +749,7 @@ class CSelectColumn extends CTextDataColumn {
  * @class CCommandColumn
  * @constructor
  * @extends CColumn
- * 
+ *
  * @example
  *     table.add_column_class(CCommandColumn,{no_add: true});
  */
@@ -724,9 +839,9 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.common_actions[i].fa_class) != "undefined"){
                     istyle = this.options.common_actions[i].fa_class;
                 }
-                
+
                 var self = this;
-                
+
                 $('<a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
             }
         }
@@ -925,7 +1040,7 @@ class CCommandColumn extends CColumn {
  * @class CIndicatorColumn
  * @constructor
  * @extends CColumn
- * 
+ *
  * @example
  *     table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });
  */
@@ -1010,14 +1125,14 @@ class CIndicatorColumn extends CColumn {
 }
 
 /**
- * Column for batch row selector 
+ * Column for batch row selector
  *
  * See {{#crossLink "CCheckboxColumn/constructor"}}{{/crossLink}} for options list.
  *
  * @class CCheckboxColumn
  * @constructor
  * @extends CColumn
- * 
+ *
  * @example
  *     table.add_column_class(CCheckboxColumn);
  */
@@ -1040,14 +1155,14 @@ class CCheckboxColumn extends CColumn {
         this.checkbox_row = null;
         this.checkbox_head = null;
     }
-    
+
     /**
      * This row is selected?
      * @method is_selected
      * @return {Boolean}
      *
      */
-    
+
     is_selected(){
         return this.checkbox_row.prop('checked');
     }
@@ -1071,7 +1186,7 @@ class CCheckboxColumn extends CColumn {
      * @param {JQueryNode} elem Container element.
      *
      */
-    
+
     build_options(elem){
         super.build_options(elem);
         elem.html('<label class="checkbox" title="'+this.table.lang.select_all_tooltip+'"><input type="checkbox"></label>');
@@ -1143,7 +1258,7 @@ class CSubtableColumn extends CColumn {
      * @param {Object} options Column options:
      * @param {Function} options.table Function(record) returns new `CTable` object.
      * @param {int} [options.width] Column width in percents.
-     * 
+     *
      */
 
     constructor(table, record, options = {}) {
@@ -1228,10 +1343,10 @@ class CSubtableColumn extends CColumn {
  * Base record class
  *
  * See {{#crossLink "CRecord/constructor"}}{{/crossLink}} for options list.
- * 
+ *
  * @class CRecord
  * @constructor
- * 
+ *
  * @example
  *     table.set_record_class(CRecord, {});
  */
@@ -1245,7 +1360,7 @@ class CRecord {
      * @param {Object} table Parent CTable object.
      * @param {Object} [options] Column options.
      * @param {Function} options.on_build_record Fuction on_build_record(row_elem, row_data) called on every data row created.
-     * 
+     *
      */
 
     constructor(table, options = {}) {
@@ -1356,8 +1471,8 @@ class CRecord {
      * @method is_selected
      * @return {Boolean}
      *
-     */    
-    
+     */
+
     is_selected(){
         var result = false;
         this.columns.forEach(function(column) {
@@ -1368,7 +1483,7 @@ class CRecord {
         });
         return result;
     }
-    
+
     /**
      * This record is new?.
      * @method record_is_new
@@ -1394,6 +1509,7 @@ class CRecord {
                 } else {
                     $('<col></col>').appendTo(this.colgroup);
                 }
+
 
                 var head_cell = $('<th></th>').appendTo(this.header_row);
                 this.columns[i].build_title(head_cell);
@@ -1454,7 +1570,7 @@ class CRecord {
 
         for (var i in this.columns){
             var col_val = this.columns[i].editor_value();
-            for (var j in this.columns){    
+            for (var j in this.columns){
                 this.columns[j].record_changed(col_val[0], col_val[1]);
             }
         }
@@ -1553,11 +1669,11 @@ class CAdaptiveRecord extends CRecord {
      * @param {Object} [options] Column options:
      * @param {String} [options.editor_width_class] Editor width class (Bulma `is-4` for default)
      * @param {String} [options.record_width_class] Column width class (Bulma `is-4` for default)
-     * @param {Boolean} [options.non_adaptive_record] Disable adaptive records
+     * @param {Boolean} [options.adaptive_record] Enable adaptive records
      * @param {Boolean} [options.non_adaptive_editor] Disable adaptive editors
      *
      */
-    
+
     /**
      * Build table row.
      * @method build_record
@@ -1565,58 +1681,64 @@ class CAdaptiveRecord extends CRecord {
      */
 
     build_record(){
-        
-        if (typeof(this.options.non_adaptive_record) != 'undefined' && this.options.non_adaptive_record){ 
+
+        if (typeof(this.options.adaptive_record) != 'undefined' ||  !this.options.adaptive_record){
             super.build_record();
             return;
         }
-        
+
         var record_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
-        var record_cell = $('<div style="columns"></div>').appendTo(record_row);
-        
+        var record_cell = $('<div class="columns is-multiline"></div>').appendTo(record_row);
+
         var width_class = 'is-4';
         if (typeof(this.options.record_width_class) != 'undefined'){
             width_class = this.options.record_width_class;
         }
-        
+
         for (var i in this.columns){
             if (this.columns[i].visible_column()){
-                
+
                 var column_width_class = width_class;
                 if(typeof(this.columns[i].options.record_width_class) != "undefined"){
-                    column_width_class = this.columns[i].options.editor_width_class;
+                    column_width_class = this.columns[i].options.record_width_class;
                 }
-                
+
                 var rightfloat = "";
                 if(typeof(this.columns[i].save_record) != 'undefined'){
                     rightfloat = "float: right;"
                 }
-                
+
                 var data_cell = $('<div class="column '+column_width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(record_cell);
+
                 this.columns[i].build_cell(data_cell);
+
+                if(typeof(this.columns[i].options.title) != "undefined"){
+                    var lab = $('<label class="label"></label>').prependTo(data_cell);
+                    lab.text(this.columns[i].options.title+":");
+                }
             }
         }
         if(typeof(this.options.on_build_record) != "undefined"){
             this.options.on_build_record(this.row, this.record_field());
         }
     }
-    
+
     /**
      * Build editor row.
      * @method build_editor
      * @param {Boolean} is_new_record Build editor for new row.
      *
      */
-    
+
     build_editor(is_new_record = false){
 
-        if (typeof(this.options.non_adaptive_editor) != 'undefined' && this.options.non_adaptive_editor){ 
+        if (typeof(this.options.non_adaptive_editor) != 'undefined' && this.options.non_adaptive_editor){
             super.build_editor(is_new_record);
             return;
         }
 
         var editor_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
-        var editor_cell = $('<div style="columns"></div>').appendTo(editor_row);
+        var editor_cell = $('<div class="columns is-multiline"></div>').appendTo(editor_row);
 
         var width_class = 'is-4';
         if (typeof(this.options.editor_width_class) != 'undefined'){
@@ -1636,25 +1758,59 @@ class CAdaptiveRecord extends CRecord {
                 }
 
                 var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(editor_cell);
+
+                this.columns[i].build_editor(div, is_new_record);
+
                 if(typeof(this.columns[i].options.title) != "undefined"){
-                    var lab = $('<label class="label"></label>').appendTo(div);
+                    var lab = $('<label class="label"></label>').prependTo(div);
                     lab.text(this.columns[i].options.title+":");
 
                 }
 
-                this.columns[i].build_editor(div, is_new_record);
-
-                if(typeof(this.columns[i].options.footnote) != "undefined"){ 
+                if(typeof(this.columns[i].options.footnote) != "undefined"){
                     var footnote = $('<p class="is-size-7 has-text-grey-light"></p>').appendTo(div);
                     footnote.text(this.columns[i].options.footnote);
                 }
             }
         }
-        
+
         for (var i in this.columns){
             var col_val = this.columns[i].editor_value();
-            for (var j in this.columns){    
+            for (var j in this.columns){
                 this.columns[j].record_changed(col_val[0], col_val[1]);
+            }
+        }
+    }
+
+
+    build_header(){
+
+        if (typeof(this.options.adaptive_record) != 'undefined' ||  !this.options.adaptive_record){
+            super.build_header();
+            return;
+        }
+
+        var head_row = $('<th colspan="'+this.table.visible_columns()+'"></th>').appendTo(this.header_row);
+        var options_row = $('<th colspan="'+this.table.visible_columns()+'"></th>').appendTo(this.options_row);
+
+        var head_div = $('<div class="columns is-multiline"></div>').appendTo(head_row);
+        var options_div = $('<div class="columns is-multiline"></div>').appendTo(options_row);
+
+        for (var i in this.columns){
+            if (this.columns[i].visible_column()){
+                if (this.columns[i].width() != 0){
+                    $('<col style="width: '+this.columns[i].width()+';"></col>').appendTo(this.colgroup);
+                } else {
+                    $('<col></col>').appendTo(this.colgroup);
+                }
+
+
+                var head_cell = $('<div class="column"></div>').appendTo(head_div);
+                this.columns[i].build_title(head_cell);
+
+                var options_cell = $('<div class="column"></div>').appendTo(options_div);
+                this.columns[i].build_options(options_cell);
+
             }
         }
     }
@@ -1684,7 +1840,7 @@ class CPagination{
      * @param {Array} [options.page_sizes] Variants of page size (list of integers).
      * @param {Int} [options.default_page_size] Default page size.
      * @param {Boolean} [options.hide_all_records] Hide option show all record.
-     * 
+     *
      */
 
     constructor(table, options = {}) {
@@ -1959,7 +2115,7 @@ class CTable {
         this.column_orders = {};
         this.column_filters = {};
         this.column_searches = {};
-        
+
         this.predefined_fields = {};
 
         this.options_url_cache = {};
@@ -1980,7 +2136,7 @@ class CTable {
             this.lang.save_record = "Save";
             this.lang.cancel = "Cancel";
             this.lang.delete_confirm = "Delete record?";
-            this.lang.no_select = "[Other]";
+            this.lang.no_select = "[Any]";
             this.lang.on_one_page = " Show by ";
             this.lang.records = "Records on current page";
             this.lang.from = "from";
@@ -2010,7 +2166,7 @@ class CTable {
             this.lang.save_record = "Сохранить";
             this.lang.cancel = "Отменить";
             this.lang.delete_confirm = "Удалить запись?";
-            this.lang.no_select = "[Другой]";
+            this.lang.no_select = "[Любой]";
             this.lang.on_one_page = " На одной странице: ";
             this.lang.records = "Записей на текущей странице";
             this.lang.from = "из";
@@ -2030,7 +2186,11 @@ class CTable {
             this.lang.to_next_tooltip = "На следующую страницу";
             this.lang.to_last_tooltip = "На последнюю страницу";
             this.lang.page_size_tooltip = "Записей на страницу";
-            
+
+        }
+
+        if(typeof(jQuery.datetimepicker) != 'undefined'){
+            jQuery.datetimepicker.setLocale(this.options.lang);
         }
 
     }
@@ -2103,6 +2263,7 @@ class CTable {
 
     build_table(elem){
         this.elem = elem;
+        elem.css('overflow-x','auto');
         this.table.appendTo(this.elem);
 
         this.head_record = new this.record_class(this, this.record_options);
@@ -2115,7 +2276,7 @@ class CTable {
         this.foot_record.build_footer();
 
         if(this.pagination_class !== null){
-            this.pagination = new this.pagination_class(this, this.pagination_options);        
+            this.pagination = new this.pagination_class(this, this.pagination_options);
 
             var pagination_cell = $('<td colspan="'+this.visible_columns()+'"></td>');
             var pagination_row = $('<tr></tr>');
@@ -2124,7 +2285,7 @@ class CTable {
 
             this.pagination.build_pagination(pagination_cell);
         }
-        
+
         if(this.data.length == 0){
             $('<tr><td style="text-align:center;" colspan="'+this.visible_columns()+'">&nbsp;</td></tr>').appendTo(this.tbody);
         }
@@ -2167,7 +2328,7 @@ class CTable {
      * @return {Array} of records
      *
      */
-    
+
     selected_records(){
         var selected_records = [];
         this.body_records.forEach(function(record){
@@ -2177,7 +2338,7 @@ class CTable {
         });
         return selected_records;
     }
-    
+
     /**
      * Add order for column.
      * @method set_order
@@ -2233,32 +2394,32 @@ class CTable {
      * @param {String} value Column value.
      *
      */
-    
+
     add_predefined_field(column, value){
         this.predefined_fields[column] = value;
     }
-    
+
     /**
      * Loading cover control.
      * @method loading_screen
      * @param {Boolean} state Loading cover on/off.
      *
-     */    
-    
+     */
+
     loading_screen(state){
         if(state){
             if(this.elem.find('.ctable-progress').length != 0) return;
-            
+
             var pos_tbody = this.tbody.offset();
             var width_tbody = this.tbody.width();
             var height_tbody = this.tbody.height();
-            
+
             $('<div class="ctable-progress" style="top:'+pos_tbody.top+'px; left:'+pos_tbody.left+'px; width:'+width_tbody+'px; height:'+height_tbody+'px;" ><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>').appendTo($(this.elem));
         } else {
            this.elem.find('.ctable-progress').remove();
         }
     }
-    
+
     /**
      * Get data from server.
      *
@@ -2295,13 +2456,13 @@ class CTable {
         this.data = [];
 
         var select_method = "GET";
-        
+
         if(typeof(this.options.select_method) != "undefined"){
             select_method = this.options.select_method;
         }
 
         this.loading_screen(true);
-        
+
         $.ajax({
             type: select_method,
             url: this.options.endpoint,
@@ -2353,13 +2514,13 @@ class CTable {
         var self = this;
 
         var editor_data = record.editor_values();
-        
+
         if (editor_data == null) return;
 
         var record_data = Object.assign({}, editor_data, this.predefined_fields);
-        
+
         this.loading_screen(true);
-        
+
         $.ajax({
             type: "POST",
             url: this.options.endpoint,
@@ -2412,7 +2573,7 @@ class CTable {
         var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
 
         this.loading_screen(true);
-        
+
         $.ajax({
             type: "POST",
             url: this.options.endpoint,
@@ -2456,11 +2617,11 @@ class CTable {
     remove(record){
 
         var self = this;
-        
+
         var record_data = Object.assign({}, self.data[record.data_index], this.predefined_fields);
 
         this.loading_screen(true);
-        
+
         $.ajax({
             type: "POST",
             url: this.options.endpoint,
@@ -2519,13 +2680,13 @@ class CTable {
         if (this.options_url_cache[str_params] != undefined){
             on_options_loaded(this.options_url_cache[str_params]);
         } else {
-            
+
             var select_method = "GET";
-        
+
             if(typeof(this.options.select_method) != "undefined"){
                 select_method = this.options.select_method;
             }
-            
+
             $.ajax({
                 type: select_method,
                 url: query_endpoint,
