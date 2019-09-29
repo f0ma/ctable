@@ -15,8 +15,7 @@ function HTMLRender(elem, record, column){
 }
 
 function EmptyRender(elem, record, column){
-}
-
+} 
 /**
  * Base column class.
  *
@@ -241,22 +240,21 @@ class CColumn {
         }
         return [null, null];
     }
-}
-
+} 
 /**
  * Text input column class.
  *
- * See {{#crossLink "CTextDataColumn/constructor"}}{{/crossLink}} for options list.
+ * See {{#crossLink "CTextColumn/constructor"}}{{/crossLink}} for options list.
  *
- * @class CTextDataColumn
+ * @class CTextColumn
  * @constructor
  * @extends CColumn
  *
  * @example
- *     table.add_column_class(CTextDataColumn,{column:'firstname', title:'Firstname', validate:"\\S+"});
+ *     table.add_column_class(CTextColumn,{column:'firstname', title:'Firstname', validate:"\\S+"});
  */
 
-class CTextDataColumn extends CColumn {
+class CTextColumn extends CColumn {
 
     /**
      * Create column object. Should not be called directly.
@@ -422,24 +420,23 @@ class CTextDataColumn extends CColumn {
         this.editor.change($.proxy(this.value_changed, this));
     }
 
-}
-
+} 
 /**
  * DateTimePicker (https://xdsoft.net/jqplugins/datetimepicker/) column.
  *
- * See {{#crossLink "CTextDataColumn/constructor"}}{{/crossLink}} for options list.
+ * See {{#crossLink "CTextColumn/constructor"}}{{/crossLink}} for options list.
  *
  * DateTimePicker js and css files should be included.
  *
  * @class CDateTimePickerColumn
- * @extends CSelectColumn
+ * @extends CTextColumn
  * @constructor
  * @param {String} [options.datetimepicker] DateTimePicker constructor parameters.
  * @param {String} [options.no_picker_for_options] Disable DateTimePicker for options bar.
  *
  */
 
-class CDateTimePickerColumn extends CTextDataColumn{
+class CDateTimePickerColumn extends CTextColumn{
 
     /**
      * Build editor part of column.
@@ -452,6 +449,10 @@ class CDateTimePickerColumn extends CTextDataColumn{
     build_options(elem){
         super.build_options(elem);
 
+        if(typeof(this.options.no_search) != "undefined" && this.options.no_search){
+            return;
+        }
+        
         if(typeof(this.options.no_picker_for_options) != "undefined" && this.options.no_picker_for_options){
             return;
         }
@@ -480,9 +481,7 @@ class CDateTimePickerColumn extends CTextDataColumn{
             this.editor.datetimepicker();
         }
     }
-}
-
-
+} 
 /**
  * Selector column
  *
@@ -490,7 +489,7 @@ class CDateTimePickerColumn extends CTextDataColumn{
  *
  * @class CSelectColumn
  * @constructor
- * @extends CTextDataColumn
+ * @extends CTextColumn
  *
  * @example
  *     table.add_column_class(CSelectColumn, {column:'group_id', title:'Group', load:'group_id',
@@ -498,7 +497,7 @@ class CDateTimePickerColumn extends CTextDataColumn{
  *                                            default_value: 3});
  */
 
-class CSelectColumn extends CTextDataColumn {
+class CSelectColumn extends CTextColumn {
 
     /**
      * Constructor, if `options.load` is set, options value will be set with `fill_options` after ajax call
@@ -695,6 +694,7 @@ class CSelectColumn extends CTextDataColumn {
  * @extends CSelectColumn
  * @constructor
  * @param {String} [options.select2] Select2 constructor parameters.
+ * @param {Boolean} [options.multiple] Select2 in multiselect mode.
  * @param {String} [options.no_select2_for_options] No select2 control for options.
  *
  */
@@ -712,6 +712,10 @@ class CSelect2Column extends CSelectColumn {
     build_editor(elem, is_new_record = false){
         super.build_editor(elem, is_new_record);
 
+        if(typeof(this.options.multiple) != "undefined" && this.options.multiple){
+            this.editor.prop('multiple','multiple');
+        }
+        
         if(typeof(this.options.select2) != "undefined"){
             this.editor.select2(this.options.select2);
         } else {
@@ -729,6 +733,10 @@ class CSelect2Column extends CSelectColumn {
     build_options(elem){
         super.build_options(elem);
 
+        if(typeof(this.options.no_filter) != "undefined" && this.options.no_filter){
+            return;
+        }
+        
         if(typeof(this.options.no_select2_for_options) != "undefined" && this.options.no_select2_for_options){
             return;
         }
@@ -739,8 +747,7 @@ class CSelect2Column extends CSelectColumn {
             this.search_field.select2();
         }
     }
-}
-
+} 
 /**
  * Command control column (add, edit, delete buttons)
  *
@@ -1123,7 +1130,7 @@ class CIndicatorColumn extends CColumn {
         return false;
     }
 }
-
+ 
 /**
  * Column for batch row selector
  *
@@ -1219,8 +1226,7 @@ class CCheckboxColumn extends CColumn {
     }
 }
 
-
-
+ 
 /**
  * Show subtable button column
  *
@@ -1339,6 +1345,7 @@ class CSubtableColumn extends CColumn {
 
 }
 
+ 
 /**
  * Base record class
  *
@@ -1645,7 +1652,7 @@ class CRecord {
     }
 
 }
-
+ 
 /**
  * Div-based editor with floats and footnotes.
  *
@@ -1816,6 +1823,7 @@ class CAdaptiveRecord extends CRecord {
     }
 
 }
+
 
 /**
  * Pagination class.
@@ -2036,8 +2044,7 @@ class CPagination{
         this.page_info.text(' '+this.table.lang.records+' 0 '+this.table.lang.from+' 0 ');
     }
 }
-
-
+ 
 /**
  * Table class
  *
@@ -2711,3 +2718,4 @@ class CTable {
 
 }
 
+ 

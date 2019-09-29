@@ -13,7 +13,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "CSelectColumn",
         "CSubtableColumn",
         "CTable",
-        "CTextDataColumn"
+        "CTextColumn"
     ],
     "modules": [
         "ctable"

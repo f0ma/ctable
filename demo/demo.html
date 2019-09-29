@@ -56,7 +56,7 @@ $(function() {
                                       editor_width_class: 'is-2',
                                       footnote: 'in YYYY-MM-DD format'});
 
-        tt.add_column_class(CTextDataColumn,{column:'sum',
+        tt.add_column_class(CTextColumn,{column:'sum',
                                       title:'Sum',
                                       validate: "[0-9]+",
                                       editor_width_class: 'is-2',
@@ -82,12 +82,12 @@ $(function() {
                                 visible_editor:false,
                                 visible_column:true});
 
-    t.add_column_class(CTextDataColumn,{column:'firstname',
+    t.add_column_class(CTextColumn,{column:'firstname',
                                         title:'Firstname',
                                         record_width_class: 'is-3',
                                         validate:"\\S+", editor_width_class: 'is-3'});
 
-    t.add_column_class(CTextDataColumn,{column:'lastname',
+    t.add_column_class(CTextColumn,{column:'lastname',
                                         title:'Lastname',
                                         record_width_class: 'is-3',
                                         validate:"\\S+", editor_width_class: 'is-3'});

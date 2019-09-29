@@ -21,7 +21,7 @@
             
             <h4>Standart column classes</h4>
             <ul>
-            <li>Text field {{#crossLink "CTextDataColumn"}}{{/crossLink}}</li>
+            <li>Text field {{#crossLink "CTextColumn"}}{{/crossLink}}</li>
             <li>Combobox {{#crossLink "CSelectColumn"}}{{/crossLink}}</li>
             <li>Control buttons {{#crossLink "CCommandColumn"}}{{/crossLink}}</li>
             </ul>
@@ -34,8 +34,8 @@
 
             <h4>Сolumn classes with third-party widgets</h4>
             <ul>
-            <li>CSelect2Column {{#crossLink "CSelect2Column"}}{{/crossLink}} for <a href="https://select2.org/">Select2</a></li>
-            <li>CDateTimePickerColumn {{#crossLink "CDateTimePickerColumn"}}{{/crossLink}} for <a href="https://xdsoft.net/jqplugins/datetimepicker/">DateTimePicker</a></li>
+            <li>CSelect2Column {{#crossLink "CSelect2Column"}}{{/crossLink}} for <a href="https://select2.org/">Select2</a>: ComboBox with search and multi-select option</li>
+            <li>CDateTimePickerColumn {{#crossLink "CDateTimePickerColumn"}}{{/crossLink}} for <a href="https://xdsoft.net/jqplugins/datetimepicker/">DateTimePicker</a>: Text field with date and/or time selection dialog</li>
             </ul>
             
             <h4>Usage exapmle</h4>
@@ -59,8 +59,8 @@
             
                 tt.set_record_class(CDivEditorRecord);
                 tt.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false, visible_column:false});
-                tt.add_column_class(CTextDataColumn,{column:'firstname', title:'Имя', validate:"\\S+"});
-                tt.add_column_class(CTextDataColumn,{column:'lastname', title:'Фамилия', validate:"\\S+"});
+                tt.add_column_class(CTextColumn,{column:'firstname', title:'Имя', validate:"\\S+"});
+                tt.add_column_class(CTextColumn,{column:'lastname', title:'Фамилия', validate:"\\S+"});
                 
                 return tt;
             }});
@@ -70,11 +70,11 @@
                                         visible_editor:false,
                                         visible_column:false});
             
-            t.add_column_class(CTextDataColumn,{column:'firstname',
+            t.add_column_class(CTextColumn,{column:'firstname',
                                                 title:'Firstname',
                                                 validate:"\\S+"});
             
-            t.add_column_class(CTextDataColumn,{column:'lastname',
+            t.add_column_class(CTextColumn,{column:'lastname',
                                                 title:'Lastname',
                                                 validate:"\\S+"});
             

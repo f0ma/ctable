@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.4.2</em>
+            <em>Version: 0.4.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -50,7 +50,7 @@
                                 <li><a href="../classes/CSelectColumn.html">CSelectColumn</a></li>
                                 <li><a href="../classes/CSubtableColumn.html">CSubtableColumn</a></li>
                                 <li><a href="../classes/CTable.html">CTable</a></li>
-                                <li><a href="../classes/CTextDataColumn.html">CTextDataColumn</a></li>
+                                <li><a href="../classes/CTextColumn.html">CTextColumn</a></li>
                             </ul>
                 
                 
@@ -110,8 +110,7 @@ function HTMLRender(elem, record, column){
 }
 
 function EmptyRender(elem, record, column){
-}
-
+} 
 /**
  * Base column class.
  *
@@ -336,22 +335,21 @@ class CColumn {
         }
         return [null, null];
     }
-}
-
+} 
 /**
  * Text input column class.
  *
- * See {{#crossLink &quot;CTextDataColumn/constructor&quot;}}{{/crossLink}} for options list.
+ * See {{#crossLink &quot;CTextColumn/constructor&quot;}}{{/crossLink}} for options list.
  *
- * @class CTextDataColumn
+ * @class CTextColumn
  * @constructor
  * @extends CColumn
  *
  * @example
- *     table.add_column_class(CTextDataColumn,{column:&#x27;firstname&#x27;, title:&#x27;Firstname&#x27;, validate:&quot;\\S+&quot;});
+ *     table.add_column_class(CTextColumn,{column:&#x27;firstname&#x27;, title:&#x27;Firstname&#x27;, validate:&quot;\\S+&quot;});
  */
 
-class CTextDataColumn extends CColumn {
+class CTextColumn extends CColumn {
 
     /**
      * Create column object. Should not be called directly.
@@ -517,24 +515,23 @@ class CTextDataColumn extends CColumn {
         this.editor.change($.proxy(this.value_changed, this));
     }
 
-}
-
+} 
 /**
  * DateTimePicker (https://xdsoft.net/jqplugins/datetimepicker/) column.
  *
- * See {{#crossLink &quot;CTextDataColumn/constructor&quot;}}{{/crossLink}} for options list.
+ * See {{#crossLink &quot;CTextColumn/constructor&quot;}}{{/crossLink}} for options list.
  *
  * DateTimePicker js and css files should be included.
  *
  * @class CDateTimePickerColumn
- * @extends CSelectColumn
+ * @extends CTextColumn
  * @constructor
  * @param {String} [options.datetimepicker] DateTimePicker constructor parameters.
  * @param {String} [options.no_picker_for_options] Disable DateTimePicker for options bar.
  *
  */
 
-class CDateTimePickerColumn extends CTextDataColumn{
+class CDateTimePickerColumn extends CTextColumn{
 
     /**
      * Build editor part of column.
@@ -547,6 +544,10 @@ class CDateTimePickerColumn extends CTextDataColumn{
     build_options(elem){
         super.build_options(elem);
 
+        if(typeof(this.options.no_search) != &quot;undefined&quot; &amp;&amp; this.options.no_search){
+            return;
+        }
+        
         if(typeof(this.options.no_picker_for_options) != &quot;undefined&quot; &amp;&amp; this.options.no_picker_for_options){
             return;
         }
@@ -575,9 +576,7 @@ class CDateTimePickerColumn extends CTextDataColumn{
             this.editor.datetimepicker();
         }
     }
-}
-
-
+} 
 /**
  * Selector column
  *
@@ -585,7 +584,7 @@ class CDateTimePickerColumn extends CTextDataColumn{
  *
  * @class CSelectColumn
  * @constructor
- * @extends CTextDataColumn
+ * @extends CTextColumn
  *
  * @example
  *     table.add_column_class(CSelectColumn, {column:&#x27;group_id&#x27;, title:&#x27;Group&#x27;, load:&#x27;group_id&#x27;,
@@ -593,7 +592,7 @@ class CDateTimePickerColumn extends CTextDataColumn{
  *                                            default_value: 3});
  */
 
-class CSelectColumn extends CTextDataColumn {
+class CSelectColumn extends CTextColumn {
 
     /**
      * Constructor, if &#x60;options.load&#x60; is set, options value will be set with &#x60;fill_options&#x60; after ajax call
@@ -790,6 +789,7 @@ class CSelectColumn extends CTextDataColumn {
  * @extends CSelectColumn
  * @constructor
  * @param {String} [options.select2] Select2 constructor parameters.
+ * @param {Boolean} [options.multiple] Select2 in multiselect mode.
  * @param {String} [options.no_select2_for_options] No select2 control for options.
  *
  */
@@ -807,6 +807,10 @@ class CSelect2Column extends CSelectColumn {
     build_editor(elem, is_new_record = false){
         super.build_editor(elem, is_new_record);
 
+        if(typeof(this.options.multiple) != &quot;undefined&quot; &amp;&amp; this.options.multiple){
+            this.editor.prop(&#x27;multiple&#x27;,&#x27;multiple&#x27;);
+        }
+        
         if(typeof(this.options.select2) != &quot;undefined&quot;){
             this.editor.select2(this.options.select2);
         } else {
@@ -824,6 +828,10 @@ class CSelect2Column extends CSelectColumn {
     build_options(elem){
         super.build_options(elem);
 
+        if(typeof(this.options.no_filter) != &quot;undefined&quot; &amp;&amp; this.options.no_filter){
+            return;
+        }
+        
         if(typeof(this.options.no_select2_for_options) != &quot;undefined&quot; &amp;&amp; this.options.no_select2_for_options){
             return;
         }
@@ -834,8 +842,7 @@ class CSelect2Column extends CSelectColumn {
             this.search_field.select2();
         }
     }
-}
-
+} 
 /**
  * Command control column (add, edit, delete buttons)
  *
@@ -1218,7 +1225,7 @@ class CIndicatorColumn extends CColumn {
         return false;
     }
 }
-
+ 
 /**
  * Column for batch row selector
  *
@@ -1314,8 +1321,7 @@ class CCheckboxColumn extends CColumn {
     }
 }
 
-
-
+ 
 /**
  * Show subtable button column
  *
@@ -1434,6 +1440,7 @@ class CSubtableColumn extends CColumn {
 
 }
 
+ 
 /**
  * Base record class
  *
@@ -1740,7 +1747,7 @@ class CRecord {
     }
 
 }
-
+ 
 /**
  * Div-based editor with floats and footnotes.
  *
@@ -1911,6 +1918,7 @@ class CAdaptiveRecord extends CRecord {
     }
 
 }
+
 
 /**
  * Pagination class.
@@ -2131,8 +2139,7 @@ class CPagination{
         this.page_info.text(&#x27; &#x27;+this.table.lang.records+&#x27; 0 &#x27;+this.table.lang.from+&#x27; 0 &#x27;);
     }
 }
-
-
+ 
 /**
  * Table class
  *
@@ -2806,6 +2813,7 @@ class CTable {
 
 }
 
+ 
 
     </pre>
 </div>

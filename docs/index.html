@@ -17,7 +17,7 @@
             <h1><a href="index.html">CTable</a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>Version: 0.4.2</em>
+            <em>Version: 0.4.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -50,7 +50,7 @@
                                 <li><a href="./classes/CSelectColumn.html">CSelectColumn</a></li>
                                 <li><a href="./classes/CSubtableColumn.html">CSubtableColumn</a></li>
                                 <li><a href="./classes/CTable.html">CTable</a></li>
-                                <li><a href="./classes/CTextDataColumn.html">CTextDataColumn</a></li>
+                                <li><a href="./classes/CTextColumn.html">CTextColumn</a></li>
                             </ul>
                 
                 
@@ -112,7 +112,7 @@
             
             <h4>Standart column classes</h4>
             <ul>
-            <li>Text field <a href="../classes/CTextDataColumn.html" class="crosslink">CTextDataColumn</a></li>
+            <li>Text field <a href="../classes/CTextColumn.html" class="crosslink">CTextColumn</a></li>
             <li>Combobox <a href="../classes/CSelectColumn.html" class="crosslink">CSelectColumn</a></li>
             <li>Control buttons <a href="../classes/CCommandColumn.html" class="crosslink">CCommandColumn</a></li>
             </ul>
@@ -125,8 +125,8 @@
 
             <h4>Сolumn classes with third-party widgets</h4>
             <ul>
-            <li>CSelect2Column <a href="../classes/CSelect2Column.html" class="crosslink">CSelect2Column</a> for <a href="https://select2.org/">Select2</a></li>
-            <li>CDateTimePickerColumn <a href="../classes/CDateTimePickerColumn.html" class="crosslink">CDateTimePickerColumn</a> for <a href="https://xdsoft.net/jqplugins/datetimepicker/">DateTimePicker</a></li>
+            <li>CSelect2Column <a href="../classes/CSelect2Column.html" class="crosslink">CSelect2Column</a> for <a href="https://select2.org/">Select2</a>: ComboBox with search and multi-select option</li>
+            <li>CDateTimePickerColumn <a href="../classes/CDateTimePickerColumn.html" class="crosslink">CDateTimePickerColumn</a> for <a href="https://xdsoft.net/jqplugins/datetimepicker/">DateTimePicker</a>: Text field with date and/or time selection dialog</li>
             </ul>
             
             <h4>Usage exapmle</h4>
@@ -150,8 +150,8 @@
             
                 tt.set_record_class(CDivEditorRecord);
                 tt.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false, visible_column:false});
-                tt.add_column_class(CTextDataColumn,{column:'firstname', title:'Имя', validate:"\\S+"});
-                tt.add_column_class(CTextDataColumn,{column:'lastname', title:'Фамилия', validate:"\\S+"});
+                tt.add_column_class(CTextColumn,{column:'firstname', title:'Имя', validate:"\\S+"});
+                tt.add_column_class(CTextColumn,{column:'lastname', title:'Фамилия', validate:"\\S+"});
                 
                 return tt;
             }});
@@ -161,11 +161,11 @@
                                         visible_editor:false,
                                         visible_column:false});
             
-            t.add_column_class(CTextDataColumn,{column:'firstname',
+            t.add_column_class(CTextColumn,{column:'firstname',
                                                 title:'Firstname',
                                                 validate:"\\S+"});
             
-            t.add_column_class(CTextDataColumn,{column:'lastname',
+            t.add_column_class(CTextColumn,{column:'lastname',
                                                 title:'Lastname',
                                                 validate:"\\S+"});
             
