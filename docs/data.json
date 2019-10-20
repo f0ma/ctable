@@ -2375,7 +2375,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2551,
+            "line": 2554,
             "description": "Update record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `update`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "update",
@@ -2391,7 +2391,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2604,
+            "line": 2610,
             "description": "Delete record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "remove",
@@ -2407,7 +2407,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2651,
+            "line": 2660,
             "description": "Table level options cache routine.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `options`)\n\nRequest is `params` object (json). Requried field `params.load`.\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Options` {Object} Result options dict.\n\nIf `params` in cache call `on_options_loaded` and returns immediately.\nElse make AJAX call and call `on_options_loaded` after data is loaded.",
             "itemtype": "method",
             "name": "load_from_options_cache",

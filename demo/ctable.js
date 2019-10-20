@@ -2544,6 +2544,9 @@ class CTable {
         }, "json")
         .fail(function() {
             alert(self.lang.server_side_error);
+        })
+        .always(function() {
+            self.loading_screen(false);
         });
 
     }
@@ -2597,6 +2600,9 @@ class CTable {
         }, "json")
         .fail(function() {
             alert(self.lang.server_side_error);
+        })
+        .always(function() {
+            self.loading_screen(false);
         });
 
     }
@@ -2645,6 +2651,9 @@ class CTable {
         }, "json")
         .fail(function() {
             alert(self.lang.server_side_error);
+        })
+        .always(function() {
+            self.loading_screen(false);
         });
     }
 

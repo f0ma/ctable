@@ -52,9 +52,8 @@ $(function() {
 
         tt.add_column_class(CDateTimePickerColumn,{column:'date',
                                       title:'Date',
-//                                      validate: "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]",
-                                      editor_width_class: 'is-2',
-                                      footnote: 'in YYYY-MM-DD format'});
+                                      datetimepicker: {timepicker:false, format:'Y-m-d'},
+                                      editor_width_class: 'is-2'});
 
         tt.add_column_class(CTextColumn,{column:'sum',
                                       title:'Sum',
