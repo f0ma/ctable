@@ -90,7 +90,7 @@ class CAdaptiveRecord extends CRecord {
         }
 
         var editor_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
-        var editor_cell = $('<div class="columns is-multiline"></div>').appendTo(editor_row);
+        var editor_cell = $('<div class="columns is-multiline" style="width:99%;"></div>').appendTo(editor_row);
 
         var width_class = 'is-4';
         if (typeof(this.options.editor_width_class) != 'undefined'){

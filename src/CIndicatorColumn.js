@@ -5,14 +5,14 @@
  *
  * @class CIndicatorColumn
  * @constructor
- * @extends CColumn
+ * @extends CCustomColumn
  *
  * @example
  *     table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });
  */
 
 
-class CIndicatorColumn extends CColumn {
+class CIndicatorColumn extends CCustomColumn {
 
     /**
      * Create column object. Should not be called directly.
@@ -27,66 +27,27 @@ class CIndicatorColumn extends CColumn {
 
     constructor(table, record, options = {}) {
         super(table, record, options);
-    }
 
-    /**
-     * Build cell part of column.
-     * @method build_cell
-     * @param {JQueryNode} elem Container element.
-     *
-     */
-
-    build_cell(elem){
-        super.build_cell(elem);
-        if (typeof(this.options.informer) != "undefined"){
-            var state = this.options.informer(this.record, this.options.column);
+        options.html = function(self, record, column_name){
+            var state = self.options.informer(record, column_name);
             if (state == "" || state == "none"){
-                elem.html('');
-                return;
+                return '';
             }
             if (state == "primary"){
-                elem.html('<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>');
-                return;
+                return '<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>';
             }
             if (state == "info"){
-                elem.html('<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>');
-                return;
+                return '<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>';
             }
             if (state == "success" || state == "ok"){
-                elem.html('<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>');
-                return;
+                return '<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>';
             }
             if (state == "warning"){
-                elem.html('<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>');
-                return;
+                return '<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>';
             }
             if (state == "danger" || state == "error"){
-                elem.html('<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>');
-                return;
+                return '<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>';
             }
         }
     }
-
-    /**
-     * Column is visible?.
-     * @method visible_column
-     * @return {Boolean} Always true
-     *
-     */
-
-    visible_column(){
-        return true;
-    }
-
-    /**
-     * Editor is visible?.
-     * @method visible_editor
-     * @return {Boolean} Always false
-     *
-     */
-
-    visible_editor(){
-        return false;
-    }
 }
- 

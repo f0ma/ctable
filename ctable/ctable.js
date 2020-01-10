@@ -1040,20 +1040,20 @@ class CCommandColumn extends CColumn {
 }
 
 /**
- * Indication column (show status based on custom function call result)
+ * Custom js column with content returned by function
  *
- * See {{#crossLink "CIndicatorColumn/constructor"}}{{/crossLink}} for options list.
+ * See {{#crossLink "CCustomColumn/constructor"}}{{/crossLink}} for options list.
  *
- * @class CIndicatorColumn
+ * @class CCustomColumn
  * @constructor
  * @extends CColumn
  *
  * @example
- *     table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });
+ *     table.add_column_class(CCustomColumn,{ text: function(record, column){return "OK!";} });
  */
 
 
-class CIndicatorColumn extends CColumn {
+class CCustomColumn extends CColumn {
 
     /**
      * Create column object. Should not be called directly.
@@ -1063,7 +1063,8 @@ class CIndicatorColumn extends CColumn {
      * @param {Object} record Parent CRecord object.
      * @param {Object} options Column options:
      * @param {int} [options.width] Column width in percents.
-     * @param {Function} [options.informer] function(record, column) returns one from "" or "none", "primary", "info", "success", "warning", "danger".
+     * @param {Function} [options.text] function(column, record, column_name) which returns text (alternative).
+     * @param {Function} [options.html] function(column, record, column_name) which returns html (alternative).
      */
 
     constructor(table, record, options = {}) {
@@ -1079,32 +1080,13 @@ class CIndicatorColumn extends CColumn {
 
     build_cell(elem){
         super.build_cell(elem);
-        if (typeof(this.options.informer) != "undefined"){
-            var state = this.options.informer(this.record, this.options.column);
-            if (state == "" || state == "none"){
-                elem.html('');
-                return;
-            }
-            if (state == "primary"){
-                elem.html('<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>');
-                return;
-            }
-            if (state == "info"){
-                elem.html('<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>');
-                return;
-            }
-            if (state == "success" || state == "ok"){
-                elem.html('<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>');
-                return;
-            }
-            if (state == "warning"){
-                elem.html('<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>');
-                return;
-            }
-            if (state == "danger" || state == "error"){
-                elem.html('<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>');
-                return;
-            }
+        if (typeof(this.options.text) != "undefined"){
+            elem.text(this.options.text(this, this.record, this.options.column));
+            return;
+        }
+        if (typeof(this.options.html) != "undefined"){
+            elem.html(this.options.html(this, this.record, this.options.column));
+            return;
         }
     }
 
@@ -1131,6 +1113,59 @@ class CIndicatorColumn extends CColumn {
     }
 }
  
+/**
+ * Indication column (show status based on custom function call result)
+ *
+ * See {{#crossLink "CIndicatorColumn/constructor"}}{{/crossLink}} for options list.
+ *
+ * @class CIndicatorColumn
+ * @constructor
+ * @extends CCustomColumn
+ *
+ * @example
+ *     table.add_column_class(CIndicatorColumn,{informer: function(record, column){} });
+ */
+
+
+class CIndicatorColumn extends CCustomColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     * @param {Function} [options.informer] function(record, column) returns one from "" or "none", "primary", "info", "success", "warning", "danger".
+     */
+
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+
+        options.html = function(self, record, column_name){
+            var state = self.options.informer(record, column_name);
+            if (state == "" || state == "none"){
+                return '';
+            }
+            if (state == "primary"){
+                return '<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>';
+            }
+            if (state == "info"){
+                return '<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>';
+            }
+            if (state == "success" || state == "ok"){
+                return '<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>';
+            }
+            if (state == "warning"){
+                return '<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>';
+            }
+            if (state == "danger" || state == "error"){
+                return '<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>';
+            }
+        }
+    }
+}
 /**
  * Column for batch row selector
  *
@@ -1745,7 +1780,7 @@ class CAdaptiveRecord extends CRecord {
         }
 
         var editor_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
-        var editor_cell = $('<div class="columns is-multiline"></div>').appendTo(editor_row);
+        var editor_cell = $('<div class="columns is-multiline" style="width:99%;"></div>').appendTo(editor_row);
 
         var width_class = 'is-4';
         if (typeof(this.options.editor_width_class) != 'undefined'){
@@ -2083,8 +2118,9 @@ class CTable {
      * @method constructor
      * @param {Object} options Column options:
      * @param {String} options.endpoint Ajax requests endpoint.
-     * @param {String} options.lang Table language: 'en' or 'ru'. Default is 'en'.
-     * @param {String} options.select_method Method of select query. Default is 'GET'.
+     * @param {String} [options.lang] Table language: 'en' or 'ru'. Default is 'en'.
+     * @param {String} [options.select_method] Method of select query. Default is 'GET'.
+     * @param {Function} [options.error_message] function(error_text) Error message routine. Default is alert.
      *
      */
 
@@ -2125,9 +2161,14 @@ class CTable {
 
         this.predefined_fields = {};
 
-        this.options_url_cache = {};
+        this.options_cache_data = {};
+        this.options_cache_calls = {};
 
         this.elem = null;
+
+        if(typeof(this.options.error_handler) == "undefined"){
+            this.options.error_handler = function(error_text){alert(error_text);};
+        }
 
         this.lang = {};
 
@@ -2485,11 +2526,11 @@ class CTable {
                 self.total_records_count = data.TotalRecordCount;
                 self.fill_table();
             } else {
-                alert(self.lang.error + data.Message);
+                self.options.error_handler(self.lang.error + data.Message);
             }
          })
-         .fail(function() {
-             alert(self.lang.server_side_error);
+         .fail(function(xhr, status, error) {
+             self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
          })
          .always(function() {
              self.loading_screen(false);
@@ -2538,15 +2579,15 @@ class CTable {
             if (data.Result == 'OK') {
                 self.select();
             } else {
-                alert(self.lang.error + data.Message);
+                self.options.error_handler(self.lang.error + data.Message);
             }
 
         }, "json")
-        .fail(function() {
-            alert(self.lang.server_side_error);
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
         })
         .always(function() {
-            self.loading_screen(false);
+            //self.loading_screen(false);
         });
 
     }
@@ -2594,15 +2635,15 @@ class CTable {
             if (data.Result == 'OK') {
                 self.select();
             } else {
-                alert(self.lang.error + data.Message);
+                self.options.error_handler(self.lang.error + data.Message);
             }
 
         }, "json")
-        .fail(function() {
-            alert(self.lang.server_side_error);
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
         })
         .always(function() {
-            self.loading_screen(false);
+            // self.loading_screen(false);
         });
 
     }
@@ -2645,15 +2686,15 @@ class CTable {
             if (data.Result == 'OK') {
                 self.select();
             } else {
-                alert(self.lang.error + data.Message);
+                self.options.error_handler(self.lang.error + data.Message);
             }
 
         }, "json")
-        .fail(function() {
-            alert(self.lang.server_side_error);
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
         })
         .always(function() {
-            self.loading_screen(false);
+            // self.loading_screen(false);
         });
     }
 
@@ -2686,6 +2727,25 @@ class CTable {
     load_from_options_cache(endpoint, params, on_options_loaded){
 
         var str_params = JSON.stringify(params);
+
+        // Data is already there
+
+        if (this.options_cache_data[str_params] != undefined){
+            on_options_loaded(this.options_cache_data[str_params]); 
+            return;
+        }
+
+        // Data is no there but someone already wants this data
+
+        if (this.options_cache_calls[str_params] != undefined){
+            this.options_cache_calls[str_params].push(on_options_loaded);
+            return;
+        }
+
+        // This call is a first
+
+        this.options_cache_calls[str_params] = [on_options_loaded];
+
         var self = this;
         var query_endpoint = this.options.endpoint;
 
@@ -2693,38 +2753,37 @@ class CTable {
             query_endpoint = endpoint;
         }
 
-        if (this.options_url_cache[str_params] != undefined){
-            on_options_loaded(this.options_url_cache[str_params]);
-        } else {
+        var select_method = "GET";
 
-            var select_method = "GET";
-
-            if(typeof(this.options.select_method) != "undefined"){
-                select_method = this.options.select_method;
-            }
-
-            $.ajax({
-                type: select_method,
-                url: query_endpoint,
-                data: {"options":str_params},
-                dataType: 'json'
-            })
-            .done(function(data) {
-                if (data.Result == 'OK') {
-                    self.options_url_cache[str_params] = data.Options;
-                    on_options_loaded(self.options_url_cache[str_params]);
-                } else {
-                    alert(self.lang.error + data.Message);
-                }
-
-            }, "json")
-            .fail(function() {
-                alert(self.lang.server_side_error);
-            });
+        if(typeof(this.options.select_method) != "undefined"){
+            select_method = this.options.select_method;
         }
 
-    }
+        $.ajax({
+            type: select_method,
+            url: query_endpoint,
+            data: {"options":str_params},
+            dataType: 'json'
+        })
+        .done(function(data) {
+            if (data.Result == 'OK') {
+                self.options_cache_data[str_params] = data.Options;
+                self.options_cache_calls[str_params].forEach(
+                    function(callback){
+                        callback(self.options_cache_data[str_params]);
+                    }
+                );
+                self.options_cache_calls[str_params] = [];
 
+            } else {
+                self.options.error_handler(self.lang.error + data.Message);
+            }
+
+        }, "json")
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
+        });
+    }
 }
 
  

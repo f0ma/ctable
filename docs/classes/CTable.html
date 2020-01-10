@@ -42,6 +42,7 @@
                                 <li><a href="../classes/CCheckboxColumn.html">CCheckboxColumn</a></li>
                                 <li><a href="../classes/CColumn.html">CColumn</a></li>
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
+                                <li><a href="../classes/CCustomColumn.html">CCustomColumn</a></li>
                                 <li><a href="../classes/CDateTimePickerColumn.html">CDateTimePickerColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
                                 <li><a href="../classes/CPagination.html">CPagination</a></li>
@@ -94,7 +95,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l2048"><code>ctable&#x2F;ctable.js:2048</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l2083"><code>ctable&#x2F;ctable.js:2083</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -125,7 +126,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2048"><code>ctable&#x2F;ctable.js:2048</code></a>
+        <a href="../files/ctable_ctable.js.html#l2083"><code>ctable&#x2F;ctable.js:2083</code></a>
         </p>
 
 
@@ -289,7 +290,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2251"><code>ctable&#x2F;ctable.js:2251</code></a>
+        <a href="../files/ctable_ctable.js.html#l2292"><code>ctable&#x2F;ctable.js:2292</code></a>
         </p>
 
 
@@ -357,7 +358,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2397"><code>ctable&#x2F;ctable.js:2397</code></a>
+        <a href="../files/ctable_ctable.js.html#l2438"><code>ctable&#x2F;ctable.js:2438</code></a>
         </p>
 
 
@@ -422,7 +423,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2264"><code>ctable&#x2F;ctable.js:2264</code></a>
+        <a href="../files/ctable_ctable.js.html#l2305"><code>ctable&#x2F;ctable.js:2305</code></a>
         </p>
 
 
@@ -476,7 +477,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2080"><code>ctable&#x2F;ctable.js:2080</code></a>
+        <a href="../files/ctable_ctable.js.html#l2115"><code>ctable&#x2F;ctable.js:2115</code></a>
         </p>
 
 
@@ -514,8 +515,9 @@
 
                             </li>
                             <li class="param">
-                                    <code class="param-name">lang</code>
+                                    <code class="param-name optional">[lang]</code>
                                     <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
                                     <p>Table language: 'en' or 'ru'. Default is 'en'.</p>
@@ -524,11 +526,23 @@
 
                             </li>
                             <li class="param">
-                                    <code class="param-name">select_method</code>
+                                    <code class="param-name optional">[select_method]</code>
                                     <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
                                     <p>Method of select query. Default is 'GET'.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[error_message]</code>
+                                    <span class="type">Function</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>function(error_text) Error message routine. Default is alert.</p>
 
                                 </div>
 
@@ -557,7 +571,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2302"><code>ctable&#x2F;ctable.js:2302</code></a>
+        <a href="../files/ctable_ctable.js.html#l2343"><code>ctable&#x2F;ctable.js:2343</code></a>
         </p>
 
 
@@ -594,7 +608,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2499"><code>ctable&#x2F;ctable.js:2499</code></a>
+        <a href="../files/ctable_ctable.js.html#l2540"><code>ctable&#x2F;ctable.js:2540</code></a>
         </p>
 
 
@@ -660,7 +674,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2660"><code>ctable&#x2F;ctable.js:2660</code></a>
+        <a href="../files/ctable_ctable.js.html#l2701"><code>ctable&#x2F;ctable.js:2701</code></a>
         </p>
 
 
@@ -756,7 +770,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2409"><code>ctable&#x2F;ctable.js:2409</code></a>
+        <a href="../files/ctable_ctable.js.html#l2450"><code>ctable&#x2F;ctable.js:2450</code></a>
         </p>
 
 
@@ -810,7 +824,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2610"><code>ctable&#x2F;ctable.js:2610</code></a>
+        <a href="../files/ctable_ctable.js.html#l2651"><code>ctable&#x2F;ctable.js:2651</code></a>
         </p>
 
 
@@ -864,7 +878,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2430"><code>ctable&#x2F;ctable.js:2430</code></a>
+        <a href="../files/ctable_ctable.js.html#l2471"><code>ctable&#x2F;ctable.js:2471</code></a>
         </p>
 
 
@@ -910,7 +924,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2332"><code>ctable&#x2F;ctable.js:2332</code></a>
+        <a href="../files/ctable_ctable.js.html#l2373"><code>ctable&#x2F;ctable.js:2373</code></a>
         </p>
 
 
@@ -959,7 +973,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2381"><code>ctable&#x2F;ctable.js:2381</code></a>
+        <a href="../files/ctable_ctable.js.html#l2422"><code>ctable&#x2F;ctable.js:2422</code></a>
         </p>
 
 
@@ -1027,7 +1041,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2349"><code>ctable&#x2F;ctable.js:2349</code></a>
+        <a href="../files/ctable_ctable.js.html#l2390"><code>ctable&#x2F;ctable.js:2390</code></a>
         </p>
 
 
@@ -1095,7 +1109,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2238"><code>ctable&#x2F;ctable.js:2238</code></a>
+        <a href="../files/ctable_ctable.js.html#l2279"><code>ctable&#x2F;ctable.js:2279</code></a>
         </p>
 
 
@@ -1163,7 +1177,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2225"><code>ctable&#x2F;ctable.js:2225</code></a>
+        <a href="../files/ctable_ctable.js.html#l2266"><code>ctable&#x2F;ctable.js:2266</code></a>
         </p>
 
 
@@ -1231,7 +1245,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2365"><code>ctable&#x2F;ctable.js:2365</code></a>
+        <a href="../files/ctable_ctable.js.html#l2406"><code>ctable&#x2F;ctable.js:2406</code></a>
         </p>
 
 
@@ -1296,7 +1310,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2554"><code>ctable&#x2F;ctable.js:2554</code></a>
+        <a href="../files/ctable_ctable.js.html#l2595"><code>ctable&#x2F;ctable.js:2595</code></a>
         </p>
 
 
@@ -1353,7 +1367,7 @@ Else make AJAX call and call <code>on_options_loaded</code> after data is loaded
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l2205"><code>ctable&#x2F;ctable.js:2205</code></a>
+        <a href="../files/ctable_ctable.js.html#l2246"><code>ctable&#x2F;ctable.js:2246</code></a>
         </p>
 
 

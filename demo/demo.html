@@ -102,7 +102,8 @@ $(function() {
     t.add_column_class(CSelect2Column,{column:'status',
                                       title:'Status',
                                       record_width_class: 'is-2',
-                                      options:[[0,'Unknown'],[1,'OK'], [2,'Blocked']],
+                                      endpoint:'http://localhost:8000/demo.php',
+                                      load:{kind:'status'},
                                       editor_width_class: 'is-2'});
 
     t.add_column_class(CCommandColumn,{title:'Actions',

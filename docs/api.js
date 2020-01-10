@@ -5,6 +5,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "CCheckboxColumn",
         "CColumn",
         "CCommandColumn",
+        "CCustomColumn",
         "CDateTimePickerColumn",
         "CIndicatorColumn",
         "CPagination",
