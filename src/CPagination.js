@@ -161,28 +161,28 @@ class CPagination{
 
         this.container = elem;
 
-        $('<a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_first, this));
+        var control_group = $('<div class="field has-addons" style="justify-content:center;"></div>').appendTo(this.container);
 
-        $('<a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_prev, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_first, this));
+
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_prev, this));
 
 
-        var page_select_div = $('<div class="select" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(this.container);
-        this.page_selector = $('<select class="page-selection"></select>').appendTo(page_select_div);
+        var page_select = $('<div class="select control" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(control_group);
+        this.page_selector = $('<select style="border-radius:0px; margin-right:2px; margin-left:2px;"></select>').appendTo(page_select);
 
         this.page_selector.change($.proxy(this.page_change, this));
 
 
-        $('<a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_next, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_next, this));
 
-        $('<a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_last, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_last, this));
 
-        var on_one_page_span = $('<span style="vertical-align:sub;"></span>').appendTo(this.container);
+        $('<p class="control"><a class="button is-static">'+this.table.lang.on_one_page+'</a></p>').appendTo(control_group);
 
-        on_one_page_span.text(this.table.lang.on_one_page);
+        var page_size_block = $('<div class="select control" title="'+this.table.lang.page_size_tooltip+'"><select  style="border-radius:0px; margin-right:2px; margin-left:2px;"></select></div>').appendTo(control_group);
 
-        var page_size_div = $('<div class="select" title="'+this.table.lang.page_size_tooltip+'"></div>').appendTo(this.container);
-
-        this.page_size_selector = $('<select></select>').appendTo(page_size_div);
+        this.page_size_selector = page_size_block.children('select');
 
         var page_sizes = [5,10,25,50,100,0];
         var default_page_size = 25;
@@ -212,7 +212,7 @@ class CPagination{
 
         this.page_size_selector.change($.proxy(this.page_size_change, this));
 
-        this.page_info = $('<span style="vertical-align:sub;"></span>').appendTo(this.container);
+        this.page_info = $('<p class="control"><a class="button is-static"></a></p>').appendTo(control_group).children('a');
 
         this.page_info.text(' '+this.table.lang.records+' 0 '+this.table.lang.from+' 0 ');
     }

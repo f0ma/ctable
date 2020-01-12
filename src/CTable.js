@@ -103,8 +103,8 @@ class CTable {
             this.lang.cancel = "Cancel";
             this.lang.delete_confirm = "Delete record?";
             this.lang.no_select = "[Any]";
-            this.lang.on_one_page = " Show by ";
-            this.lang.records = "Records on current page";
+            this.lang.on_one_page = "Show records";
+            this.lang.records = "Current page";
             this.lang.from = "from";
             this.lang.all_records = "All";
             this.lang.server_side_error = "Server side error";
@@ -133,8 +133,8 @@ class CTable {
             this.lang.cancel = "Отменить";
             this.lang.delete_confirm = "Удалить запись?";
             this.lang.no_select = "[Любой]";
-            this.lang.on_one_page = " На одной странице: ";
-            this.lang.records = "Записей на текущей странице";
+            this.lang.on_one_page = "Записей на странице:";
+            this.lang.records = "На текущей странице";
             this.lang.from = "из";
             this.lang.all_records = "Все";
             this.lang.server_side_error = "Ошибка на стороне сервера";

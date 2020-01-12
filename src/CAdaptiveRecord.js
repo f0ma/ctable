@@ -104,12 +104,8 @@ class CAdaptiveRecord extends CRecord {
             }
 
             if (this.columns[i].visible_editor()){
-                var rightfloat = "";
-                if(typeof(this.columns[i].save_record) != 'undefined'){
-                    rightfloat = "float: right;"
-                }
 
-                var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(editor_cell);
+                var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;"></div>').appendTo(editor_cell);
 
                 this.columns[i].build_editor(div, is_new_record);
 

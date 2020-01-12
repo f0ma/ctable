@@ -792,7 +792,8 @@ class CCommandColumn extends CColumn {
         this.edit_record = null;
 
         this.show_editor_button = null;
-        this.close_editor_button = null;
+
+        this.new_record_button = null;
     }
 
     /**
@@ -806,6 +807,7 @@ class CCommandColumn extends CColumn {
         if (this.new_record !== null){
             this.new_record.row.remove();
             this.new_record = null;
+            this.new_record_button.children('a').addClass('is-outlined');
         } else {
             this.new_record = new this.table.record_class(this.table, this.record_options);
             var editor_row = $('<tr></tr>').prependTo(this.table.tbody);
@@ -813,6 +815,7 @@ class CCommandColumn extends CColumn {
             this.new_record.set_data_index(this.record.data_index);
             this.new_record.set_parent_column(this);
             this.new_record.build_editor(true);
+            this.new_record_button.children('a').removeClass('is-outlined');
         }
     }
 
@@ -826,14 +829,14 @@ class CCommandColumn extends CColumn {
     build_title(elem){
         this.title_elem = elem;
 
-        var buttons_div = $('<div class="buttons is-right" style="flex-wrap: nowrap;"></div>').appendTo(this.title_elem);
+        var buttons_div = $('<div class="field has-addons" style="justify-content: right;"></div>').appendTo(this.title_elem);
 
         if(typeof(this.options.no_add) == "undefined" || this.options.no_add == false){
-            $('<a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><i class="far fa-plus-square"></i></span></a>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
+            this.new_record_button = $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><i class="far fa-plus-square"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
         }
 
         if(typeof(this.options.no_refresh) == "undefined" || this.options.no_refresh == false){
-            $('<a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><i class="fa fa-sync"></i></span></a>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
+            $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><i class="fa fa-sync"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
         }
 
         if(typeof(this.options.common_actions) != "undefined"){
@@ -849,7 +852,7 @@ class CCommandColumn extends CColumn {
 
                 var self = this;
 
-                $('<a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
+                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
             }
         }
     }
@@ -862,8 +865,9 @@ class CCommandColumn extends CColumn {
      */
 
     open_edit_record_editor(){
-        this.show_editor_button.hide();
-        this.close_editor_button.show();
+        this.show_editor_button.children('a').removeClass('is-outlined');
+        this.show_editor_button.off('click');
+        this.show_editor_button.click($.proxy(this.close_edit_record_editor, this));
         this.edit_record = new this.table.record_class(this.table, this.record_options);
         var editor_row = this.record.open_subrecord($.proxy(this.close_editor, this));
         this.edit_record.set_row(editor_row);
@@ -880,8 +884,9 @@ class CCommandColumn extends CColumn {
      */
 
     close_edit_record_editor(){
-        this.show_editor_button.show();
-        this.close_editor_button.hide();
+        this.show_editor_button.children('a').addClass('is-outlined');
+        this.show_editor_button.off('click');
+        this.show_editor_button.click($.proxy(this.open_edit_record_editor, this));
         this.record.close_subrecord();
         this.edit_record = null;
     }
@@ -896,15 +901,14 @@ class CCommandColumn extends CColumn {
     build_cell(elem){
         this.cell_elem = elem;
 
-        var buttons_div = $('<div class="buttons is-right" style="flex-wrap: nowrap;"></div>').appendTo(this.cell_elem);
+        var buttons_div = $('<div class="field has-addons" style="justify-content: right;"></div>').appendTo(this.cell_elem);
 
         if(typeof(this.options.no_edit) == "undefined" || this.options.no_edit == false){
-            this.show_editor_button = $('<a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><i class="far fa-edit"></i></span></a>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
-            this.close_editor_button = $('<a class="button is-warning" title="'+this.table.lang.edit_tooltip+'" style="display:none;"><span class="icon is-small"><i class="far fa-edit"></i></span></a>').appendTo(buttons_div).click($.proxy(this.close_edit_record_editor, this));
+            this.show_editor_button = $('<p class="control"><a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><i class="far fa-edit"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
         }
 
         if(typeof(this.options.no_delete) == "undefined" || this.options.no_delete == false){
-            $('<a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><i class="far fa-trash-alt"></i></span></a>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
+            $('<p class="control"><a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><i class="far fa-trash-alt"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
         }
 
         if(typeof(this.options.item_actions) != "undefined"){
@@ -917,7 +921,7 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.item_actions[i].fa_class) != "undefined"){
                     istyle = this.options.item_actions[i].fa_class;
                 }
-                $('<a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a>').appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
+                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
             }
         }
 
@@ -945,6 +949,7 @@ class CCommandColumn extends CColumn {
             if (this.record.parent_column.new_record !== null){
                 this.record.parent_column.new_record.row.remove();
                 this.record.parent_column.new_record = null;
+                this.record.parent_column.new_record_button.children('a').addClass('is-outlined');
             }
         }
     }
@@ -982,13 +987,13 @@ class CCommandColumn extends CColumn {
     build_editor(elem, is_new_record = false){
         this.editor_elem = elem;
 
-        var buttons_div = $('<div class="buttons is-right" style="flex-wrap: nowrap;"></div>').appendTo(this.editor_elem);
+        var buttons_div = $('<div class="field is-grouped"></div>').appendTo(this.editor_elem);
 
         if(typeof(this.options.no_commit) == "undefined" || this.options.no_commit == false){
             if(is_new_record) {
-                $('<a class="button is-primary is-outlined"><span class="icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.add_record+'</a>').appendTo(buttons_div).click($.proxy(this.add_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
             } else {
-                $('<a class="button is-primary is-outlined"><span class="icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.save_record+'</a>').appendTo(buttons_div).click($.proxy(this.save_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
             }
         }
 
@@ -1794,12 +1799,8 @@ class CAdaptiveRecord extends CRecord {
             }
 
             if (this.columns[i].visible_editor()){
-                var rightfloat = "";
-                if(typeof(this.columns[i].save_record) != 'undefined'){
-                    rightfloat = "float: right;"
-                }
 
-                var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;'+rightfloat+'"></div>').appendTo(editor_cell);
+                var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;"></div>').appendTo(editor_cell);
 
                 this.columns[i].build_editor(div, is_new_record);
 
@@ -2023,28 +2024,28 @@ class CPagination{
 
         this.container = elem;
 
-        $('<a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_first, this));
+        var control_group = $('<div class="field has-addons" style="justify-content:center;"></div>').appendTo(this.container);
 
-        $('<a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a>').appendTo(this.container).click($.proxy(this.go_prev, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_first, this));
+
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_prev, this));
 
 
-        var page_select_div = $('<div class="select" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(this.container);
-        this.page_selector = $('<select class="page-selection"></select>').appendTo(page_select_div);
+        var page_select = $('<div class="select control" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(control_group);
+        this.page_selector = $('<select style="border-radius:0px; margin-right:2px; margin-left:2px;"></select>').appendTo(page_select);
 
         this.page_selector.change($.proxy(this.page_change, this));
 
 
-        $('<a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_next, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_next, this));
 
-        $('<a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a>').appendTo(this.container).click($.proxy(this.go_last, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_last, this));
 
-        var on_one_page_span = $('<span style="vertical-align:sub;"></span>').appendTo(this.container);
+        $('<p class="control"><a class="button is-static">'+this.table.lang.on_one_page+'</a></p>').appendTo(control_group);
 
-        on_one_page_span.text(this.table.lang.on_one_page);
+        var page_size_block = $('<div class="select control" title="'+this.table.lang.page_size_tooltip+'"><select  style="border-radius:0px; margin-right:2px; margin-left:2px;"></select></div>').appendTo(control_group);
 
-        var page_size_div = $('<div class="select" title="'+this.table.lang.page_size_tooltip+'"></div>').appendTo(this.container);
-
-        this.page_size_selector = $('<select></select>').appendTo(page_size_div);
+        this.page_size_selector = page_size_block.children('select');
 
         var page_sizes = [5,10,25,50,100,0];
         var default_page_size = 25;
@@ -2074,7 +2075,7 @@ class CPagination{
 
         this.page_size_selector.change($.proxy(this.page_size_change, this));
 
-        this.page_info = $('<span style="vertical-align:sub;"></span>').appendTo(this.container);
+        this.page_info = $('<p class="control"><a class="button is-static"></a></p>').appendTo(control_group).children('a');
 
         this.page_info.text(' '+this.table.lang.records+' 0 '+this.table.lang.from+' 0 ');
     }
@@ -2185,8 +2186,8 @@ class CTable {
             this.lang.cancel = "Cancel";
             this.lang.delete_confirm = "Delete record?";
             this.lang.no_select = "[Any]";
-            this.lang.on_one_page = " Show by ";
-            this.lang.records = "Records on current page";
+            this.lang.on_one_page = "Show records";
+            this.lang.records = "Current page";
             this.lang.from = "from";
             this.lang.all_records = "All";
             this.lang.server_side_error = "Server side error";
@@ -2215,8 +2216,8 @@ class CTable {
             this.lang.cancel = "Отменить";
             this.lang.delete_confirm = "Удалить запись?";
             this.lang.no_select = "[Любой]";
-            this.lang.on_one_page = " На одной странице: ";
-            this.lang.records = "Записей на текущей странице";
+            this.lang.on_one_page = "Записей на странице:";
+            this.lang.records = "На текущей странице";
             this.lang.from = "из";
             this.lang.all_records = "Все";
             this.lang.server_side_error = "Ошибка на стороне сервера";
