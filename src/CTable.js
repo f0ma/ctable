@@ -39,6 +39,7 @@ class CTable {
      * @param {String} [options.lang] Table language: 'en' or 'ru'. Default is 'en'.
      * @param {String} [options.select_method] Method of select query. Default is 'GET'.
      * @param {Function} [options.error_message] function(error_text) Error message routine. Default is alert.
+     * @param {Boolean} [options.clear_cache_on_select] Clear options cache on each select.
      *
      */
 
@@ -427,6 +428,11 @@ class CTable {
             select_method = this.options.select_method;
         }
 
+        if(typeof(this.options.clear_cache_on_select) != "undefined" && this.options.clear_cache_on_select){
+            this.options_cache_data = [];
+            this.options_cache_calls = [];
+        }
+
         this.loading_screen(true);
 
         $.ajax({
@@ -503,9 +509,7 @@ class CTable {
         }, "json")
         .fail(function(xhr, status, error) {
             self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
-        })
-        .always(function() {
-            //self.loading_screen(false);
+            self.loading_screen(false);
         });
 
     }
@@ -559,9 +563,7 @@ class CTable {
         }, "json")
         .fail(function(xhr, status, error) {
             self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
-        })
-        .always(function() {
-            // self.loading_screen(false);
+            self.loading_screen(false);
         });
 
     }
@@ -610,9 +612,7 @@ class CTable {
         }, "json")
         .fail(function(xhr, status, error) {
             self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
-        })
-        .always(function() {
-            // self.loading_screen(false);
+            self.loading_screen(false);
         });
     }
 

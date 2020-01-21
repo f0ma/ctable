@@ -258,6 +258,7 @@ class CCommandColumn extends CColumn {
      */
 
     add_record(){
+        this.close_editor();
         this.table.insert(this.record);
     }
 

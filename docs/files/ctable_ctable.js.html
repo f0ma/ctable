@@ -1104,6 +1104,7 @@ class CCommandColumn extends CColumn {
      */
 
     add_record(){
+        this.close_editor();
         this.table.insert(this.record);
     }
 
@@ -2218,6 +2219,7 @@ class CTable {
      * @param {String} [options.lang] Table language: &#x27;en&#x27; or &#x27;ru&#x27;. Default is &#x27;en&#x27;.
      * @param {String} [options.select_method] Method of select query. Default is &#x27;GET&#x27;.
      * @param {Function} [options.error_message] function(error_text) Error message routine. Default is alert.
+     * @param {Boolean} [options.clear_cache_on_select] Clear options cache on each select.
      *
      */
 
@@ -2606,6 +2608,11 @@ class CTable {
             select_method = this.options.select_method;
         }
 
+        if(typeof(this.options.clear_cache_on_select) != &quot;undefined&quot; &amp;&amp; this.options.clear_cache_on_select){
+            this.options_cache_data = [];
+            this.options_cache_calls = [];
+        }
+
         this.loading_screen(true);
 
         $.ajax({
@@ -2682,9 +2689,7 @@ class CTable {
         }, &quot;json&quot;)
         .fail(function(xhr, status, error) {
             self.options.error_handler(self.lang.server_side_error+&#x27;:\n&#x27;+ xhr.status + &#x27;: &#x27; + xhr.statusText+ &#x27;\n&#x27; + error);
-        })
-        .always(function() {
-            //self.loading_screen(false);
+            self.loading_screen(false);
         });
 
     }
@@ -2738,9 +2743,7 @@ class CTable {
         }, &quot;json&quot;)
         .fail(function(xhr, status, error) {
             self.options.error_handler(self.lang.server_side_error+&#x27;:\n&#x27;+ xhr.status + &#x27;: &#x27; + xhr.statusText+ &#x27;\n&#x27; + error);
-        })
-        .always(function() {
-            // self.loading_screen(false);
+            self.loading_screen(false);
         });
 
     }
@@ -2789,9 +2792,7 @@ class CTable {
         }, &quot;json&quot;)
         .fail(function(xhr, status, error) {
             self.options.error_handler(self.lang.server_side_error+&#x27;:\n&#x27;+ xhr.status + &#x27;: &#x27; + xhr.statusText+ &#x27;\n&#x27; + error);
-        })
-        .always(function() {
-            // self.loading_screen(false);
+            self.loading_screen(false);
         });
     }
 
