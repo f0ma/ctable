@@ -241,13 +241,13 @@ class CCommandColumn extends CColumn {
 
         if(typeof(this.options.no_commit) == "undefined" || this.options.no_commit == false){
             if(is_new_record) {
-                $('<p class="control"><a class="button is-primary is-outlined"><span class="icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
             } else {
-                $('<p class="control"><a class="button is-primary is-outlined"><span class="icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
             }
         }
 
-        $('<a class="button is-warning is-outlined"><span class="icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+        $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
 
     }
 
@@ -258,8 +258,9 @@ class CCommandColumn extends CColumn {
      */
 
     add_record(){
-        this.close_editor();
-        this.table.insert(this.record);
+        if (this.table.insert(this.record) != 'invalid'){
+            this.close_editor();
+        }
     }
 
     /**

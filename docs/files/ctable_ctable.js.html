@@ -44,6 +44,7 @@
                                 <li><a href="../classes/CCommandColumn.html">CCommandColumn</a></li>
                                 <li><a href="../classes/CCustomColumn.html">CCustomColumn</a></li>
                                 <li><a href="../classes/CDateTimePickerColumn.html">CDateTimePickerColumn</a></li>
+                                <li><a href="../classes/CFileUploadColumn.html">CFileUploadColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
                                 <li><a href="../classes/CPagination.html">CPagination</a></li>
                                 <li><a href="../classes/CRecord.html">CRecord</a></li>
@@ -143,7 +144,8 @@ class CColumn {
      * @param {String} [options.footnote] Footnote text (if record class supported).
      * @param {String} [options.editor_width_class] Editor width class (if record class supported).
      * @param {Function} [options.render] Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender, EmptyRender.
-     *
+     * @param {Boolean} [options.virtual] Do not send column value on server
+     * 
      */
 
     constructor(table, record, options = {}) {
@@ -325,14 +327,18 @@ class CColumn {
      */
 
     editor_value(){
-        if(typeof(this.options.column) != &quot;undefined&quot;){
-             if(this.editor != null){
-                 return [this.options.column, this.editor.val()];
-             } else {
-                 if(! this.record.record_is_new()) {
-                     return [this.options.column, this.record.record_field(this.options.column)];
-                 }
-             }
+        if(typeof(this.options.column) == &quot;undefined&quot;){
+            return [null, null];
+        }
+        if(typeof(this.options.virtual) != &quot;undefined&quot; &amp;&amp; this.options.virtual){
+            return [null, null];
+        }
+        if(this.editor != null){
+            return [this.options.column, this.editor.val()];
+        } else {
+            if(! this.record.record_is_new()) {
+                return [this.options.column, this.record.record_field(this.options.column)];
+            }
         }
         return [null, null];
     }
@@ -588,7 +594,7 @@ class CDateTimePickerColumn extends CTextColumn{
  * @extends CTextColumn
  *
  * @example
- *     table.add_column_class(CSelectColumn, {column:&#x27;group_id&#x27;, title:&#x27;Group&#x27;, load:&#x27;group_id&#x27;,
+ *     table.add_column_class(CSelectColumn, {column:&#x27;group_id&#x27;, title:&#x27;Group&#x27;, params:{&#x27;key&#x27;:&#x27;group_id&#x27;},
  *                                            endpoint:&#x27;/groups.php&#x27;, width:&#x27;10%&#x27;,
  *                                            default_value: 3});
  */
@@ -596,7 +602,7 @@ class CDateTimePickerColumn extends CTextColumn{
 class CSelectColumn extends CTextColumn {
 
     /**
-     * Constructor, if &#x60;options.load&#x60; is set, options value will be set with &#x60;fill_options&#x60; after ajax call
+     * Constructor, if &#x60;options.endpoint&#x60; is set, options value will be set with &#x60;fill_options&#x60; after ajax call
      *
      * @method constructor
      * @param {Object} table Parent CTable object.
@@ -611,7 +617,7 @@ class CSelectColumn extends CTextColumn {
      * @param {Boolean} [options.no_filter] Disable filter field by this column.
      * @param {String} [options.default_value] Default value for new record.
      * @param {Object} [options.options] Options dict.
-     * @param {String} [options.load] Load options from server. Value will be sended as &#x27;load&#x27; parameter.
+     * @param {String} [options.params] Request body sended to server, default {}.
      * @param {String} [options.endpoint] Load options from another endpoint.
      * @param {String} [options.footnote] Footnote text (if record class supported).
      *
@@ -620,8 +626,11 @@ class CSelectColumn extends CTextColumn {
     constructor(table, record, options = {}) {
         super(table, record, options);
 
-        if(typeof(this.options.load) != &quot;undefined&quot;){
-            this.table.load_from_options_cache(this.options.endpoint, {load:this.options.load}, $.proxy(this.fill_options, this));
+        if(typeof(this.options.endpoint) != &quot;undefined&quot;){
+            if(typeof(this.options.params) == &quot;undefined&quot;){
+                this.options.params = {};
+            }
+            this.table.load_from_options_cache(this.options.endpoint, this.options.params, $.proxy(this.fill_options, this));
         }
     }
 
@@ -1087,13 +1096,13 @@ class CCommandColumn extends CColumn {
 
         if(typeof(this.options.no_commit) == &quot;undefined&quot; || this.options.no_commit == false){
             if(is_new_record) {
-                $(&#x27;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-primary is-outlined&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;far fa-check-circle&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.add_record+&#x27;&lt;/a&gt;&lt;/p&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.add_record, this));
+                $(&#x27;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-primary is-outlined&quot;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;far fa-check-circle&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.add_record+&#x27;&lt;/a&gt;&lt;/p&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.add_record, this));
             } else {
-                $(&#x27;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-primary is-outlined&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;far fa-check-circle&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.save_record+&#x27;&lt;/a&gt;&lt;/p&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.save_record, this));
+                $(&#x27;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-primary is-outlined&quot;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;far fa-check-circle&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.save_record+&#x27;&lt;/a&gt;&lt;/p&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.save_record, this));
             }
         }
 
-        $(&#x27;&lt;a class=&quot;button is-warning is-outlined&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-ban&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.cancel+&#x27;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.close_editor, this));
+        $(&#x27;&lt;a class=&quot;button is-warning is-outlined&quot;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fas fa-ban&quot;&gt;&lt;/i&gt;&lt;/span&gt;&amp;nbsp;&#x27;+this.table.lang.cancel+&#x27;&lt;/a&gt;&#x27;).appendTo(buttons_div).click($.proxy(this.close_editor, this));
 
     }
 
@@ -1104,8 +1113,9 @@ class CCommandColumn extends CColumn {
      */
 
     add_record(){
-        this.close_editor();
-        this.table.insert(this.record);
+        if (this.table.insert(this.record) != &#x27;invalid&#x27;){
+            this.close_editor();
+        }
     }
 
     /**
@@ -1361,6 +1371,260 @@ class CCheckboxColumn extends CColumn {
     visible_editor(){
         return false;
     }
+}
+
+ 
+/**
+ * Column for file uploading. Single of multiple file supported.
+ *
+ * See {{#crossLink &quot;CFileUploadColumn/constructor&quot;}}{{/crossLink}} for options list.
+ *
+ * @class CFileUploadColumn
+ * @constructor
+ * @extends CColumn
+ *
+ * @example
+ *     table.add_column_class(CFileUploadColumn,{upload_endpoint:&#x27;/upload.php&#x27;});
+ */
+
+function file_name_shortifier(fname, length){
+    if (fname.length &lt;= length){
+        return fname;
+    }
+    return fname.substring(0,length-5) + &#x27;&amp;hellip;&#x27; + fname.substring(fname.length-5);
+}
+
+function cfileupload_default_parser(column, record, value){
+    if (value == &#x27;&#x27; || value == null){
+        return {uploaded:false, count:0, filelabel:&#x27;&#x27;, uid:&#x27;&#x27;, filelink:&#x27;&#x27;, filedate:&#x27;&#x27;};
+    }
+
+    var flines = value.split(&#x27;;&#x27;).filter(function(el) {return el.length != 0});
+
+    if(flines.length == 1 ){
+        var fcomp = flines[0].split(&#x27;:&#x27;);
+        return {uploaded:true, count:1, filelabel:file_name_shortifier(fcomp[1], column.options.filelabel_length), uid:fcomp[0], filelink:column.options.link_endpoint+fcomp[0]};
+    }
+
+    var uids = [];
+    var labels = [];
+    var links = [];
+
+    flines.forEach(function(frecord){
+        var fcomp = frecord.split(&#x27;:&#x27;).filter(function(el) {return el.length != 0});
+        uids.push(fcomp[0]);
+        labels.push(file_name_shortifier(fcomp[1], column.options.filelabel_length));
+        links.push(column.options.link_endpoint+fcomp[0]);
+    });
+
+    return {uploaded:true, count:flines.length, filelabel:labels, uid:uids, filelink:links};
+}
+
+class CFileUploadColumn extends CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     * @param {Function} [options.field_parser] function (column, record, value) which returns object {uploaded:?, count:?, filelabel:?, uid:?, filelink:?} by value - column value.
+     * @param {String} options.upload_endpoint Url for file uploading.
+     * @param {String} [options.link_endpoint] Url for file downloading - default link_endpoint+uid.
+     * @param {Boolean} [options.links] Files available for downloading by link?
+     * @param {Boolean} [options.multiple] Allow multiple files upload, default true.
+     * @param {int} [options.filelabel_length] File label shortificator - default 12 symbols.
+     *
+     */
+
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+        if(typeof(this.options.field_parser) == &quot;undefined&quot;){
+            this.options.field_parser = cfileupload_default_parser;
+        }
+        if(typeof(this.options.filelabel_length) == &quot;undefined&quot;){
+            this.options.filelabel_length = 12;
+        }
+        if(typeof(this.options.links) == &quot;undefined&quot;){
+            this.options.links = true;
+        }
+        this.value = null;
+    }
+
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        super.build_cell(elem);
+        this.value = this.record.record_field(this.options.column);
+        var fileinfo = this.options.field_parser(this, this.record, this.value);
+
+        if (fileinfo.uploaded &amp;&amp; fileinfo.count == 1){
+            var filelink = &#x27;&#x27;;
+            if (this.options.links) {
+                filelink = &#x27;href=&quot;&#x27;+fileinfo.filelink+&#x27;&quot; target=&quot;_blank&quot;&#x27;;
+            }
+            elem.html(&#x27;&lt;a class=&quot;button is-info is-outlined&quot; &#x27;+filelink+&#x27;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa-check-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+fileinfo.filelabel+&#x27;&lt;/a&gt;&#x27;);
+        } else if (fileinfo.uploaded &amp;&amp; fileinfo.count &gt; 1){
+            // Link to multifile not available now
+            var filelink = &#x27;&#x27;;
+            if (this.options.links) {
+                filelink = &#x27;href=&quot;&#x27;+fileinfo.filelink+&#x27;&quot; target=&quot;_blank&quot;&#x27;;
+            }
+            elem.html(&#x27;&lt;a class=&quot;button is-info is-outlined&quot; &#x27;+filelink+&#x27;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa-check-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+this.table.lang.multiple+fileinfo.count+&#x27;&lt;/a&gt;&#x27;);
+        } else {
+            elem.html(&#x27;&lt;a class=&quot;button is-info is-outlined&quot; disabled&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa-minus-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+this.table.lang.no_file+&#x27;&lt;/a&gt;&#x27;);
+        }
+    }
+
+    /**
+     * Build editor part of column.
+     * @method build_editor
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_editor(elem, is_new_record){
+        super.build_editor(elem, is_new_record);
+
+        this.value = &#x27;&#x27;;
+
+        if(!is_new_record){
+            this.value = this.record.record_field(this.options.column);
+        }
+
+        this.input_elem = elem.html(&#x27;&lt;div&gt;&lt;/div&gt;&#x27;).find(&#x27;div&#x27;).first();
+
+        this.make_input(this.input_elem, this.value);
+    }
+
+    /**
+     * Make upload form.
+     * @method make_input
+     * @param {JQueryNode} elem Container element.
+     * @param {JQueryNode} files Value field.
+     *
+     */
+    make_input(elem, files){
+
+        var fileinfo = this.options.field_parser(this, this.record, files);
+
+        var multiple = &#x27;&#x27;;
+
+        if(typeof(this.options.multiple) != &quot;undefined&quot; &amp;&amp; this.options.multiple){
+            multiple = &#x27;multiple&#x27;;
+        }
+
+        if (fileinfo.uploaded &amp;&amp; fileinfo.count == 1){
+            var filelink = &#x27;&#x27;;
+            if (this.options.links) {
+                filelink = &#x27;href=&quot;&#x27;+fileinfo.filelink+&#x27;&quot; target=&quot;_blank&quot;&#x27;;
+            }
+            elem.html(&#x27;&lt;div class=&quot;field has-addons&quot;&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot; &#x27;+filelink+&#x27;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa-check-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+fileinfo.filelabel+&#x27;&lt;/a&gt;&lt;/p&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined ctable-close&quot;&gt;&lt;i class=&quot;fas fa-window-close&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;input class=&quot;file-input&quot; type=&quot;file&quot; name=&quot;file&quot; &#x27;+multiple+&#x27;/&gt;&lt;/p&gt;&lt;/div&gt;&#x27;);
+        } else if (fileinfo.uploaded &amp;&amp; fileinfo.count &gt; 1){
+            var filelink = &#x27;&#x27;;
+            if (this.options.links) {
+                filelink = &#x27;href=&quot;&#x27;+fileinfo.filelink+&#x27;&quot; target=&quot;_blank&quot;&#x27;;
+            }
+            elem.html(&#x27;&lt;div class=&quot;field has-addons&quot;&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot; &#x27;+filelink+&#x27;&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa-check-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+this.table.lang.multiple+fileinfo.count+&#x27;&lt;/a&gt;&lt;/p&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined ctable-close&quot;&gt;&lt;i class=&quot;fas fa-window-close&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;input class=&quot;file-input&quot; type=&quot;file&quot; name=&quot;file&quot; &#x27;+multiple+&#x27;/&gt;&lt;/p&gt;&lt;/div&gt;&#x27;);
+        } else {
+            elem.html(&#x27;&lt;div class=&quot;field has-addons&quot;&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot; href=&quot;#&quot; disabled&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa fa-minus-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+this.table.lang.no_file+&#x27;&lt;/a&gt;&lt;/p&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;input class=&quot;file-input&quot; type=&quot;file&quot; name=&quot;file&quot; &#x27;+multiple+&#x27;/&gt;&lt;/p&gt;&lt;/div&gt;&#x27;);
+        }
+
+        self = this;
+
+        elem.find(&#x27;.ctable-close&#x27;).click(function(){
+            self.value = &#x27;&#x27;;
+            self.make_input(self.input_elem, self.value);
+        });
+
+        elem.find(&#x27;input&#x27;).change(function(){
+            var file_data = $(this).prop(&quot;files&quot;);
+            var form_data = new FormData();
+
+            for(var file_index = 0; file_index &lt; file_data.length; file_index++){
+                form_data.append(&quot;file&quot;+file_index, file_data[file_index]);
+            };
+
+            elem.find(&#x27;a&#x27;).first().addClass(&#x27;is-loading&#x27;);
+
+            $.ajax({
+                url: self.options.upload_endpoint,
+                dataType: &#x27;script&#x27;,
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: &#x27;post&#x27;,
+                dataType: &#x27;json&#x27;
+            })
+            .done(function(data) {
+                elem.find(&#x27;a&#x27;).first().removeClass(&#x27;is-loading&#x27;);
+                if (data.Result == &#x27;OK&#x27;) {
+                    self.value = data.Files;
+                    self.make_input(self.input_elem, self.value);
+                } else {
+                    self.options.error_handler(self.table.lang.error + data.Message);
+                }
+            })
+            .fail(function(xhr, status, error) {
+                self.table.options.error_handler(self.table.lang.server_side_error+&#x27;:\n&#x27;+ xhr.status + &#x27;: &#x27; + xhr.statusText+ &#x27;\n&#x27; + error);
+                elem.find(&#x27;a&#x27;).first().removeClass(&#x27;is-loading&#x27;);
+            });
+        });
+    }
+
+    /**
+     * Get editor value.
+     * @method editor_value
+     * @return {Array} Column name and value as [String, String] or [null, null]
+     *
+     */
+
+    editor_value(){
+        if(typeof(this.options.column) == &quot;undefined&quot;){
+            return [null, null];
+        }
+        if(typeof(this.options.virtual) != &quot;undefined&quot; &amp;&amp; this.options.virtual){
+            return [null, null];
+        }
+        if(this.editor != null){
+            return [this.options.column, this.value];
+        } else {
+            if(! this.record.record_is_new()) {
+                return [this.options.column, this.value];
+            }
+        }
+        return [null, null];
+    }
+
+    /**
+     * Validate value.
+     * @method is_valid
+     * @return {Boolean} If options.validate is set return true if value not empty.
+     *
+     */
+
+    is_valid(){
+        if(typeof(this.options.validate) != &quot;undefined&quot; &amp;&amp; this.options.validate){
+            if (this.value != &#x27;&#x27;){
+                this.input_elem.find(&quot;a&quot;).removeClass( &quot;is-danger&quot; );
+                this.input_elem.find(&quot;a&quot;).addClass( &quot;is-success&quot; );
+                return true;
+            }
+            this.input_elem.find(&quot;a&quot;).removeClass( &quot;is-success&quot; );
+            this.input_elem.find(&quot;a&quot;).addClass( &quot;is-danger&quot; );
+            return false;
+        }
+        return true;
+    }
+    
 }
 
  
@@ -1917,7 +2181,9 @@ class CAdaptiveRecord extends CRecord {
         for (var i in this.columns){
             var col_val = this.columns[i].editor_value();
             for (var j in this.columns){
-                this.columns[j].record_changed(col_val[0], col_val[1]);
+                if (col_val[0] != null){
+                    this.columns[j].record_changed(col_val[0], col_val[1]);
+                }
             }
         }
     }
@@ -2303,6 +2569,9 @@ class CTable {
             this.lang.to_next_tooltip = &quot;To next page&quot;;
             this.lang.to_last_tooltip = &quot;To last page&quot;;
             this.lang.page_size_tooltip = &quot;Records per page&quot;;
+            this.lang.no_file = &quot;[No file]&quot;;
+            this.lang.multiple =&quot;Files: &quot;;
+            this.lang.upload = &quot;Upload...&quot;;
         }
 
         if(this.options.lang == &quot;ru&quot;){
@@ -2333,6 +2602,9 @@ class CTable {
             this.lang.to_next_tooltip = &quot;На следующую страницу&quot;;
             this.lang.to_last_tooltip = &quot;На последнюю страницу&quot;;
             this.lang.page_size_tooltip = &quot;Записей на страницу&quot;;
+            this.lang.no_file = &quot;[Нет файла]&quot;;
+            this.lang.multiple =&quot;Файлов: &quot;;
+            this.lang.upload = &quot;Загрузить...&quot;;
 
         }
 
@@ -2609,8 +2881,8 @@ class CTable {
         }
 
         if(typeof(this.options.clear_cache_on_select) != &quot;undefined&quot; &amp;&amp; this.options.clear_cache_on_select){
-            this.options_cache_data = [];
-            this.options_cache_calls = [];
+            this.options_cache_data = {};
+            this.options_cache_calls = {};
         }
 
         this.loading_screen(true);
@@ -2667,7 +2939,7 @@ class CTable {
 
         var editor_data = record.editor_values();
 
-        if (editor_data == null) return;
+        if (editor_data == null) return &#x27;invalid&#x27;;
 
         var record_data = Object.assign({}, editor_data, this.predefined_fields);
 
@@ -2684,6 +2956,7 @@ class CTable {
                 self.select();
             } else {
                 self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
             }
 
         }, &quot;json&quot;)
@@ -2719,11 +2992,9 @@ class CTable {
         var self = this;
 
         var updated_record_data = record.editor_values();
-        if (updated_record_data == null) return;
+        if (updated_record_data == null) return &#x27;invalid&#x27;;
 
-        var source_record_data = record.record_field();
-
-        var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
+        var record_data = Object.assign({}, updated_record_data, this.predefined_fields);
 
         this.loading_screen(true);
 
@@ -2738,6 +3009,7 @@ class CTable {
                 self.select();
             } else {
                 self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
             }
 
         }, &quot;json&quot;)
@@ -2787,6 +3059,7 @@ class CTable {
                 self.select();
             } else {
                 self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
             }
 
         }, &quot;json&quot;)
@@ -2817,14 +3090,13 @@ class CTable {
      * @method load_from_options_cache
      * @param {String} endpoint Override table endpoint. If undefined, table endpoint will be used.
      * @param {Object} params Params array.
-     * @param {String} params.load Requried param.
      * @param {Function} on_options_loaded Called when request complete. Options object will be first parameter.
      *
      */
 
     load_from_options_cache(endpoint, params, on_options_loaded){
 
-        var str_params = JSON.stringify(params);
+        var str_params = endpoint+JSON.stringify(params);
 
         // Data is already there
 
@@ -2860,18 +3132,20 @@ class CTable {
         $.ajax({
             type: select_method,
             url: query_endpoint,
-            data: {&quot;options&quot;:str_params},
+            data: {&quot;options&quot;:JSON.stringify(params)},
             dataType: &#x27;json&#x27;
         })
         .done(function(data) {
             if (data.Result == &#x27;OK&#x27;) {
                 self.options_cache_data[str_params] = data.Options;
-                self.options_cache_calls[str_params].forEach(
-                    function(callback){
-                        callback(self.options_cache_data[str_params]);
-                    }
-                );
-                self.options_cache_calls[str_params] = [];
+                if(typeof(self.options_cache_calls[str_params]) != &quot;undefined&quot;){
+                    self.options_cache_calls[str_params].forEach(
+                        function(callback){
+                            callback(self.options_cache_data[str_params]);
+                        }
+                    );
+                }
+                self.options_cache_calls[str_params] = {};
 
             } else {
                 self.options.error_handler(self.lang.error + data.Message);

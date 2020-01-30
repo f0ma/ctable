@@ -126,7 +126,6 @@ if(isset($_POST['update'])){
     echo json_encode(['Result'=>'OK']);
 }
 
-
 if(isset($_POST['delete'])){
     sleep(0.5);
 
@@ -138,6 +137,28 @@ if(isset($_POST['delete'])){
 if(isset($_GET['options'])){
     sleep(0.5);
     echo json_encode(['Result' => 'OK', 'Options' => [[0,'Unknown'],[1,'OK'], [2,'Blocked']]]);
+}
+
+if(isset($_GET['upload'])){
+    sleep(2);
+
+    $files = '';
+
+    foreach ($_FILES as $key => $value){
+        if($_FILES[$key]['size'] > 1000000){
+            echo json_encode(['Result'=>'Error', 'Message'=>'File too large']);
+        }
+        $hash = md5_file($_FILES[$key]['tmp_name']);
+        $name = $_FILES[$key]['name'];
+        $timestamp = time();
+        $ext = pathinfo($_FILES[$key]['name'])['extension'];
+
+        //move_uploaded_file($_FILES[$key]['tmp_name'], 'uploads/' . $hash .'.'. $ext);
+
+        $files .= '$hash:'.$name.':'.$timestamp.';';
+    }
+
+    echo json_encode(['Result'=>'OK', 'Files'=> $files]);
 }
 
 ?>

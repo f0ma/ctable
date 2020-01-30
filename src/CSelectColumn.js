@@ -8,7 +8,7 @@
  * @extends CTextColumn
  *
  * @example
- *     table.add_column_class(CSelectColumn, {column:'group_id', title:'Group', load:'group_id',
+ *     table.add_column_class(CSelectColumn, {column:'group_id', title:'Group', params:{'key':'group_id'},
  *                                            endpoint:'/groups.php', width:'10%',
  *                                            default_value: 3});
  */
@@ -16,7 +16,7 @@
 class CSelectColumn extends CTextColumn {
 
     /**
-     * Constructor, if `options.load` is set, options value will be set with `fill_options` after ajax call
+     * Constructor, if `options.endpoint` is set, options value will be set with `fill_options` after ajax call
      *
      * @method constructor
      * @param {Object} table Parent CTable object.
@@ -31,7 +31,7 @@ class CSelectColumn extends CTextColumn {
      * @param {Boolean} [options.no_filter] Disable filter field by this column.
      * @param {String} [options.default_value] Default value for new record.
      * @param {Object} [options.options] Options dict.
-     * @param {String} [options.load] Load options from server. Value will be sended as 'load' parameter.
+     * @param {String} [options.params] Request body sended to server, default {}.
      * @param {String} [options.endpoint] Load options from another endpoint.
      * @param {String} [options.footnote] Footnote text (if record class supported).
      *
@@ -40,8 +40,11 @@ class CSelectColumn extends CTextColumn {
     constructor(table, record, options = {}) {
         super(table, record, options);
 
-        if(typeof(this.options.load) != "undefined"){
-            this.table.load_from_options_cache(this.options.endpoint, {load:this.options.load}, $.proxy(this.fill_options, this));
+        if(typeof(this.options.endpoint) != "undefined"){
+            if(typeof(this.options.params) == "undefined"){
+                this.options.params = {};
+            }
+            this.table.load_from_options_cache(this.options.endpoint, this.options.params, $.proxy(this.fill_options, this));
         }
     }
 

@@ -123,6 +123,9 @@ class CTable {
             this.lang.to_next_tooltip = "To next page";
             this.lang.to_last_tooltip = "To last page";
             this.lang.page_size_tooltip = "Records per page";
+            this.lang.no_file = "[No file]";
+            this.lang.multiple ="Files: ";
+            this.lang.upload = "Upload...";
         }
 
         if(this.options.lang == "ru"){
@@ -153,6 +156,9 @@ class CTable {
             this.lang.to_next_tooltip = "На следующую страницу";
             this.lang.to_last_tooltip = "На последнюю страницу";
             this.lang.page_size_tooltip = "Записей на страницу";
+            this.lang.no_file = "[Нет файла]";
+            this.lang.multiple ="Файлов: ";
+            this.lang.upload = "Загрузить...";
 
         }
 
@@ -429,8 +435,8 @@ class CTable {
         }
 
         if(typeof(this.options.clear_cache_on_select) != "undefined" && this.options.clear_cache_on_select){
-            this.options_cache_data = [];
-            this.options_cache_calls = [];
+            this.options_cache_data = {};
+            this.options_cache_calls = {};
         }
 
         this.loading_screen(true);
@@ -487,7 +493,7 @@ class CTable {
 
         var editor_data = record.editor_values();
 
-        if (editor_data == null) return;
+        if (editor_data == null) return 'invalid';
 
         var record_data = Object.assign({}, editor_data, this.predefined_fields);
 
@@ -504,6 +510,7 @@ class CTable {
                 self.select();
             } else {
                 self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
             }
 
         }, "json")
@@ -539,11 +546,9 @@ class CTable {
         var self = this;
 
         var updated_record_data = record.editor_values();
-        if (updated_record_data == null) return;
+        if (updated_record_data == null) return 'invalid';
 
-        var source_record_data = record.record_field();
-
-        var record_data = Object.assign({}, source_record_data, updated_record_data, this.predefined_fields);
+        var record_data = Object.assign({}, updated_record_data, this.predefined_fields);
 
         this.loading_screen(true);
 
@@ -558,6 +563,7 @@ class CTable {
                 self.select();
             } else {
                 self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
             }
 
         }, "json")
@@ -607,6 +613,7 @@ class CTable {
                 self.select();
             } else {
                 self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
             }
 
         }, "json")
@@ -637,14 +644,13 @@ class CTable {
      * @method load_from_options_cache
      * @param {String} endpoint Override table endpoint. If undefined, table endpoint will be used.
      * @param {Object} params Params array.
-     * @param {String} params.load Requried param.
      * @param {Function} on_options_loaded Called when request complete. Options object will be first parameter.
      *
      */
 
     load_from_options_cache(endpoint, params, on_options_loaded){
 
-        var str_params = JSON.stringify(params);
+        var str_params = endpoint+JSON.stringify(params);
 
         // Data is already there
 
@@ -680,18 +686,20 @@ class CTable {
         $.ajax({
             type: select_method,
             url: query_endpoint,
-            data: {"options":str_params},
+            data: {"options":JSON.stringify(params)},
             dataType: 'json'
         })
         .done(function(data) {
             if (data.Result == 'OK') {
                 self.options_cache_data[str_params] = data.Options;
-                self.options_cache_calls[str_params].forEach(
-                    function(callback){
-                        callback(self.options_cache_data[str_params]);
-                    }
-                );
-                self.options_cache_calls[str_params] = [];
+                if(typeof(self.options_cache_calls[str_params]) != "undefined"){
+                    self.options_cache_calls[str_params].forEach(
+                        function(callback){
+                            callback(self.options_cache_data[str_params]);
+                        }
+                    );
+                }
+                self.options_cache_calls[str_params] = {};
 
             } else {
                 self.options.error_handler(self.lang.error + data.Message);

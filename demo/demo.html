@@ -106,6 +106,14 @@ $(function() {
                                       load:{kind:'status'},
                                       editor_width_class: 'is-2'});
 
+    t.add_column_class(CFileUploadColumn,{column:'image',
+                                        title:'Image',
+                                        upload_endpoint: 'http://localhost:8000/demo.php?upload=true',
+                                        multiple: true,
+                                        links: false,
+                                        footnote: 'Up to 1 Mb',
+                                        validate: true});
+
     t.add_column_class(CCommandColumn,{title:'Actions',
                                             record_width_class: 'is-2',
                                             editor_width_class: 'is-2',

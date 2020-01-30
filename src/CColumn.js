@@ -29,7 +29,8 @@ class CColumn {
      * @param {String} [options.footnote] Footnote text (if record class supported).
      * @param {String} [options.editor_width_class] Editor width class (if record class supported).
      * @param {Function} [options.render] Column render: function (JQueryNode, cell_value), predefined: TextRender (default), HTMLRender, EmptyRender.
-     *
+     * @param {Boolean} [options.virtual] Do not send column value on server
+     * 
      */
 
     constructor(table, record, options = {}) {
@@ -211,14 +212,18 @@ class CColumn {
      */
 
     editor_value(){
-        if(typeof(this.options.column) != "undefined"){
-             if(this.editor != null){
-                 return [this.options.column, this.editor.val()];
-             } else {
-                 if(! this.record.record_is_new()) {
-                     return [this.options.column, this.record.record_field(this.options.column)];
-                 }
-             }
+        if(typeof(this.options.column) == "undefined"){
+            return [null, null];
+        }
+        if(typeof(this.options.virtual) != "undefined" && this.options.virtual){
+            return [null, null];
+        }
+        if(this.editor != null){
+            return [this.options.column, this.editor.val()];
+        } else {
+            if(! this.record.record_is_new()) {
+                return [this.options.column, this.record.record_field(this.options.column)];
+            }
         }
         return [null, null];
     }
