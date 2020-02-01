@@ -1537,7 +1537,7 @@ class CFileUploadColumn extends CColumn {
             elem.html(&#x27;&lt;div class=&quot;field has-addons&quot;&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot; href=&quot;#&quot; disabled&gt;&lt;span class=&quot;file-icon&quot;&gt;&lt;i class=&quot;fa fa fa-minus-square&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;+this.table.lang.no_file+&#x27;&lt;/a&gt;&lt;/p&gt;&lt;p class=&quot;control&quot;&gt;&lt;a class=&quot;button is-info is-outlined&quot;&gt;&lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;input class=&quot;file-input&quot; type=&quot;file&quot; name=&quot;file&quot; &#x27;+multiple+&#x27;/&gt;&lt;/p&gt;&lt;/div&gt;&#x27;);
         }
 
-        self = this;
+        var self = this;
 
         elem.find(&#x27;.ctable-close&#x27;).click(function(){
             self.value = &#x27;&#x27;;

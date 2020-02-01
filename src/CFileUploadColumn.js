@@ -161,7 +161,7 @@ class CFileUploadColumn extends CColumn {
             elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" href="#" disabled><span class="file-icon"><i class="fa fa fa-minus-square" aria-hidden="true"></i></span>'+this.table.lang.no_file+'</a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
         }
 
-        self = this;
+        var self = this;
 
         elem.find('.ctable-close').click(function(){
             self.value = '';
