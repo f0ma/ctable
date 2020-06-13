@@ -24,6 +24,8 @@ class CMultiColumn extends CColumn {
      * @param {int} [options.width] Column width in percents.
      * @param {List} [options.columns] List of record field.
      * @param {List} [options.labels] List of labels.
+     * @param {Boolean} [options.no_search] Disable search field by this column.
+     * @param {List} [options.search_columns] List of columns used for search (all columns if empty).
      * @param {int} [options.labels_width] Label width.
      */
 
@@ -78,7 +80,11 @@ class CMultiColumn extends CColumn {
      */
 
     set_search_filter(){
-        this.table.set_search(this.options.columns.join('+'), this.search_field.val());
+        if(typeof(this.options.search_columns) == "undefined"){
+            this.table.set_search(this.options.columns.join('+'), this.search_field.val());
+        } else {
+            this.table.set_search(this.options.search_columns.join('+'), this.search_field.val());
+        }
         this.table.select();
     }
 
