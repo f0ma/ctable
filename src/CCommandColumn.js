@@ -25,14 +25,17 @@ class CCommandColumn extends CColumn {
      * @param {Boolean} [options.no_edit] No edit button.
      * @param {Boolean} [options.no_commit] Show editor without save button.
      * @param {Boolean} [options.no_delete] No delete button.
-     * @param {Array} [options.item_actions] Additional actions.
-     * @param {String} [options.item_actions.button_class] Bulma buttom class.
-     * @param {String} [options.item_actions.fa_class] FA image class.
-     * @param {Function} [options.item_actions.action] Click handler (record as argument).
-     * @param {Array} [options.common_actions] Additional actions.
-     * @param {String} [options.common_actions.button_class] Bulma buttom class.
-     * @param {String} [options.common_actions.fa_class] FA image class.
-     * @param {Function} [options.common_actions.action] Click handler (record as argument).
+     * @param {Boolean} [options.no_cancel] No cancel button in editor mode.
+     * @param {Array} [options.item_actions] Additional actions list.
+     * @param {String} [options.item_actions[].button_class] Bulma buttom class.
+     * @param {String} [options.item_actions[].fa_class] FA image class.
+     * @param {String} [options.item_actions[].tooltip] Button tooltip
+     * @param {Function} [options.item_actions[].action] function(record) Click handler.
+     * @param {Array} [options.common_actions] Additional actions list.
+     * @param {String} [options.common_actions[].button_class] Bulma buttom class.
+     * @param {String} [options.common_actions[].fa_class] FA image class.
+     * @param {String} [options.common_actions[].tooltip] Button tooltip
+     * @param {Function} [options.common_actions[].action] function(record) Click handler.
      */
 
     constructor(table, record, options = {}) {
@@ -57,7 +60,9 @@ class CCommandColumn extends CColumn {
         if (this.new_record !== null){
             this.new_record.row.remove();
             this.new_record = null;
-            this.new_record_button.children('a').addClass('is-outlined');
+            if(this.new_record_button !== null){
+                this.new_record_button.children('a').addClass('is-outlined');
+            }
         } else {
             this.new_record = new this.table.record_class(this.table, this.record_options);
             var editor_row = $('<tr></tr>').prependTo(this.table.tbody);
@@ -65,7 +70,9 @@ class CCommandColumn extends CColumn {
             this.new_record.set_data_index(this.record.data_index);
             this.new_record.set_parent_column(this);
             this.new_record.build_editor(true);
-            this.new_record_button.children('a').removeClass('is-outlined');
+            if(this.new_record_button !== null){
+                this.new_record_button.children('a').removeClass('is-outlined');
+            }
         }
     }
 
@@ -100,9 +107,7 @@ class CCommandColumn extends CColumn {
                     istyle = this.options.common_actions[i].fa_class;
                 }
 
-                var self = this;
-
-                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
+                 $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.common_actions[i].action(this.record)}, this,i));
             }
         }
     }
@@ -171,7 +176,8 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.item_actions[i].fa_class) != "undefined"){
                     istyle = this.options.item_actions[i].fa_class;
                 }
-                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
+
+                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.item_actions[i].action(this.record)}, this, i));
             }
         }
 
@@ -247,7 +253,9 @@ class CCommandColumn extends CColumn {
             }
         }
 
-        $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+        if(typeof(this.options.no_cancel) == "undefined" || this.options.no_cancel == false){
+            $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+        }
 
     }
 

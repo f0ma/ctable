@@ -1,13 +1,13 @@
     <div class="apidocs">
         <div id="docs-main" class="content">
             <h1>CTable JavaScript CRUD Framework</h1>
-            
+
             <p>CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.</p>
-            
+
             <p><a href="https://github.com/f0ma/ctable">Home</a> | <a href="http://geochemland.ru/ctable/demo.html">Demo</a></p>
-            
+
             <h4>Key features</h4>
-            
+
             <ul>
             <li>Object oriented design (ES6 Classes and promises, <a href="http://jquery.com">jQuery</a>)</li>
             <li>Asynchronous (AJAX based)</li>
@@ -18,14 +18,15 @@
             <li>Easily extends by column class inheritance</li>
             <li>Good looking and mobile-ready with <a href="http://bulma.io">Bulma CSS</a>, <a href="https://fontawesome.com/">Font Awesome</a> icons and <a href="https://loading.io/css/">loading.io</a> CSS loader</li>
             </ul>
-            
+
             <h4>Standart column classes</h4>
             <ul>
             <li>Text field {{#crossLink "CTextColumn"}}{{/crossLink}}</li>
             <li>Combobox {{#crossLink "CSelectColumn"}}{{/crossLink}}</li>
+            <li>File upload {{#crossLink "CFileUploadColumn"}}{{/crossLink}}</li>
             <li>Control buttons {{#crossLink "CCommandColumn"}}{{/crossLink}}</li>
             </ul>
-            
+
             <h4>Helper classes</h4>
             <ul>
             <li>Pagination {{#crossLink "CPagination"}}{{/crossLink}}</li>
@@ -37,58 +38,57 @@
             <li>CSelect2Column {{#crossLink "CSelect2Column"}}{{/crossLink}} for <a href="https://select2.org/">Select2</a>: ComboBox with search and multi-select option</li>
             <li>CDateTimePickerColumn {{#crossLink "CDateTimePickerColumn"}}{{/crossLink}} for <a href="https://xdsoft.net/jqplugins/datetimepicker/">DateTimePicker</a>: Text field with date and/or time selection dialog</li>
             </ul>
-            
+
             <h4>Usage exapmle</h4>
             <p>1. Add to page header:</p>
-            
+
             <pre class="code prettyprint prettyprinted">
             &lt;script type="text/javascript" src="query/jquery.min.js"&gt;&lt;/script&gt;
             &lt;script type="text/javascript" src="ctable/ctable.js"&gt;&lt;/script&gt;
             &lt;link rel="stylesheet" href="css/bulma.min.css"&gt;
             &lt;link rel="stylesheet" href="fa/css/all.min.css"&gt;
             &lt;link rel="stylesheet" href="ctable.css"&gt;</pre>
-            
+
             <p>2. After documet ready:</p>
-            
+
             <pre class="code prettyprint prettyprinted">
             var t = new CTable({endpoint: "/demo.php"});
             t.set_record_class(CDivEditorRecord);
             t.add_column_class(CSubtableColumn,{title:'Exp', table: function(parent_record){
-            
+
                 var tt = new CTable({endpoint: "/demo.php"});
-            
+
                 tt.set_record_class(CDivEditorRecord);
                 tt.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false, visible_column:false});
                 tt.add_column_class(CTextColumn,{column:'firstname', title:'Имя', validate:"\\S+"});
                 tt.add_column_class(CTextColumn,{column:'lastname', title:'Фамилия', validate:"\\S+"});
-                
+
                 return tt;
             }});
-            
+
             t.add_column_class(CColumn,{column:'id',
                                         title:'ID',
-                                        visible_editor:false,
-                                        visible_column:false});
-            
+                                        visible_editor:false});
+
             t.add_column_class(CTextColumn,{column:'firstname',
                                                 title:'Firstname',
                                                 validate:"\\S+"});
-            
+
             t.add_column_class(CTextColumn,{column:'lastname',
                                                 title:'Lastname',
                                                 validate:"\\S+"});
-            
+
             t.add_column_class(CSelectColumn,{column:'sex',
                                               title:'Sex',
                                               options:[['m','М'], ['f','F']],
                                               validate: true});
-            
+
             t.add_column_class(CCommandColumn,{});
-            
+
             t.set_pagination_class(CPagination,{});
-            
+
             t.build_table($('#mainbox'));
-            
+
             t.select();</pre>
         </div>
     </div>

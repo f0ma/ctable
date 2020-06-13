@@ -126,6 +126,7 @@ class CTable {
             this.lang.no_file = "[No file]";
             this.lang.multiple ="Files: ";
             this.lang.upload = "Upload...";
+            this.lang.export = "Export...";
         }
 
         if(this.options.lang == "ru"){
@@ -136,7 +137,7 @@ class CTable {
             this.lang.save_record = "Сохранить";
             this.lang.cancel = "Отменить";
             this.lang.delete_confirm = "Удалить запись?";
-            this.lang.no_select = "[Любой]";
+            this.lang.no_select = "[Не выбран]";
             this.lang.on_one_page = "Записей на странице:";
             this.lang.records = "На текущей странице";
             this.lang.from = "из";
@@ -159,6 +160,7 @@ class CTable {
             this.lang.no_file = "[Нет файла]";
             this.lang.multiple ="Файлов: ";
             this.lang.upload = "Загрузить...";
+            this.lang.export = "Экспортировать...";
 
         }
 
@@ -712,4 +714,48 @@ class CTable {
     }
 }
 
- 
+
+
+class CTableInputForm extends CTable {
+
+    build_form(elem, is_new_record, redirect_url){
+        this.elem = elem;
+        elem.css('overflow-x','auto');
+        this.table.appendTo(this.elem);
+
+        this.head_record = new this.record_class(this, this.record_options);
+        this.head_record.set_head(this.thead);
+        this.head_record.set_colgroup(this.colgroup);
+
+        this.is_new_record = is_new_record;
+        this.is_form_loaded = false;
+        this.redirect_url = redirect_url;
+    }
+
+    select(){
+        if(!this.is_form_loaded){
+            super.select();
+            this.is_form_loaded = true;
+        } else {
+            window.location.replace(this.redirect_url);
+        }
+    }
+
+    fill_table(){
+        this.body_records = [];
+        this.tbody.empty();
+
+        this.new_record = new this.record_class(this, this.record_options);
+        this.editor_row = $('<tr></tr>').prependTo(this.tbody);
+        this.new_record.set_row(this.editor_row);
+        this.new_record.set_parent_column(null);
+
+        if(this.is_new_record){
+            this.new_record.set_data_index(-1);
+            this.new_record.build_editor(true);
+        } else {
+            this.new_record.set_data_index(0);
+            this.new_record.build_editor(false);
+        }
+    }
+}

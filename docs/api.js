@@ -9,6 +9,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "CDateTimePickerColumn",
         "CFileUploadColumn",
         "CIndicatorColumn",
+        "CMultiColumn",
         "CPagination",
         "CRecord",
         "CSelect2Column",

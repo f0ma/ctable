@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CSubtableColumn - CTable</title>
+    <title>CMultiColumn - CTable</title>
     <link rel="stylesheet" href="https://yui-s.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -92,7 +92,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>CSubtableColumn Class</h1>
+<h1>CMultiColumn Class</h1>
 <div class="box meta">
 
         <div class="extends">
@@ -100,7 +100,7 @@
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/ctable_ctable.js.html#l1683"><code>ctable&#x2F;ctable.js:1683</code></a>
+            Defined in: <a href="../files/ctable_ctable.js.html#l1174"><code>ctable&#x2F;ctable.js:1174</code></a>
         </div>
 
             Module: <a href="../modules/ctable.html">ctable</a>
@@ -109,15 +109,15 @@
 
 
 <div class="box intro">
-    <p>Show subtable button column</p>
-<p>See <a href="../classes/CSubtableColumn.html#method_constructor" class="crosslink">constructor</a> for options list.</p>
+    <p>CMultiColumn for key-value style view and search</p>
+<p>See <a href="../classes/CMultiColumn.html#method_constructor" class="crosslink">constructor</a> for options list.</p>
 
 </div>
 
     <div class="constructor">
         <h2>Constructor</h2>
-<div id="method_CSubtableColumn" class="method item">
-    <h3 class="name"><code>CSubtableColumn</code></h3>
+<div id="method_CMultiColumn" class="method item">
+    <h3 class="name"><code>CMultiColumn</code></h3>
 
         <span class="paren">()</span>
 
@@ -131,7 +131,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1683"><code>ctable&#x2F;ctable.js:1683</code></a>
+        <a href="../files/ctable_ctable.js.html#l1174"><code>ctable&#x2F;ctable.js:1174</code></a>
         </p>
 
 
@@ -149,20 +149,7 @@
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code>parent_table.add_column_class(CSubtableColumn, {title:'Ext',
-table: function(record){
-
-       var child_table = new CTable({endpoint: &quot;/call.php&quot;});
-
-       child_table.set_record_class(CAdaptiveRecord);
-       child_table.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false});
-       child_table.add_column_class(CSelectColumn, {column:'name', title: 'Name', load:'person_id', endpoint:'/person.php'});
-       child_table.add_column_class(CCommandColumn,{});
-       child_table.set_filter('person_id', record.record_field('id'));
-       child_table.add_predefined_field('person_id', record.record_field('id'));
-
-       return child_table;
- }});</code></pre>
+                <pre class="code prettyprint"><code>table.add_column_class(CMultiColumn,{ columns:['fname', 'lname'], labels:['First Name', 'Last Name'] });</code></pre>
 
             </div>
         </div>
@@ -212,10 +199,6 @@ table: function(record){
                                 <a href="#method_editor_value">editor_value</a>
 
                             </li>
-                            <li class="index-item method private">
-                                <a href="#method_hide_subtable">hide_subtable</a>
-
-                            </li>
                             <li class="index-item method inherited">
                                 <a href="#method_is_valid">is_valid</a>
 
@@ -225,7 +208,7 @@ table: function(record){
 
                             </li>
                             <li class="index-item method private">
-                                <a href="#method_show_subtable">show_subtable</a>
+                                <a href="#method_set_search_filter">set_search_filter</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -278,7 +261,7 @@ table: function(record){
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1755"><code>ctable&#x2F;ctable.js:1755</code></a>
+        <a href="../files/ctable_ctable.js.html#l1207"><code>ctable&#x2F;ctable.js:1207</code></a>
         </p>
 
 
@@ -379,7 +362,7 @@ table: function(record){
 
 
 </div>
-<div id="method_build_options" class="method item inherited">
+<div id="method_build_options" class="method item">
     <h3 class="name"><code>build_options</code></h3>
 
         <div class="args">
@@ -398,9 +381,12 @@ table: function(record){
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/CColumn.html#method_build_options">CColumn</a>:
-        <a href="../files/ctable_ctable.js.html#l130"><code>ctable&#x2F;ctable.js:130</code></a>
+            <p>Inherited from
+            <a href="../classes/CColumn.html#method_build_options">
+                CColumn
+            </a>
+            but overwritten in
+        <a href="../files/ctable_ctable.js.html#l1230"><code>ctable&#x2F;ctable.js:1230</code></a>
         </p>
 
 
@@ -408,7 +394,7 @@ table: function(record){
     </div>
 
     <div class="description">
-        <p>Build options part of column.</p>
+        <p>Build options part of column with search input.</p>
 
     </div>
 
@@ -571,7 +557,7 @@ table: function(record){
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1711"><code>ctable&#x2F;ctable.js:1711</code></a>
+        <a href="../files/ctable_ctable.js.html#l1190"><code>ctable&#x2F;ctable.js:1190</code></a>
         </p>
 
 
@@ -621,22 +607,45 @@ table: function(record){
 
                         <ul class="params-list">
                             <li class="param">
-                                    <code class="param-name">table</code>
-                                    <span class="type">Function</span>
-
-                                <div class="param-description">
-                                    <p>Function(record) returns new <code>CTable</code> object.</p>
-
-                                </div>
-
-                            </li>
-                            <li class="param">
                                     <code class="param-name optional">[width]</code>
                                     <span class="type">Int</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
                                     <p>Column width in percents.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[columns]</code>
+                                    <span class="type">List</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>List of record field.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[labels]</code>
+                                    <span class="type">List</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>List of labels.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[labels_width]</code>
+                                    <span class="type">Int</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Label width.</p>
 
                                 </div>
 
@@ -689,38 +698,6 @@ table: function(record){
 
             </div>
         </div>
-
-
-</div>
-<div id="method_hide_subtable" class="method item private">
-    <h3 class="name"><code>hide_subtable</code></h3>
-
-        <span class="paren">()</span>
-
-
-
-        <span class="flag private">private</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/ctable_ctable.js.html#l1785"><code>ctable&#x2F;ctable.js:1785</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Hide subtable button handler.</p>
-
-    </div>
-
-
 
 
 </div>
@@ -798,8 +775,8 @@ table: function(record){
 
 
 </div>
-<div id="method_show_subtable" class="method item private">
-    <h3 class="name"><code>show_subtable</code></h3>
+<div id="method_set_search_filter" class="method item private">
+    <h3 class="name"><code>set_search_filter</code></h3>
 
         <span class="paren">()</span>
 
@@ -814,7 +791,7 @@ table: function(record){
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1768"><code>ctable&#x2F;ctable.js:1768</code></a>
+        <a href="../files/ctable_ctable.js.html#l1246"><code>ctable&#x2F;ctable.js:1246</code></a>
         </p>
 
 
@@ -822,7 +799,7 @@ table: function(record){
     </div>
 
     <div class="description">
-        <p>Show subtable button handler.</p>
+        <p>Search input change handler.</p>
 
     </div>
 
@@ -882,7 +859,7 @@ table: function(record){
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1733"><code>ctable&#x2F;ctable.js:1733</code></a>
+        <a href="../files/ctable_ctable.js.html#l1258"><code>ctable&#x2F;ctable.js:1258</code></a>
         </p>
 
 
@@ -928,7 +905,7 @@ table: function(record){
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l1744"><code>ctable&#x2F;ctable.js:1744</code></a>
+        <a href="../files/ctable_ctable.js.html#l1269"><code>ctable&#x2F;ctable.js:1269</code></a>
         </p>
 
 

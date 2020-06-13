@@ -54,10 +54,10 @@ class CFileUploadColumn extends CColumn {
      * @param {Object} record Parent CRecord object.
      * @param {Object} options Column options:
      * @param {int} [options.width] Column width in percents.
-     * @param {Function} [options.field_parser] function (column, record, value) which returns object {uploaded:?, count:?, filelabel:?, uid:?, filelink:?} by value - column value.
+     * @param {Function} [options.field_parser] function (column, record, value) which returns object {uploaded:?, count:?, filelabel:?, uid:?, filelink:?} by column value.
      * @param {String} options.upload_endpoint Url for file uploading.
-     * @param {String} [options.link_endpoint] Url for file downloading - default link_endpoint+uid.
      * @param {Boolean} [options.links] Files available for downloading by link?
+     * @param {String} [options.link_endpoint] Url for file downloading - default link_endpoint+uid.
      * @param {Boolean} [options.multiple] Allow multiple files upload, default true.
      * @param {int} [options.filelabel_length] File label shortificator - default 12 symbols.
      *
@@ -248,7 +248,6 @@ class CFileUploadColumn extends CColumn {
         }
         return true;
     }
-    
 }
 
  

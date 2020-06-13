@@ -46,6 +46,7 @@
                                 <li><a href="../classes/CDateTimePickerColumn.html">CDateTimePickerColumn</a></li>
                                 <li><a href="../classes/CFileUploadColumn.html">CFileUploadColumn</a></li>
                                 <li><a href="../classes/CIndicatorColumn.html">CIndicatorColumn</a></li>
+                                <li><a href="../classes/CMultiColumn.html">CMultiColumn</a></li>
                                 <li><a href="../classes/CPagination.html">CPagination</a></li>
                                 <li><a href="../classes/CRecord.html">CRecord</a></li>
                                 <li><a href="../classes/CSelect2Column.html">CSelect2Column</a></li>
@@ -198,6 +199,10 @@
                                 <a href="#method_build_title">build_title</a>
 
                             </li>
+                            <li class="index-item method">
+                                <a href="#method_CExportTableAction">CExportTableAction</a>
+
+                            </li>
                             <li class="index-item method private">
                                 <a href="#method_close_edit_record_editor">close_edit_record_editor</a>
 
@@ -280,7 +285,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1012"><code>ctable&#x2F;ctable.js:1012</code></a>
+        <a href="../files/ctable_ctable.js.html#l1020"><code>ctable&#x2F;ctable.js:1020</code></a>
         </p>
 
 
@@ -320,7 +325,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l902"><code>ctable&#x2F;ctable.js:902</code></a>
+        <a href="../files/ctable_ctable.js.html#l907"><code>ctable&#x2F;ctable.js:907</code></a>
         </p>
 
 
@@ -380,7 +385,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l987"><code>ctable&#x2F;ctable.js:987</code></a>
+        <a href="../files/ctable_ctable.js.html#l993"><code>ctable&#x2F;ctable.js:993</code></a>
         </p>
 
 
@@ -440,7 +445,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l807"><code>ctable&#x2F;ctable.js:807</code></a>
+        <a href="../files/ctable_ctable.js.html#l810"><code>ctable&#x2F;ctable.js:810</code></a>
         </p>
 
 
@@ -588,7 +593,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l830"><code>ctable&#x2F;ctable.js:830</code></a>
+        <a href="../files/ctable_ctable.js.html#l837"><code>ctable&#x2F;ctable.js:837</code></a>
         </p>
 
 
@@ -621,6 +626,100 @@
 
 
 </div>
+<div id="method_CExportTableAction" class="method item">
+    <h3 class="name"><code>CExportTableAction</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>table</code>
+                </li>
+                <li class="arg">
+                        <code>format</code>
+                </li>
+                <li class="arg">
+                        <code>filename</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">Object</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/ctable_ctable.js.html#l1074"><code>ctable&#x2F;ctable.js:1074</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Build export table action.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">table</code>
+                        <span class="type"><a href="../classes/CTable.html" class="crosslink">CTable</a></span>
+
+
+                    <div class="param-description">
+                        <p>Table object.</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">format</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                        <p>File format (csv, txt or xlsx).</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">filename</code>
+                        <span class="type">String</span>
+
+
+                    <div class="param-description">
+                        <p>Name of downloaded file (without extention).</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Object</span>:
+                    <p>Object for add to actions list.</p>
+
+            </div>
+        </div>
+
+
+</div>
 <div id="method_close_edit_record_editor" class="method item private">
     <h3 class="name"><code>close_edit_record_editor</code></h3>
 
@@ -637,7 +736,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l887"><code>ctable&#x2F;ctable.js:887</code></a>
+        <a href="../files/ctable_ctable.js.html#l892"><code>ctable&#x2F;ctable.js:892</code></a>
         </p>
 
 
@@ -669,7 +768,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l939"><code>ctable&#x2F;ctable.js:939</code></a>
+        <a href="../files/ctable_ctable.js.html#l945"><code>ctable&#x2F;ctable.js:945</code></a>
         </p>
 
 
@@ -820,44 +919,70 @@
 
                             </li>
                             <li class="param">
+                                    <code class="param-name optional">[no_cancel]</code>
+                                    <span class="type">Boolean</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>No cancel button in editor mode.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
                                     <code class="param-name optional">[item_actions]</code>
                                     <span class="type">Array</span>
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
-                                    <p>Additional actions.</p>
+                                    <p>Additional actions list.</p>
 
                                 </div>
 
-                                    <ul class="params-list">
-                                        <li class="param">
-                                                <code class="param-name optional">[button_class]</code>
-                                                <span class="type">String</span>
-                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[item_actions[].button_class]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
 
-                                            <div class="param-description">
-                                                Bulma buttom class.
-                                            </div>
-                                        </li>
-                                        <li class="param">
-                                                <code class="param-name optional">[fa_class]</code>
-                                                <span class="type">String</span>
-                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                <div class="param-description">
+                                    <p>Bulma buttom class.</p>
 
-                                            <div class="param-description">
-                                                FA image class.
-                                            </div>
-                                        </li>
-                                        <li class="param">
-                                                <code class="param-name optional">[action]</code>
-                                                <span class="type">Function</span>
-                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                </div>
 
-                                            <div class="param-description">
-                                                Click handler (record as argument).
-                                            </div>
-                                        </li>
-                                    </ul>
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[item_actions[].fa_class]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>FA image class.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[item_actions[].tooltip]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Button tooltip</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[item_actions[].action]</code>
+                                    <span class="type">Function</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>function(record) Click handler.</p>
+
+                                </div>
+
                             </li>
                             <li class="param">
                                     <code class="param-name optional">[common_actions]</code>
@@ -865,39 +990,54 @@
                                     <span class="flag optional" title="This parameter is optional.">optional</span>
 
                                 <div class="param-description">
-                                    <p>Additional actions.</p>
+                                    <p>Additional actions list.</p>
 
                                 </div>
 
-                                    <ul class="params-list">
-                                        <li class="param">
-                                                <code class="param-name optional">[button_class]</code>
-                                                <span class="type">String</span>
-                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[common_actions[].button_class]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
 
-                                            <div class="param-description">
-                                                Bulma buttom class.
-                                            </div>
-                                        </li>
-                                        <li class="param">
-                                                <code class="param-name optional">[fa_class]</code>
-                                                <span class="type">String</span>
-                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                <div class="param-description">
+                                    <p>Bulma buttom class.</p>
 
-                                            <div class="param-description">
-                                                FA image class.
-                                            </div>
-                                        </li>
-                                        <li class="param">
-                                                <code class="param-name optional">[action]</code>
-                                                <span class="type">Function</span>
-                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                </div>
 
-                                            <div class="param-description">
-                                                Click handler (record as argument).
-                                            </div>
-                                        </li>
-                                    </ul>
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[common_actions[].fa_class]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>FA image class.</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[common_actions[].tooltip]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>Button tooltip</p>
+
+                                </div>
+
+                            </li>
+                            <li class="param">
+                                    <code class="param-name optional">[common_actions[].action]</code>
+                                    <span class="type">Function</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+
+                                <div class="param-description">
+                                    <p>function(record) Click handler.</p>
+
+                                </div>
+
                             </li>
                         </ul>
                 </li>
@@ -923,7 +1063,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1034"><code>ctable&#x2F;ctable.js:1034</code></a>
+        <a href="../files/ctable_ctable.js.html#l1042"><code>ctable&#x2F;ctable.js:1042</code></a>
         </p>
 
 
@@ -1041,7 +1181,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l868"><code>ctable&#x2F;ctable.js:868</code></a>
+        <a href="../files/ctable_ctable.js.html#l873"><code>ctable&#x2F;ctable.js:873</code></a>
         </p>
 
 
@@ -1104,7 +1244,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1046"><code>ctable&#x2F;ctable.js:1046</code></a>
+        <a href="../files/ctable_ctable.js.html#l1054"><code>ctable&#x2F;ctable.js:1054</code></a>
         </p>
 
 
@@ -1136,7 +1276,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/ctable_ctable.js.html#l1024"><code>ctable&#x2F;ctable.js:1024</code></a>
+        <a href="../files/ctable_ctable.js.html#l1032"><code>ctable&#x2F;ctable.js:1032</code></a>
         </p>
 
 
@@ -1204,7 +1344,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l965"><code>ctable&#x2F;ctable.js:965</code></a>
+        <a href="../files/ctable_ctable.js.html#l971"><code>ctable&#x2F;ctable.js:971</code></a>
         </p>
 
 
@@ -1250,7 +1390,7 @@
                 CColumn
             </a>
             but overwritten in
-        <a href="../files/ctable_ctable.js.html#l976"><code>ctable&#x2F;ctable.js:976</code></a>
+        <a href="../files/ctable_ctable.js.html#l982"><code>ctable&#x2F;ctable.js:982</code></a>
         </p>
 
 

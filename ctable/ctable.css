@@ -103,3 +103,16 @@
 .ctable-table tbody tr td, .ctable-table thead tr th, .ctable-table tfoot tr th {
     vertical-align:middle;
 }
+
+
+.ctable-table tbody tr td dt {
+    float: left;
+    clear: both;
+    font-style: italic;
+
+}
+
+.ctable-table tbody tr td dd {
+    float: left;
+    margin-left:0.5em;
+}

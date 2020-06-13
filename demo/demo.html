@@ -10,10 +10,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.js"></script>
+    <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/5ed507ef8aa53d8ecfea96d96bc7214cd2476fd2/FileSaver.min.js"></script>
+    <script src="https://unpkg.com/tableexport@5.2.0/dist/js/tableexport.min.js"></script>
     <link rel="stylesheet" href="ctable.css"/>
     <script src="ctable.js"></script>
 </head>
 <body>
+
+
 
 <a href="https://github.com/f0ma/ctable"  style="position:absolute;z-index:4;right:0;top:0;"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" alt="Fork me on GitHub"></a>
 
@@ -81,14 +85,22 @@ $(function() {
                                 visible_editor:false,
                                 visible_column:true});
 
+
+    t.add_column_class(CMultiColumn,{title:'Name',
+                                     columns: ['firstname', 'lastname'],
+                                     labels: ['Firstname', 'Lastname'],
+                                     labels_width: '5em'});
+
     t.add_column_class(CTextColumn,{column:'firstname',
                                         title:'Firstname',
                                         record_width_class: 'is-3',
+                                        visible_column:false,
                                         validate:"\\S+", editor_width_class: 'is-3'});
 
     t.add_column_class(CTextColumn,{column:'lastname',
                                         title:'Lastname',
                                         record_width_class: 'is-3',
+                                        visible_column:false,
                                         validate:"\\S+", editor_width_class: 'is-3'});
 
     t.add_column_class(CDateTimePickerColumn,{column:'reg_date',
@@ -99,7 +111,7 @@ $(function() {
                                       editor_width_class: 'is-2',
                                       footnote: 'in YYYY-MM-DD format'});
 
-    t.add_column_class(CSelect2Column,{column:'status',
+    t.add_column_class(CSelectColumn,{column:'status',
                                       title:'Status',
                                       record_width_class: 'is-2',
                                       endpoint:'http://localhost:8000/demo.php',
@@ -108,6 +120,7 @@ $(function() {
 
     t.add_column_class(CFileUploadColumn,{column:'image',
                                         title:'Image',
+                                        editor_width_class: 'is-2',
                                         upload_endpoint: 'http://localhost:8000/demo.php?upload=true',
                                         multiple: true,
                                         links: false,
@@ -124,15 +137,16 @@ $(function() {
                                                                   });
                                                                   alert(textline);
                                                               },
-                                                              tooltip: "Show selected records"}]});
+                                                              tooltip: "Show selected records"},
+                                                              CExportTableAction(t, 'csv','accounts')]});
 
     t.set_pagination_class(CPagination,{});
+
+//    t.build_form($('#mainbox'), false, "http://localhost:8000/demo.html");
 
     t.build_table($('#mainbox'));
 
     t.select();
-
-
 
 });
 </script>

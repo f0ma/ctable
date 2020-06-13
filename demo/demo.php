@@ -48,14 +48,25 @@ if(isset($_GET['select'])){
     if(isset($opts['column_searches']) and count($opts['column_searches']) > 0){
         $rules = [];
         foreach($opts['column_searches'] as $column => $filter){
-            $rules[]= $db->escapeString($column).' LIKE "'.$db->escapeString("%".$filter."%").'"';
+            if (strpos($column,'+') !== FALSE){
+                $columns = explode('+', $column);
+                $rule = [];
+                foreach($columns as $col){
+                    $rule []= $db->escapeString($col).' LIKE "'.$db->escapeString("%".$filter."%").'"';
+                }
+                $rules[]= " (".implode(' OR ',$rule).") ";
+            } else {
+                $rules[]= $db->escapeString($column).' LIKE "'.$db->escapeString("%".$filter."%").'"';
+            }
         }
         if ($whereword == '') {
             $whereword = " WHERE ";
         } else {
             $whereword.= ' AND ';
         }
-        $whereword.= implode(' AND ',$rules)." ";
+        if(count($rules) > 0){
+            $whereword.= " (".implode(' AND ',$rules).") ";
+        }
     }
 
     $ordword = '';
@@ -155,7 +166,7 @@ if(isset($_GET['upload'])){
 
         //move_uploaded_file($_FILES[$key]['tmp_name'], 'uploads/' . $hash .'.'. $ext);
 
-        $files .= '$hash:'.$name.':'.$timestamp.';';
+        $files .= "$hash:".$name.':'.$timestamp.';';
     }
 
     echo json_encode(['Result'=>'OK', 'Files'=> $files]);

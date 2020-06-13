@@ -783,14 +783,17 @@ class CCommandColumn extends CColumn {
      * @param {Boolean} [options.no_edit] No edit button.
      * @param {Boolean} [options.no_commit] Show editor without save button.
      * @param {Boolean} [options.no_delete] No delete button.
-     * @param {Array} [options.item_actions] Additional actions.
-     * @param {String} [options.item_actions.button_class] Bulma buttom class.
-     * @param {String} [options.item_actions.fa_class] FA image class.
-     * @param {Function} [options.item_actions.action] Click handler (record as argument).
-     * @param {Array} [options.common_actions] Additional actions.
-     * @param {String} [options.common_actions.button_class] Bulma buttom class.
-     * @param {String} [options.common_actions.fa_class] FA image class.
-     * @param {Function} [options.common_actions.action] Click handler (record as argument).
+     * @param {Boolean} [options.no_cancel] No cancel button in editor mode.
+     * @param {Array} [options.item_actions] Additional actions list.
+     * @param {String} [options.item_actions[].button_class] Bulma buttom class.
+     * @param {String} [options.item_actions[].fa_class] FA image class.
+     * @param {String} [options.item_actions[].tooltip] Button tooltip
+     * @param {Function} [options.item_actions[].action] function(record) Click handler.
+     * @param {Array} [options.common_actions] Additional actions list.
+     * @param {String} [options.common_actions[].button_class] Bulma buttom class.
+     * @param {String} [options.common_actions[].fa_class] FA image class.
+     * @param {String} [options.common_actions[].tooltip] Button tooltip
+     * @param {Function} [options.common_actions[].action] function(record) Click handler.
      */
 
     constructor(table, record, options = {}) {
@@ -815,7 +818,9 @@ class CCommandColumn extends CColumn {
         if (this.new_record !== null){
             this.new_record.row.remove();
             this.new_record = null;
-            this.new_record_button.children('a').addClass('is-outlined');
+            if(this.new_record_button !== null){
+                this.new_record_button.children('a').addClass('is-outlined');
+            }
         } else {
             this.new_record = new this.table.record_class(this.table, this.record_options);
             var editor_row = $('<tr></tr>').prependTo(this.table.tbody);
@@ -823,7 +828,9 @@ class CCommandColumn extends CColumn {
             this.new_record.set_data_index(this.record.data_index);
             this.new_record.set_parent_column(this);
             this.new_record.build_editor(true);
-            this.new_record_button.children('a').removeClass('is-outlined');
+            if(this.new_record_button !== null){
+                this.new_record_button.children('a').removeClass('is-outlined');
+            }
         }
     }
 
@@ -858,9 +865,7 @@ class CCommandColumn extends CColumn {
                     istyle = this.options.common_actions[i].fa_class;
                 }
 
-                var self = this;
-
-                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click(function(event){self.options.common_actions[i].action(self.record)});
+                 $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.common_actions[i].action(this.record)}, this,i));
             }
         }
     }
@@ -929,7 +934,8 @@ class CCommandColumn extends CColumn {
                 if (typeof(this.options.item_actions[i].fa_class) != "undefined"){
                     istyle = this.options.item_actions[i].fa_class;
                 }
-                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click({record:this.record}, this.options.item_actions[i].action);
+
+                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.item_actions[i].action(this.record)}, this, i));
             }
         }
 
@@ -1005,7 +1011,9 @@ class CCommandColumn extends CColumn {
             }
         }
 
-        $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+        if(typeof(this.options.no_cancel) == "undefined" || this.options.no_cancel == false){
+            $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+        }
 
     }
 
@@ -1055,6 +1063,41 @@ class CCommandColumn extends CColumn {
 }
 
 /**
+ * Export table action constructor.
+ * Requries FileSaver.js and tableexport.js
+ *
+ * @example
+ *     table.add_column_class(CCommandColumn,{common_actions: [CExportTableAction(t, 'csv', 'table')]});
+ *
+ */
+
+/**
+ * Build export table action.
+ * @method CExportTableAction
+ * @param {CTable} table Table object.
+ * @param {String} format File format (csv, txt or xlsx).
+ * @param {String} filename Name of downloaded file (without extention).
+ * @return {Object} Object for add to actions list.
+ *
+ */
+
+function CExportTableAction (table, format, filename) {
+    TableExport.prototype.ignoreCSS = ".tableexport-ignore";
+
+    return {
+    fa_class: 'fas fa-file-export',
+    action: function (record){
+        record.table.table.find('thead tr:eq(1) th').addClass('tableexport-ignore');
+        record.table.table.find('tbody tr td dl dt').addClass('tableexport-ignore');
+
+        var table = TableExport(record.table.table, {exportButtons: false, footers: false, formats:[format]});
+        var exportData = table.getExportData();
+        var csvData = exportData['tableexport-1'][format];
+        table.export2file(csvData.data, csvData.mimeType, filename, csvData.fileExtension, csvData.merges, csvData.RTL, csvData.sheetname);
+    },
+    tooltip: table.lang.export
+}};
+/**
  * Custom js column with content returned by function
  *
  * See {{#crossLink "CCustomColumn/constructor"}}{{/crossLink}} for options list.
@@ -1103,6 +1146,113 @@ class CCustomColumn extends CColumn {
             elem.html(this.options.html(this, this.record, this.options.column));
             return;
         }
+    }
+
+    /**
+     * Column is visible?.
+     * @method visible_column
+     * @return {Boolean} Always true
+     *
+     */
+
+    visible_column(){
+        return true;
+    }
+
+    /**
+     * Editor is visible?.
+     * @method visible_editor
+     * @return {Boolean} Always false
+     *
+     */
+
+    visible_editor(){
+        return false;
+    }
+}
+ 
+/**
+ * CMultiColumn for key-value style view and search
+ *
+ * See {{#crossLink "CMultiColumn/constructor"}}{{/crossLink}} for options list.
+ *
+ * @class CMultiColumn
+ * @constructor
+ * @extends CColumn
+ *
+ * @example
+ *     table.add_column_class(CMultiColumn,{ columns:['fname', 'lname'], labels:['First Name', 'Last Name'] });
+ */
+
+
+class CMultiColumn extends CColumn {
+
+    /**
+     * Create column object. Should not be called directly.
+     *
+     * @method constructor
+     * @param {Object} table Parent CTable object.
+     * @param {Object} record Parent CRecord object.
+     * @param {Object} options Column options:
+     * @param {int} [options.width] Column width in percents.
+     * @param {List} [options.columns] List of record field.
+     * @param {List} [options.labels] List of labels.
+     * @param {int} [options.labels_width] Label width.
+     */
+
+    constructor(table, record, options = {}) {
+        super(table, record, options);
+    }
+
+    /**
+     * Build cell part of column.
+     * @method build_cell
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_cell(elem){
+        super.build_cell(elem);
+
+        var dt_style = '';
+        if(typeof(this.options.labels_width) != "undefined"){
+            dt_style = ' style="width:'+this.options.labels_width+';" ';
+        }
+
+        var text = '';
+        for (var i in this.options.columns){
+            text += '<dt'+dt_style+'> ' + this.options.labels[i] + ': </dt><dd>' + this.record.record_field(this.options.columns[i]) + '</dd>';
+        }
+
+        elem.html('<dl>' + text + '</dl>');
+    }
+
+    /**
+     * Build options part of column with search input.
+     * @method build_options
+     * @param {JQueryNode} elem Container element.
+     *
+     */
+
+    build_options(elem){
+        this.options_elem = elem;
+
+        if(typeof(this.options.no_search) == "undefined" || !this.options.no_search){
+            this.search_field = $('<input class="input" type="search"></input>').appendTo(this.options_elem);
+            this.search_field.change($.proxy(this.set_search_filter, this));
+        }
+    }
+
+    /**
+     * Search input change handler.
+     * @method set_search_filter
+     * @private
+     *
+     */
+
+    set_search_filter(){
+        this.table.set_search(this.options.columns.join('+'), this.search_field.val());
+        this.table.select();
     }
 
     /**
@@ -1333,10 +1483,10 @@ class CFileUploadColumn extends CColumn {
      * @param {Object} record Parent CRecord object.
      * @param {Object} options Column options:
      * @param {int} [options.width] Column width in percents.
-     * @param {Function} [options.field_parser] function (column, record, value) which returns object {uploaded:?, count:?, filelabel:?, uid:?, filelink:?} by value - column value.
+     * @param {Function} [options.field_parser] function (column, record, value) which returns object {uploaded:?, count:?, filelabel:?, uid:?, filelink:?} by column value.
      * @param {String} options.upload_endpoint Url for file uploading.
-     * @param {String} [options.link_endpoint] Url for file downloading - default link_endpoint+uid.
      * @param {Boolean} [options.links] Files available for downloading by link?
+     * @param {String} [options.link_endpoint] Url for file downloading - default link_endpoint+uid.
      * @param {Boolean} [options.multiple] Allow multiple files upload, default true.
      * @param {int} [options.filelabel_length] File label shortificator - default 12 symbols.
      *
@@ -1527,7 +1677,6 @@ class CFileUploadColumn extends CColumn {
         }
         return true;
     }
-    
 }
 
  
@@ -2475,6 +2624,7 @@ class CTable {
             this.lang.no_file = "[No file]";
             this.lang.multiple ="Files: ";
             this.lang.upload = "Upload...";
+            this.lang.export = "Export...";
         }
 
         if(this.options.lang == "ru"){
@@ -2485,7 +2635,7 @@ class CTable {
             this.lang.save_record = "Сохранить";
             this.lang.cancel = "Отменить";
             this.lang.delete_confirm = "Удалить запись?";
-            this.lang.no_select = "[Любой]";
+            this.lang.no_select = "[Не выбран]";
             this.lang.on_one_page = "Записей на странице:";
             this.lang.records = "На текущей странице";
             this.lang.from = "из";
@@ -2508,6 +2658,7 @@ class CTable {
             this.lang.no_file = "[Нет файла]";
             this.lang.multiple ="Файлов: ";
             this.lang.upload = "Загрузить...";
+            this.lang.export = "Экспортировать...";
 
         }
 
@@ -3061,4 +3212,48 @@ class CTable {
     }
 }
 
- 
+
+
+class CTableInputForm extends CTable {
+
+    build_form(elem, is_new_record, redirect_url){
+        this.elem = elem;
+        elem.css('overflow-x','auto');
+        this.table.appendTo(this.elem);
+
+        this.head_record = new this.record_class(this, this.record_options);
+        this.head_record.set_head(this.thead);
+        this.head_record.set_colgroup(this.colgroup);
+
+        this.is_new_record = is_new_record;
+        this.is_form_loaded = false;
+        this.redirect_url = redirect_url;
+    }
+
+    select(){
+        if(!this.is_form_loaded){
+            super.select();
+            this.is_form_loaded = true;
+        } else {
+            window.location.replace(this.redirect_url);
+        }
+    }
+
+    fill_table(){
+        this.body_records = [];
+        this.tbody.empty();
+
+        this.new_record = new this.record_class(this, this.record_options);
+        this.editor_row = $('<tr></tr>').prependTo(this.tbody);
+        this.new_record.set_row(this.editor_row);
+        this.new_record.set_parent_column(null);
+
+        if(this.is_new_record){
+            this.new_record.set_data_index(-1);
+            this.new_record.build_editor(true);
+        } else {
+            this.new_record.set_data_index(0);
+            this.new_record.build_editor(false);
+        }
+    }
+}
