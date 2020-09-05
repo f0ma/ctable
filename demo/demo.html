@@ -111,11 +111,12 @@ $(function() {
                                       editor_width_class: 'is-2',
                                       footnote: 'in YYYY-MM-DD format'});
 
+
     t.add_column_class(CSelectColumn,{column:'status',
                                       title:'Status',
                                       record_width_class: 'is-2',
                                       endpoint:'http://localhost:8000/demo.php',
-                                      load:{kind:'status'},
+                                      params:{kind:'status'},
                                       editor_width_class: 'is-2'});
 
     t.add_column_class(CFileUploadColumn,{column:'image',
