@@ -2708,7 +2708,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2813,
+            "line": 2816,
             "description": "Fill table with values after ajax call.",
             "itemtype": "method",
             "name": "fill_table",
@@ -2719,7 +2719,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2843,
+            "line": 2846,
             "description": "Returns selected with CCheckboxColumn records list.",
             "itemtype": "method",
             "name": "selected_records",
@@ -2732,7 +2732,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2860,
+            "line": 2863,
             "description": "Add order for column.",
             "itemtype": "method",
             "name": "set_order",
@@ -2753,7 +2753,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2876,
+            "line": 2879,
             "description": "Add search for column.",
             "itemtype": "method",
             "name": "set_search",
@@ -2774,7 +2774,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2892,
+            "line": 2895,
             "description": "Add filter for column.",
             "itemtype": "method",
             "name": "set_filter",
@@ -2795,7 +2795,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2908,
+            "line": 2911,
             "description": "Add predefined field value for all insert, update and delete requests in this table.",
             "itemtype": "method",
             "name": "add_predefined_field",
@@ -2816,7 +2816,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2920,
+            "line": 2923,
             "description": "Loading cover control.",
             "itemtype": "method",
             "name": "loading_screen",
@@ -2832,7 +2832,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2941,
+            "line": 2944,
             "description": "Get data from server.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `select`)\n\nRequest fields (json):\n\n`start` {Int} Start record index (0 if no pagination)\n\n`page` {Int} Page size (0 if no pagination)\n\n`column_filters` {Object} Pairs column_name => filter_value\n\n`column_searches` {Object} Pairs column_name => search_value\n\n`column_orders` {Object} Pairs column_name => sort_order\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Records` {Array} Result record set: array of {Object}.\n\n`TotalRecordCount` {Int} Total records count for pagination.",
             "itemtype": "method",
             "name": "select",
@@ -2841,7 +2841,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3015,
+            "line": 3018,
             "description": "Insert record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `insert`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "insert",
@@ -2857,7 +2857,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3069,
+            "line": 3072,
             "description": "Update record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `update`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "update",
@@ -2873,7 +2873,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3122,
+            "line": 3125,
             "description": "Delete record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "remove",
@@ -2889,7 +2889,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3171,
+            "line": 3174,
             "description": "Table level options cache routine.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `options`)\n\nRequest is `params` object (json). Requried field `params.load`.\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Options` {Object} Result options dict.\n\nIf `params` in cache call `on_options_loaded` and returns immediately.\nElse make AJAX call and call `on_options_loaded` after data is loaded.",
             "itemtype": "method",
             "name": "load_from_options_cache",

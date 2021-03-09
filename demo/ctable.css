@@ -104,7 +104,6 @@
     vertical-align:middle;
 }
 
-
 .ctable-table tbody tr td dt {
     float: left;
     clear: both;
@@ -116,3 +115,29 @@
     float: left;
     margin-left:0.5em;
 }
+
+.ctable-table tbody tr.is-selected {
+    background-color: #fff0ce;
+    color: #000;
+}
+
+.ctable-table tbody tr td.ctable-container {
+    background-color: #fff0ce;
+    padding: 2em;
+}
+
+.ctable-table tbody tr td.ctable-container-1 {
+    background-color: #fff0ce;
+    padding: 0.5em;
+}
+
+.ctable-table tbody tr td.ctable-container div {
+    background-color: #fff;
+}
+
+.ctable-table tbody tr td div div.field.column {
+    vertical-align:top;
+    margin: 0.5em;
+}
+
+    

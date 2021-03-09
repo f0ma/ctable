@@ -89,8 +89,8 @@ class CAdaptiveRecord extends CRecord {
             return;
         }
 
-        var editor_row = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
-        var editor_cell = $('<div class="columns is-multiline" style="width:99%;"></div>').appendTo(editor_row);
+        var editor_row = $('<td class="ctable-container" colspan="'+this.table.visible_columns()+'"></td>').appendTo(this.row);
+        var editor_cell = $('<div class="columns is-multiline"></div>').appendTo(editor_row);
 
         var width_class = 'is-4';
         if (typeof(this.options.editor_width_class) != 'undefined'){
@@ -105,7 +105,7 @@ class CAdaptiveRecord extends CRecord {
 
             if (this.columns[i].visible_editor()){
 
-                var div = $('<div class="field column '+column_width_class+'" style="display: inline-block; vertical-align:top;"></div>').appendTo(editor_cell);
+                var div = $('<div class="field column '+column_width_class+'"></div>').appendTo(editor_cell);
 
                 this.columns[i].build_editor(div, is_new_record);
 

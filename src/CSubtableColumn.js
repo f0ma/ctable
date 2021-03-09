@@ -94,7 +94,7 @@ class CSubtableColumn extends CColumn {
         this.show_subtable_button.hide();
         this.hide_subtable_button.show();
         var subtable_row = this.record.open_subrecord($.proxy(this.close_subtable, this));
-        this.subtable_cell = $('<td colspan="'+this.table.visible_columns()+'"></td>').appendTo(subtable_row);
+        this.subtable_cell = $('<td class="ctable-container-1" colspan="'+this.table.visible_columns()+'"></td>').appendTo(subtable_row);
         this.subtable = this.options.table(this.record);
         this.subtable.build_table(this.subtable_cell);
         this.subtable.select();

@@ -238,7 +238,7 @@ class CTable {
 
     build_table(elem){
         this.elem = elem;
-        elem.css('overflow-x','auto');
+        //elem.css('overflow-x','auto');
         this.table.appendTo(this.elem);
 
         this.head_record = new this.record_class(this, this.record_options);
@@ -253,10 +253,13 @@ class CTable {
         if(this.pagination_class !== null){
             this.pagination = new this.pagination_class(this, this.pagination_options);
 
-            var pagination_cell = $('<td colspan="'+this.visible_columns()+'"></td>');
-            var pagination_row = $('<tr></tr>');
-            pagination_cell.appendTo(pagination_row);
-            pagination_row.appendTo(this.tfoot);
+            //var pagination_cell = $('<td colspan="'+this.visible_columns()+'"></td>');
+            //var pagination_row = $('<tr></tr>');
+            //pagination_cell.appendTo(pagination_row);
+            //pagination_row.appendTo(this.tfoot);
+
+            var pagination_cell = $('<div></div>');
+            pagination_cell.appendTo(this.elem);
 
             this.pagination.build_pagination(pagination_cell);
         }

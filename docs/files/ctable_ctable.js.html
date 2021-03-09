@@ -1919,7 +1919,7 @@ class CSubtableColumn extends CColumn {
         this.show_subtable_button.hide();
         this.hide_subtable_button.show();
         var subtable_row = this.record.open_subrecord($.proxy(this.close_subtable, this));
-        this.subtable_cell = $(&#x27;&lt;td colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(subtable_row);
+        this.subtable_cell = $(&#x27;&lt;td class=&quot;ctable-container-1&quot; colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(subtable_row);
         this.subtable = this.options.table(this.record);
         this.subtable.build_table(this.subtable_cell);
         this.subtable.select();
@@ -2340,8 +2340,8 @@ class CAdaptiveRecord extends CRecord {
             return;
         }
 
-        var editor_row = $(&#x27;&lt;td colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
-        var editor_cell = $(&#x27;&lt;div class=&quot;columns is-multiline&quot; style=&quot;width:99%;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_row);
+        var editor_row = $(&#x27;&lt;td class=&quot;ctable-container&quot; colspan=&quot;&#x27;+this.table.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;).appendTo(this.row);
+        var editor_cell = $(&#x27;&lt;div class=&quot;columns is-multiline&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_row);
 
         var width_class = &#x27;is-4&#x27;;
         if (typeof(this.options.editor_width_class) != &#x27;undefined&#x27;){
@@ -2356,7 +2356,7 @@ class CAdaptiveRecord extends CRecord {
 
             if (this.columns[i].visible_editor()){
 
-                var div = $(&#x27;&lt;div class=&quot;field column &#x27;+column_width_class+&#x27;&quot; style=&quot;display: inline-block; vertical-align:top;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_cell);
+                var div = $(&#x27;&lt;div class=&quot;field column &#x27;+column_width_class+&#x27;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(editor_cell);
 
                 this.columns[i].build_editor(div, is_new_record);
 
@@ -2879,7 +2879,7 @@ class CTable {
 
     build_table(elem){
         this.elem = elem;
-        elem.css(&#x27;overflow-x&#x27;,&#x27;auto&#x27;);
+        //elem.css(&#x27;overflow-x&#x27;,&#x27;auto&#x27;);
         this.table.appendTo(this.elem);
 
         this.head_record = new this.record_class(this, this.record_options);
@@ -2894,10 +2894,13 @@ class CTable {
         if(this.pagination_class !== null){
             this.pagination = new this.pagination_class(this, this.pagination_options);
 
-            var pagination_cell = $(&#x27;&lt;td colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;);
-            var pagination_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;);
-            pagination_cell.appendTo(pagination_row);
-            pagination_row.appendTo(this.tfoot);
+            //var pagination_cell = $(&#x27;&lt;td colspan=&quot;&#x27;+this.visible_columns()+&#x27;&quot;&gt;&lt;/td&gt;&#x27;);
+            //var pagination_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;);
+            //pagination_cell.appendTo(pagination_row);
+            //pagination_row.appendTo(this.tfoot);
+
+            var pagination_cell = $(&#x27;&lt;div&gt;&lt;/div&gt;&#x27;);
+            pagination_cell.appendTo(this.elem);
 
             this.pagination.build_pagination(pagination_cell);
         }
