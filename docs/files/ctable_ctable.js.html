@@ -405,7 +405,7 @@ class CTextColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == &quot;undefined&quot; || !this.options.no_sort){
 
-            this.sort_button = $(&#x27;&lt;a class=&quot;button is-small is-pulled-right&quot; title=&quot;&#x27;+this.table.lang.sort_tooltip+&#x27;&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;/&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;/&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;/&gt;&lt;/span&gt;&lt;/a&gt;&#x27;).appendTo(this.title_elem);
+            this.sort_button = $(&#x27;&lt;span class=&quot;icon&quot; title=&quot;&#x27;+this.table.lang.sort_tooltip+&#x27;&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;/&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;/&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;/&gt;&lt;/span&gt;&#x27;).prependTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -419,23 +419,23 @@ class CTextColumn extends CColumn {
      */
 
     sort_button_click(){
-        if(this.sort_button.find(&#x27;span i.xtable-sort-none&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
-                this.sort_button.find(&#x27;span i.xtable-sort-none&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
-                this.sort_button.find(&#x27;span i.xtable-sort-up&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
+        if(this.sort_button.find(&#x27;i.xtable-sort-none&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
+                this.sort_button.find(&#x27;i.xtable-sort-none&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+                this.sort_button.find(&#x27;i.xtable-sort-up&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
                 this.table.set_order(this.options.column, &#x27;ASC&#x27;);
                 this.table.select();
                 return
             }
-            if(this.sort_button.find(&#x27;span i.xtable-sort-up&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
-                this.sort_button.find(&#x27;span i.xtable-sort-up&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
-                this.sort_button.find(&#x27;span i.xtable-sort-down&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
+            if(this.sort_button.find(&#x27;i.xtable-sort-up&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
+                this.sort_button.find(&#x27;i.xtable-sort-up&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+                this.sort_button.find(&#x27;i.xtable-sort-down&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
                 this.table.set_order(this.options.column, &#x27;DESC&#x27;);
                 this.table.select();
                 return
             }
-            if(this.sort_button.find(&#x27;span i.xtable-sort-down&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
-                this.sort_button.find(&#x27;span i.xtable-sort-down&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
-                this.sort_button.find(&#x27;span i.xtable-sort-none&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
+            if(this.sort_button.find(&#x27;i.xtable-sort-down&#x27;).css(&#x27;display&#x27;) != &#x27;none&#x27;) {
+                this.sort_button.find(&#x27;i.xtable-sort-down&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+                this.sort_button.find(&#x27;i.xtable-sort-none&#x27;).css(&#x27;display&#x27;, &#x27;&#x27;);
                 this.table.set_order(this.options.column, &#x27;&#x27;);
                 this.table.select();
                 return
