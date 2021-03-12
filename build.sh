@@ -4,6 +4,7 @@ cat src/ctable.stub.js src/renderers.js src/CColumn.js src/CTextColumn.js src/CD
 
 cp ctable/ctable.css demo/ctable.css
 cp ctable/ctable.js demo/ctable.js
+cp src-php/CTableClass.php demo/CTableClass.php
 
 #npm install uglify-es -g
 

@@ -38,14 +38,14 @@
 <script>
 
 $(function() {
-    var t = new CTable({endpoint: "http://localhost:8000/demo.php?table=account"});
+    var t = new CTable({endpoint: "http://localhost:8000/account.php"});
     t.set_record_class(CAdaptiveRecord);
 
     t.add_column_class(CCheckboxColumn, {record_width_class: 'is-1'});
 
     t.add_column_class(CSubtableColumn,{record_width_class: 'is-1', table: function(parent_record){
 
-        var tt = new CTable({endpoint: "http://localhost:8000/demo.php?table=bill"});
+        var tt = new CTable({endpoint: "http://localhost:8000/bill.php"});
 
         tt.set_record_class(CAdaptiveRecord, {non_adaptive_record: true});
         tt.add_column_class(CColumn,{column:'id', title:'ID', visible_editor:false});
@@ -115,14 +115,14 @@ $(function() {
     t.add_column_class(CSelectColumn,{column:'status',
                                       title:'Status',
                                       record_width_class: 'is-2',
-                                      endpoint:'http://localhost:8000/demo.php',
+                                      endpoint:'http://localhost:8000/opts.php',
                                       params:{kind:'status'},
                                       editor_width_class: 'is-2'});
 
     t.add_column_class(CFileUploadColumn,{column:'image',
                                         title:'Image',
                                         editor_width_class: 'is-2',
-                                        upload_endpoint: 'http://localhost:8000/demo.php?upload=true',
+                                        upload_endpoint: 'http://localhost:8000/account.php',
                                         multiple: true,
                                         links: false,
                                         footnote: 'Up to 1 Mb',
