@@ -307,7 +307,7 @@ class CTextColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == "undefined" || !this.options.no_sort){
 
-            this.sort_button = $('<span class="icon" title="'+this.table.lang.sort_tooltip+'"><i class="fas fa-sort xtable-sort-none"/><i class="fas fa-sort-up xtable-sort-up" style="display: none;"/><i class="fas fa-sort-down xtable-sort-down" style="display: none;"/></span>').prependTo(this.title_elem);
+            this.sort_button = $('<span class="icon" title="'+this.table.lang.sort_tooltip+'"><i class="fas fa-sort xtable-sort-none"></i><i class="fas fa-sort-up xtable-sort-up" style="display: none;"></i><i class="fas fa-sort-down xtable-sort-down" style="display: none;"></i></span>').prependTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -1067,7 +1067,7 @@ class CCommandColumn extends CColumn {
  * Requries FileSaver.js and tableexport.js
  *
  * @example
- *     table.add_column_class(CCommandColumn,{common_actions: [CExportTableAction(t, 'csv', 'table')]});
+ *     table.add_column_class(CCommandColumn,{common_actions: [CExportTableAction(t, 'CSV', 'table')]});
  *
  */
 
@@ -1075,25 +1075,18 @@ class CCommandColumn extends CColumn {
  * Build export table action.
  * @method CExportTableAction
  * @param {CTable} table Table object.
- * @param {String} format File format (csv, txt or xlsx).
- * @param {String} filename Name of downloaded file (without extention).
+ * @param {String} format File format (JSON, CSV or TXT).
+ * @param {String} filename Name of downloaded file (with extention).
  * @return {Object} Object for add to actions list.
  *
  */
 
-function CExportTableAction (table, format, filename) {
-    TableExport.prototype.ignoreCSS = ".tableexport-ignore";
+function CExportTableAction (table, format, filename, header = {}) {
 
     return {
     fa_class: 'fas fa-file-export',
     action: function (record){
-        record.table.table.find('thead tr:eq(1) th').addClass('tableexport-ignore');
-        record.table.table.find('tbody tr td dl dt').addClass('tableexport-ignore');
-
-        var table = TableExport(record.table.table, {exportButtons: false, footers: false, formats:[format]});
-        var exportData = table.getExportData();
-        var csvData = exportData['tableexport-1'][format];
-        table.export2file(csvData.data, csvData.mimeType, filename, csvData.fileExtension, csvData.merges, csvData.RTL, csvData.sheetname);
+        record.table.download(format, filename, header);
     },
     tooltip: table.lang.export
 }};
@@ -3016,6 +3009,39 @@ class CTable {
     }
 
     /**
+     * Get data from server as downloadable table.
+     *
+     * Making GET request to `options.endpoint` URL (post field `download`)
+     *
+     * Request fields: see select method
+     *
+     * @param {String} format File format: JSON, CSV, TXT
+     * @param {String} name File name.
+     * @param {Object} header Fields to header dictionary
+     *
+     * Expected responce: Downloading file
+     *
+     * @method download
+     */
+
+    download(format, name, header){
+        var self = this;
+
+        var select_method = "GET"; //always GET
+
+        var query = JSON.stringify({'start':this.start_record,
+                                    'page':this.page_size,
+                                    'column_filters':this.column_filters,
+                                    'column_searches':this.column_searches,
+                                    'column_orders':this.column_orders,
+                                    'format':format,
+                                    'name': name,
+                                    'header': header});
+
+        window.open(this.options.endpoint+'?download='+query, '_blank');
+    }
+
+    /**
      * Insert record request.
      *
      * Making AJAX POST request to `options.endpoint` URL (post field `insert`)
@@ -3258,50 +3284,67 @@ class CTable {
             self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
         });
     }
-}
 
+    /**
+     * Custom action request.
+     *
+     * Making AJAX GET/POST request to `options.endpoint` URL (post field `delete`)
+     *
+     * Request is custom object (json).
+     *
+     * Expected responce (json):
+     *
+     * `Result` {String} `'OK'` if success or `'Error'` if falure.
+     *
+     * `Message` {String} if falure, message to user.
+     *
+     * `Data` {Object} custom data.
+     *
+     * @method custom
+     * @param {String} kind Type of query: read or write.
+     * @param {String} method Handling method.
+     * @param {Object} data Custom payload.
+     * @param {Function} on_query_complete Called when request complete. `Data` object is a first parameter.
+     *
+     */
 
+    custom(kind, handler, data, on_query_complete){
 
-class CTableInputForm extends CTable {
+        var self = this;
 
-    build_form(elem, is_new_record, redirect_url){
-        this.elem = elem;
-        elem.css('overflow-x','auto');
-        this.table.appendTo(this.elem);
+        var custom_method = 'GET';
+        var key = 'custom_read';
 
-        this.head_record = new this.record_class(this, this.record_options);
-        this.head_record.set_head(this.thead);
-        this.head_record.set_colgroup(this.colgroup);
-
-        this.is_new_record = is_new_record;
-        this.is_form_loaded = false;
-        this.redirect_url = redirect_url;
-    }
-
-    select(){
-        if(!this.is_form_loaded){
-            super.select();
-            this.is_form_loaded = true;
-        } else {
-            window.location.replace(this.redirect_url);
+        if(typeof(this.options.select_method) != "undefined"){
+            custom_method = this.options.select_method;
         }
-    }
 
-    fill_table(){
-        this.body_records = [];
-        this.tbody.empty();
-
-        this.new_record = new this.record_class(this, this.record_options);
-        this.editor_row = $('<tr></tr>').prependTo(this.tbody);
-        this.new_record.set_row(this.editor_row);
-        this.new_record.set_parent_column(null);
-
-        if(this.is_new_record){
-            this.new_record.set_data_index(-1);
-            this.new_record.build_editor(true);
-        } else {
-            this.new_record.set_data_index(0);
-            this.new_record.build_editor(false);
+        if(kind == 'write'){
+            custom_method = 'POST';
+            key = 'custom_write';
         }
+
+        this.loading_screen(true);
+
+        $.ajax({
+            type: custom_method,
+            url: this.options.endpoint,
+            data: {custom_method:JSON.stringify({'handler': handler, 'data':record_data})},
+            dataType: 'json'
+        })
+        .done(function(data) {
+            if (data.Result == 'OK') {
+                on_query_complete(data.Data);
+                self.loading_screen(false);
+            } else {
+                self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
+            }
+
+        }, "json")
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
+            self.loading_screen(false);
+        });
     }
 }

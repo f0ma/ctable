@@ -405,7 +405,7 @@ class CTextColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == &quot;undefined&quot; || !this.options.no_sort){
 
-            this.sort_button = $(&#x27;&lt;span class=&quot;icon&quot; title=&quot;&#x27;+this.table.lang.sort_tooltip+&#x27;&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;/&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;/&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;/&gt;&lt;/span&gt;&#x27;).prependTo(this.title_elem);
+            this.sort_button = $(&#x27;&lt;span class=&quot;icon&quot; title=&quot;&#x27;+this.table.lang.sort_tooltip+&#x27;&quot;&gt;&lt;i class=&quot;fas fa-sort xtable-sort-none&quot;&gt;&lt;/i&gt;&lt;i class=&quot;fas fa-sort-up xtable-sort-up&quot; style=&quot;display: none;&quot;&gt;&lt;/i&gt;&lt;i class=&quot;fas fa-sort-down xtable-sort-down&quot; style=&quot;display: none;&quot;&gt;&lt;/i&gt;&lt;/span&gt;&#x27;).prependTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -1165,7 +1165,7 @@ class CCommandColumn extends CColumn {
  * Requries FileSaver.js and tableexport.js
  *
  * @example
- *     table.add_column_class(CCommandColumn,{common_actions: [CExportTableAction(t, &#x27;csv&#x27;, &#x27;table&#x27;)]});
+ *     table.add_column_class(CCommandColumn,{common_actions: [CExportTableAction(t, &#x27;CSV&#x27;, &#x27;table&#x27;)]});
  *
  */
 
@@ -1173,25 +1173,18 @@ class CCommandColumn extends CColumn {
  * Build export table action.
  * @method CExportTableAction
  * @param {CTable} table Table object.
- * @param {String} format File format (csv, txt or xlsx).
- * @param {String} filename Name of downloaded file (without extention).
+ * @param {String} format File format (JSON, CSV or TXT).
+ * @param {String} filename Name of downloaded file (with extention).
  * @return {Object} Object for add to actions list.
  *
  */
 
-function CExportTableAction (table, format, filename) {
-    TableExport.prototype.ignoreCSS = &quot;.tableexport-ignore&quot;;
+function CExportTableAction (table, format, filename, header = {}) {
 
     return {
     fa_class: &#x27;fas fa-file-export&#x27;,
     action: function (record){
-        record.table.table.find(&#x27;thead tr:eq(1) th&#x27;).addClass(&#x27;tableexport-ignore&#x27;);
-        record.table.table.find(&#x27;tbody tr td dl dt&#x27;).addClass(&#x27;tableexport-ignore&#x27;);
-
-        var table = TableExport(record.table.table, {exportButtons: false, footers: false, formats:[format]});
-        var exportData = table.getExportData();
-        var csvData = exportData[&#x27;tableexport-1&#x27;][format];
-        table.export2file(csvData.data, csvData.mimeType, filename, csvData.fileExtension, csvData.merges, csvData.RTL, csvData.sheetname);
+        record.table.download(format, filename, header);
     },
     tooltip: table.lang.export
 }};
@@ -3114,6 +3107,39 @@ class CTable {
     }
 
     /**
+     * Get data from server as downloadable table.
+     *
+     * Making GET request to &#x60;options.endpoint&#x60; URL (post field &#x60;download&#x60;)
+     *
+     * Request fields: see select method
+     *
+     * @param {String} format File format: JSON, CSV, TXT
+     * @param {String} name File name.
+     * @param {Object} header Fields to header dictionary
+     *
+     * Expected responce: Downloading file
+     *
+     * @method download
+     */
+
+    download(format, name, header){
+        var self = this;
+
+        var select_method = &quot;GET&quot;; //always GET
+
+        var query = JSON.stringify({&#x27;start&#x27;:this.start_record,
+                                    &#x27;page&#x27;:this.page_size,
+                                    &#x27;column_filters&#x27;:this.column_filters,
+                                    &#x27;column_searches&#x27;:this.column_searches,
+                                    &#x27;column_orders&#x27;:this.column_orders,
+                                    &#x27;format&#x27;:format,
+                                    &#x27;name&#x27;: name,
+                                    &#x27;header&#x27;: header});
+
+        window.open(this.options.endpoint+&#x27;?download=&#x27;+query, &#x27;_blank&#x27;);
+    }
+
+    /**
      * Insert record request.
      *
      * Making AJAX POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;insert&#x60;)
@@ -3356,51 +3382,68 @@ class CTable {
             self.options.error_handler(self.lang.server_side_error+&#x27;:\n&#x27;+ xhr.status + &#x27;: &#x27; + xhr.statusText+ &#x27;\n&#x27; + error);
         });
     }
-}
 
+    /**
+     * Custom action request.
+     *
+     * Making AJAX GET/POST request to &#x60;options.endpoint&#x60; URL (post field &#x60;delete&#x60;)
+     *
+     * Request is custom object (json).
+     *
+     * Expected responce (json):
+     *
+     * &#x60;Result&#x60; {String} &#x60;&#x27;OK&#x27;&#x60; if success or &#x60;&#x27;Error&#x27;&#x60; if falure.
+     *
+     * &#x60;Message&#x60; {String} if falure, message to user.
+     *
+     * &#x60;Data&#x60; {Object} custom data.
+     *
+     * @method custom
+     * @param {String} kind Type of query: read or write.
+     * @param {String} method Handling method.
+     * @param {Object} data Custom payload.
+     * @param {Function} on_query_complete Called when request complete. &#x60;Data&#x60; object is a first parameter.
+     *
+     */
 
+    custom(kind, handler, data, on_query_complete){
 
-class CTableInputForm extends CTable {
+        var self = this;
 
-    build_form(elem, is_new_record, redirect_url){
-        this.elem = elem;
-        elem.css(&#x27;overflow-x&#x27;,&#x27;auto&#x27;);
-        this.table.appendTo(this.elem);
+        var custom_method = &#x27;GET&#x27;;
+        var key = &#x27;custom_read&#x27;;
 
-        this.head_record = new this.record_class(this, this.record_options);
-        this.head_record.set_head(this.thead);
-        this.head_record.set_colgroup(this.colgroup);
-
-        this.is_new_record = is_new_record;
-        this.is_form_loaded = false;
-        this.redirect_url = redirect_url;
-    }
-
-    select(){
-        if(!this.is_form_loaded){
-            super.select();
-            this.is_form_loaded = true;
-        } else {
-            window.location.replace(this.redirect_url);
+        if(typeof(this.options.select_method) != &quot;undefined&quot;){
+            custom_method = this.options.select_method;
         }
-    }
 
-    fill_table(){
-        this.body_records = [];
-        this.tbody.empty();
-
-        this.new_record = new this.record_class(this, this.record_options);
-        this.editor_row = $(&#x27;&lt;tr&gt;&lt;/tr&gt;&#x27;).prependTo(this.tbody);
-        this.new_record.set_row(this.editor_row);
-        this.new_record.set_parent_column(null);
-
-        if(this.is_new_record){
-            this.new_record.set_data_index(-1);
-            this.new_record.build_editor(true);
-        } else {
-            this.new_record.set_data_index(0);
-            this.new_record.build_editor(false);
+        if(kind == &#x27;write&#x27;){
+            custom_method = &#x27;POST&#x27;;
+            key = &#x27;custom_write&#x27;;
         }
+
+        this.loading_screen(true);
+
+        $.ajax({
+            type: custom_method,
+            url: this.options.endpoint,
+            data: {custom_method:JSON.stringify({&#x27;handler&#x27;: handler, &#x27;data&#x27;:record_data})},
+            dataType: &#x27;json&#x27;
+        })
+        .done(function(data) {
+            if (data.Result == &#x27;OK&#x27;) {
+                on_query_complete(data.Data);
+                self.loading_screen(false);
+            } else {
+                self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
+            }
+
+        }, &quot;json&quot;)
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+&#x27;:\n&#x27;+ xhr.status + &#x27;: &#x27; + xhr.statusText+ &#x27;\n&#x27; + error);
+            self.loading_screen(false);
+        });
     }
 }
 

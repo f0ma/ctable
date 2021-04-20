@@ -59,7 +59,7 @@ class CTextColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == "undefined" || !this.options.no_sort){
 
-            this.sort_button = $('<span class="icon" title="'+this.table.lang.sort_tooltip+'"><i class="fas fa-sort xtable-sort-none"/><i class="fas fa-sort-up xtable-sort-up" style="display: none;"/><i class="fas fa-sort-down xtable-sort-down" style="display: none;"/></span>').prependTo(this.title_elem);
+            this.sort_button = $('<span class="icon" title="'+this.table.lang.sort_tooltip+'"><i class="fas fa-sort xtable-sort-none"></i><i class="fas fa-sort-up xtable-sort-up" style="display: none;"></i><i class="fas fa-sort-down xtable-sort-down" style="display: none;"></i></span>').prependTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }

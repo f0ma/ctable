@@ -10,8 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.js"></script>
-    <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/5ed507ef8aa53d8ecfea96d96bc7214cd2476fd2/FileSaver.min.js"></script>
-    <script src="https://unpkg.com/tableexport@5.2.0/dist/js/tableexport.min.js"></script>
     <link rel="stylesheet" href="ctable.css"/>
     <script src="ctable.js"></script>
 </head>
@@ -121,7 +119,7 @@ $(function() {
 
     t.add_column_class(CFileUploadColumn,{column:'image',
                                         title:'Image',
-                                        editor_width_class: 'is-2',
+                                        editor_width_class: 'is-4',
                                         upload_endpoint: 'http://localhost:8000/account.php',
                                         multiple: true,
                                         links: false,
@@ -139,7 +137,7 @@ $(function() {
                                                                   alert(textline);
                                                               },
                                                               tooltip: "Show selected records"},
-                                                              CExportTableAction(t, 'csv','accounts')]});
+                                                              CExportTableAction(t, 'CSV', 'table.csv', {'id':'ID','firstname':'Firstname', 'lastname':'Lastname'})]});
 
     t.set_pagination_class(CPagination,{});
 

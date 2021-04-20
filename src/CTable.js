@@ -473,6 +473,39 @@ class CTable {
     }
 
     /**
+     * Get data from server as downloadable table.
+     *
+     * Making GET request to `options.endpoint` URL (post field `download`)
+     *
+     * Request fields: see select method
+     *
+     * @param {String} format File format: JSON, CSV, TXT
+     * @param {String} name File name.
+     * @param {Object} header Fields to header dictionary
+     *
+     * Expected responce: Downloading file
+     *
+     * @method download
+     */
+
+    download(format, name, header){
+        var self = this;
+
+        var select_method = "GET"; //always GET
+
+        var query = JSON.stringify({'start':this.start_record,
+                                    'page':this.page_size,
+                                    'column_filters':this.column_filters,
+                                    'column_searches':this.column_searches,
+                                    'column_orders':this.column_orders,
+                                    'format':format,
+                                    'name': name,
+                                    'header': header});
+
+        window.open(this.options.endpoint+'?download='+query, '_blank');
+    }
+
+    /**
      * Insert record request.
      *
      * Making AJAX POST request to `options.endpoint` URL (post field `insert`)
@@ -715,50 +748,67 @@ class CTable {
             self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
         });
     }
-}
 
+    /**
+     * Custom action request.
+     *
+     * Making AJAX GET/POST request to `options.endpoint` URL (post field `delete`)
+     *
+     * Request is custom object (json).
+     *
+     * Expected responce (json):
+     *
+     * `Result` {String} `'OK'` if success or `'Error'` if falure.
+     *
+     * `Message` {String} if falure, message to user.
+     *
+     * `Data` {Object} custom data.
+     *
+     * @method custom
+     * @param {String} kind Type of query: read or write.
+     * @param {String} method Handling method.
+     * @param {Object} data Custom payload.
+     * @param {Function} on_query_complete Called when request complete. `Data` object is a first parameter.
+     *
+     */
 
+    custom(kind, handler, data, on_query_complete){
 
-class CTableInputForm extends CTable {
+        var self = this;
 
-    build_form(elem, is_new_record, redirect_url){
-        this.elem = elem;
-        elem.css('overflow-x','auto');
-        this.table.appendTo(this.elem);
+        var custom_method = 'GET';
+        var key = 'custom_read';
 
-        this.head_record = new this.record_class(this, this.record_options);
-        this.head_record.set_head(this.thead);
-        this.head_record.set_colgroup(this.colgroup);
-
-        this.is_new_record = is_new_record;
-        this.is_form_loaded = false;
-        this.redirect_url = redirect_url;
-    }
-
-    select(){
-        if(!this.is_form_loaded){
-            super.select();
-            this.is_form_loaded = true;
-        } else {
-            window.location.replace(this.redirect_url);
+        if(typeof(this.options.select_method) != "undefined"){
+            custom_method = this.options.select_method;
         }
-    }
 
-    fill_table(){
-        this.body_records = [];
-        this.tbody.empty();
-
-        this.new_record = new this.record_class(this, this.record_options);
-        this.editor_row = $('<tr></tr>').prependTo(this.tbody);
-        this.new_record.set_row(this.editor_row);
-        this.new_record.set_parent_column(null);
-
-        if(this.is_new_record){
-            this.new_record.set_data_index(-1);
-            this.new_record.build_editor(true);
-        } else {
-            this.new_record.set_data_index(0);
-            this.new_record.build_editor(false);
+        if(kind == 'write'){
+            custom_method = 'POST';
+            key = 'custom_write';
         }
+
+        this.loading_screen(true);
+
+        $.ajax({
+            type: custom_method,
+            url: this.options.endpoint,
+            data: {custom_method:JSON.stringify({'handler': handler, 'data':record_data})},
+            dataType: 'json'
+        })
+        .done(function(data) {
+            if (data.Result == 'OK') {
+                on_query_complete(data.Data);
+                self.loading_screen(false);
+            } else {
+                self.options.error_handler(self.lang.error + data.Message);
+                self.loading_screen(false);
+            }
+
+        }, "json")
+        .fail(function(xhr, status, error) {
+            self.options.error_handler(self.lang.server_side_error+':\n'+ xhr.status + ': ' + xhr.statusText+ '\n' + error);
+            self.loading_screen(false);
+        });
     }
 }
