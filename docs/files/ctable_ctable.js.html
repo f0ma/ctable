@@ -3411,7 +3411,6 @@ class CTable {
         var self = this;
 
         var custom_method = &#x27;GET&#x27;;
-        var key = &#x27;custom_read&#x27;;
 
         if(typeof(this.options.select_method) != &quot;undefined&quot;){
             custom_method = this.options.select_method;
@@ -3419,7 +3418,14 @@ class CTable {
 
         if(kind == &#x27;write&#x27;){
             custom_method = &#x27;POST&#x27;;
-            key = &#x27;custom_write&#x27;;
+        }
+
+        var sended_array = {};
+
+        if (kind == &#x27;read&#x27;){
+            sended_array = {custom_read:JSON.stringify({&#x27;handler&#x27;: handler, &#x27;data&#x27;:data})}
+        } else {
+            sended_array = {custom_write:JSON.stringify({&#x27;handler&#x27;: handler, &#x27;data&#x27;:data})}
         }
 
         this.loading_screen(true);
@@ -3427,12 +3433,12 @@ class CTable {
         $.ajax({
             type: custom_method,
             url: this.options.endpoint,
-            data: {custom_method:JSON.stringify({&#x27;handler&#x27;: handler, &#x27;data&#x27;:record_data})},
+            data: sended_array,
             dataType: &#x27;json&#x27;
         })
         .done(function(data) {
             if (data.Result == &#x27;OK&#x27;) {
-                on_query_complete(data.Data);
+                on_query_complete(data.Records);
                 self.loading_screen(false);
             } else {
                 self.options.error_handler(self.lang.error + data.Message);

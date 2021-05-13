@@ -162,9 +162,9 @@ class CTable extends ExtendedCallable {
         if ($this->operation == 'upload'){
             $this->call_with_extends('processing_upload');
         } elseif ($this->operation == 'custom_read') {
-            $this->call_with_extends('custom_read_'.$this->params['handler']);
+            $this->call_with_extends('custom_read_'.$this->param['handler']);
         } elseif ($this->operation == 'custom_write') {
-            $this->call_with_extends('custom_write_'.$this->params['handler']);
+            $this->call_with_extends('custom_write_'.$this->param['handler']);
         } else {
             $this->call_with_extends('building_query');
             $this->call_with_extends('executing_query');
