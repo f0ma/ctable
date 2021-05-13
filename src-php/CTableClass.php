@@ -173,6 +173,8 @@ class CTable extends ExtendedCallable {
     }
 
     function parsing_request() {
+        $this->operation = NULL;
+
         if(isset($_GET['download']) && in_array('download', $this->allowed_query)){
             $this->operation = 'download';
             $this->param = json_decode($_GET['download'], true);
@@ -219,6 +221,10 @@ class CTable extends ExtendedCallable {
         }
         if((count($_FILES) > 0) && in_array('upload', $this->allowed_query)){
             $this->operation = 'upload';
+        }
+
+        if($this->operation == NULL){
+            $this->send_error('Operation not allowed');
         }
     }
 
@@ -288,11 +294,16 @@ class CTable extends ExtendedCallable {
         if($this->operation == 'insert'){
             $this->call_with_extends('building_insert_query');
             $this->call_with_extends('setting_writable_columns');
-        } elseif ($this->operation == 'update'){
-            $this->call_with_extends('building_update_query');
-            $this->call_with_extends('setting_writable_columns');
-        } elseif ($this->operation == 'delete'){
-            $this->call_with_extends('building_delete_query');
+        } else {
+            if(count($this->key_columns) != count($this->key_columns_values)){
+                $this->send_error('Missing some key field');
+            }
+            if ($this->operation == 'update'){
+                $this->call_with_extends('building_update_query');
+                $this->call_with_extends('setting_writable_columns');
+            } elseif ($this->operation == 'delete'){
+                $this->call_with_extends('building_delete_query');
+            }
         }
     }
 
@@ -314,6 +325,7 @@ class CTable extends ExtendedCallable {
         foreach($this->key_columns_values as $col => $val){
             $this->query->andWhere(field($col)->eq($val));
         }
+        $this->query->limit(1);
     }
 
     function processing_upload() {
@@ -344,6 +356,7 @@ class CTable extends ExtendedCallable {
         foreach($this->key_columns_values as $col => $val){
             $this->query->andWhere(field($col)->eq($val));
         }
+        $this->query->limit(1);
     }
 
     function applying_filters() {
@@ -555,7 +568,8 @@ class CTable extends ExtendedCallable {
                 return false;
             }
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            if($stmt->execute($query->params($this->engine)) !== false){
+            $exec_result = $stmt->execute($query->params($this->engine));
+            if($exec_result !== false){
                 $rdata = [];
                 while($row = $stmt->fetch()){
                     $rdata[]=$row;
