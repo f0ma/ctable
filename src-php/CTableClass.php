@@ -325,7 +325,6 @@ class CTable extends ExtendedCallable {
         foreach($this->key_columns_values as $col => $val){
             $this->query->andWhere(field($col)->eq($val));
         }
-        $this->query->limit(1);
     }
 
     function processing_upload() {
@@ -356,7 +355,6 @@ class CTable extends ExtendedCallable {
         foreach($this->key_columns_values as $col => $val){
             $this->query->andWhere(field($col)->eq($val));
         }
-        $this->query->limit(1);
     }
 
     function applying_filters() {
@@ -378,14 +376,38 @@ class CTable extends ExtendedCallable {
                     }
                     $this->query->andWhere(group($rule));
                 } else {
-                    $this->query->andWhere(search($col)->contains($val));
+                    if ($val == '%any'){
+                    //pass do not add filter
+                    } elseif ($val == '%empty'){
+                        $this->query->andWhere(field($col)->eq(''));
+                    } elseif ($val == '%notempty'){
+                        $this->query->andWhere(field($col)->notEq(''));
+                    } elseif ($val == '%null'){
+                        $this->query->andWhere(field($col)->isNull());
+                    } elseif ($val == '%notnull'){
+                        $this->query->andWhere(field($col)->isNotNull());
+                    } else {
+                        $this->query->andWhere(search($col)->contains($val));
+                    }
                 }
             }
         }
 
         if(array_key_exists('column_filters', $this->param)){
             foreach($this->param['column_filters'] as $col => $val){
-                $this->query->andWhere(field($col)->eq($val));
+                if ($val == '%any'){
+                    //pass do not add filter
+                } elseif ($val == '%empty'){
+                    $this->query->andWhere(field($col)->eq(''));
+                } elseif ($val == '%notempty'){
+                    $this->query->andWhere(field($col)->notEq(''));
+                } elseif ($val == '%null'){
+                    $this->query->andWhere(field($col)->isNull());
+                } elseif ($val == '%notnull'){
+                    $this->query->andWhere(field($col)->isNotNull());
+                } else {
+                    $this->query->andWhere(field($col)->eq($val));
+                }
             }
         }
 

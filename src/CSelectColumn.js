@@ -154,7 +154,7 @@ class CSelectColumn extends CTextColumn {
 
             var div_select = $('<div class="select" style="max-width: 10em;"></div>').appendTo(this.options_elem);
             this.search_field = $('<select></select>').appendTo(div_select);
-            $('<option value="" selected>'+this.table.lang.no_select+'</option>').appendTo(this.search_field);
+            $('<option value="%any" selected>'+this.table.lang.no_select+'</option>').appendTo(this.search_field);
 
             if(typeof(this.options.options) != "undefined"){
                 for (var opt in this.options.options) {

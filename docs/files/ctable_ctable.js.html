@@ -741,7 +741,7 @@ class CSelectColumn extends CTextColumn {
 
             var div_select = $(&#x27;&lt;div class=&quot;select&quot; style=&quot;max-width: 10em;&quot;&gt;&lt;/div&gt;&#x27;).appendTo(this.options_elem);
             this.search_field = $(&#x27;&lt;select&gt;&lt;/select&gt;&#x27;).appendTo(div_select);
-            $(&#x27;&lt;option value=&quot;&quot; selected&gt;&#x27;+this.table.lang.no_select+&#x27;&lt;/option&gt;&#x27;).appendTo(this.search_field);
+            $(&#x27;&lt;option value=&quot;%any&quot; selected&gt;&#x27;+this.table.lang.no_select+&#x27;&lt;/option&gt;&#x27;).appendTo(this.search_field);
 
             if(typeof(this.options.options) != &quot;undefined&quot;){
                 for (var opt in this.options.options) {
@@ -2992,7 +2992,7 @@ class CTable {
      */
 
     set_filter(column, value) {
-        if(value == &#x27;&#x27;){
+        if(value == &#x27;%any&#x27;){
             delete this.column_filters[column];
         } else {
             this.column_filters[column] = value;

@@ -358,7 +358,7 @@ class CTable {
      */
 
     set_filter(column, value) {
-        if(value == ''){
+        if(value == '%any'){
             delete this.column_filters[column];
         } else {
             this.column_filters[column] = value;

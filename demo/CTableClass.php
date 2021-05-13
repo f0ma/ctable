@@ -173,6 +173,8 @@ class CTable extends ExtendedCallable {
     }
 
     function parsing_request() {
+        $this->operation = NULL;
+
         if(isset($_GET['download']) && in_array('download', $this->allowed_query)){
             $this->operation = 'download';
             $this->param = json_decode($_GET['download'], true);
@@ -219,6 +221,10 @@ class CTable extends ExtendedCallable {
         }
         if((count($_FILES) > 0) && in_array('upload', $this->allowed_query)){
             $this->operation = 'upload';
+        }
+
+        if($this->operation == NULL){
+            $this->send_error('Operation not allowed');
         }
     }
 
@@ -288,11 +294,16 @@ class CTable extends ExtendedCallable {
         if($this->operation == 'insert'){
             $this->call_with_extends('building_insert_query');
             $this->call_with_extends('setting_writable_columns');
-        } elseif ($this->operation == 'update'){
-            $this->call_with_extends('building_update_query');
-            $this->call_with_extends('setting_writable_columns');
-        } elseif ($this->operation == 'delete'){
-            $this->call_with_extends('building_delete_query');
+        } else {
+            if(count($this->key_columns) != count($this->key_columns_values)){
+                $this->send_error('Missing some key field');
+            }
+            if ($this->operation == 'update'){
+                $this->call_with_extends('building_update_query');
+                $this->call_with_extends('setting_writable_columns');
+            } elseif ($this->operation == 'delete'){
+                $this->call_with_extends('building_delete_query');
+            }
         }
     }
 
@@ -365,14 +376,38 @@ class CTable extends ExtendedCallable {
                     }
                     $this->query->andWhere(group($rule));
                 } else {
-                    $this->query->andWhere(search($col)->contains($val));
+                    if ($val == '%any'){
+                    //pass do not add filter
+                    } elseif ($val == '%empty'){
+                        $this->query->andWhere(field($col)->eq(''));
+                    } elseif ($val == '%notempty'){
+                        $this->query->andWhere(field($col)->notEq(''));
+                    } elseif ($val == '%null'){
+                        $this->query->andWhere(field($col)->isNull());
+                    } elseif ($val == '%notnull'){
+                        $this->query->andWhere(field($col)->isNotNull());
+                    } else {
+                        $this->query->andWhere(search($col)->contains($val));
+                    }
                 }
             }
         }
 
         if(array_key_exists('column_filters', $this->param)){
             foreach($this->param['column_filters'] as $col => $val){
-                $this->query->andWhere(field($col)->eq($val));
+                if ($val == '%any'){
+                    //pass do not add filter
+                } elseif ($val == '%empty'){
+                    $this->query->andWhere(field($col)->eq(''));
+                } elseif ($val == '%notempty'){
+                    $this->query->andWhere(field($col)->notEq(''));
+                } elseif ($val == '%null'){
+                    $this->query->andWhere(field($col)->isNull());
+                } elseif ($val == '%notnull'){
+                    $this->query->andWhere(field($col)->isNotNull());
+                } else {
+                    $this->query->andWhere(field($col)->eq($val));
+                }
             }
         }
 
@@ -555,7 +590,8 @@ class CTable extends ExtendedCallable {
                 return false;
             }
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            if($stmt->execute($query->params($this->engine)) !== false){
+            $exec_result = $stmt->execute($query->params($this->engine));
+            if($exec_result !== false){
                 $rdata = [];
                 while($row = $stmt->fetch()){
                     $rdata[]=$row;
