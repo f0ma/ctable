@@ -76,6 +76,17 @@ class CPagination{
     }
 
     /**
+     * Set pagination to first page.
+     * @method reset_page
+     *
+     */
+
+    reset_page(){
+        this.page_selector.val(0);
+        this.table.start_record = 0;
+    }
+
+    /**
      * Go to next page.
      * @method go_next
      * @private

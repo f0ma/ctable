@@ -2392,6 +2392,17 @@ class CPagination{
     }
 
     /**
+     * Set pagination to first page.
+     * @method reset_page
+     *
+     */
+
+    reset_page(){
+        this.page_selector.val(0);
+        this.table.start_record = 0;
+    }
+
+    /**
      * Go to next page.
      * @method go_next
      * @private
@@ -2830,7 +2841,7 @@ class CTable {
             this.body_records[i].build_record();
         }
 
-        if (this.pagination != null){
+        if (this.pagination !== null){
             this.pagination.on_table_reloaded();
         }
     }
@@ -2867,6 +2878,9 @@ class CTable {
         } else {
             this.column_orders[column] = type;
         }
+        if (this.pagination !== null){
+            this.pagination.reset_page();
+        }
     }
 
     /**
@@ -2883,6 +2897,9 @@ class CTable {
         } else {
             this.column_searches[column] = value;
         }
+        if (this.pagination !== null){
+            this.pagination.reset_page();
+        }
     }
 
     /**
@@ -2898,6 +2915,9 @@ class CTable {
             delete this.column_filters[column];
         } else {
             this.column_filters[column] = value;
+        }
+        if (this.pagination !== null){
+            this.pagination.reset_page();
         }
     }
 

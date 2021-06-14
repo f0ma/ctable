@@ -60,7 +60,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "ctable/ctable.js",
-            "line": 2537,
+            "line": 2548,
             "description": "Provides the base CTable classes."
         }
     },
@@ -386,7 +386,7 @@
             "module": "ctable",
             "namespace": "",
             "file": "ctable/ctable.js",
-            "line": 2537,
+            "line": 2548,
             "description": "Table class\n\nSee {{#crossLink \"CTable/constructor\"}}{{/crossLink}} for options list.",
             "is_constructor": 1,
             "example": [
@@ -2501,6 +2501,15 @@
         {
             "file": "ctable/ctable.js",
             "line": 2394,
+            "description": "Set pagination to first page.",
+            "itemtype": "method",
+            "name": "reset_page",
+            "class": "CPagination",
+            "module": "ctable"
+        },
+        {
+            "file": "ctable/ctable.js",
+            "line": 2405,
             "description": "Go to next page.",
             "itemtype": "method",
             "name": "go_next",
@@ -2511,7 +2520,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2409,
+            "line": 2420,
             "description": "Go to last page.",
             "itemtype": "method",
             "name": "go_last",
@@ -2522,7 +2531,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2421,
+            "line": 2432,
             "description": "Page size change handler.",
             "itemtype": "method",
             "name": "page_size_change",
@@ -2533,7 +2542,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2434,
+            "line": 2445,
             "description": "Table reloaded handler.",
             "itemtype": "method",
             "name": "on_table_reloaded",
@@ -2542,7 +2551,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2458,
+            "line": 2469,
             "description": "Update pagination text info.",
             "itemtype": "method",
             "name": "set_page_info",
@@ -2553,7 +2562,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2469,
+            "line": 2480,
             "description": "Build pagination.",
             "itemtype": "method",
             "name": "build_pagination",
@@ -2569,7 +2578,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2569,
+            "line": 2580,
             "description": "Create table object",
             "itemtype": "method",
             "name": "constructor",
@@ -2616,7 +2625,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2709,
+            "line": 2720,
             "description": "Get visible columns count.",
             "itemtype": "method",
             "name": "visible_columns",
@@ -2629,7 +2638,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2729,
+            "line": 2740,
             "description": "Set table record class.",
             "itemtype": "method",
             "name": "set_record_class",
@@ -2650,7 +2659,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2742,
+            "line": 2753,
             "description": "Set table pagination class.",
             "itemtype": "method",
             "name": "set_pagination_class",
@@ -2671,7 +2680,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2755,
+            "line": 2766,
             "description": "Add table column class.",
             "itemtype": "method",
             "name": "add_column_class",
@@ -2692,7 +2701,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2768,
+            "line": 2779,
             "description": "Build table.",
             "itemtype": "method",
             "name": "build_table",
@@ -2708,7 +2717,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2809,
+            "line": 2820,
             "description": "Fill table with values after ajax call.",
             "itemtype": "method",
             "name": "fill_table",
@@ -2719,7 +2728,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2839,
+            "line": 2850,
             "description": "Returns selected with CCheckboxColumn records list.",
             "itemtype": "method",
             "name": "selected_records",
@@ -2732,7 +2741,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2856,
+            "line": 2867,
             "description": "Add order for column.",
             "itemtype": "method",
             "name": "set_order",
@@ -2753,7 +2762,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2872,
+            "line": 2886,
             "description": "Add search for column.",
             "itemtype": "method",
             "name": "set_search",
@@ -2774,7 +2783,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2888,
+            "line": 2905,
             "description": "Add filter for column.",
             "itemtype": "method",
             "name": "set_filter",
@@ -2795,7 +2804,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2904,
+            "line": 2924,
             "description": "Add predefined field value for all insert, update and delete requests in this table.",
             "itemtype": "method",
             "name": "add_predefined_field",
@@ -2816,7 +2825,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2916,
+            "line": 2936,
             "description": "Loading cover control.",
             "itemtype": "method",
             "name": "loading_screen",
@@ -2832,7 +2841,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 2937,
+            "line": 2957,
             "description": "Get data from server.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `select`)\n\nRequest fields (json):\n\n`start` {Int} Start record index (0 if no pagination)\n\n`page` {Int} Page size (0 if no pagination)\n\n`column_filters` {Object} Pairs column_name => filter_value\n\n`column_searches` {Object} Pairs column_name => search_value\n\n`column_orders` {Object} Pairs column_name => sort_order\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Records` {Array} Result record set: array of {Object}.\n\n`TotalRecordCount` {Int} Total records count for pagination.",
             "itemtype": "method",
             "name": "select",
@@ -2841,7 +2850,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3011,
+            "line": 3031,
             "description": "Get data from server as downloadable table.\n\nMaking GET request to `options.endpoint` URL (post field `download`)\n\nRequest fields: see select method",
             "params": [
                 {
@@ -2867,7 +2876,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3044,
+            "line": 3064,
             "description": "Insert record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `insert`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "insert",
@@ -2883,7 +2892,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3098,
+            "line": 3118,
             "description": "Update record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `update`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "update",
@@ -2899,7 +2908,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3151,
+            "line": 3171,
             "description": "Delete record request.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is record object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\nMake `select()` if success.",
             "itemtype": "method",
             "name": "remove",
@@ -2915,7 +2924,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3200,
+            "line": 3220,
             "description": "Table level options cache routine.\n\nMaking AJAX POST request to `options.endpoint` URL (post field `options`)\n\nRequest is `params` object (json). Requried field `params.load`.\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Options` {Object} Result options dict.\n\nIf `params` in cache call `on_options_loaded` and returns immediately.\nElse make AJAX call and call `on_options_loaded` after data is loaded.",
             "itemtype": "method",
             "name": "load_from_options_cache",
@@ -2941,7 +2950,7 @@
         },
         {
             "file": "ctable/ctable.js",
-            "line": 3288,
+            "line": 3308,
             "description": "Custom action request.\n\nMaking AJAX GET/POST request to `options.endpoint` URL (post field `delete`)\n\nRequest is custom object (json).\n\nExpected responce (json):\n\n`Result` {String} `'OK'` if success or `'Error'` if falure.\n\n`Message` {String} if falure, message to user.\n\n`Data` {Object} custom data.",
             "itemtype": "method",
             "name": "custom",
