@@ -28,12 +28,12 @@ class CCommandColumn extends CColumn {
      * @param {Boolean} [options.no_cancel] No cancel button in editor mode.
      * @param {Array} [options.item_actions] Additional actions list.
      * @param {String} [options.item_actions[].button_class] Bulma buttom class.
-     * @param {String} [options.item_actions[].fa_class] FA image class.
+     * @param {String} [options.item_actions[].symbol] Button symbol.
      * @param {String} [options.item_actions[].tooltip] Button tooltip
      * @param {Function} [options.item_actions[].action] function(record) Click handler.
      * @param {Array} [options.common_actions] Additional actions list.
      * @param {String} [options.common_actions[].button_class] Bulma buttom class.
-     * @param {String} [options.common_actions[].fa_class] FA image class.
+     * @param {String} [options.common_actions[].symbol] Button symbol.
      * @param {String} [options.common_actions[].tooltip] Button tooltip
      * @param {Function} [options.common_actions[].action] function(record) Click handler.
      */
@@ -89,25 +89,25 @@ class CCommandColumn extends CColumn {
         var buttons_div = $('<div class="field has-addons" style="justify-content: right;"></div>').appendTo(this.title_elem);
 
         if(typeof(this.options.no_add) == "undefined" || this.options.no_add == false){
-            this.new_record_button = $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><i class="far fa-plus-square"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
+            this.new_record_button = $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><span class="unicode-icon">⊕</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
         }
 
         if(typeof(this.options.no_refresh) == "undefined" || this.options.no_refresh == false){
-            $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><i class="fa fa-sync"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
+            $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><span class="unicode-icon">↻</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
         }
 
         if(typeof(this.options.common_actions) != "undefined"){
             for (var i in this.options.common_actions){
                 var bstyle = 'is-info is-outlined';
-                var istyle = 'fa fa-circle';
+                var symbol = '○';
                 if (typeof(this.options.common_actions[i].button_class) != "undefined"){
                     bstyle = this.options.common_actions[i].button_class;
                 }
-                if (typeof(this.options.common_actions[i].fa_class) != "undefined"){
-                    istyle = this.options.common_actions[i].fa_class;
+                if (typeof(this.options.common_actions[i].symbol) != "undefined"){
+                    symbol = this.options.common_actions[i].symbol;
                 }
 
-                 $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.common_actions[i].action(this.record)}, this,i));
+                 $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><span class="unicode-icon">'+symbol+'</span></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.common_actions[i].action(this.record)}, this,i));
             }
         }
     }
@@ -159,25 +159,25 @@ class CCommandColumn extends CColumn {
         var buttons_div = $('<div class="field has-addons" style="justify-content: right;"></div>').appendTo(this.cell_elem);
 
         if(typeof(this.options.no_edit) == "undefined" || this.options.no_edit == false){
-            this.show_editor_button = $('<p class="control"><a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><i class="far fa-edit"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
+            this.show_editor_button = $('<p class="control"><a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><span class="unicode-icon">✎</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
         }
 
         if(typeof(this.options.no_delete) == "undefined" || this.options.no_delete == false){
-            $('<p class="control"><a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><i class="far fa-trash-alt"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
+            $('<p class="control"><a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><span class="unicode-icon">⊗</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
         }
 
         if(typeof(this.options.item_actions) != "undefined"){
             for (var i in this.options.item_actions){
                 var bstyle = 'is-info is-outlined';
-                var istyle = 'far fa-plus-square';
+                var symbol = '○';
                 if (typeof(this.options.item_actions[i].button_class) != "undefined"){
                     bstyle = this.options.item_actions[i].button_class;
                 }
-                if (typeof(this.options.item_actions[i].fa_class) != "undefined"){
-                    istyle = this.options.item_actions[i].fa_class;
+                if (typeof(this.options.item_actions[i].symbol) != "undefined"){
+                    symbol = this.options.item_actions[i].symbol;
                 }
 
-                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.item_actions[i].action(this.record)}, this, i));
+                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><span class="unicode-icon">'+symbol+'</span></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.item_actions[i].action(this.record)}, this, i));
             }
         }
 
@@ -247,14 +247,14 @@ class CCommandColumn extends CColumn {
 
         if(typeof(this.options.no_commit) == "undefined" || this.options.no_commit == false){
             if(is_new_record) {
-                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><span class="unicode-icon">⊕</span></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
             } else {
-                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><span class="unicode-icon">⊕</span></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
             }
         }
 
         if(typeof(this.options.no_cancel) == "undefined" || this.options.no_cancel == false){
-            $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+            $('<a class="button is-warning is-outlined"><span class="file-icon"><span class="unicode-icon">⊗</span></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
         }
 
     }

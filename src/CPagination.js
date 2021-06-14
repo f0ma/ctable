@@ -163,9 +163,9 @@ class CPagination{
 
         var control_group = $('<div class="field has-addons" style="justify-content:center;"></div>').appendTo(this.container);
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_first, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><span class="unicode-icon">⇤</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_first, this));
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_prev, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><span class="unicode-icon">←</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_prev, this));
 
 
         var page_select = $('<div class="select control" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(control_group);
@@ -174,9 +174,9 @@ class CPagination{
         this.page_selector.change($.proxy(this.page_change, this));
 
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_next, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><span class="unicode-icon">→</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_next, this));
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_last, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><span class="unicode-icon">⇥</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_last, this));
 
         $('<p class="control"><a class="button is-static">'+this.table.lang.on_one_page+'</a></p>').appendTo(control_group);
 

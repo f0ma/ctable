@@ -140,4 +140,10 @@
     margin: 0.5em;
 }
 
-    
+.unicode-icon {
+    font-size: 1.2rem;
+}
+
+.ctable-sort-none {
+    font-size: 1.0rem;
+}

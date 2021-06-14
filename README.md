@@ -9,12 +9,13 @@ CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.
 * Object oriented design (ES6 Classes and promises, [jQuery](http://jquery.com))
 * Asynchronous (AJAX based)
 * Server technology agnostic (JSON based communications)
+* Optional server side PHP library
 * Server-side sorting and pagination
-* Sub-table support
+* Expanding sub-table support
 * Multilanguage (currently English and Russian)
 * Easily extends by column class inheritance
-* Good looking and mobile-ready with [Bulma CSS](http://bulma.io), [Font Awesome](https://fontawesome.com/) icons and [loading.io](https://loading.io/css/) CSS loader
-* Integration with [Select2](https://select2.org/) and [DateTimePicker jQuery plugin](https://xdsoft.net/jqplugins/datetimepicker/)
+* Good looking and mobile-ready with [Bulma CSS](http://bulma.io) CSS framework and [loading.io](https://loading.io/css/) loader
+* Optional integration with [Select2](https://select2.org/) and [DateTimePicker jQuery plugin](https://xdsoft.net/jqplugins/datetimepicker/)
 
 ## Documentation
 
@@ -26,7 +27,6 @@ Add to page header:
 
 ```html
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"/>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <link rel="stylesheet" href="ctable.css"/>
 <script src="ctable.js"></script>

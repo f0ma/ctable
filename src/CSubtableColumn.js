@@ -79,8 +79,8 @@ class CSubtableColumn extends CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-        this.show_subtable_button = $('<a class="button is-info is-outlined" title="'+this.table.lang.expand_tooltip+'"><span class="icon is-small"><i class="far fa-caret-square-down"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
-        this.hide_subtable_button = $('<a class="button is-info" style="display:none;"><span class="icon is-small"><i class="far fa-minus-square"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
+        this.show_subtable_button = $('<a class="button is-info is-outlined" title="'+this.table.lang.expand_tooltip+'"><span class="unicode-icon">⊞</span></a>').appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
+        this.hide_subtable_button = $('<a class="button is-info" style="display:none;"><span class="unicode-icon">⊟</span></a>').appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
     }
 
     /**

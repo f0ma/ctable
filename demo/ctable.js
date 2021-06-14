@@ -307,7 +307,7 @@ class CTextColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == "undefined" || !this.options.no_sort){
 
-            this.sort_button = $('<span class="icon" title="'+this.table.lang.sort_tooltip+'"><i class="fas fa-sort xtable-sort-none"></i><i class="fas fa-sort-up xtable-sort-up" style="display: none;"></i><i class="fas fa-sort-down xtable-sort-down" style="display: none;"></i></span>').prependTo(this.title_elem);
+            this.sort_button = $('<a class="icon" title="'+this.table.lang.sort_tooltip+'"><span class="unicode-icon ctable-sort-none">⇵</span><span class="unicode-icon ctable-sort-up" style="display: none;">↑</span><span class="unicode-icon ctable-sort-down" style="display: none;">↓</span></a>').prependTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -321,23 +321,23 @@ class CTextColumn extends CColumn {
      */
 
     sort_button_click(){
-        if(this.sort_button.find('i.xtable-sort-none').css('display') != 'none') {
-                this.sort_button.find('i.xtable-sort-none').css('display', 'none');
-                this.sort_button.find('i.xtable-sort-up').css('display', '');
+        if(this.sort_button.find('span.ctable-sort-none').css('display') != 'none') {
+                this.sort_button.find('span.ctable-sort-none').css('display', 'none');
+                this.sort_button.find('span.ctable-sort-up').css('display', '');
                 this.table.set_order(this.options.column, 'ASC');
                 this.table.select();
                 return
             }
-            if(this.sort_button.find('i.xtable-sort-up').css('display') != 'none') {
-                this.sort_button.find('i.xtable-sort-up').css('display', 'none');
-                this.sort_button.find('i.xtable-sort-down').css('display', '');
+            if(this.sort_button.find('span.ctable-sort-up').css('display') != 'none') {
+                this.sort_button.find('span.ctable-sort-up').css('display', 'none');
+                this.sort_button.find('span.ctable-sort-down').css('display', '');
                 this.table.set_order(this.options.column, 'DESC');
                 this.table.select();
                 return
             }
-            if(this.sort_button.find('i.xtable-sort-down').css('display') != 'none') {
-                this.sort_button.find('i.xtable-sort-down').css('display', 'none');
-                this.sort_button.find('i.xtable-sort-none').css('display', '');
+            if(this.sort_button.find('span.ctable-sort-down').css('display') != 'none') {
+                this.sort_button.find('span.ctable-sort-down').css('display', 'none');
+                this.sort_button.find('span.ctable-sort-none').css('display', '');
                 this.table.set_order(this.options.column, '');
                 this.table.select();
                 return
@@ -786,12 +786,12 @@ class CCommandColumn extends CColumn {
      * @param {Boolean} [options.no_cancel] No cancel button in editor mode.
      * @param {Array} [options.item_actions] Additional actions list.
      * @param {String} [options.item_actions[].button_class] Bulma buttom class.
-     * @param {String} [options.item_actions[].fa_class] FA image class.
+     * @param {String} [options.item_actions[].symbol] Button symbol.
      * @param {String} [options.item_actions[].tooltip] Button tooltip
      * @param {Function} [options.item_actions[].action] function(record) Click handler.
      * @param {Array} [options.common_actions] Additional actions list.
      * @param {String} [options.common_actions[].button_class] Bulma buttom class.
-     * @param {String} [options.common_actions[].fa_class] FA image class.
+     * @param {String} [options.common_actions[].symbol] Button symbol.
      * @param {String} [options.common_actions[].tooltip] Button tooltip
      * @param {Function} [options.common_actions[].action] function(record) Click handler.
      */
@@ -847,25 +847,25 @@ class CCommandColumn extends CColumn {
         var buttons_div = $('<div class="field has-addons" style="justify-content: right;"></div>').appendTo(this.title_elem);
 
         if(typeof(this.options.no_add) == "undefined" || this.options.no_add == false){
-            this.new_record_button = $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><i class="far fa-plus-square"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
+            this.new_record_button = $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.add_tooltip+'"><span class="icon is-small"><span class="unicode-icon">⊕</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.build_new_record_editor, this));
         }
 
         if(typeof(this.options.no_refresh) == "undefined" || this.options.no_refresh == false){
-            $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><i class="fa fa-sync"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
+            $('<p class="control"><a class="button is-info is-outlined" title="'+this.table.lang.reload_tooltip+'"><span class="icon is-small"><span class="unicode-icon">↻</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.refresh_table, this));
         }
 
         if(typeof(this.options.common_actions) != "undefined"){
             for (var i in this.options.common_actions){
                 var bstyle = 'is-info is-outlined';
-                var istyle = 'fa fa-circle';
+                var symbol = '○';
                 if (typeof(this.options.common_actions[i].button_class) != "undefined"){
                     bstyle = this.options.common_actions[i].button_class;
                 }
-                if (typeof(this.options.common_actions[i].fa_class) != "undefined"){
-                    istyle = this.options.common_actions[i].fa_class;
+                if (typeof(this.options.common_actions[i].symbol) != "undefined"){
+                    symbol = this.options.common_actions[i].symbol;
                 }
 
-                 $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.common_actions[i].action(this.record)}, this,i));
+                 $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.common_actions[i].tooltip+'"><span class="icon is-small"><span class="unicode-icon">'+symbol+'</span></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.common_actions[i].action(this.record)}, this,i));
             }
         }
     }
@@ -917,25 +917,25 @@ class CCommandColumn extends CColumn {
         var buttons_div = $('<div class="field has-addons" style="justify-content: right;"></div>').appendTo(this.cell_elem);
 
         if(typeof(this.options.no_edit) == "undefined" || this.options.no_edit == false){
-            this.show_editor_button = $('<p class="control"><a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><i class="far fa-edit"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
+            this.show_editor_button = $('<p class="control"><a class="button is-warning is-outlined" title="'+this.table.lang.edit_tooltip+'"><span class="icon is-small"><span class="unicode-icon">✎</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.open_edit_record_editor, this));
         }
 
         if(typeof(this.options.no_delete) == "undefined" || this.options.no_delete == false){
-            $('<p class="control"><a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><i class="far fa-trash-alt"></i></span></a></p>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
+            $('<p class="control"><a class="button is-danger is-outlined" title="'+this.table.lang.delete_tooltip+'"><span class="icon is-small"><span class="unicode-icon">⊗</span></span></a></p>').appendTo(buttons_div).click($.proxy(this.delete_record, this));
         }
 
         if(typeof(this.options.item_actions) != "undefined"){
             for (var i in this.options.item_actions){
                 var bstyle = 'is-info is-outlined';
-                var istyle = 'far fa-plus-square';
+                var symbol = '○';
                 if (typeof(this.options.item_actions[i].button_class) != "undefined"){
                     bstyle = this.options.item_actions[i].button_class;
                 }
-                if (typeof(this.options.item_actions[i].fa_class) != "undefined"){
-                    istyle = this.options.item_actions[i].fa_class;
+                if (typeof(this.options.item_actions[i].symbol) != "undefined"){
+                    symbol = this.options.item_actions[i].symbol;
                 }
 
-                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><i class="'+istyle+'"></i></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.item_actions[i].action(this.record)}, this, i));
+                $('<p class="control"><a class="button '+bstyle+'" title="'+this.options.item_actions[i].tooltip+'"><span class="icon is-small"><span class="unicode-icon">'+symbol+'</span></span></a></p>').appendTo(buttons_div).click($.proxy(function(i){this.options.item_actions[i].action(this.record)}, this, i));
             }
         }
 
@@ -1005,14 +1005,14 @@ class CCommandColumn extends CColumn {
 
         if(typeof(this.options.no_commit) == "undefined" || this.options.no_commit == false){
             if(is_new_record) {
-                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><span class="unicode-icon">⊕</span></span>&nbsp;'+this.table.lang.add_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.add_record, this));
             } else {
-                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><i class="far fa-check-circle"></i></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
+                $('<p class="control"><a class="button is-primary is-outlined"><span class="file-icon"><span class="unicode-icon">⊕</span></span>&nbsp;'+this.table.lang.save_record+'</a></p>').appendTo(buttons_div).click($.proxy(this.save_record, this));
             }
         }
 
         if(typeof(this.options.no_cancel) == "undefined" || this.options.no_cancel == false){
-            $('<a class="button is-warning is-outlined"><span class="file-icon"><i class="fas fa-ban"></i></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
+            $('<a class="button is-warning is-outlined"><span class="file-icon"><span class="unicode-icon">⊗</span></span>&nbsp;'+this.table.lang.cancel+'</a>').appendTo(buttons_div).click($.proxy(this.close_editor, this));
         }
 
     }
@@ -1084,7 +1084,7 @@ class CCommandColumn extends CColumn {
 function CExportTableAction (table, format, filename, header = {}) {
 
     return {
-    fa_class: 'fas fa-file-export',
+    symbol: '↧',
     action: function (record){
         record.table.download(format, filename, header);
     },
@@ -1352,19 +1352,19 @@ class CIndicatorColumn extends CCustomColumn {
                 return '';
             }
             if (state == "primary"){
-                return '<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>';
+                return '<a class="button is-primary is-outlined"><span class="unicode-icon">○</span></a>';
             }
             if (state == "info"){
-                return '<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>';
+                return '<a class="button is-info is-outlined"><span class="unicode-icon">⊙</span></a>';
             }
             if (state == "success" || state == "ok"){
-                return '<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>';
+                return '<a class="button is-success is-outlined"><span class="unicode-icon">⊕</span></a>';
             }
             if (state == "warning"){
-                return '<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>';
+                return '<a class="button is-warning is-outlined"><span class="unicode-icon">⊘</span></a>';
             }
             if (state == "danger" || state == "error"){
-                return '<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>';
+                return '<a class="button is-danger is-outlined"><span class="unicode-icon">⊗</span></a>';
             }
         }
     }
@@ -1561,16 +1561,16 @@ class CFileUploadColumn extends CColumn {
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+fileinfo.filelabel+'</a>');
+            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></span>'+fileinfo.filelabel+'</a>');
         } else if (fileinfo.uploaded && fileinfo.count > 1){
             // Link to multifile not available now
             var filelink = '';
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+this.table.lang.multiple+fileinfo.count+'</a>');
+            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></i></span>'+this.table.lang.multiple+fileinfo.count+'</a>');
         } else {
-            elem.html('<a class="button is-info is-outlined" disabled><span class="file-icon"><i class="fa fa-minus-square" aria-hidden="true"></i></span>'+this.table.lang.no_file+'</a>');
+            elem.html('<a class="button is-info is-outlined" disabled><span class="file-icon"><span class="unicode-icon">⊖</span></span>'+this.table.lang.no_file+'</a>');
         }
     }
 
@@ -1617,15 +1617,15 @@ class CFileUploadColumn extends CColumn {
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+fileinfo.filelabel+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close"><i class="fas fa-window-close"></i></a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
+            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></span>'+fileinfo.filelabel+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close is-danger"><span class="unicode-icon">⊗</span></a></p><p class="control"><a class="button is-info is-outlined"><span class="unicode-icon">↥</span></a><input class="file-input button" type="file" name="file" '+multiple+'/></p></div>');
         } else if (fileinfo.uploaded && fileinfo.count > 1){
             var filelink = '';
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+this.table.lang.multiple+fileinfo.count+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close"><i class="fas fa-window-close"></i></a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
+            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></span>'+this.table.lang.multiple+fileinfo.count+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close is-danger"><span class="unicode-icon">⊗</span></a></p><p class="control"><a class="button is-info is-outlined"><span class="unicode-icon">↥</span></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
         } else {
-            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" href="#" disabled><span class="file-icon"><i class="fa fa fa-minus-square" aria-hidden="true"></i></span>'+this.table.lang.no_file+'</a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
+            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" href="#" disabled><span class="file-icon"><span class="unicode-icon">⊖</span></span>'+this.table.lang.no_file+'</a></p><p class="control"><a class="button is-info is-outlined"><span class="unicode-icon">↥</span></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
         }
 
         var self = this;
@@ -1799,8 +1799,8 @@ class CSubtableColumn extends CColumn {
 
     build_cell(elem){
         this.cell_elem = elem;
-        this.show_subtable_button = $('<a class="button is-info is-outlined" title="'+this.table.lang.expand_tooltip+'"><span class="icon is-small"><i class="far fa-caret-square-down"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
-        this.hide_subtable_button = $('<a class="button is-info" style="display:none;"><span class="icon is-small"><i class="far fa-minus-square"></i></span></a>').appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
+        this.show_subtable_button = $('<a class="button is-info is-outlined" title="'+this.table.lang.expand_tooltip+'"><span class="unicode-icon">⊞</span></a>').appendTo(this.cell_elem).click($.proxy(this.open_subtable, this));
+        this.hide_subtable_button = $('<a class="button is-info" style="display:none;"><span class="unicode-icon">⊟</span></a>').appendTo(this.cell_elem).click($.proxy(this.close_subtable, this));
     }
 
     /**
@@ -2479,9 +2479,9 @@ class CPagination{
 
         var control_group = $('<div class="field has-addons" style="justify-content:center;"></div>').appendTo(this.container);
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><i class="fas fa-fast-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_first, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_first_tooltip+'"><span class="icon"><span class="unicode-icon">⇤</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_first, this));
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><i class="fas fa-step-backward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_prev, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_prev_tooltip+'"><span class="icon"><span class="unicode-icon">←</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_prev, this));
 
 
         var page_select = $('<div class="select control" title="'+this.table.lang.current_page_tooltip+'"></div>').appendTo(control_group);
@@ -2490,9 +2490,9 @@ class CPagination{
         this.page_selector.change($.proxy(this.page_change, this));
 
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><i class="fas fa-step-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_next, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_next_tooltip+'"><span class="icon"><span class="unicode-icon">→</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_next, this));
 
-        $('<p class="control"><a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><i class="fas fa-fast-forward"/></span></a></p>').appendTo(control_group).click($.proxy(this.go_last, this));
+        $('<p class="control"><a class="button" title="'+this.table.lang.to_last_tooltip+'"><span class="icon"><span class="unicode-icon">⇥</span></span></a></p>').appendTo(control_group).click($.proxy(this.go_last, this));
 
         $('<p class="control"><a class="button is-static">'+this.table.lang.on_one_page+'</a></p>').appendTo(control_group);
 

@@ -20,7 +20,7 @@
 function CExportTableAction (table, format, filename, header = {}) {
 
     return {
-    fa_class: 'fas fa-file-export',
+    symbol: '↧',
     action: function (record){
         record.table.download(format, filename, header);
     },

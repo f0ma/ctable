@@ -59,7 +59,7 @@ class CTextColumn extends CColumn {
 
         if(typeof(this.options.no_sort) == "undefined" || !this.options.no_sort){
 
-            this.sort_button = $('<span class="icon" title="'+this.table.lang.sort_tooltip+'"><i class="fas fa-sort xtable-sort-none"></i><i class="fas fa-sort-up xtable-sort-up" style="display: none;"></i><i class="fas fa-sort-down xtable-sort-down" style="display: none;"></i></span>').prependTo(this.title_elem);
+            this.sort_button = $('<a class="icon" title="'+this.table.lang.sort_tooltip+'"><span class="unicode-icon ctable-sort-none">⇵</span><span class="unicode-icon ctable-sort-up" style="display: none;">↑</span><span class="unicode-icon ctable-sort-down" style="display: none;">↓</span></a>').prependTo(this.title_elem);
 
             this.sort_button.click($.proxy(this.sort_button_click, this));
         }
@@ -73,23 +73,23 @@ class CTextColumn extends CColumn {
      */
 
     sort_button_click(){
-        if(this.sort_button.find('i.xtable-sort-none').css('display') != 'none') {
-                this.sort_button.find('i.xtable-sort-none').css('display', 'none');
-                this.sort_button.find('i.xtable-sort-up').css('display', '');
+        if(this.sort_button.find('span.ctable-sort-none').css('display') != 'none') {
+                this.sort_button.find('span.ctable-sort-none').css('display', 'none');
+                this.sort_button.find('span.ctable-sort-up').css('display', '');
                 this.table.set_order(this.options.column, 'ASC');
                 this.table.select();
                 return
             }
-            if(this.sort_button.find('i.xtable-sort-up').css('display') != 'none') {
-                this.sort_button.find('i.xtable-sort-up').css('display', 'none');
-                this.sort_button.find('i.xtable-sort-down').css('display', '');
+            if(this.sort_button.find('span.ctable-sort-up').css('display') != 'none') {
+                this.sort_button.find('span.ctable-sort-up').css('display', 'none');
+                this.sort_button.find('span.ctable-sort-down').css('display', '');
                 this.table.set_order(this.options.column, 'DESC');
                 this.table.select();
                 return
             }
-            if(this.sort_button.find('i.xtable-sort-down').css('display') != 'none') {
-                this.sort_button.find('i.xtable-sort-down').css('display', 'none');
-                this.sort_button.find('i.xtable-sort-none').css('display', '');
+            if(this.sort_button.find('span.ctable-sort-down').css('display') != 'none') {
+                this.sort_button.find('span.ctable-sort-down').css('display', 'none');
+                this.sort_button.find('span.ctable-sort-none').css('display', '');
                 this.table.set_order(this.options.column, '');
                 this.table.select();
                 return

@@ -1200,8 +1200,8 @@
                             "optional": true
                         },
                         {
-                            "name": "item_actions[].fa_class",
-                            "description": "FA image class.",
+                            "name": "item_actions[].symbol",
+                            "description": "Button symbol.",
                             "type": "String",
                             "optional": true
                         },
@@ -1230,8 +1230,8 @@
                             "optional": true
                         },
                         {
-                            "name": "common_actions[].fa_class",
-                            "description": "FA image class.",
+                            "name": "common_actions[].symbol",
+                            "description": "Button symbol.",
                             "type": "String",
                             "optional": true
                         },

@@ -34,19 +34,19 @@ class CIndicatorColumn extends CCustomColumn {
                 return '';
             }
             if (state == "primary"){
-                return '<a class="button is-primary is-outlined"><i class="fas fa-circle"></i></a>';
+                return '<a class="button is-primary is-outlined"><span class="unicode-icon">○</span></a>';
             }
             if (state == "info"){
-                return '<a class="button is-info is-outlined"><i class="fas fa-info-circle"></i></a>';
+                return '<a class="button is-info is-outlined"><span class="unicode-icon">⊙</span></a>';
             }
             if (state == "success" || state == "ok"){
-                return '<a class="button is-success is-outlined"><i class="fas fa-check-circle"></i></a>';
+                return '<a class="button is-success is-outlined"><span class="unicode-icon">⊕</span></a>';
             }
             if (state == "warning"){
-                return '<a class="button is-warning is-outlined"><i class="fas fa-exclamation-circle"></i></a>';
+                return '<a class="button is-warning is-outlined"><span class="unicode-icon">⊘</span></a>';
             }
             if (state == "danger" || state == "error"){
-                return '<a class="button is-danger is-outlined"><i class="fas fa-times-circle"></i></a>';
+                return '<a class="button is-danger is-outlined"><span class="unicode-icon">⊗</span></a>';
             }
         }
     }

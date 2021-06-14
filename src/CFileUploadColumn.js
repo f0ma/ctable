@@ -94,16 +94,16 @@ class CFileUploadColumn extends CColumn {
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+fileinfo.filelabel+'</a>');
+            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></span>'+fileinfo.filelabel+'</a>');
         } else if (fileinfo.uploaded && fileinfo.count > 1){
             // Link to multifile not available now
             var filelink = '';
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+this.table.lang.multiple+fileinfo.count+'</a>');
+            elem.html('<a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></i></span>'+this.table.lang.multiple+fileinfo.count+'</a>');
         } else {
-            elem.html('<a class="button is-info is-outlined" disabled><span class="file-icon"><i class="fa fa-minus-square" aria-hidden="true"></i></span>'+this.table.lang.no_file+'</a>');
+            elem.html('<a class="button is-info is-outlined" disabled><span class="file-icon"><span class="unicode-icon">⊖</span></span>'+this.table.lang.no_file+'</a>');
         }
     }
 
@@ -150,15 +150,15 @@ class CFileUploadColumn extends CColumn {
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+fileinfo.filelabel+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close"><i class="fas fa-window-close"></i></a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
+            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></span>'+fileinfo.filelabel+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close is-danger"><span class="unicode-icon">⊗</span></a></p><p class="control"><a class="button is-info is-outlined"><span class="unicode-icon">↥</span></a><input class="file-input button" type="file" name="file" '+multiple+'/></p></div>');
         } else if (fileinfo.uploaded && fileinfo.count > 1){
             var filelink = '';
             if (this.options.links) {
                 filelink = 'href="'+fileinfo.filelink+'" target="_blank"';
             }
-            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><i class="fa fa-check-square" aria-hidden="true"></i></span>'+this.table.lang.multiple+fileinfo.count+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close"><i class="fas fa-window-close"></i></a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
+            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" '+filelink+'><span class="file-icon"><span class="unicode-icon">⊕</span></span>'+this.table.lang.multiple+fileinfo.count+'</a></p><p class="control"><a class="button is-info is-outlined ctable-close is-danger"><span class="unicode-icon">⊗</span></a></p><p class="control"><a class="button is-info is-outlined"><span class="unicode-icon">↥</span></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
         } else {
-            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" href="#" disabled><span class="file-icon"><i class="fa fa fa-minus-square" aria-hidden="true"></i></span>'+this.table.lang.no_file+'</a></p><p class="control"><a class="button is-info is-outlined"><i class="fas fa-upload"></i></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
+            elem.html('<div class="field has-addons"><p class="control"><a class="button is-info is-outlined" href="#" disabled><span class="file-icon"><span class="unicode-icon">⊖</span></span>'+this.table.lang.no_file+'</a></p><p class="control"><a class="button is-info is-outlined"><span class="unicode-icon">↥</span></a><input class="file-input" type="file" name="file" '+multiple+'/></p></div>');
         }
 
         var self = this;
