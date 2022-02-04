@@ -33,7 +33,9 @@ var ctable_lang = {
     add_rec: 'Add row',
     actions: 'Other actions',
     open_subtable: 'Open subtable',
-    no_data: 'No rows'
+    no_data: 'No rows',
+    error: 'Error: ',
+    server_error: 'Server side error: '
   },
   ru: {
     current_page: 'Текущая страница',
@@ -51,7 +53,9 @@ var ctable_lang = {
     add_rec: 'Добавить запись',
     actions: 'Другие действия',
     open_subtable: 'Открыть подтаблицу',
-    no_data: 'Нет данных'
+    no_data: 'Нет данных',
+    error: 'Ошибка: ',
+    server_error: 'Ошибка сервера: '
   }
 };
 /**
@@ -713,9 +717,19 @@ class CTable extends Component {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
-    }).then(response => response.json()).then(function (result) {
-      self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
-      self.reload();
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        alert(self.props.lang.server_error + response.status);
+      }
+    }).then(function (result) {
+      if (result.Result == 'OK') {
+        self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
+        self.reload();
+      } else {
+        alert(self.props.lang.error + result.Message);
+      }
     });
   }
   /**
@@ -764,9 +778,19 @@ class CTable extends Component {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
-    }).then(response => response.json()).then(function (result) {
-      self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
-      self.reload();
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        alert(self.props.lang.server_error + response.status);
+      }
+    }).then(function (result) {
+      if (result.Result == 'OK') {
+        self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
+        self.reload();
+      } else {
+        alert(self.props.lang.error + result.Message);
+      }
     });
   }
   /**
@@ -891,17 +915,27 @@ class CTable extends Component {
       column_searches: column_searches,
       column_orders: column_orders
     };
-    fetch(this.props.endpoint + '?select=' + JSON.stringify(query)).then(response => response.json()).then(function (result) {
-      self.changes = [];
-      self.setState({
-        records: result.Records,
-        total_records: result.TotalRecordCount,
-        records_on_page: self.state.records_on_page,
-        current_page: self.state.current_page,
-        opened_editors: [],
-        opened_subtables: [],
-        total_pages: Math.floor(result.TotalRecordCount / self.state.records_on_page) - (result.TotalRecordCount % self.state.records_on_page == 0 ? 1 : 0)
-      });
+    fetch(this.props.endpoint + '?select=' + JSON.stringify(query)).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        alert(self.props.lang.server_error + response.status);
+      }
+    }).then(function (result) {
+      if (result.Result == 'OK') {
+        self.changes = [];
+        self.setState({
+          records: result.Records,
+          total_records: result.TotalRecordCount,
+          records_on_page: self.state.records_on_page,
+          current_page: self.state.current_page,
+          opened_editors: [],
+          opened_subtables: [],
+          total_pages: Math.floor(result.TotalRecordCount / self.state.records_on_page) - (result.TotalRecordCount % self.state.records_on_page == 0 ? 1 : 0)
+        });
+      } else {
+        alert(self.props.lang.error + result.Message);
+      }
     });
   }
 

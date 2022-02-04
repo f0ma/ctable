@@ -16,6 +16,8 @@ var ctable_lang = {
         actions: 'Other actions',
         open_subtable: 'Open subtable',
         no_data: 'No rows',
+        error: 'Error: ',
+        server_error: 'Server side error: ',
     },
     ru: {
         current_page: 'Текущая страница',
@@ -34,6 +36,8 @@ var ctable_lang = {
         actions: 'Другие действия',
         open_subtable: 'Открыть подтаблицу',
         no_data: 'Нет данных',
+        error: 'Ошибка: ',
+        server_error: 'Ошибка сервера: ',
     }
 }
 
