@@ -1,0 +1,15 @@
+{
+  "name": "ctable",
+  "version": "2.0",
+  "scripts": {
+    "build": "babel src --out-file dist/ctable.js",
+    "docs": "jsdoc src/*.jsx -d docs"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.12",
+    "@babel/plugin-transform-react-jsx": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
+    "jsdoc": "^3.6.10"
+  }
+}

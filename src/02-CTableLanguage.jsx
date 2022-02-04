@@ -1,0 +1,40 @@
+var ctable_lang = {
+    en: {
+        current_page: 'Current page',
+        from: 'from',
+        show_by: 'Show by',
+        to_last_page: 'To last page',
+        to_next_page: 'To next page',
+        to_prev_page: 'To previous page',
+        to_first_page: 'To first page',
+        delete_row_ask: 'Delete this row?',
+        save: 'Save',
+        discard: 'Discard',
+        edit_rec: 'Edit this row',
+        delete_rec: 'Delete this row',
+        add_rec: 'Add row',
+        actions: 'Other actions',
+        open_subtable: 'Open subtable',
+        no_data: 'No rows',
+    },
+    ru: {
+        current_page: 'Текущая страница',
+        from: 'из',
+        show_by: 'Показывать по',
+        to_last_page: 'На последнюю страницу',
+        to_next_page: 'На следующую страницу',
+        to_prev_page: 'На предыдущую страницу',
+        to_first_page: 'На первую страницу',
+        delete_row_ask: 'Удалить запись?',
+        save: 'Сохранить',
+        discard: 'Отменить',
+        edit_rec: 'Изменить запись',
+        delete_rec: 'Удалить запись',
+        add_rec: 'Добавить запись',
+        actions: 'Другие действия',
+        open_subtable: 'Открыть подтаблицу',
+        no_data: 'Нет данных',
+    }
+}
+
+
