@@ -18,6 +18,13 @@ var ctable_lang = {
         no_data: 'No rows',
         error: 'Error: ',
         server_error: 'Server side error: ',
+        no_filter: 'No filter',
+        no_file: 'No file',
+        multiple_files: 'Files: ',
+        file_to_large: 'File too large',
+        file_wrong_extention: 'File have a wrong type',
+        file_filter_no: 'No file',
+        file_filter_yes: 'Have a file'
     },
     ru: {
         current_page: 'Текущая страница',
@@ -38,6 +45,13 @@ var ctable_lang = {
         no_data: 'Нет данных',
         error: 'Ошибка: ',
         server_error: 'Ошибка сервера: ',
+        no_filter: 'Нет фильтра',
+        no_file: 'Файл не загружен',
+        multiple_files: 'Файлы: ',
+        file_to_large: 'Файл слишком велик',
+        file_wrong_extention: 'Файл имеет недопустимый тип',
+        file_filter_no: 'Файла нет',
+        file_filter_yes: 'Файл есть'
     }
 }
 

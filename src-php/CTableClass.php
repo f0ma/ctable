@@ -485,7 +485,7 @@ class CTable extends ExtendedCallable {
 
     function sending_upload_result() {
         header('Content-Type: application/json;charset=utf-8');
-        echo json_encode(['Result'=>'OK', 'Files'=> implode($this->file_names,'')]);
+        echo json_encode(['Result'=>'OK', 'Files'=> implode('', $this->file_names)]);
     }
 
     function sending_write_result() {

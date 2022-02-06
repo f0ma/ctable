@@ -136,13 +136,13 @@ Includes server interaction logic, pagination, and other.</div>
 
         <tr>
             
-                <td class="name"><code>this.props.columns[</code></td>
+                <td class="name"><code>this.props.columns</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Array.&lt;Object></span>
 
 
             
@@ -152,14 +152,33 @@ Includes server interaction logic, pagination, and other.</div>
 
             
 
-            <td class="description last">List of columns. Each column will be passed as props to column object.</td>
-        </tr>
+            <td class="description last">List of columns. Each column will be passed as props to column object.
+                <h6>Properties</h6>
+                
 
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>this.props.columns[].name</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -182,7 +201,7 @@ Includes server interaction logic, pagination, and other.</div>
 
         <tr>
             
-                <td class="name"><code>this.props.columns[].title</code></td>
+                <td class="name"><code>title</code></td>
             
 
             <td class="type">
@@ -205,7 +224,7 @@ Includes server interaction logic, pagination, and other.</div>
 
         <tr>
             
-                <td class="name"><code>this.props.columns[].kind</code></td>
+                <td class="name"><code>kind</code></td>
             
 
             <td class="type">
@@ -228,7 +247,7 @@ Includes server interaction logic, pagination, and other.</div>
 
         <tr>
             
-                <td class="name"><code>this.props.columns[].footnote</code></td>
+                <td class="name"><code>footnote</code></td>
             
 
             <td class="type">
@@ -245,6 +264,13 @@ Includes server interaction logic, pagination, and other.</div>
             
 
             <td class="description last">Footnote for column editor.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -467,7 +493,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line193">line 193</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -629,7 +655,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line207">line 207</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line231">line 231</a>
     </li></ul></dd>
     
 
@@ -791,7 +817,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line221">line 221</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line245">line 245</a>
     </li></ul></dd>
     
 
@@ -816,6 +842,170 @@ For call from column class. Reload table.
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="column_by_name"><span class="type-signature"></span>column_by_name<span class="signature">(name)</span><span class="type-signature"> &rarr; {int|null}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Getting column index by column name.
+
+For call from column class.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Column name.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Column index in current table or `null`.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">int</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -930,7 +1120,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line101">line 101</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line123">line 123</a>
     </li></ul></dd>
     
 
@@ -1069,7 +1259,7 @@ For call from column class.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line75">line 75</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -1257,7 +1447,7 @@ For call from column class.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line239">line 239</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line263">line 263</a>
     </li></ul></dd>
     
 
@@ -1444,7 +1634,264 @@ For call from column class.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line258">line 258</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line282">line 282</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="open_subtable"><span class="type-signature"></span>open_subtable<span class="signature">(row, keys, config)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Open subtable in table.
+
+For call from column class.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>row</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Row index.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;List></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Constrains for subtable.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>0</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Subtable column name.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Current table column name which value will be used as constrain.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Subtable props including columns.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -1532,7 +1979,7 @@ For call from column class.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line284">line 284</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line308">line 308</a>
     </li></ul></dd>
     
 
@@ -1671,7 +2118,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line135">line 135</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line158">line 158</a>
     </li></ul></dd>
     
 
@@ -1881,7 +2328,7 @@ For call from column class.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line276">line 276</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -1969,7 +2416,7 @@ For call from column class.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line385">line 385</a>
+        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line443">line 443</a>
     </li></ul></dd>
     
 
@@ -2015,13 +2462,13 @@ For call from column class.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Feb 04 2022 18:10:13 GMT+0300 (Москва, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun Feb 06 2022 14:14:17 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -3,13 +3,13 @@
  *
  * Includes server interaction logic, pagination, and other.
  *
- * @arg this.props.endpoint {string} Url to endpoint.
- * @arg this.props.no_pagination {undefined|Boolean} Disable pagination.
- * @arg this.props.columns[] {Object} List of columns. Each column will be passed as props to column object.
- * @arg this.props.columns[].name {string} Name of column.
- * @arg this.props.columns[].title {string} Title of column.
- * @arg this.props.columns[].kind {Class} Column class derived from CTableColumn.
- * @arg this.props.columns[].footnote {string} Footnote for column editor.
+ * @arg {string} this.props.endpoint - Url to endpoint.
+ * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
+ * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
+ * @arg {string} this.props.columns[].name - Name of column.
+ * @arg {string} this.props.columns[].title - Title of column.
+ * @arg {Class} this.props.columns[].kind - Column class derived from CTableColumn.
+ * @arg {string} this.props.columns[].footnote - Footnote for column editor.
  */
 
 class CTable extends Component {
@@ -34,6 +34,7 @@ class CTable extends Component {
         this.valids = [];
         this.changes_handlers = [];
         this.subtables_params = {};
+        this.options_cache = {};
     }
 
     componentDidMount() {
@@ -43,6 +44,15 @@ class CTable extends Component {
         this.reload();
     }
 
+    /**
+     * Getting column index by column name.
+     *
+     * For call from column class.
+     *
+     * @param {string} name - Column name.
+     * @returns {int|null} Column index in current table or `null`.
+     */
+
     column_by_name(name){
         for(var i = 0; i < this.props.columns.length; i++){
             if(this.props.columns[i].name == name){
@@ -51,6 +61,18 @@ class CTable extends Component {
         }
         return null;
     }
+
+    /**
+     * Open subtable in table.
+     *
+     * For call from column class.
+     *
+     * @param {int} row - Row index.
+     * @param {List[]} keys - Constrains for subtable.
+     * @param {string} keys[].0 - Subtable column name.
+     * @param {string} keys[].1 - Current table column name which value will be used as constrain.
+     * @param {Object} config - Subtable props including columns.
+     */
 
     open_subtable(row, keys, config){
         if (this.state.opened_subtables.includes(row)){
@@ -69,7 +91,7 @@ class CTable extends Component {
      *
      * For call from column class.
      *
-     * @param row {int} Row number. `-1` for new record.
+     * @param {int} row - Row number. `-1` for new record.
      */
 
     edit_row(row){
@@ -95,7 +117,7 @@ class CTable extends Component {
      *
      * For call from column class. Reload table.
      *
-     * @param row {int} Row number.
+     * @param {int} row - Row number.
      */
 
     delete_row(row){
@@ -115,6 +137,7 @@ class CTable extends Component {
             if (response.ok) { return response.json(); }
             else { alert(self.props.lang.server_error + response.status); } })
         .then(function (result) {
+            if (!result) return;
             if(result.Result == 'OK'){
                 self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
                 self.reload();
@@ -172,6 +195,7 @@ class CTable extends Component {
             if (response.ok) {return response.json();}
             else {alert(self.props.lang.server_error + response.status)} })
         .then(function (result) {
+            if (!result) return;
             if(result.Result == 'OK'){
                 self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
                 self.reload();
@@ -308,6 +332,7 @@ class CTable extends Component {
             if (response.ok) {return response.json();}
             else {alert(self.props.lang.server_error + response.status)} })
         .then(function (result) {
+            if (!result) return;
             if(result.Result == 'OK'){
                 self.changes = [];
                 self.setState({records: result.Records, total_records: result.TotalRecordCount,
@@ -321,6 +346,39 @@ class CTable extends Component {
             }
         });
 
+
+    }
+
+    load_options(endpoint, elem, ref, params = {}) {
+        var json_opts = JSON.stringify(params);
+        var url = endpoint + '?options=' + json_opts;
+        var self = this;
+        if (url in this.options_cache){
+            if (this.options_cache[url] == null){
+                setTimeout(function()
+                    {
+                        self.load_options(endpoint, elem, ref, params);
+                    }, 500);
+            } else {
+                elem.setState({options: this.options_cache[url]});
+            }
+        } else {
+            this.options_cache[url] = null;
+            fetch(url)
+            .then(function(response){
+                if (response.ok) {return response.json();}
+                else {alert(self.props.lang.server_error + response.status)} })
+            .then(function (result) {
+                if (!result) return;
+                if(result.Result == 'OK'){
+                    self.options_cache[url] = result.Options;
+                    //if(ref.current != null){
+                        elem.setState(self.options_cache[url]);
+                    //}
+                } else {
+                    alert(self.props.lang.error + result.Message);
+                }});
+        }
 
     }
 

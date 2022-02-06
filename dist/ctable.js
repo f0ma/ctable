@@ -35,7 +35,14 @@ var ctable_lang = {
     open_subtable: 'Open subtable',
     no_data: 'No rows',
     error: 'Error: ',
-    server_error: 'Server side error: '
+    server_error: 'Server side error: ',
+    no_filter: 'No filter',
+    no_file: 'No file',
+    multiple_files: 'Files: ',
+    file_to_large: 'File too large',
+    file_wrong_extention: 'File have a wrong type',
+    file_filter_no: 'No file',
+    file_filter_yes: 'Have a file'
   },
   ru: {
     current_page: 'Текущая страница',
@@ -55,7 +62,14 @@ var ctable_lang = {
     open_subtable: 'Открыть подтаблицу',
     no_data: 'Нет данных',
     error: 'Ошибка: ',
-    server_error: 'Ошибка сервера: '
+    server_error: 'Ошибка сервера: ',
+    no_filter: 'Нет фильтра',
+    no_file: 'Файл не загружен',
+    multiple_files: 'Файлы: ',
+    file_to_large: 'Файл слишком велик',
+    file_wrong_extention: 'Файл имеет недопустимый тип',
+    file_filter_no: 'Файла нет',
+    file_filter_yes: 'Файл есть'
   }
 };
 /**
@@ -408,13 +422,88 @@ class CActionColumn extends CTableColumn {
 
 }
 /**
+ * Select column with dynamic items loaded from server.
+ *
+ * This column for selecting from dropdown.
+ *
+ * @arg {string} this.props.endpoint - Endpoint for loading options.
+ */
+class CDynamicSelectColumn extends CTableColumn {
+  constructor() {
+    super();
+    this.state = {
+      options: []
+    };
+    this.ref = createRef();
+  }
+
+  componentDidMount() {
+    this.props.table.load_options(this.props.endpoint, this, this.ref);
+  }
+
+  render_cell() {
+    var cvalues = this.state.options.filter(item => item[0] == this.value());
+
+    if (cvalues.length > 0) {
+      return h("span", null, cvalues[0][1]);
+    }
+
+    return h("span", null);
+  }
+
+  filterChanged = e => {
+    this.props.table.change_filter_for_column(this.props.column, e.target.value);
+  };
+
+  render_search() {
+    if (typeof this.props.filtering === 'undefined') {// do nothing
+    } else {
+      return h("div", {
+        class: "select"
+      }, h("select", {
+        onChange: this.filterChanged,
+        value: this.props.filtering
+      }, h("option", {
+        value: ""
+      }, this.props.table.props.lang.no_filter), this.state.options.map(item => h("option", {
+        value: item[0]
+      }, item[1]))));
+    }
+  }
+
+  editorChanged = e => {
+    this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+  };
+
+  render_editor() {
+    return h("div", {
+      class: "field",
+      ref: this.ref
+    }, h("label", {
+      class: "label"
+    }, this.title()), h("div", {
+      class: "control"
+    }, h("div", {
+      class: "select"
+    }, h("select", {
+      onChange: this.editorChanged,
+      value: this.value()
+    }, this.state.options.map(item => h("option", {
+      value: item[0]
+    }, item[1]))))), this.props.footnote ? h("div", {
+      class: "help"
+    }, this.props.footnote) : '');
+  }
+
+}
+/**
  * Select column.
  *
  * This column for selecting from dropdown.
  *
- * @arg this.props.options[] {List} Options list.
- * @arg this.props.options[][0] {*} Key.
- * @arg this.props.options[][1] {*} Test in control.
+ * @arg {List[]} this.props.options - Options list.
+ * @arg {string} this.props.options[].0 - Key.
+ * @arg {string} this.props.options[].1 - Text.
  */
 class CSelectColumn extends CTableColumn {
   constructor() {
@@ -455,7 +544,7 @@ class CSelectColumn extends CTableColumn {
         value: this.props.filtering
       }, h("option", {
         value: ""
-      }, "[Empty]"), this.state.options.map(item => h("option", {
+      }, this.props.table.props.lang.no_filter), this.state.options.map(item => h("option", {
         value: item[0]
       }, item[1]))));
     }
@@ -604,17 +693,326 @@ class CTextColumn extends CTableColumn {
 
 }
 /**
+ * Upload column.
+ *
+ * This column for uploading files.
+ *
+ * @arg {string} this.props.upload_endpoint - Endpoint for uploading files.
+ * @arg {undefined | Boolean} this.props.multiple - Multiple upload allowed. Not tested.
+ * @arg {undefined | string} this.props.links_endpoint - Link endpoint. No link available if undefined.
+ * @arg {undefined | int} this.props.filename_len - Max length for filename. 12 if undefined.
+ * @arg {undefined | int} this.props.max_file_size - Maximum file size.
+ * @arg {undefined | string[]} this.props.allowed_extentions - Allowed file extention.
+ */
+class CUploadColumn extends CTableColumn {
+  constructor() {
+    super();
+    this.state = {
+      fileinfo: {
+        uploaded: false,
+        count: 0,
+        filelabel: [],
+        uid: [],
+        filelink: [],
+        filedate: []
+      }
+    };
+    this.ref = createRef();
+  }
+
+  file_name_shortifier(fname) {
+    var length = 12;
+
+    if (this.props.filename_len) {
+      length = this.props.filename_len;
+    }
+
+    if (fname.length < length) return fname;
+    return fname.substring(0, length - 5) + '...' + fname.substring(fname.length - 5);
+  }
+
+  value_parser(value) {
+    if (value == '' || value == null) {
+      return {
+        uploaded: false,
+        count: 0,
+        filelabel: [],
+        uid: [],
+        filelink: [],
+        filedate: []
+      };
+    }
+
+    var links = null;
+
+    if (this.props.links_endpoint) {
+      links = this.props.links_endpoint;
+    }
+
+    var flines = value.split(';').filter(function (el) {
+      return el.length != 0;
+    });
+
+    if (flines.length == 1) {
+      var fcomp = flines[0].split(':');
+      return {
+        uploaded: true,
+        count: 1,
+        filelabel: [this.file_name_shortifier(fcomp[1])],
+        uid: [fcomp[0]],
+        filelink: [links ? links + fcomp[0] : '']
+      };
+    }
+
+    var uids = [];
+    var labels = [];
+    var links = [];
+    flines.forEach(function (frecord) {
+      var fcomp = frecord.split(':').filter(function (el) {
+        return el.length != 0;
+      });
+      uids.push(fcomp[0]);
+      labels.push(this.file_name_shortifier(fcomp[1]));
+      links.push(links ? links + fcomp[0] : '');
+    });
+    return {
+      uploaded: true,
+      count: flines.length,
+      filelabel: labels,
+      uid: uids,
+      filelink: links
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      fileinfo: this.value_parser(this.value())
+    });
+  }
+
+  render_cell() {
+    var fileinfo = this.value_parser(this.value());
+
+    if (!fileinfo.uploaded) {
+      return h("a", {
+        class: "button is-info is-outlined",
+        disabled: "true"
+      }, h("span", {
+        class: "file-icon"
+      }, "\u2296"), this.props.table.props.lang.no_file);
+    }
+
+    if (fileinfo.count == 1) {
+      var filelink = {};
+
+      if (this.props.links_endpoint) {
+        filelink = {
+          "href": fileinfo.filelink,
+          "target": "_blank",
+          "disabled": false
+        };
+      }
+
+      return h("a", {
+        "class": "button is-info is-outlined",
+        "disabled": true,
+        ...filelink
+      }, h(Fragment, null, h("span", {
+        class: "file-icon"
+      }, "\u2296"), fileinfo.filelabel[0]));
+    } else {
+      return h("a", {
+        class: "button is-info is-outlined",
+        disabled: "true"
+      }, h("span", {
+        class: "file-icon"
+      }, "\u2296"), this.props.table.props.lang.multiple_files, " ", fileinfo.count);
+    }
+  }
+
+  filterChanged = e => {
+    this.props.table.change_filter_for_column(this.props.column, e.target.value);
+  };
+
+  render_search() {
+    if (typeof this.props.filtering === 'undefined') {// do nothing
+    } else {
+      return h("div", {
+        class: "select"
+      }, h("select", {
+        onChange: this.filterChanged,
+        value: this.props.filtering
+      }, h("option", {
+        value: ""
+      }, this.props.table.props.lang.no_filter), h("option", {
+        value: "%null"
+      }, this.props.table.props.lang.file_filter_no), h("option", {
+        value: "%notempty"
+      }, this.props.table.props.lang.file_filter_yes)));
+    }
+  }
+
+  editorCleared = e => {
+    this.setState({
+      fileinfo: this.value_parser('')
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, '');
+  };
+  editorChanged = e => {
+    var form_data = new FormData();
+
+    for (var file_index = 0; file_index < e.target.files.length; file_index++) {
+      if (this.props.max_file_size) {
+        if (e.target.files[file_index].size > this.props.max_file_size) {
+          alert(this.props.table.props.lang.file_to_large);
+          return;
+        }
+      }
+
+      if (this.props.allowed_extentions) {
+        if (this.props.allowed_extentions.filter(item => e.target.files[file_index].name.toLowerCase().endsWith(item)).length == 0) {
+          alert(this.props.table.props.lang.file_wrong_extention);
+          return;
+        }
+      }
+
+      form_data.append("file" + file_index, e.target.files[file_index]);
+    }
+
+    var self = this;
+    fetch(this.props.upload_endpoint, {
+      method: 'POST',
+      body: form_data
+    }).then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        alert(self.props.table.props.lang.server_error + response.status);
+      }
+    }).then(function (result) {
+      if (!result) return;
+
+      if (result.Result == 'OK') {
+        self.setState({
+          fileinfo: self.value_parser(result.Files)
+        });
+        self.props.table.notify_changes(self.props.row, self.props.column, result.Files);
+      }
+    });
+  };
+
+  render_editor() {
+    if (!this.state.fileinfo.uploaded) {
+      return h("div", {
+        class: "field has-addons"
+      }, h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info",
+        disabled: "true"
+      }, h("span", {
+        class: "file-icon"
+      }, "\u2296"), this.props.table.props.lang.no_file)), h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info is-danger",
+        disabled: "true"
+      }, "\u2297")), h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info"
+      }, "\u21A5"), h("input", {
+        class: "file-input",
+        type: "file",
+        name: "file",
+        multiple: this.props.multiple ? "true" : "false",
+        onChange: this.editorChanged
+      })), this.props.footnote ? h("div", {
+        class: "help"
+      }, this.props.footnote) : '');
+    }
+
+    if (this.state.fileinfo.count == 1) {
+      var filelink = {};
+
+      if (this.props.links_endpoint) {
+        filelink = {
+          "href": this.state.fileinfo.filelink,
+          "target": "_blank"
+        };
+      }
+
+      return h("div", {
+        class: "field has-addons"
+      }, h("div", {
+        class: "control"
+      }, h("a", {
+        "class": "button is-info",
+        ...filelink
+      }, h(Fragment, null, h("span", {
+        class: "file-icon"
+      }, "\u2296"), this.state.fileinfo.filelabel[0]))), h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info is-danger",
+        onClick: this.editorCleared
+      }, "\u2297")), h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info"
+      }, "\u21A5"), h("input", {
+        class: "file-input",
+        type: "file",
+        name: "file",
+        multiple: this.props.multiple ? "true" : "false",
+        onChange: this.editorChanged
+      })), this.props.footnote ? h("div", {
+        class: "help"
+      }, this.props.footnote) : '');
+    } else {
+      return h("div", {
+        class: "field has-addons"
+      }, h("div", {
+        class: "control"
+      }, h("a", {
+        "class": "button is-info",
+        "disabled": true
+      }, h(Fragment, null, h("span", {
+        class: "file-icon"
+      }, "\u2296"), this.props.table.props.lang.multiple_files, " ", this.state.fileinfo.count))), h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info is-danger",
+        onClick: this.editorCleared
+      }, "\u2297")), h("div", {
+        class: "control"
+      }, h("button", {
+        class: "button is-info"
+      }, "\u21A5"), h("input", {
+        class: "file-input",
+        type: "file",
+        name: "file",
+        multiple: this.props.multiple ? "true" : "false",
+        onChange: this.editorChanged
+      })), this.props.footnote ? h("div", {
+        class: "help"
+      }, this.props.footnote) : '');
+    }
+  }
+
+}
+/**
  * Main component.
  *
  * Includes server interaction logic, pagination, and other.
  *
- * @arg this.props.endpoint {string} Url to endpoint.
- * @arg this.props.no_pagination {undefined|Boolean} Disable pagination.
- * @arg this.props.columns[] {Object} List of columns. Each column will be passed as props to column object.
- * @arg this.props.columns[].name {string} Name of column.
- * @arg this.props.columns[].title {string} Title of column.
- * @arg this.props.columns[].kind {Class} Column class derived from CTableColumn.
- * @arg this.props.columns[].footnote {string} Footnote for column editor.
+ * @arg {string} this.props.endpoint - Url to endpoint.
+ * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
+ * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
+ * @arg {string} this.props.columns[].name - Name of column.
+ * @arg {string} this.props.columns[].title - Title of column.
+ * @arg {Class} this.props.columns[].kind - Column class derived from CTableColumn.
+ * @arg {string} this.props.columns[].footnote - Footnote for column editor.
  */
 class CTable extends Component {
   constructor() {
@@ -634,6 +1032,7 @@ class CTable extends Component {
     this.valids = [];
     this.changes_handlers = [];
     this.subtables_params = {};
+    this.options_cache = {};
   }
 
   componentDidMount() {
@@ -642,6 +1041,15 @@ class CTable extends Component {
     this.setState({});
     this.reload();
   }
+  /**
+   * Getting column index by column name.
+   *
+   * For call from column class.
+   *
+   * @param {string} name - Column name.
+   * @returns {int|null} Column index in current table or `null`.
+   */
+
 
   column_by_name(name) {
     for (var i = 0; i < this.props.columns.length; i++) {
@@ -652,6 +1060,18 @@ class CTable extends Component {
 
     return null;
   }
+  /**
+   * Open subtable in table.
+   *
+   * For call from column class.
+   *
+   * @param {int} row - Row index.
+   * @param {List[]} keys - Constrains for subtable.
+   * @param {string} keys[].0 - Subtable column name.
+   * @param {string} keys[].1 - Current table column name which value will be used as constrain.
+   * @param {Object} config - Subtable props including columns.
+   */
+
 
   open_subtable(row, keys, config) {
     if (this.state.opened_subtables.includes(row)) {
@@ -670,7 +1090,7 @@ class CTable extends Component {
    *
    * For call from column class.
    *
-   * @param row {int} Row number. `-1` for new record.
+   * @param {int} row - Row number. `-1` for new record.
    */
 
 
@@ -699,7 +1119,7 @@ class CTable extends Component {
    *
    * For call from column class. Reload table.
    *
-   * @param row {int} Row number.
+   * @param {int} row - Row number.
    */
 
 
@@ -724,6 +1144,8 @@ class CTable extends Component {
         alert(self.props.lang.server_error + response.status);
       }
     }).then(function (result) {
+      if (!result) return;
+
       if (result.Result == 'OK') {
         self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
         self.reload();
@@ -785,6 +1207,8 @@ class CTable extends Component {
         alert(self.props.lang.server_error + response.status);
       }
     }).then(function (result) {
+      if (!result) return;
+
       if (result.Result == 'OK') {
         self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
         self.reload();
@@ -922,6 +1346,8 @@ class CTable extends Component {
         alert(self.props.lang.server_error + response.status);
       }
     }).then(function (result) {
+      if (!result) return;
+
       if (result.Result == 'OK') {
         self.changes = [];
         self.setState({
@@ -937,6 +1363,43 @@ class CTable extends Component {
         alert(self.props.lang.error + result.Message);
       }
     });
+  }
+
+  load_options(endpoint, elem, ref, params = {}) {
+    var json_opts = JSON.stringify(params);
+    var url = endpoint + '?options=' + json_opts;
+    var self = this;
+
+    if (url in this.options_cache) {
+      if (this.options_cache[url] == null) {
+        setTimeout(function () {
+          self.load_options(endpoint, elem, ref, params);
+        }, 500);
+      } else {
+        elem.setState({
+          options: this.options_cache[url]
+        });
+      }
+    } else {
+      this.options_cache[url] = null;
+      fetch(url).then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          alert(self.props.lang.server_error + response.status);
+        }
+      }).then(function (result) {
+        if (!result) return;
+
+        if (result.Result == 'OK') {
+          self.options_cache[url] = result.Options; //if(ref.current != null){
+
+          elem.setState(self.options_cache[url]); //}
+        } else {
+          alert(self.props.lang.error + result.Message);
+        }
+      });
+    }
   }
 
   recordsOnPageChanged = e => {

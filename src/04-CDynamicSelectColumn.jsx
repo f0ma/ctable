@@ -1,22 +1,20 @@
 /**
- * Select column.
+ * Select column with dynamic items loaded from server.
  *
  * This column for selecting from dropdown.
  *
- * @arg {List[]} this.props.options - Options list.
- * @arg {string} this.props.options[].0 - Key.
- * @arg {string} this.props.options[].1 - Text.
+ * @arg {string} this.props.endpoint - Endpoint for loading options.
  */
 
-class CSelectColumn extends CTableColumn{
+class CDynamicSelectColumn extends CTableColumn{
     constructor() {
         super();
-        this.state = {options: []}
+        this.state = {options: []};
         this.ref = createRef();
     }
 
     componentDidMount() {
-        this.setState({options: this.props.options});
+        this.props.table.load_options(this.props.endpoint, this, this.ref);
     }
 
     render_cell() {
