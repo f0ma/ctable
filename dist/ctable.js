@@ -42,7 +42,8 @@ var ctable_lang = {
     file_to_large: 'File too large',
     file_wrong_extention: 'File have a wrong type',
     file_filter_no: 'No file',
-    file_filter_yes: 'Have a file'
+    file_filter_yes: 'Have a file',
+    reload: 'Reload'
   },
   ru: {
     current_page: 'Текущая страница',
@@ -64,12 +65,13 @@ var ctable_lang = {
     error: 'Ошибка: ',
     server_error: 'Ошибка сервера: ',
     no_filter: 'Нет фильтра',
-    no_file: 'Файл не загружен',
+    no_file: 'Нет файла',
     multiple_files: 'Файлы: ',
     file_to_large: 'Файл слишком велик',
     file_wrong_extention: 'Файл имеет недопустимый тип',
     file_filter_no: 'Файла нет',
-    file_filter_yes: 'Файл есть'
+    file_filter_yes: 'Файл есть',
+    reload: 'Перезагрузить'
   }
 };
 /**
@@ -433,7 +435,7 @@ class CActionColumn extends CTableColumn {
       href: "#",
       class: "dropdown-item",
       onClick: this.reloadClicked
-    }, "Reload")))));
+    }, this.props.table.props.lang.reload)))));
   }
 
 }
@@ -1372,6 +1374,7 @@ class CTable extends Component {
 
       if (result.Result == 'OK') {
         self.changes = [];
+        this.options_cache = {};
         self.setState({
           records: result.Records,
           total_records: result.TotalRecordCount,

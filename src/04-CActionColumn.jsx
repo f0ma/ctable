@@ -74,7 +74,7 @@ class CActionColumn extends CTableColumn{
                    <div class="dropdown-menu" id={this.state.search_menu_id} role="menu">
                    <div class="dropdown-content">
                      <a href="#" class="dropdown-item" onClick={this.reloadClicked}>
-                       Reload
+                       {this.props.table.props.lang.reload}
                      </a>
                    </div>
                  </div>
