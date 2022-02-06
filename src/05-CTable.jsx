@@ -446,10 +446,7 @@ class CTable extends Component {
 
     render() {
 
-        var tbody = <tbody><tr><td colspan={this.visible_column_count()}><div class="has-text-centered">{this.props.lang.no_data}</div></td></tr></tbody>;
-
-        if (this.state.records.length > 0){
-        tbody= <tbody>
+        var tbody= <tbody>
                     {this.state.opened_editors.includes(-1) ? <tr><td colspan={this.visible_column_count()}>
                         {
                         this.state.columns.map((column,j) => <>
@@ -473,9 +470,8 @@ class CTable extends Component {
                         {h(CTable, {lang:this.props.lang, ...this.subtables_params[i]})}
                         </td></tr> : ''}
                         </> ) }
+                        {this.state.records.length == 0 ? <tr><td colspan={this.visible_column_count()}><div class="has-text-centered">{this.props.lang.no_data}</div></td></tr> : ''}
                 </tbody>;
-        }
-
 
         var pager = <div class="field has-addons" style="justify-content:center;">
                         <div class="control">

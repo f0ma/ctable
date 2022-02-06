@@ -1463,50 +1463,45 @@ class CTable extends Component {
   }
 
   render() {
-    var tbody = h("tbody", null, h("tr", null, h("td", {
+    var tbody = h("tbody", null, this.state.opened_editors.includes(-1) ? h("tr", null, h("td", {
+      colspan: this.visible_column_count()
+    }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
+      role: "editor",
+      is_new: true,
+      table: this,
+      column: j,
+      row: -1,
+      key: j * 1000000,
+      ...column
+    }) : '')))) : '', this.state.records.map((cell, i) => h(Fragment, null, h("tr", {
+      class: this.state.opened_editors.includes(i) || this.state.opened_subtables.includes(i) ? "is-selected" : ""
+    }, " ", this.state.columns.map((column, j) => h("td", null, column.hide_column != true ? h(column.kind, {
+      role: "cell",
+      table: this,
+      column: j,
+      row: i,
+      key: j * 1000000 + i,
+      ...column
+    }) : '')), " "), this.state.opened_editors.includes(i) ? h("tr", null, h("td", {
+      colspan: this.visible_column_count()
+    }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
+      role: "editor",
+      is_new: false,
+      table: this,
+      column: j,
+      row: i,
+      key: j * 1000000 + i,
+      ...column
+    }) : '')))) : '', this.state.opened_subtables.includes(i) ? h("tr", null, h("td", {
+      colspan: this.visible_column_count()
+    }, h(CTable, {
+      lang: this.props.lang,
+      ...this.subtables_params[i]
+    }))) : '')), this.state.records.length == 0 ? h("tr", null, h("td", {
       colspan: this.visible_column_count()
     }, h("div", {
       class: "has-text-centered"
-    }, this.props.lang.no_data))));
-
-    if (this.state.records.length > 0) {
-      tbody = h("tbody", null, this.state.opened_editors.includes(-1) ? h("tr", null, h("td", {
-        colspan: this.visible_column_count()
-      }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
-        role: "editor",
-        is_new: true,
-        table: this,
-        column: j,
-        row: -1,
-        key: j * 1000000,
-        ...column
-      }) : '')))) : '', this.state.records.map((cell, i) => h(Fragment, null, h("tr", {
-        class: this.state.opened_editors.includes(i) || this.state.opened_subtables.includes(i) ? "is-selected" : ""
-      }, " ", this.state.columns.map((column, j) => h("td", null, column.hide_column != true ? h(column.kind, {
-        role: "cell",
-        table: this,
-        column: j,
-        row: i,
-        key: j * 1000000 + i,
-        ...column
-      }) : '')), " "), this.state.opened_editors.includes(i) ? h("tr", null, h("td", {
-        colspan: this.visible_column_count()
-      }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
-        role: "editor",
-        is_new: false,
-        table: this,
-        column: j,
-        row: i,
-        key: j * 1000000 + i,
-        ...column
-      }) : '')))) : '', this.state.opened_subtables.includes(i) ? h("tr", null, h("td", {
-        colspan: this.visible_column_count()
-      }, h(CTable, {
-        lang: this.props.lang,
-        ...this.subtables_params[i]
-      }))) : '')));
-    }
-
+    }, this.props.lang.no_data))) : '');
     var pager = h("div", {
       class: "field has-addons",
       style: "justify-content:center;"
