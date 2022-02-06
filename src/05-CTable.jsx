@@ -518,15 +518,15 @@ class CTable extends Component {
             <table class="table" style="width: 100%;">
                 <thead>
                     <tr>
-                        {this.state.columns.map((column,i) => <th> {column.hide_column != true ? h(column.kind, { role: "header", table: this, column: i, key: i, ...column}) : ''} </th> ) }
+                        {this.state.columns.map((column,i) => (column.hide_column != true ? <th>{h(column.kind, { role: "header", table: this, column: i, key: i, ...column})} </th>  : '') ) }
                     </tr>
                     <tr>
-                        {this.state.columns.map((column,i) => <th> {column.hide_column != true ? h(column.kind, { role: "search", table: this, column: i, key: i, ...column }) : ''} </th> ) }
+                        {this.state.columns.map((column,i) => (column.hide_column != true ? <th>{h(column.kind, { role: "search", table: this, column: i, key: i, ...column })} </th> : '') ) }
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        {this.state.columns.map((column,i) => <th> {column.hide_column != true ? h(column.kind, { role: "footer", table: this, column: i, key: i, ...column }) : ''} </th> ) }
+                        {this.state.columns.map((column,i) => (column.hide_column != true ? <th>{h(column.kind, { role: "footer", table: this, column: i, key: i, ...column })} </th> : '') ) }
                     </tr>
                 </tfoot>
                 {tbody}

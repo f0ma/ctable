@@ -1579,25 +1579,25 @@ class CTable extends Component {
     }, h("table", {
       class: "table",
       style: "width: 100%;"
-    }, h("thead", null, h("tr", null, this.state.columns.map((column, i) => h("th", null, " ", column.hide_column != true ? h(column.kind, {
+    }, h("thead", null, h("tr", null, this.state.columns.map((column, i) => column.hide_column != true ? h("th", null, h(column.kind, {
       role: "header",
       table: this,
       column: i,
       key: i,
       ...column
-    }) : '', " "))), h("tr", null, this.state.columns.map((column, i) => h("th", null, " ", column.hide_column != true ? h(column.kind, {
+    }), " ") : '')), h("tr", null, this.state.columns.map((column, i) => column.hide_column != true ? h("th", null, h(column.kind, {
       role: "search",
       table: this,
       column: i,
       key: i,
       ...column
-    }) : '', " ")))), h("tfoot", null, h("tr", null, this.state.columns.map((column, i) => h("th", null, " ", column.hide_column != true ? h(column.kind, {
+    }), " ") : ''))), h("tfoot", null, h("tr", null, this.state.columns.map((column, i) => column.hide_column != true ? h("th", null, h(column.kind, {
       role: "footer",
       table: this,
       column: i,
       key: i,
       ...column
-    }) : '', " ")))), tbody), this.props.no_pagination ? '' : pager);
+    }), " ") : ''))), tbody), this.props.no_pagination ? '' : pager);
   }
 
 }
