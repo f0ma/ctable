@@ -346,8 +346,12 @@ class CTable extends ExtendedCallable {
 
             $this->files[] = $_FILES[$key]['tmp_name'];
             $this->file_names[] = "$hash:".$name.':'.$timestamp.';';
-            //move_uploaded_file($_FILES[$key]['tmp_name'], 'uploads/' . $hash .'.'. $ext);
+            $this->process_uploaded_file($_FILES[$key]['tmp_name'], $hash, $ext);
         }
+    }
+
+    function process_uploaded_file($tmpfile, $hash, $ext){
+        //move_uploaded_file($tmpfile, 'uploads/' . $hash .'.'. $ext);
     }
 
     function building_delete_query() {
