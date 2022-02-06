@@ -139,6 +139,7 @@ class CTable extends Component {
         .then(function (result) {
             if (!result) return;
             if(result.Result == 'OK'){
+                self.options_cache = {};
                 self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
                 self.reload();
             } else {
@@ -197,6 +198,7 @@ class CTable extends Component {
         .then(function (result) {
             if (!result) return;
             if(result.Result == 'OK'){
+                self.options_cache = {};
                 self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
                 self.reload();
             } else {
@@ -335,7 +337,6 @@ class CTable extends Component {
             if (!result) return;
             if(result.Result == 'OK'){
                 self.changes = [];
-                self.options_cache = {};
                 self.setState({records: result.Records, total_records: result.TotalRecordCount,
                                records_on_page: self.state.records_on_page,
                                current_page: self.state.current_page,

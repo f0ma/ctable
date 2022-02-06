@@ -1171,6 +1171,7 @@ class CTable extends Component {
       if (!result) return;
 
       if (result.Result == 'OK') {
+        self.options_cache = {};
         self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
         self.reload();
       } else {
@@ -1234,6 +1235,7 @@ class CTable extends Component {
       if (!result) return;
 
       if (result.Result == 'OK') {
+        self.options_cache = {};
         self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
         self.reload();
       } else {
@@ -1374,7 +1376,6 @@ class CTable extends Component {
 
       if (result.Result == 'OK') {
         self.changes = [];
-        self.options_cache = {};
         self.setState({
           records: result.Records,
           total_records: result.TotalRecordCount,
