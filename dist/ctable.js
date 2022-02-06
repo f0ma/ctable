@@ -1374,7 +1374,7 @@ class CTable extends Component {
 
       if (result.Result == 'OK') {
         self.changes = [];
-        this.options_cache = {};
+        self.options_cache = {};
         self.setState({
           records: result.Records,
           total_records: result.TotalRecordCount,
