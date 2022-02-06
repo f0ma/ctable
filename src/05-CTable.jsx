@@ -375,7 +375,7 @@ class CTable extends Component {
                 if(result.Result == 'OK'){
                     self.options_cache[url] = result.Options;
                     //if(ref.current != null){
-                        elem.setState(self.options_cache[url]);
+                        elem.setState({options: self.options_cache[url]});
                     //}
                 } else {
                     alert(self.props.lang.error + result.Message);
