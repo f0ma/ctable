@@ -108,6 +108,21 @@ class CTableColumn extends Component {
     }
 
     /**
+     * Return current row values.
+     *
+     * For use in subclesses.
+     *
+     * @return {Object|null} Current row dictionary.
+     */
+
+    row() {
+        if (this.props.row >= 0){
+            return this.props.table.state.records[this.props.row];
+        }
+        return null;
+    }
+
+    /**
      * Return column name.
      *
      * For use in subclesses.
