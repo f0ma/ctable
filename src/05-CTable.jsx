@@ -455,9 +455,7 @@ class CTable extends Component {
                         }
                         </td></tr> : ''}
                     {this.state.records.map((cell,i) => <><tr  class={(this.state.opened_editors.includes(i) || this.state.opened_subtables.includes(i)) ? "is-selected" : ""} > {
-                        this.state.columns.map((column,j) => <td>
-                            {column.hide_column != true ? h(column.kind, { role: "cell", table: this, column: j, row: i, key: j*1000000+i, ...column }) : ''}
-                        </td> )
+                        this.state.columns.map((column,j) => (column.hide_column != true ? <td>                           {h(column.kind, { role: "cell", table: this, column: j, row: i, key: j*1000000+i, ...column })}</td> : ''))
                         } </tr>
                         {this.state.opened_editors.includes(i) ? <tr><td colspan={this.visible_column_count()}>
                         {

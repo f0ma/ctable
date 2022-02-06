@@ -1481,14 +1481,14 @@ class CTable extends Component {
       ...column
     }) : '')))) : '', this.state.records.map((cell, i) => h(Fragment, null, h("tr", {
       class: this.state.opened_editors.includes(i) || this.state.opened_subtables.includes(i) ? "is-selected" : ""
-    }, " ", this.state.columns.map((column, j) => h("td", null, column.hide_column != true ? h(column.kind, {
+    }, " ", this.state.columns.map((column, j) => column.hide_column != true ? h("td", null, "                           ", h(column.kind, {
       role: "cell",
       table: this,
       column: j,
       row: i,
       key: j * 1000000 + i,
       ...column
-    }) : '')), " "), this.state.opened_editors.includes(i) ? h("tr", null, h("td", {
+    })) : ''), " "), this.state.opened_editors.includes(i) ? h("tr", null, h("td", {
       colspan: this.visible_column_count()
     }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
       role: "editor",

@@ -29,7 +29,7 @@
 
 
       var columns = [
-                {name: "id", title: "ID", kind: CTableColumn, hide_editor:true, is_key:true},
+                {name: "id", title: "ID", kind: CTableColumn, hide_column:true, hide_editor:true, is_key:true},
                 {name: "",  title: 'Bills', kind: CSubtableColumn, config:{columns: subcolumns, endpoint: "/bill.php", no_pagination: true, button_hint:"Открыть счета"}, keys:[['account_id', 'id']]},
                 {name: "firstname", title: "Firstname", kind: CTextColumn, sorting:'',  searching: '', textarea: true, footnote: "Fill this."},
                 {name: "lastname", title: "Lastname", kind: CTextColumn, sorting:'',  searching: ''},
