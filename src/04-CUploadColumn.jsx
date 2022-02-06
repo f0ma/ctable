@@ -142,7 +142,8 @@ class CUploadColumn extends CTableColumn{
 
     render_editor() {
         if (!this.state.fileinfo.uploaded){
-            return <div class="field has-addons">
+            return <><label class="label">{this.title()}</label>
+                   <div class="field has-addons">
                        <div class="control">
                            <button class="button is-info" disabled="true"><span class="file-icon">⊖</span>{this.props.table.props.lang.no_file}</button>
                         </div>
@@ -154,7 +155,7 @@ class CUploadColumn extends CTableColumn{
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
                         {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
-                    </div>;
+                    </div></>;
         }
 
         if (this.state.fileinfo.count == 1){
@@ -162,7 +163,8 @@ class CUploadColumn extends CTableColumn{
             if (this.props.links_endpoint) {
                 filelink = {"href":this.state.fileinfo.filelink, "target": "_blank"};
             }
-            return <div class="field has-addons">
+            return <><label class="label">{this.title()}</label>
+                   <div class="field has-addons">
                        <div class="control">
                            {h("a",{"class": "button is-info", ...filelink}, <><span class="file-icon">⊖</span>{this.state.fileinfo.filelabel[0]}</>)}
                         </div>
@@ -174,9 +176,10 @@ class CUploadColumn extends CTableColumn{
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
                         {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
-                    </div>;
+                    </div></>;
         } else {
-            return <div class="field has-addons">
+            return <><label class="label">{this.title()}</label>
+                   <div class="field has-addons">
                        <div class="control">
                            {h("a",{"class": "button is-info", "disabled": true}, <><span class="file-icon">⊖</span>{this.props.table.props.lang.multiple_files} {this.state.fileinfo.count}</>)}
                         </div>
@@ -188,7 +191,7 @@ class CUploadColumn extends CTableColumn{
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
                         {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
-                    </div>;
+                    </div></>;
         }
     }
 }

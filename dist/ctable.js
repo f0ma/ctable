@@ -903,7 +903,9 @@ class CUploadColumn extends CTableColumn {
 
   render_editor() {
     if (!this.state.fileinfo.uploaded) {
-      return h("div", {
+      return h(Fragment, null, h("label", {
+        class: "label"
+      }, this.title()), h("div", {
         class: "field has-addons"
       }, h("div", {
         class: "control"
@@ -929,7 +931,7 @@ class CUploadColumn extends CTableColumn {
         onChange: this.editorChanged
       })), this.props.footnote ? h("div", {
         class: "help"
-      }, this.props.footnote) : '');
+      }, this.props.footnote) : ''));
     }
 
     if (this.state.fileinfo.count == 1) {
@@ -942,7 +944,9 @@ class CUploadColumn extends CTableColumn {
         };
       }
 
-      return h("div", {
+      return h(Fragment, null, h("label", {
+        class: "label"
+      }, this.title()), h("div", {
         class: "field has-addons"
       }, h("div", {
         class: "control"
@@ -968,9 +972,11 @@ class CUploadColumn extends CTableColumn {
         onChange: this.editorChanged
       })), this.props.footnote ? h("div", {
         class: "help"
-      }, this.props.footnote) : '');
+      }, this.props.footnote) : ''));
     } else {
-      return h("div", {
+      return h(Fragment, null, h("label", {
+        class: "label"
+      }, this.title()), h("div", {
         class: "field has-addons"
       }, h("div", {
         class: "control"
@@ -996,7 +1002,7 @@ class CUploadColumn extends CTableColumn {
         onChange: this.editorChanged
       })), this.props.footnote ? h("div", {
         class: "help"
-      }, this.props.footnote) : '');
+      }, this.props.footnote) : ''));
     }
   }
 
