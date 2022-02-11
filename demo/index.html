@@ -39,7 +39,7 @@
                 {name: "", "title": "Action", kind: CActionColumn}
             ];
 
-      render(h(CTable, {columns: columns, endpoint: "/account.php", lang: ctable_lang.en}), document.getElementById("mytab"));
+      render(h(CTable, {columns: columns, endpoint: "/account.php", lang: ctable_lang.en, params: {test: 1}}), document.getElementById("mytab"));
   </script>
   </body>
 </html>

@@ -4,6 +4,7 @@
  * This column for selecting from dropdown.
  *
  * @arg {string} this.props.endpoint - Endpoint for loading options.
+ * @arg {Object} this.props.params - Additional parameters to select query
  */
 
 class CDynamicSelectColumn extends CTableColumn{
@@ -14,7 +15,7 @@ class CDynamicSelectColumn extends CTableColumn{
     }
 
     componentDidMount() {
-        this.props.table.load_options(this.props.endpoint, this, this.ref);
+        this.props.table.load_options(this.props.endpoint, this.props.params, this, this.ref);
     }
 
     render_cell() {

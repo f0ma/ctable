@@ -425,7 +425,7 @@ class CActionColumn extends CTableColumn {
       onBlur: this.menuLeave
     }, h("span", {
       class: "icon"
-    }, "\u21A7")), h("div", {
+    }, "\u2261")), h("div", {
       class: "dropdown-menu",
       id: this.state.search_menu_id,
       role: "menu"
@@ -445,6 +445,7 @@ class CActionColumn extends CTableColumn {
  * This column for selecting from dropdown.
  *
  * @arg {string} this.props.endpoint - Endpoint for loading options.
+ * @arg {Object} this.props.params - Additional parameters to select query
  */
 class CDynamicSelectColumn extends CTableColumn {
   constructor() {
@@ -456,7 +457,7 @@ class CDynamicSelectColumn extends CTableColumn {
   }
 
   componentDidMount() {
-    this.props.table.load_options(this.props.endpoint, this, this.ref);
+    this.props.table.load_options(this.props.endpoint, this.props.params, this, this.ref);
   }
 
   render_cell() {
@@ -632,7 +633,7 @@ class CSubtableColumn extends CTableColumn {
       onClick: this.openSubtableClicked
     }, h("span", {
       class: "icon"
-    }, "\u21A7"))));
+    }, "\u2BA1"))));
   }
 
 }
@@ -1031,6 +1032,7 @@ class CUploadColumn extends CTableColumn {
  * Includes server interaction logic, pagination, and other.
  *
  * @arg {string} this.props.endpoint - Url to endpoint.
+ * @arg {Object} this.props.params - Additional parameters to select query
  * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
  * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
  * @arg {string} this.props.columns[].name - Name of column.
@@ -1365,7 +1367,11 @@ class CTable extends Component {
       column_searches: column_searches,
       column_orders: column_orders
     };
-    fetch(this.props.endpoint + '?select=' + JSON.stringify(query)).then(function (response) {
+    var query_params = new URLSearchParams({
+      select: JSON.stringify(query),
+      ...this.props.params
+    });
+    fetch(this.props.endpoint + '?' + query_params.toString()).then(function (response) {
       if (response.ok) {
         return response.json();
       } else {
@@ -1391,15 +1397,18 @@ class CTable extends Component {
     });
   }
 
-  load_options(endpoint, elem, ref, params = {}) {
-    var json_opts = JSON.stringify(params);
-    var url = endpoint + '?options=' + json_opts;
+  load_options(endpoint, params, elem, ref) {
+    var query_params = new URLSearchParams({
+      options: '{}',
+      ...params
+    });
+    var url = endpoint + '?' + query_params.toString();
     var self = this;
 
     if (url in this.options_cache) {
       if (this.options_cache[url] == null) {
         setTimeout(function () {
-          self.load_options(endpoint, elem, ref, params);
+          self.load_options(endpoint, params, elem, ref);
         }, 500);
       } else {
         elem.setState({
