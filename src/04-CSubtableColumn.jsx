@@ -24,6 +24,6 @@ class CSubtableColumn extends CTableColumn{
     }
 
     render_cell() {
-        return <div class="field has-addons"><div class="control"><button class={this.state.opened ? "button is-info is-inverted" : "button is-info"} title={typeof this.props.button_hint === 'undefined' ? this.props.table.props.lang.open_subtable : this.props.button_hint} onClick={this.openSubtableClicked}><span class="icon">↧</span></button></div></div>;
+        return <div class="field has-addons"><div class="control"><button class={this.state.opened ? "button is-info is-inverted" : "button is-info"} title={typeof this.props.button_hint === 'undefined' ? this.props.table.props.lang.open_subtable : this.props.button_hint} onClick={this.openSubtableClicked}><span class="icon">⮡</span></button></div></div>;
     }
 }

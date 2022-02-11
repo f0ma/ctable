@@ -70,7 +70,7 @@ class CActionColumn extends CTableColumn{
                  </div>}
                  {this.props.no_menu ? '' :
                  <div class="control">
-                   <button class={this.state.menu_active ? "button is-info dropdown-trigger is-inverted" : "button is-info dropdown-trigger" } title={this.props.table.props.lang.actions} aria-haspopup="true" aria-controls={this.state.search_menu_id} onClick={this.additionalClicked}  onBlur={this.menuLeave}><span class="icon">↧</span></button>
+                   <button class={this.state.menu_active ? "button is-info dropdown-trigger is-inverted" : "button is-info dropdown-trigger" } title={this.props.table.props.lang.actions} aria-haspopup="true" aria-controls={this.state.search_menu_id} onClick={this.additionalClicked}  onBlur={this.menuLeave}><span class="icon">≡</span></button>
                    <div class="dropdown-menu" id={this.state.search_menu_id} role="menu">
                    <div class="dropdown-content">
                      <a href="#" class="dropdown-item" onClick={this.reloadClicked}>
