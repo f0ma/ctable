@@ -1399,6 +1399,24 @@ class CTable extends Component {
     });
   }
 
+  row_changes_summary(row, only_changes = false) {
+    var xvalues = {};
+    var self = this;
+
+    if (row >= 0) {
+      if (!only_changes) {
+        xvalues = this.state.records[row];
+      }
+    }
+
+    this.changes.filter(item => item[0] == row).map(function (item) {
+      if (self.state.columns[item[1]].name != '') {
+        xvalues[self.state.columns[item[1]].name] = item[2];
+      }
+    });
+    return xvalues;
+  }
+
   load_options(endpoint, params, elem, ref) {
     var query_params = new URLSearchParams({
       options: '{}',
