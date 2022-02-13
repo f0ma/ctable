@@ -154,8 +154,9 @@ class CUploadColumn extends CTableColumn{
                             <button class="button is-info">↥</button>
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
-                        {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
-                    </div></>;
+                    </div>
+                    {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
+                    </>;
         }
 
         if (this.state.fileinfo.count == 1){
@@ -175,8 +176,9 @@ class CUploadColumn extends CTableColumn{
                             <button class="button is-info">↥</button>
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
-                        {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
-                    </div></>;
+                    </div>
+                    {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
+                    </>;
         } else {
             return <><label class="label">{this.title()}</label>
                    <div class="field has-addons">
@@ -190,8 +192,9 @@ class CUploadColumn extends CTableColumn{
                             <button class="button is-info">↥</button>
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
-                        {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
-                    </div></>;
+                    </div>
+                    {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
+                    </>;
         }
     }
 }

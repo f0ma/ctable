@@ -948,9 +948,9 @@ class CUploadColumn extends CTableColumn {
         name: "file",
         multiple: this.props.multiple ? "true" : "false",
         onChange: this.editorChanged
-      })), this.props.footnote ? h("div", {
+      }))), this.props.footnote ? h("div", {
         class: "help"
-      }, this.props.footnote) : ''));
+      }, this.props.footnote) : '');
     }
 
     if (this.state.fileinfo.count == 1) {
@@ -989,9 +989,9 @@ class CUploadColumn extends CTableColumn {
         name: "file",
         multiple: this.props.multiple ? "true" : "false",
         onChange: this.editorChanged
-      })), this.props.footnote ? h("div", {
+      }))), this.props.footnote ? h("div", {
         class: "help"
-      }, this.props.footnote) : ''));
+      }, this.props.footnote) : '');
     } else {
       return h(Fragment, null, h("label", {
         class: "label"
@@ -1019,9 +1019,9 @@ class CUploadColumn extends CTableColumn {
         name: "file",
         multiple: this.props.multiple ? "true" : "false",
         onChange: this.editorChanged
-      })), this.props.footnote ? h("div", {
+      }))), this.props.footnote ? h("div", {
         class: "help"
-      }, this.props.footnote) : ''));
+      }, this.props.footnote) : '');
     }
   }
 
