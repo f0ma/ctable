@@ -84,7 +84,7 @@ class CTableColumn extends Component {
             } else if (this.props.sorting == ''){
                 arrow = '⇵';
             }
-            return <b><a onClick={this.sortingChanged}><span class="icon">{arrow}</span> {this.props.table.state.columns[this.props.column].title}</a></b>;
+            return <b><a onClick={this.sortingChanged}><span class="icon" style="display:inline">{arrow}</span>&nbsp;{this.props.table.state.columns[this.props.column].title}</a></b>;
         }
     }
 

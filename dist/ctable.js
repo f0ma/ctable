@@ -175,8 +175,9 @@ class CTableColumn extends Component {
       return h("b", null, h("a", {
         onClick: this.sortingChanged
       }, h("span", {
-        class: "icon"
-      }, arrow), " ", this.props.table.state.columns[this.props.column].title));
+        class: "icon",
+        style: "display:inline"
+      }, arrow), "\xA0", this.props.table.state.columns[this.props.column].title));
     }
   }
   /**
@@ -1034,6 +1035,7 @@ class CUploadColumn extends CTableColumn {
  * @arg {string} this.props.endpoint - Url to endpoint.
  * @arg {Object} this.props.params - Additional parameters to select query
  * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
+ * @arg {Object} this.props.filters - Set presistent filter as column => value.
  * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
  * @arg {string} this.props.columns[].name - Name of column.
  * @arg {string} this.props.columns[].title - Title of column.

@@ -6,6 +6,7 @@
  * @arg {string} this.props.endpoint - Url to endpoint.
  * @arg {Object} this.props.params - Additional parameters to select query
  * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
+ * @arg {Object} this.props.filters - Set presistent filter as column => value.
  * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
  * @arg {string} this.props.columns[].name - Name of column.
  * @arg {string} this.props.columns[].title - Title of column.
