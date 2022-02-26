@@ -25,7 +25,8 @@ var ctable_lang = {
         file_wrong_extention: 'File have a wrong type',
         file_filter_no: 'No file',
         file_filter_yes: 'Have a file',
-        reload: 'Reload'
+        reload: 'Reload',
+        all: 'All'
     },
     ru: {
         current_page: 'Текущая страница',
@@ -53,7 +54,8 @@ var ctable_lang = {
         file_wrong_extention: 'Файл имеет недопустимый тип',
         file_filter_no: 'Файла нет',
         file_filter_yes: 'Файл есть',
-        reload: 'Перезагрузить'
+        reload: 'Перезагрузить',
+        all: 'Все'
     }
 }
 

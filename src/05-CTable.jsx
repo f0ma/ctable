@@ -386,7 +386,7 @@ class CTable extends Component {
                 setTimeout(function()
                     {
                         self.load_options(endpoint, params, elem, ref);
-                    }, 500);
+                    }, 100);
             } else {
                 elem.setState({options: this.options_cache[url]});
             }
@@ -411,7 +411,9 @@ class CTable extends Component {
     }
 
     recordsOnPageChanged = e => {
-        this.state.records_on_page = parseInt(e.target.value);
+        var new_rec_on_page = parseInt(e.target.value);
+        if (new_rec_on_page == this.state.records_on_page) return;
+        this.state.records_on_page = new_rec_on_page;
         this.state.current_page = 0;
         this.reload();
     }
@@ -531,6 +533,7 @@ class CTable extends Component {
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
+                                    <option value="50000">{this.props.lang.all}</option>
                                 </select>
                             </div>
                         </div>

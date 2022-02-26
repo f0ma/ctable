@@ -43,7 +43,8 @@ var ctable_lang = {
     file_wrong_extention: 'File have a wrong type',
     file_filter_no: 'No file',
     file_filter_yes: 'Have a file',
-    reload: 'Reload'
+    reload: 'Reload',
+    all: 'All'
   },
   ru: {
     current_page: 'Текущая страница',
@@ -71,7 +72,8 @@ var ctable_lang = {
     file_wrong_extention: 'Файл имеет недопустимый тип',
     file_filter_no: 'Файла нет',
     file_filter_yes: 'Файл есть',
-    reload: 'Перезагрузить'
+    reload: 'Перезагрузить',
+    all: 'Все'
   }
 };
 /**
@@ -1429,7 +1431,7 @@ class CTable extends Component {
       if (this.options_cache[url] == null) {
         setTimeout(function () {
           self.load_options(endpoint, params, elem, ref);
-        }, 500);
+        }, 100);
       } else {
         elem.setState({
           options: this.options_cache[url]
@@ -1460,7 +1462,9 @@ class CTable extends Component {
   }
 
   recordsOnPageChanged = e => {
-    this.state.records_on_page = parseInt(e.target.value);
+    var new_rec_on_page = parseInt(e.target.value);
+    if (new_rec_on_page == this.state.records_on_page) return;
+    this.state.records_on_page = new_rec_on_page;
     this.state.current_page = 0;
     this.reload();
   };
@@ -1626,7 +1630,9 @@ class CTable extends Component {
       value: "50"
     }, "50"), h("option", {
       value: "100"
-    }, "100")))), h("div", {
+    }, "100"), h("option", {
+      value: "50000"
+    }, this.props.lang.all)))), h("div", {
       class: "control"
     }, h("div", {
       class: "button"
