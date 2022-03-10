@@ -11,10 +11,13 @@
 class CSubtableColumn extends CTableColumn{
     constructor() {
         super();
+
+        this.openSubtableClicked = this.openSubtableClicked.bind(this);
+
         this.setState({opened: false});
     }
 
-    openSubtableClicked = e => {
+    openSubtableClicked(e){
         this.setState({opened: !this.state.opened});
         this.props.table.open_subtable(this.props.row, this.props.keys, this.props.config);
     }

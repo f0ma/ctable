@@ -14,6 +14,11 @@
 class CUploadColumn extends CTableColumn{
     constructor() {
         super();
+
+        this.filterChanged = this.filterChanged.bind(this);
+        this.editorCleared = this.editorCleared.bind(this);
+        this.editorChanged = this.editorChanged.bind(this);
+
         this.state = {fileinfo: {uploaded:false, count:0, filelabel:[], uid:[], filelink:[], filedate:[]}};
         this.ref = createRef();
     }
@@ -82,7 +87,7 @@ class CUploadColumn extends CTableColumn{
         }
     }
 
-    filterChanged = e => {
+    filterChanged(e){
         this.props.table.change_filter_for_column(this.props.column, e.target.value);
     }
 
@@ -100,12 +105,12 @@ class CUploadColumn extends CTableColumn{
         }
     }
 
-    editorCleared = e => {
+    editorCleared(e) {
         this.setState({fileinfo: this.value_parser('')});
         this.props.table.notify_changes(this.props.row, this.props.column, '');
     }
 
-    editorChanged = e => {
+    editorChanged(e) {
 
         var form_data = new FormData();
 

@@ -12,6 +12,9 @@
 class CTextColumn extends CTableColumn{
     constructor() {
         super();
+
+        this.editorChanged = this.editorChanged.bind(this);
+
         this.ref = createRef();
     }
 
@@ -23,7 +26,7 @@ class CTextColumn extends CTableColumn{
         return <span>{this.value()}</span>;
     }
 
-    editorChanged = e => {
+    editorChanged(e) {
         this.setState({value: e.target.value});
         this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
         if (this.props.validate){

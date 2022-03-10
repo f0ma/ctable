@@ -17,23 +17,27 @@ class CTableColumn extends Component {
      */
     constructor() {
         super();
+
+        this.searchCleared = this.searchCleared.bind(this);
+        this.searchChanged = this.searchChanged.bind(this);
+        this.sortingChanged = this.sortingChanged.bind(this);
     }
 
     componentDidMount() {
         this.setState({searching: this.props.search});
     }
 
-    searchCleared = e => {
+    searchCleared(e) {
         this.setState({searching: ''});
         this.props.table.change_search_for_column(this.props.column, '');
     }
 
-    searchChanged = e => {
+    searchChanged(e) {
         this.setState({searching: e.target.value});
         this.props.table.change_search_for_column(this.props.column, e.target.value);
     }
 
-    sortingChanged = e => {
+    sortingChanged(e) {
         var order = '';
         if (this.props.sorting == 'ASC'){
             order = 'DESC';
@@ -84,7 +88,7 @@ class CTableColumn extends Component {
             } else if (this.props.sorting == ''){
                 arrow = '⇵';
             }
-            return <b><a onClick={this.sortingChanged}><span class="icon" style="display:inline">{arrow}</span>&nbsp;{this.props.table.state.columns[this.props.column].title}</a></b>;
+            return <b><a onClick={this.sortingChanged}><span class="icon" style="display:inline">{arrow}</span>&nbsp;{this.title()}</a></b>;
         }
     }
 

@@ -93,6 +93,9 @@ class CTableColumn extends Component {
    */
   constructor() {
     super();
+    this.searchCleared = this.searchCleared.bind(this);
+    this.searchChanged = this.searchChanged.bind(this);
+    this.sortingChanged = this.sortingChanged.bind(this);
   }
 
   componentDidMount() {
@@ -101,19 +104,21 @@ class CTableColumn extends Component {
     });
   }
 
-  searchCleared = e => {
+  searchCleared(e) {
     this.setState({
       searching: ''
     });
     this.props.table.change_search_for_column(this.props.column, '');
-  };
-  searchChanged = e => {
+  }
+
+  searchChanged(e) {
     this.setState({
       searching: e.target.value
     });
     this.props.table.change_search_for_column(this.props.column, e.target.value);
-  };
-  sortingChanged = e => {
+  }
+
+  sortingChanged(e) {
     var order = '';
 
     if (this.props.sorting == 'ASC') {
@@ -125,7 +130,7 @@ class CTableColumn extends Component {
     }
 
     this.props.table.change_sort_for_column(this.props.column, order);
-  };
+  }
   /**
    * Build search bar for column.
    *
@@ -133,6 +138,7 @@ class CTableColumn extends Component {
    *
    * @return {PreactNode} Search control.
    */
+
 
   render_search() {
     if (typeof this.props.searching === 'undefined') {// do nothing
@@ -179,7 +185,7 @@ class CTableColumn extends Component {
       }, h("span", {
         class: "icon",
         style: "display:inline"
-      }, arrow), "\xA0", this.props.table.state.columns[this.props.column].title));
+      }, arrow), "\xA0", this.title()));
     }
   }
   /**
@@ -321,45 +327,60 @@ class CTableColumn extends Component {
 class CActionColumn extends CTableColumn {
   constructor() {
     super();
+    this.newClicked = this.newClicked.bind(this);
+    this.additionalClicked = this.additionalClicked.bind(this);
+    this.menuLeave = this.menuLeave.bind(this);
+    this.reloadClicked = this.reloadClicked.bind(this);
+    this.editClicked = this.editClicked.bind(this);
+    this.discardClicked = this.discardClicked.bind(this);
+    this.saveClicked = this.saveClicked.bind(this);
+    this.deleteClicked = this.deleteClicked.bind(this);
     this.setState({
       menu_active: false,
       search_menu_id: makeID()
     });
   }
 
-  newClicked = e => {
+  newClicked(e) {
     this.props.table.edit_row(-1);
-  };
-  additionalClicked = e => {
+  }
+
+  additionalClicked(e) {
     this.setState({
       menu_active: !this.state.menu_active
     });
-  };
-  menuLeave = e => {
+  }
+
+  menuLeave(e) {
     this.setState({
       menu_active: false
     });
-  };
-  reloadClicked = e => {
+  }
+
+  reloadClicked(e) {
     this.props.table.reload();
     this.setState({
       menu_active: false
     });
-  };
-  editClicked = e => {
+  }
+
+  editClicked(e) {
     this.props.table.edit_row(this.props.row);
-  };
-  discardClicked = e => {
+  }
+
+  discardClicked(e) {
     this.props.table.edit_row(this.props.row);
-  };
-  saveClicked = e => {
+  }
+
+  saveClicked(e) {
     this.props.table.save_row(this.props.row);
-  };
-  deleteClicked = e => {
+  }
+
+  deleteClicked(e) {
     if (window.confirm(this.props.table.props.lang.delete_row_ask)) {
       this.props.table.delete_row(this.props.row);
     }
-  };
+  }
 
   render_header() {
     return h("b", null, this.title());
@@ -453,6 +474,8 @@ class CActionColumn extends CTableColumn {
 class CDynamicSelectColumn extends CTableColumn {
   constructor() {
     super();
+    this.filterChanged = this.filterChanged.bind(this);
+    this.editorChanged = this.editorChanged.bind(this);
     this.state = {
       options: []
     };
@@ -464,7 +487,10 @@ class CDynamicSelectColumn extends CTableColumn {
   }
 
   render_cell() {
-    var cvalues = this.state.options.filter(item => item[0] == this.value());
+    var self = this;
+    var cvalues = this.state.options.filter(function (item) {
+      return item[0] == self.value();
+    });
 
     if (cvalues.length > 0) {
       return h("span", null, cvalues[0][1]);
@@ -473,9 +499,9 @@ class CDynamicSelectColumn extends CTableColumn {
     return h("span", null);
   }
 
-  filterChanged = e => {
+  filterChanged(e) {
     this.props.table.change_filter_for_column(this.props.column, e.target.value);
-  };
+  }
 
   render_search() {
     if (typeof this.props.filtering === 'undefined') {// do nothing
@@ -487,15 +513,17 @@ class CDynamicSelectColumn extends CTableColumn {
         value: this.props.filtering
       }, h("option", {
         value: ""
-      }, this.props.table.props.lang.no_filter), this.state.options.map(item => h("option", {
-        value: item[0]
-      }, item[1]))));
+      }, this.props.table.props.lang.no_filter), this.state.options.map(function (item) {
+        return h("option", {
+          value: item[0]
+        }, item[1]);
+      })));
     }
   }
 
-  editorChanged = e => {
+  editorChanged(e) {
     this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
-  };
+  }
 
   render_editor() {
     return h("div", {
@@ -510,9 +538,11 @@ class CDynamicSelectColumn extends CTableColumn {
     }, h("select", {
       onChange: this.editorChanged,
       value: this.value()
-    }, this.state.options.map(item => h("option", {
-      value: item[0]
-    }, item[1]))))), this.props.footnote ? h("div", {
+    }, this.state.options.map(function (item) {
+      return h("option", {
+        value: item[0]
+      }, item[1]);
+    })))), this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }
@@ -530,6 +560,8 @@ class CDynamicSelectColumn extends CTableColumn {
 class CSelectColumn extends CTableColumn {
   constructor() {
     super();
+    this.filterChanged = this.filterChanged.bind(this);
+    this.editorChanged = this.editorChanged.bind(this);
     this.state = {
       options: []
     };
@@ -543,7 +575,10 @@ class CSelectColumn extends CTableColumn {
   }
 
   render_cell() {
-    var cvalues = this.state.options.filter(item => item[0] == this.value());
+    var self = this;
+    var cvalues = this.state.options.filter(function (item) {
+      return item[0] == self.value();
+    });
 
     if (cvalues.length > 0) {
       return h("span", null, cvalues[0][1]);
@@ -552,9 +587,9 @@ class CSelectColumn extends CTableColumn {
     return h("span", null);
   }
 
-  filterChanged = e => {
+  filterChanged(e) {
     this.props.table.change_filter_for_column(this.props.column, e.target.value);
-  };
+  }
 
   render_search() {
     if (typeof this.props.filtering === 'undefined') {// do nothing
@@ -566,15 +601,17 @@ class CSelectColumn extends CTableColumn {
         value: this.props.filtering
       }, h("option", {
         value: ""
-      }, this.props.table.props.lang.no_filter), this.state.options.map(item => h("option", {
-        value: item[0]
-      }, item[1]))));
+      }, this.props.table.props.lang.no_filter), this.state.options.map(function (item) {
+        return h("option", {
+          value: item[0]
+        }, item[1]);
+      })));
     }
   }
 
-  editorChanged = e => {
+  editorChanged(e) {
     this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
-  };
+  }
 
   render_editor() {
     return h("div", {
@@ -589,9 +626,11 @@ class CSelectColumn extends CTableColumn {
     }, h("select", {
       onChange: this.editorChanged,
       value: this.value()
-    }, this.state.options.map(item => h("option", {
-      value: item[0]
-    }, item[1]))))), this.props.footnote ? h("div", {
+    }, this.state.options.map(function (item) {
+      return h("option", {
+        value: item[0]
+      }, item[1]);
+    })))), this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }
@@ -609,17 +648,18 @@ class CSelectColumn extends CTableColumn {
 class CSubtableColumn extends CTableColumn {
   constructor() {
     super();
+    this.openSubtableClicked = this.openSubtableClicked.bind(this);
     this.setState({
       opened: false
     });
   }
 
-  openSubtableClicked = e => {
+  openSubtableClicked(e) {
     this.setState({
       opened: !this.state.opened
     });
     this.props.table.open_subtable(this.props.row, this.props.keys, this.props.config);
-  };
+  }
 
   render_header() {
     return h("b", null, this.title());
@@ -652,6 +692,7 @@ class CSubtableColumn extends CTableColumn {
 class CTextColumn extends CTableColumn {
   constructor() {
     super();
+    this.editorChanged = this.editorChanged.bind(this);
     this.ref = createRef();
   }
 
@@ -666,7 +707,7 @@ class CTextColumn extends CTableColumn {
     return h("span", null, this.value());
   }
 
-  editorChanged = e => {
+  editorChanged(e) {
     this.setState({
       value: e.target.value
     });
@@ -685,8 +726,9 @@ class CTextColumn extends CTableColumn {
         });
       }
     }
-  }; //TODO: add input/textarea swith
+  } //TODO: add input/textarea swith
   //TODO: validations
+
 
   render_editor() {
     var textarea = h("textarea", {
@@ -729,6 +771,9 @@ class CTextColumn extends CTableColumn {
 class CUploadColumn extends CTableColumn {
   constructor() {
     super();
+    this.filterChanged = this.filterChanged.bind(this);
+    this.editorCleared = this.editorCleared.bind(this);
+    this.editorChanged = this.editorChanged.bind(this);
     this.state = {
       fileinfo: {
         uploaded: false,
@@ -852,9 +897,9 @@ class CUploadColumn extends CTableColumn {
     }
   }
 
-  filterChanged = e => {
+  filterChanged(e) {
     this.props.table.change_filter_for_column(this.props.column, e.target.value);
-  };
+  }
 
   render_search() {
     if (typeof this.props.filtering === 'undefined') {// do nothing
@@ -874,13 +919,14 @@ class CUploadColumn extends CTableColumn {
     }
   }
 
-  editorCleared = e => {
+  editorCleared(e) {
     this.setState({
       fileinfo: this.value_parser('')
     });
     this.props.table.notify_changes(this.props.row, this.props.column, '');
-  };
-  editorChanged = e => {
+  }
+
+  editorChanged(e) {
     var form_data = new FormData();
 
     for (var file_index = 0; file_index < e.target.files.length; file_index++) {
@@ -921,7 +967,7 @@ class CUploadColumn extends CTableColumn {
         self.props.table.notify_changes(self.props.row, self.props.column, result.Files);
       }
     });
-  };
+  }
 
   render_editor() {
     if (!this.state.fileinfo.uploaded) {
@@ -1047,6 +1093,12 @@ class CUploadColumn extends CTableColumn {
 class CTable extends Component {
   constructor() {
     super();
+    this.recordsOnPageChanged = this.recordsOnPageChanged.bind(this);
+    this.toFirstPage = this.toFirstPage.bind(this);
+    this.toLastPage = this.toLastPage.bind(this);
+    this.toNextPage = this.toNextPage.bind(this);
+    this.toPrevPage = this.toPrevPage.bind(this);
+    this.toPage = this.toPage.bind(this);
     this.state = {
       records: [],
       columns: [],
@@ -1105,12 +1157,18 @@ class CTable extends Component {
 
   open_subtable(row, keys, config) {
     if (this.state.opened_subtables.includes(row)) {
-      this.state.opened_subtables = this.state.opened_subtables.filter(item => item !== row);
+      this.state.opened_subtables = this.state.opened_subtables.filter(function (item) {
+        return item !== row;
+      });
     } else {
       this.state.opened_subtables.push(row);
-      this.subtables_params[row] = config;
+      this.subtables_params[row] = {};
+      Object.assign(this.subtables_params[row], config); //Deep copy
+
       self = this;
-      this.subtables_params[row].filters = keys.map(item => [item[0], self.state.records[row][item[1]]]);
+      this.subtables_params[row].filters = keys.map(function (item) {
+        return [item[0], self.state.records[row][item[1]]];
+      });
     }
 
     this.setState({});
@@ -1128,8 +1186,12 @@ class CTable extends Component {
     var self = this;
 
     if (this.state.opened_editors.includes(row)) {
-      this.state.opened_editors = this.state.opened_editors.filter(item => item !== row);
-      this.changes = this.changes.filter(item => !(item[0] == row));
+      this.state.opened_editors = this.state.opened_editors.filter(function (item) {
+        return item !== row;
+      });
+      this.changes = this.changes.filter(function (item) {
+        return !(item[0] == row);
+      });
     } else {
       this.state.opened_editors.push(row);
 
@@ -1178,7 +1240,9 @@ class CTable extends Component {
 
       if (result.Result == 'OK') {
         self.options_cache = {};
-        self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
+        self.state.opened_editors = self.state.opened_editors.filter(function (item) {
+          return item !== row;
+        });
         self.reload();
       } else {
         alert(self.props.lang.error + result.Message);
@@ -1195,7 +1259,11 @@ class CTable extends Component {
 
 
   save_row(row) {
-    if (this.valids.filter(item => item[0] == row).filter(item => item[2] == false).length > 0) return;
+    if (this.valids.filter(function (item) {
+      return item[0] == row;
+    }).filter(function (item) {
+      return item[2] == false;
+    }).length > 0) return;
     if (this.changes.length == 0) return;
     var xvalues = {};
     var self = this;
@@ -1207,14 +1275,18 @@ class CTable extends Component {
           xvalues[item.name] = self.state.records[row][item.name];
         }
       });
-      this.changes.filter(item => item[0] == row).map(function (item) {
+      this.changes.filter(function (item) {
+        return item[0] == row;
+      }).map(function (item) {
         if (self.state.columns[item[1]].name != '') {
           xvalues[self.state.columns[item[1]].name] = item[2];
         }
       });
     } else {
       cmd = 'insert=';
-      this.changes.filter(item => item[0] == row).map(function (item) {
+      this.changes.filter(function (item) {
+        return item[0] == row;
+      }).map(function (item) {
         if (!self.state.columns[item[1]].is_key && self.state.columns[item[1]].name != '') {
           xvalues[self.state.columns[item[1]].name] = item[2];
         }
@@ -1222,7 +1294,9 @@ class CTable extends Component {
     }
 
     if (typeof this.props.filters !== 'undefined') {
-      this.props.filters.forEach(item => xvalues[item[0]] = item[1]);
+      this.props.filters.forEach(function (item) {
+        xvalues[item[0]] = item[1];
+      });
     }
 
     fetch(this.props.endpoint, {
@@ -1242,7 +1316,9 @@ class CTable extends Component {
 
       if (result.Result == 'OK') {
         self.options_cache = {};
-        self.state.opened_editors = self.state.opened_editors.filter(item => item !== row);
+        self.state.opened_editors = self.state.opened_editors.filter(function (item) {
+          return item !== row;
+        });
         self.reload();
       } else {
         alert(self.props.lang.error + result.Message);
@@ -1306,10 +1382,18 @@ class CTable extends Component {
 
 
   notify_changes(row, col, value) {
-    this.changes = this.changes.filter(item => !(item[0] == row && item[1] == col));
+    this.changes = this.changes.filter(function (item) {
+      return !(item[0] == row && item[1] == col);
+    });
     this.changes.push([row, col, value]);
-    this.changes_handlers = this.changes_handlers.filter(item => item[2].current != null);
-    this.changes_handlers.filter(item => item[0] == row && item[1] == col).map(item => item[3].on_changes(row, col, value));
+    this.changes_handlers = this.changes_handlers.filter(function (item) {
+      return item[2].current != null;
+    });
+    this.changes_handlers.filter(function (item) {
+      return item[0] == row && item[1] == col;
+    }).map(function (item) {
+      item[3].on_changes(row, col, value);
+    });
   }
   /**
    * Notify that value in editor is valid or invalid.
@@ -1325,7 +1409,9 @@ class CTable extends Component {
 
 
   notify_valids(row, col, is_valid) {
-    this.valids = this.valids.filter(item => !(item[0] == row && item[1] == col));
+    this.valids = this.valids.filter(function (item) {
+      return !(item[0] == row && item[1] == col);
+    });
     this.valids.push([row, col, is_valid]);
   }
   /**
@@ -1358,12 +1444,20 @@ class CTable extends Component {
     var self = this;
 
     if (typeof this.props.filters !== 'undefined') {
-      this.props.filters.forEach(item => column_filters[item[0]] = item[1]);
+      this.props.filters.forEach(function (item) {
+        column_filters[item[0]] = item[1];
+      });
     }
 
-    this.state.columns.forEach(item => item.name != '' && item.filtering ? column_filters[item.name] = item.filtering : '');
-    this.state.columns.forEach(item => item.name != '' && item.searching ? column_searches[item.name] = item.searching : '');
-    this.state.columns.forEach(item => item.name != '' && item.sorting ? column_orders[item.name] = item.sorting : '');
+    this.state.columns.forEach(function (item) {
+      item.name != '' && item.filtering ? column_filters[item.name] = item.filtering : '';
+    });
+    this.state.columns.forEach(function (item) {
+      item.name != '' && item.searching ? column_searches[item.name] = item.searching : '';
+    });
+    this.state.columns.forEach(function (item) {
+      item.name != '' && item.sorting ? column_orders[item.name] = item.sorting : '';
+    });
     var query = {
       start: this.props.no_pagination ? 0 : this.state.records_on_page * this.state.current_page,
       page: this.props.no_pagination ? 0 : this.state.records_on_page,
@@ -1411,7 +1505,9 @@ class CTable extends Component {
       }
     }
 
-    this.changes.filter(item => item[0] == row).map(function (item) {
+    this.changes.filter(function (item) {
+      return item[0] == row;
+    }).map(function (item) {
       if (self.state.columns[item[1]].name != '') {
         xvalues[self.state.columns[item[1]].name] = item[2];
       }
@@ -1461,41 +1557,46 @@ class CTable extends Component {
     }
   }
 
-  recordsOnPageChanged = e => {
+  recordsOnPageChanged(e) {
     var new_rec_on_page = parseInt(e.target.value);
     if (new_rec_on_page == this.state.records_on_page) return;
     this.state.records_on_page = new_rec_on_page;
     this.state.current_page = 0;
     this.reload();
-  };
-  toFirstPage = e => {
+  }
+
+  toFirstPage(e) {
     if (this.state.current_page != 0) {
       this.state.current_page = 0;
       this.reload();
     }
-  };
-  toLastPage = e => {
+  }
+
+  toLastPage(e) {
     if (this.state.current_page != this.state.total_pages) {
       this.state.current_page = this.state.total_pages;
       this.reload();
     }
-  };
-  toNextPage = e => {
+  }
+
+  toNextPage(e) {
     if (this.state.current_page < this.state.total_pages) {
       this.state.current_page = this.state.current_page + 1;
       this.reload();
     }
-  };
-  toPrevPage = e => {
+  }
+
+  toPrevPage(e) {
     if (this.state.current_page - 1 >= 0) {
       this.state.current_page = this.state.current_page - 1;
       this.reload();
     }
-  };
-  toPage = e => {
+  }
+
+  toPage(e) {
     this.state.current_page = parseInt(e.target.value);
     this.reload();
-  };
+  }
 
   get_pages() {
     if (this.state.total_records == 0) {
@@ -1520,49 +1621,60 @@ class CTable extends Component {
 
 
   visible_column_count() {
-    return this.state.columns.filter(c => c.hide_column != true).length;
+    return this.state.columns.filter(function (item) {
+      return item.hide_column != true;
+    }).length;
   }
 
   render() {
-    var tbody = h("tbody", null, this.state.opened_editors.includes(-1) ? h("tr", null, h("td", {
-      colspan: this.visible_column_count()
-    }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
-      role: "editor",
-      is_new: true,
-      table: this,
-      column: j,
-      row: -1,
-      key: j * 1000000,
-      ...column
-    }) : '')))) : '', this.state.records.map((cell, i) => h(Fragment, null, h("tr", {
-      class: this.state.opened_editors.includes(i) || this.state.opened_subtables.includes(i) ? "is-selected" : ""
-    }, " ", this.state.columns.map((column, j) => column.hide_column != true ? h("td", null, "                           ", h(column.kind, {
-      role: "cell",
-      table: this,
-      column: j,
-      row: i,
-      key: j * 1000000 + i,
-      ...column
-    })) : ''), " "), this.state.opened_editors.includes(i) ? h("tr", null, h("td", {
-      colspan: this.visible_column_count()
-    }, this.state.columns.map((column, j) => h(Fragment, null, column.hide_editor != true ? h(column.kind, {
-      role: "editor",
-      is_new: false,
-      table: this,
-      column: j,
-      row: i,
-      key: j * 1000000 + i,
-      ...column
-    }) : '')))) : '', this.state.opened_subtables.includes(i) ? h("tr", null, h("td", {
-      colspan: this.visible_column_count()
-    }, h(CTable, {
-      lang: this.props.lang,
-      ...this.subtables_params[i]
-    }))) : '')), this.state.records.length == 0 ? h("tr", null, h("td", {
-      colspan: this.visible_column_count()
+    var self = this;
+    var tbody = h("tbody", null, self.state.opened_editors.includes(-1) ? h("tr", null, h("td", {
+      colspan: self.visible_column_count()
+    }, self.state.columns.map(function (column, j) {
+      return h(Fragment, null, column.hide_editor != true ? h(column.kind, {
+        role: "editor",
+        is_new: true,
+        table: self,
+        column: j,
+        row: -1,
+        key: j * 1000000,
+        ...column
+      }) : '');
+    }))) : '', self.state.records.map(function (cell, i) {
+      return h(Fragment, null, " ", h("tr", {
+        class: self.state.opened_editors.includes(i) || self.state.opened_subtables.includes(i) ? "is-selected" : ""
+      }, " ", self.state.columns.map(function (column, j) {
+        return column.hide_column != true ? h("td", null, "                           ", h(column.kind, {
+          role: "cell",
+          table: self,
+          column: j,
+          row: i,
+          key: j * 1000000 + i,
+          ...column
+        })) : '';
+      }), " "), self.state.opened_editors.includes(i) ? h("tr", null, h("td", {
+        colspan: self.visible_column_count()
+      }, self.state.columns.map(function (column, j) {
+        return h(Fragment, null, column.hide_editor != true ? h(column.kind, {
+          role: "editor",
+          is_new: false,
+          table: self,
+          column: j,
+          row: i,
+          key: j * 1000000 + i,
+          ...column
+        }) : '');
+      }))) : '', self.state.opened_subtables.includes(i) ? h("tr", null, h("td", {
+        colspan: self.visible_column_count()
+      }, h(CTable, {
+        lang: self.props.lang,
+        ...self.subtables_params[i]
+      }))) : '');
+    }), self.state.records.length == 0 ? h("tr", null, h("td", {
+      colspan: self.visible_column_count()
     }, h("div", {
       class: "has-text-centered"
-    }, this.props.lang.no_data))) : '');
+    }, self.props.lang.no_data))) : '');
     var pager = h("div", {
       class: "field has-addons",
       style: "justify-content:center;"
@@ -1589,9 +1701,11 @@ class CTable extends Component {
     }, h("select", {
       value: this.state.current_page,
       onChange: this.toPage
-    }, this.get_pages().map(page => h("option", {
-      value: page
-    }, page + 1))))), h("div", {
+    }, this.get_pages().map(function (page) {
+      return h("option", {
+        value: page
+      }, page + 1);
+    })))), h("div", {
       class: "control"
     }, h("div", {
       class: "button",
@@ -1642,25 +1756,31 @@ class CTable extends Component {
     }, h("table", {
       class: "table",
       style: "width: 100%;"
-    }, h("thead", null, h("tr", null, this.state.columns.map((column, i) => column.hide_column != true ? h("th", null, h(column.kind, {
-      role: "header",
-      table: this,
-      column: i,
-      key: i,
-      ...column
-    }), " ") : '')), h("tr", null, this.state.columns.map((column, i) => column.hide_column != true ? h("th", null, h(column.kind, {
-      role: "search",
-      table: this,
-      column: i,
-      key: i,
-      ...column
-    }), " ") : ''))), h("tfoot", null, h("tr", null, this.state.columns.map((column, i) => column.hide_column != true ? h("th", null, h(column.kind, {
-      role: "footer",
-      table: this,
-      column: i,
-      key: i,
-      ...column
-    }), " ") : ''))), tbody), this.props.no_pagination ? '' : pager);
+    }, h("thead", null, h("tr", null, this.state.columns.map(function (column, i) {
+      return column.hide_column != true ? h("th", null, h(column.kind, {
+        role: "header",
+        table: self,
+        column: i,
+        key: i,
+        ...column
+      }), " ") : '';
+    })), h("tr", null, this.state.columns.map(function (column, i) {
+      return column.hide_column != true ? h("th", null, h(column.kind, {
+        role: "search",
+        table: self,
+        column: i,
+        key: i,
+        ...column
+      }), " ") : '';
+    }))), h("tfoot", null, h("tr", null, this.state.columns.map(function (column, i) {
+      return column.hide_column != true ? h("th", null, h(column.kind, {
+        role: "footer",
+        table: self,
+        column: i,
+        key: i,
+        ...column
+      }), " ") : '';
+    }))), tbody), this.props.no_pagination ? '' : pager);
   }
 
 }

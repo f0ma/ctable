@@ -10,41 +10,51 @@
 class CActionColumn extends CTableColumn{
     constructor() {
         super();
+
+        this.newClicked = this.newClicked.bind(this);
+        this.additionalClicked = this.additionalClicked.bind(this);
+        this.menuLeave = this.menuLeave.bind(this);
+        this.reloadClicked = this.reloadClicked.bind(this);
+        this.editClicked = this.editClicked.bind(this);
+        this.discardClicked = this.discardClicked.bind(this);
+        this.saveClicked = this.saveClicked.bind(this);
+        this.deleteClicked = this.deleteClicked.bind(this);
+
         this.setState({menu_active:false,
                        search_menu_id: makeID()
         });
     }
 
-    newClicked = e => {
+    newClicked(e){
         this.props.table.edit_row(-1);
     }
 
-    additionalClicked = e => {
+    additionalClicked(e){
         this.setState({menu_active: !this.state.menu_active });
     }
 
-    menuLeave = e => {
+    menuLeave(e){
         this.setState({menu_active: false});
     }
 
-    reloadClicked = e => {
+    reloadClicked(e){
         this.props.table.reload();
         this.setState({menu_active: false});
     }
 
-    editClicked = e => {
+    editClicked(e){
         this.props.table.edit_row(this.props.row);
     }
 
-    discardClicked = e => {
+    discardClicked(e){
         this.props.table.edit_row(this.props.row);
     }
 
-    saveClicked = e => {
+    saveClicked(e){
         this.props.table.save_row(this.props.row);
     }
 
-    deleteClicked = e => {
+    deleteClicked(e){
         if(window.confirm(this.props.table.props.lang.delete_row_ask)){
             this.props.table.delete_row(this.props.row);
         }

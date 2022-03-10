@@ -10,6 +10,10 @@
 class CDynamicSelectColumn extends CTableColumn{
     constructor() {
         super();
+
+        this.filterChanged = this.filterChanged.bind(this);
+        this.editorChanged = this.editorChanged.bind(this);
+
         this.state = {options: []};
         this.ref = createRef();
     }
@@ -19,7 +23,8 @@ class CDynamicSelectColumn extends CTableColumn{
     }
 
     render_cell() {
-        var cvalues = this.state.options.filter(item => item[0] == this.value());
+        var self = this;
+        var cvalues = this.state.options.filter(function(item){return item[0] == self.value();});
         if (cvalues.length > 0){
             return <span>{cvalues[0][1]}</span>;
         }
@@ -27,7 +32,7 @@ class CDynamicSelectColumn extends CTableColumn{
 
     }
 
-    filterChanged = e => {
+    filterChanged(e){
         this.props.table.change_filter_for_column(this.props.column, e.target.value);
     }
 
@@ -38,13 +43,13 @@ class CDynamicSelectColumn extends CTableColumn{
             return <div class="select">
                      <select onChange={this.filterChanged} value={this.props.filtering}>
                        <option value=''>{this.props.table.props.lang.no_filter}</option>
-                       {this.state.options.map(item => <option value={item[0]}>{item[1]}</option>)}
+                       {this.state.options.map(function(item){return <option value={item[0]}>{item[1]}</option>;})}
                      </select>
                    </div>;
         }
     }
 
-    editorChanged = e => {
+    editorChanged(e){
         this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
     }
 
@@ -54,7 +59,7 @@ class CDynamicSelectColumn extends CTableColumn{
                    <div class="control">
                       <div class="select">
                         <select onChange={this.editorChanged} value={this.value()}>
-                          {this.state.options.map(item => <option value={item[0]}>{item[1]}</option>)}
+                          {this.state.options.map(function(item){return <option value={item[0]}>{item[1]}</option>;})}
                         </select>
                       </div>
                    </div>
