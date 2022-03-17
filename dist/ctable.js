@@ -697,15 +697,9 @@ class CSubtableColumn extends CTableColumn {
   constructor() {
     super();
     this.openSubtableClicked = this.openSubtableClicked.bind(this);
-    this.setState({
-      opened: false
-    });
   }
 
   openSubtableClicked(e) {
-    this.setState({
-      opened: !this.state.opened
-    });
     this.props.table.open_subtable(this.props.row, this.props.keys, this.props.config);
   }
 
@@ -719,7 +713,7 @@ class CSubtableColumn extends CTableColumn {
     }, h("div", {
       class: "control"
     }, h("button", {
-      class: this.state.opened ? "button is-info is-inverted" : "button is-info",
+      class: this.props.table.state.opened_subtables.includes(this.props.row) ? "button is-info is-inverted" : "button is-info",
       title: typeof this.props.button_hint === 'undefined' ? this.props.table.props.lang.open_subtable : this.props.button_hint,
       onClick: this.openSubtableClicked
     }, h("span", {
