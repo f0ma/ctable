@@ -89,8 +89,7 @@ class CTable extends Component {
             this.state.opened_subtables = this.state.opened_subtables.filter(function(item){return item !== row;});
         } else {
             this.state.opened_subtables.push(row);
-            this.subtables_params[row] = {};
-            Object.assign(this.subtables_params[row], config); //Deep copy
+            this.subtables_params[row] = clone(config);
             self = this;
             this.subtables_params[row].filters = keys.map(function(item){return [item[0], self.state.records[row][item[1]]];});
         }
@@ -374,9 +373,16 @@ class CTable extends Component {
                 alert(self.props.lang.error + result.Message);
             }
         });
-
-
     }
+
+    /**
+     * Getting row with unsaved changes.
+     *
+     * @param row {int} Row index. -1 in new row.
+     * @param only_changes {Boolean} Getting only changes or full row with changes.
+     *
+     * @return {Object} Unsaved values.
+     */
 
     row_changes_summary(row, only_changes = false) {
         var xvalues = {};

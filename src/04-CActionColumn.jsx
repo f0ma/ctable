@@ -34,12 +34,14 @@ class CActionColumn extends CTableColumn{
     }
 
     menuLeave(e){
+        if(e.relatedTarget !== null){
+            e.relatedTarget.click();
+        }
         this.setState({menu_active: false});
     }
 
     reloadClicked(e){
         this.props.table.reload();
-        this.setState({menu_active: false});
     }
 
     editClicked(e){
