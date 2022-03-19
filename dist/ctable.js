@@ -409,6 +409,7 @@ class CActionColumn extends CTableColumn {
   }
 
   reloadClicked(e) {
+    e.preventDefault();
     this.props.table.reload();
   }
 
@@ -504,7 +505,7 @@ class CActionColumn extends CTableColumn {
     }, h("div", {
       class: "dropdown-content"
     }, h("a", {
-      href: "#",
+      href: "",
       class: "dropdown-item",
       onClick: this.reloadClicked
     }, this.props.table.props.lang.reload)))));
