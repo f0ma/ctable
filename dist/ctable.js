@@ -661,7 +661,7 @@ class SearchableSelect extends Component {
   }
 
   dropdownMenuLeave(e) {
-    if (e.target.id == this.state.input_id || e.relatedTarget.id == this.state.input_id) {
+    if (e.relatedTarget !== null && e.relatedTarget.id == this.state.input_id) {
       return;
     }
 
@@ -774,7 +774,7 @@ class SearchableSelect extends Component {
       class: "control is-expanded has-icons-right"
     }, h("input", {
       class: "input",
-      type: "search",
+      type: "input",
       onFocus: this.dropdownMenuEnter,
       onBlur: this.dropdownMenuLeave,
       value: this.value2text(this.state.current_item),
@@ -793,18 +793,15 @@ class SearchableSelect extends Component {
     }, h("div", {
       class: "field dropdown-item "
     }, h("p", {
-      class: "control is-expanded has-icons-right"
+      class: "control"
     }, h("input", {
       class: "input",
-      type: "search",
+      type: "input",
       id: this.state.input_id,
       onBlur: this.dropdownMenuLeave,
-      onKeyUp: this.menuFilterChanged
-    }), h("span", {
-      class: "icon is-small is-right",
-      style: "pointer-events: all; cursor: pointer",
-      onClick: this.menuFilterCleared
-    }, "\u2297"))), aw_options.map(function (item) {
+      onKeyUp: this.menuFilterChanged,
+      value: this.state.filter_text
+    }))), aw_options.map(function (item) {
       item_count += 1;
       return h("a", {
         href: "",

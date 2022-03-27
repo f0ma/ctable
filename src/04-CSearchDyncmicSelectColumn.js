@@ -38,7 +38,7 @@ class SearchableSelect extends Component {
     }
 
     dropdownMenuLeave(e){
-        if(e.target.id == this.state.input_id || e.relatedTarget.id == this.state.input_id){
+        if(e.relatedTarget !== null && e.relatedTarget.id == this.state.input_id){
             return;
         }
 
@@ -133,7 +133,7 @@ class SearchableSelect extends Component {
                        <div class="field">
                            {this.props.title ? <label class="label">{this.props.title}</label> : ''}
                            <p class="control is-expanded has-icons-right">
-                               <input class="input" type="search" onFocus={this.dropdownMenuEnter} onBlur={this.dropdownMenuLeave} value={this.value2text(this.state.current_item)} readonly/>
+                               <input class="input" type="input" onFocus={this.dropdownMenuEnter} onBlur={this.dropdownMenuLeave} value={this.value2text(this.state.current_item)} readonly/>
                                <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.filterCleared}>⊗</span>
                            </p>
                        </div>
@@ -141,9 +141,8 @@ class SearchableSelect extends Component {
                    <div class="dropdown-menu" id={this.state.menu_id} role="menu">
                        <div class="dropdown-content" style="max-height: 13em; overflow: auto;">
                            <div class="field dropdown-item ">
-                               <p class="control is-expanded has-icons-right">
-                                   <input class="input" type="search" id={this.state.input_id} onBlur={this.dropdownMenuLeave} onKeyUp={this.menuFilterChanged}/>
-                                   <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.menuFilterCleared}>⊗</span>
+                               <p class="control">
+                                   <input class="input" type="input" id={this.state.input_id} onBlur={this.dropdownMenuLeave} onKeyUp={this.menuFilterChanged} value={this.state.filter_text}/>
                                </p>
                            </div>
                            {aw_options.map(function(item){

@@ -9,3 +9,7 @@
 .input {
     min-width: 8em;
 }
+
+.table-container {
+    min-height: 21em;
+}
