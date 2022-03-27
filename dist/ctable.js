@@ -693,6 +693,7 @@ class SearchableSelect extends Component {
 
   menuFilterChanged(e) {
     var aw_options = this.available_options();
+    var self = this;
 
     if (e.key == "Enter") {
       e.preventDefault();
@@ -714,8 +715,8 @@ class SearchableSelect extends Component {
           top_index: this.state.top_index + 1
         });
         setTimeout(function () {
-          document.getElementById(this.state.selected_id).scrollIntoView();
-        }, 100);
+          document.getElementById(self.state.selected_id).scrollIntoView();
+        }, 50);
       }
 
       return;
@@ -727,8 +728,8 @@ class SearchableSelect extends Component {
           top_index: this.state.top_index - 1
         });
         setTimeout(function () {
-          document.getElementById(this.state.selected_id).scrollIntoView();
-        }, 100);
+          document.getElementById(self.state.selected_id).scrollIntoView();
+        }, 50);
       }
 
       return;
