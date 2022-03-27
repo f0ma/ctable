@@ -28,8 +28,8 @@ class CTableColumn extends Component {
     }
 
     searchCleared(e) {
-        this.setState({searching: ''});
-        this.props.table.change_search_for_column(this.props.column, '');
+        this.setState({searching: null});
+        this.props.table.change_search_for_column(this.props.column, null);
     }
 
     searchChanged(e) {
@@ -38,12 +38,12 @@ class CTableColumn extends Component {
     }
 
     sortingChanged(e) {
-        var order = '';
+        var order = null;
         if (this.props.sorting == 'ASC'){
             order = 'DESC';
         } else if (this.props.sorting == 'DESC'){
-            order = '';
-        } else if (this.props.sorting == ''){
+            order = null;
+        } else if (this.props.sorting == null){
             order = 'ASC';
         }
         this.props.table.change_sort_for_column(this.props.column, order);
@@ -85,7 +85,7 @@ class CTableColumn extends Component {
                 arrow = '↓';
             } else if (this.props.sorting == 'DESC'){
                 arrow = '↑';
-            } else if (this.props.sorting == ''){
+            } else if (this.props.sorting == null){
                 arrow = '⇵';
             }
             return <b><a onClick={this.sortingChanged}><span class="icon" style="display:inline">{arrow}</span>&nbsp;{this.title()}</a></b>;
@@ -196,6 +196,14 @@ class CTableColumn extends Component {
 
     on_changes(row, col, value) {
     }
+
+    /**
+     * Main render method.
+     *
+     * Call specific method by this.props.role.
+     *
+     * @return {PreactNode} Cell control.
+     */
 
     render() {
         if(this.props.role == 'header'){

@@ -40,10 +40,6 @@ class CTextColumn extends CTableColumn{
         }
     }
 
-
-//TODO: add input/textarea swith
-//TODO: validations
-
     render_editor() {
 
         var textarea = <textarea class={!this.state.editor_valid ? "textarea is-danger" : "textarea"} onChange={this.editorChanged} placeholder={this.props.placeholder}>{this.state.value}</textarea>;

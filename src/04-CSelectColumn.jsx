@@ -34,7 +34,11 @@ class CSelectColumn extends CTableColumn{
     }
 
     filterChanged(e) {
-        this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        if(e.target.value == ''){
+            this.props.table.change_filter_for_column(this.props.column, null);
+        } else {
+            this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        }
     }
 
     render_search() {
@@ -51,7 +55,11 @@ class CSelectColumn extends CTableColumn{
     }
 
     editorChanged(e) {
-        this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+        if(e.target.value == ''){
+            this.props.table.notify_changes(this.props.row, this.props.column, null);
+        } else {
+            this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+        }
     }
 
     render_editor() {

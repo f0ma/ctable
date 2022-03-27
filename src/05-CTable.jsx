@@ -269,14 +269,15 @@ class CTable extends Component {
      *
      * @param col {int} Column number.
      * @param row {int} Row number. -1 in new row.
-     * @param value {*} Value.
+     * @param value {Any|null} Value. Set null - reset changes.
      */
 
     notify_changes(row, col, value){
         this.changes = this.changes.filter(function(item){return !( (item[0] == row) && (item[1] == col) );});
-        this.changes.push([row, col, value]);
         this.changes_handlers = this.changes_handlers.filter(function(item){return item[2].current != null;});
         this.changes_handlers.filter(function(item){return ((item[0] == row) && (item[1] == col));}).map(function(item){item[3].on_changes(row, col, value);});
+        if (value !== null)
+            this.changes.push([row, col, value]);
     }
 
     /**
@@ -335,17 +336,20 @@ class CTable extends Component {
 
         this.state.columns.forEach(
             function(item){
-                ((item.name != '') && (item.filtering)) ? column_filters[item.name] = item.filtering : '';
+                if ((item.name != '') && (typeof item.filtering != 'undefined') && (item.filtering !== null))
+                 column_filters[item.name] = item.filtering;
             });
 
         this.state.columns.forEach(
             function(item){
-                ((item.name != '') && (item.searching)) ? column_searches[item.name] = item.searching : '';
+                if ((item.name != '') && (typeof item.searching != 'undefined') && (item.searching !== null))
+                    column_searches[item.name] = item.searching;
             });
 
         this.state.columns.forEach(
             function(item){
-                ((item.name != '') && (item.sorting)) ? column_orders[item.name] = item.sorting : '';
+                if ((item.name != '') && (typeof item.sorting != 'undefined') && (item.sorting !== null))
+                    column_orders[item.name] = item.sorting;
             });
 
         var query = {start:(this.props.no_pagination ? 0 : this.state.records_on_page*this.state.current_page),

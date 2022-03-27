@@ -32,8 +32,12 @@ class CDynamicSelectColumn extends CTableColumn{
 
     }
 
-    filterChanged(e){
-        this.props.table.change_filter_for_column(this.props.column, e.target.value);
+    filterChanged(e) {
+        if(e.target.value == ''){
+            this.props.table.change_filter_for_column(this.props.column, null);
+        } else {
+            this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        }
     }
 
     render_search() {
@@ -49,8 +53,12 @@ class CDynamicSelectColumn extends CTableColumn{
         }
     }
 
-    editorChanged(e){
-        this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+    editorChanged(e) {
+        if(e.target.value == ''){
+            this.props.table.notify_changes(this.props.row, this.props.column, null);
+        } else {
+            this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+        }
     }
 
     render_editor() {
