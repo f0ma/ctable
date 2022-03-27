@@ -43,7 +43,7 @@ class SearchableSelect extends Component {
             return;
         }
 
-        if(e.relatedTarget.id == this.state.input_id){
+        if(e.target.id == this.state.input_id || e.relatedTarget.id == this.state.input_id){
             //this.setState({menu_active: false});
         } else {
             this.setState({menu_active: false});
