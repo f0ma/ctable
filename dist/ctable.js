@@ -715,7 +715,7 @@ class SearchableSelect extends Component {
           top_index: this.state.top_index + 1
         });
         setTimeout(function () {
-          document.getElementById(self.state.selected_id).scrollIntoView();
+          if (document.getElementById(self.state.selected_id) !== null) document.getElementById(self.state.menu_id).getElementsByClassName('dropdown-content')[0].scrollTo(0, document.getElementById(self.state.selected_id).offsetTop);
         }, 50);
       }
 
@@ -728,7 +728,7 @@ class SearchableSelect extends Component {
           top_index: this.state.top_index - 1
         });
         setTimeout(function () {
-          document.getElementById(self.state.selected_id).scrollIntoView();
+          if (document.getElementById(self.state.selected_id) !== null) document.getElementById(self.state.menu_id).getElementsByClassName('dropdown-content')[0].scrollTo(0, document.getElementById(self.state.selected_id).offsetTop);
         }, 50);
       }
 

@@ -80,7 +80,9 @@ class SearchableSelect extends Component {
         if(e.key == "ArrowDown"){
             if (this.state.top_index+1 < aw_options.length){
                 this.setState({top_index: this.state.top_index + 1});
-                setTimeout(function () {document.getElementById(self.state.selected_id).scrollIntoView();}, 50);
+                setTimeout(function () {
+                    if(document.getElementById(self.state.selected_id) !== null)
+                        document.getElementById(self.state.menu_id).getElementsByClassName('dropdown-content')[0].scrollTo(0, document.getElementById(self.state.selected_id).offsetTop);}, 50);
             }
             return;
         }
@@ -88,7 +90,9 @@ class SearchableSelect extends Component {
         if(e.key == "ArrowUp"){
             if (this.state.top_index-1 >=-1){
                 this.setState({top_index: this.state.top_index - 1});
-                setTimeout(function () {document.getElementById(self.state.selected_id).scrollIntoView();}, 50);
+                setTimeout(function () {
+                    if(document.getElementById(self.state.selected_id) !== null)
+                        document.getElementById(self.state.menu_id).getElementsByClassName('dropdown-content')[0].scrollTo(0, document.getElementById(self.state.selected_id).offsetTop);}, 50);
             }
             return;
         }
