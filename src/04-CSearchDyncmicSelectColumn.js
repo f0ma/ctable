@@ -61,7 +61,6 @@ class SearchableSelect extends Component {
 
     menuFilterChanged(e){
         var aw_options = this.available_options();
-        var self = this;
 
         if (e.key == "Enter"){
             e.preventDefault();
@@ -78,22 +77,14 @@ class SearchableSelect extends Component {
         }
 
         if(e.key == "ArrowDown"){
-            if (this.state.top_index+1 < aw_options.length){
+            if (this.state.top_index+1 < aw_options.length)
                 this.setState({top_index: this.state.top_index + 1});
-                setTimeout(function () {
-                    if(document.getElementById(self.state.selected_id) !== null)
-                        document.getElementById(self.state.menu_id).getElementsByClassName('dropdown-content')[0].scrollTo(0, document.getElementById(self.state.selected_id).offsetTop);}, 50);
-            }
             return;
         }
 
         if(e.key == "ArrowUp"){
-            if (this.state.top_index-1 >=-1){
+            if (this.state.top_index-1 >=-1)
                 this.setState({top_index: this.state.top_index - 1});
-                setTimeout(function () {
-                    if(document.getElementById(self.state.selected_id) !== null)
-                        document.getElementById(self.state.menu_id).getElementsByClassName('dropdown-content')[0].scrollTo(0, document.getElementById(self.state.selected_id).offsetTop);}, 50);
-            }
             return;
         }
 
