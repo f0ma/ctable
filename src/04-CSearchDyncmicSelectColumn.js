@@ -72,8 +72,7 @@ class SearchableSelect extends Component {
             this.setState({top_index: -1,
                            menu_active: false,
                            current_item: aw_options[this.state.top_index][0],
-                           filter_text: aw_options[this.state.top_index][1]
-            });
+                           filter_text: ''});
             this.props.valueChanged(aw_options[this.state.top_index][0]);
             return;
         }
@@ -97,7 +96,7 @@ class SearchableSelect extends Component {
         e.preventDefault();
         this.setState({menu_active: false,
                        current_item: e.target.dataset['value'],
-                       filter_text: this.value2text(e.target.dataset['value']),
+                       filter_text: '',
                        top_index: -1
         });
         this.props.valueChanged(e.target.dataset['value']);
@@ -107,7 +106,7 @@ class SearchableSelect extends Component {
         var aw_options = this.props.options;
         var self = this;
 
-        if(this.state.current_item == null && this.state.filter_text != ""){
+        if(this.state.filter_text != ""){
             var lowtext = self.state.filter_text.toLowerCase();
 
             var partA = aw_options.filter(function(item){

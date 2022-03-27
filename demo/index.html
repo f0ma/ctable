@@ -33,7 +33,7 @@
                 {name: "",  title: 'Bills', kind: CSubtableColumn, config:{columns: subcolumns, endpoint: "/bill.php", no_pagination: true, button_hint:"Открыть счета"}, keys:[['account_id', 'id']]},
                 {name: "firstname", title: "Firstname", kind: CTextColumn, sorting:null,  searching:null, textarea: true, footnote: "Fill this."},
                 {name: "lastname", title: "Lastname", kind: CTextColumn, sorting:null,  searching:null},
-                {name: "status", title: "Status", kind: CSmartSelectColumn, sorting:null, filtering:null, endpoint: '/opts.php'},
+                {name: "status", title: "Status", kind: CSearchDyncmicSelectColumn, sorting:null, filtering:null, endpoint: '/opts.php'},
                 {name: "reg_date", title: "Date", kind: CTextColumn, sorting:null,  searching:null, default: '2022-01-01', validate:'^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$'},
                 {name: "image", title: "Image", kind: CUploadColumn, upload_endpoint: '/account.php', links_endpoint: '/files/', max_file_size: 1000000, allowed_extentions:['.py'], filtering:null},
                 {name: "", "title": "Action", kind: CActionColumn}
