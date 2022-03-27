@@ -626,6 +626,7 @@ class SearchableSelect extends Component {
       menu_active: false,
       menu_id: makeID(),
       input_id: makeID(),
+      selected_id: makeID(),
       current_item: null,
       filter_text: '',
       top_index: -1
@@ -708,16 +709,28 @@ class SearchableSelect extends Component {
     }
 
     if (e.key == "ArrowDown") {
-      if (this.state.top_index + 1 < aw_options.length) this.setState({
-        top_index: this.state.top_index + 1
-      });
+      if (this.state.top_index + 1 < aw_options.length) {
+        this.setState({
+          top_index: this.state.top_index + 1
+        });
+        setTimeout(function () {
+          document.getElementById(this.state.selected_id).scrollIntoView();
+        }, 100);
+      }
+
       return;
     }
 
     if (e.key == "ArrowUp") {
-      if (this.state.top_index - 1 >= -1) this.setState({
-        top_index: this.state.top_index - 1
-      });
+      if (this.state.top_index - 1 >= -1) {
+        this.setState({
+          top_index: this.state.top_index - 1
+        });
+        setTimeout(function () {
+          document.getElementById(this.state.selected_id).scrollIntoView();
+        }, 100);
+      }
+
       return;
     }
 
@@ -806,6 +819,7 @@ class SearchableSelect extends Component {
       return h("a", {
         href: "",
         class: item_count == self.state.top_index ? "dropdown-item is-active" : "dropdown-item",
+        id: item_count == self.state.top_index ? self.state.selected_id : null,
         onClick: self.menuItemClicked,
         "data-value": item[0]
       }, item[1]);
