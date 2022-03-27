@@ -5,3 +5,7 @@
 .table tbody tr:last-child td, .table tbody tr:last-child th {
   border-bottom-width: 1px;
 }
+
+.input {
+    min-width: 8em;
+}
