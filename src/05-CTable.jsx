@@ -37,7 +37,8 @@ class CTable extends Component {
             current_page: 0,
             records_on_page: 25,
             total_records: 0,
-            total_pages: 0
+            total_pages: 0,
+            waiting_active: false,
         };
 
         this.changes = [];
@@ -141,11 +142,16 @@ class CTable extends Component {
 
         });
 
+        this.setState({waiting_active: true});
+
         fetch(this.props.endpoint, { method: "POST", body: 'delete='+JSON.stringify(xkeys),
                                      headers: {'Content-Type':'application/x-www-form-urlencoded'} })
         .then(function(response){
             if (response.ok) { return response.json(); }
-            else { alert(self.props.lang.server_error + response.status); } })
+            else {
+                alert(self.props.lang.server_error + response.status);
+                self.setState({waiting_active: false});
+            }})
         .then(function (result) {
             if (!result) return;
             if(result.Result == 'OK'){
@@ -154,6 +160,7 @@ class CTable extends Component {
                 self.reload();
             } else {
                 alert(self.props.lang.error + result.Message);
+                self.setState({waiting_active: false});
             }
         });
     }
@@ -200,11 +207,16 @@ class CTable extends Component {
             this.props.filters.forEach(function(item){xvalues[item[0]] = item[1];});
         }
 
+        this.setState({waiting_active: true});
+
         fetch(this.props.endpoint, { method: "POST", body: cmd+JSON.stringify(xvalues),
                                      headers: {'Content-Type':'application/x-www-form-urlencoded'} })
         .then(function(response){
             if (response.ok) {return response.json();}
-            else {alert(self.props.lang.server_error + response.status)} })
+            else {
+                alert(self.props.lang.server_error + response.status);
+                self.setState({waiting_active: false});
+            }})
         .then(function (result) {
             if (!result) return;
             if(result.Result == 'OK'){
@@ -213,6 +225,7 @@ class CTable extends Component {
                 self.reload();
             } else {
                 alert(self.props.lang.error + result.Message);
+                self.setState({waiting_active: false});
             }
         });
     }
@@ -228,6 +241,7 @@ class CTable extends Component {
 
     change_filter_for_column(col, value){
         this.state.columns[col].filtering = value;
+        this.state.current_page = 0;
         this.reload();
     }
 
@@ -242,6 +256,7 @@ class CTable extends Component {
 
     change_search_for_column(col, value){
         this.state.columns[col].searching = value;
+        this.state.current_page = 0;
         this.reload();
     }
 
@@ -359,10 +374,15 @@ class CTable extends Component {
 
         var query_params = new URLSearchParams({select : JSON.stringify(query), ...this.props.params});
 
+        this.setState({waiting_active: true});
+
         fetch(this.props.endpoint + '?' + query_params.toString())
         .then(function(response){
             if (response.ok) {return response.json();}
-            else {alert(self.props.lang.server_error + response.status)} })
+            else {
+                alert(self.props.lang.server_error + response.status);
+                self.setState({waiting_active: false});
+            }})
         .then(function (result) {
             if (!result) return;
             if(result.Result == 'OK'){
@@ -370,11 +390,12 @@ class CTable extends Component {
                 self.setState({records: result.Records, total_records: result.TotalRecordCount,
                                records_on_page: self.state.records_on_page,
                                current_page: self.state.current_page,
-                               opened_editors: [], opened_subtables: [],
+                               opened_editors: [], opened_subtables: [], waiting_active: false,
                                total_pages: Math.floor(result.TotalRecordCount / self.state.records_on_page) - (result.TotalRecordCount % self.state.records_on_page == 0 ? 1 : 0)
                 });
             } else {
                 alert(self.props.lang.error + result.Message);
+                self.setState({waiting_active: false});
             }
         });
     }
@@ -428,7 +449,10 @@ class CTable extends Component {
             fetch(url)
             .then(function(response){
                 if (response.ok) {return response.json();}
-                else {alert(self.props.lang.server_error + response.status)} })
+                else {
+                    alert(self.props.lang.server_error + response.status)
+                    self.setState({waiting_active: false});
+                }})
             .then(function (result) {
                 if (!result) return;
                 if(result.Result == 'OK'){
@@ -438,6 +462,7 @@ class CTable extends Component {
                     //}
                 } else {
                     alert(self.props.lang.error + result.Message);
+                    self.setState({waiting_active: false});
                 }});
         }
 
@@ -536,8 +561,14 @@ class CTable extends Component {
                 {h(CTable, {lang:self.props.lang, ...self.subtables_params[i]})}
                 </td></tr> : ''}
                 </>; }) }
-                {self.state.records.length == 0 ? <tr><td colspan={self.visible_column_count()}><div class="has-text-centered">{self.props.lang.no_data}</div></td></tr> : ''}
+                {self.state.records.length == 0 ? <tr><td colspan={self.visible_column_count()}><div class="has-text-centered">{this.state.waiting_active ? self.props.lang.loading : self.props.lang.no_data}</div></td></tr> : ''}
         </tbody>;
+
+        var current_page_block = <div class="button"> {this.props.lang.current_page} {this.state.current_page+1} {this.props.lang.from} {this.state.total_pages+1}.</div>;
+
+        if(this.state.total_pages < 0){
+            var current_page_block = <div class="button"> {this.props.lang.no_pages}.</div>;
+        }
 
         var pager = <div class="field has-addons" style="justify-content:center;">
                         <div class="control">
@@ -576,12 +607,15 @@ class CTable extends Component {
                             </div>
                         </div>
                         <div class="control">
-                            <div class="button"> {this.props.lang.current_page} {this.state.current_page+1} {this.props.lang.from} {this.state.total_pages+1}.</div>
+                            {current_page_block}
                         </div>
                     </div>;
 
 
-        return <div class="table-container">
+        return <div class="table-container ctable-table-container">
+            <div class={this.state.waiting_active ? "ctable-loader-wrapper-active" : "ctable-loader-wrapper" } >
+                <div class="button is-large is-loading is-info"></div>
+            </div>
             <table class="table" style="width: 100%;">
                 <thead>
                     <tr>

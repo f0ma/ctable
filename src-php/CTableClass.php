@@ -580,21 +580,32 @@ class CTable extends ExtendedCallable {
 
     function execute_query($query){
         if ($query != NULL) {
+            $error_txt = '';
             $query->compile();
             $sqlquery = $query->sql($this->engine);
-            $stmt = $this->db->prepare($sqlquery);
+            try {
+                $stmt = $this->db->prepare($sqlquery);
+            } catch(Exception $e) {
+                $stmt = false;
+                $error_txt = $e->getMessage();
+            }
             if($this->log_query){
                 error_log('SQL: '.$sqlquery);
             }
             if(is_bool($stmt)){
-                $error_txt = implode(' ',$this->db->errorInfo());
+                $error_txt = 'PREPARE ERROR: '.$error_txt;
                 error_log('QUERY: '.$sqlquery);
                 error_log('ERROR STMT: '.$error_txt);
                 $this->send_error($error_txt);
                 return false;
             }
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $exec_result = $stmt->execute($query->params($this->engine));
+            try {
+                $exec_result = $stmt->execute($query->params($this->engine));
+            } catch(Exception $e) {
+                $exec_result = false;
+                $error_txt = $e->getMessage();
+            }
             if($exec_result !== false){
                 $rdata = [];
                 while($row = $stmt->fetch()){
@@ -605,10 +616,10 @@ class CTable extends ExtendedCallable {
                 }
                 return $rdata;
             }else{
-                $error_txt = implode(' ',$this->db->errorInfo());
+                $error_txt = 'EXECUTE ERROR: '.$error_txt;
                 error_log('QUERY: '.$sqlquery);
                 error_log('ERROR QUERY: '.$error_txt);
-                $this->send_error($error_txt.' IN '.$sqlquery);
+                $this->send_error($error_txt.' IN '.$sqlquery.' WITH '.var_export($query->params($this->engine), true));
                 return false;
             }
         }

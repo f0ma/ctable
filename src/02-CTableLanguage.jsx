@@ -1,6 +1,7 @@
 var ctable_lang = {
     en: {
-        current_page: 'Current page',
+        current_page: 'Page',
+        no_pages: 'No pages',
         from: 'from',
         show_by: 'Show by',
         to_last_page: 'To last page',
@@ -26,10 +27,12 @@ var ctable_lang = {
         file_filter_no: 'No file',
         file_filter_yes: 'Have a file',
         reload: 'Reload',
+        loading: 'Loading...',
         all: 'All'
     },
     ru: {
-        current_page: 'Текущая страница',
+        current_page: 'Страница',
+        no_pages: 'Нет страниц',
         from: 'из',
         show_by: 'Показывать по',
         to_last_page: 'На последнюю страницу',
@@ -55,6 +58,7 @@ var ctable_lang = {
         file_filter_no: 'Файла нет',
         file_filter_yes: 'Файл есть',
         reload: 'Перезагрузить',
+        loading: 'Загрузка...',
         all: 'Все'
     }
 }
