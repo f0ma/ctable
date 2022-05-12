@@ -2,3 +2,4 @@ demo/demo.real.db
 demo/demo.timestamp
 demo/vendor
 src-php/vendor
+node_modules

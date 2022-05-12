@@ -346,8 +346,12 @@ class CTable extends ExtendedCallable {
 
             $this->files[] = $_FILES[$key]['tmp_name'];
             $this->file_names[] = "$hash:".$name.':'.$timestamp.';';
-            //move_uploaded_file($_FILES[$key]['tmp_name'], 'uploads/' . $hash .'.'. $ext);
+            $this->process_uploaded_file($_FILES[$key]['tmp_name'], $hash, $ext);
         }
+    }
+
+    function process_uploaded_file($tmpfile, $hash, $ext){
+        //move_uploaded_file($tmpfile, 'uploads/' . $hash .'.'. $ext);
     }
 
     function building_delete_query() {
@@ -485,7 +489,7 @@ class CTable extends ExtendedCallable {
 
     function sending_upload_result() {
         header('Content-Type: application/json;charset=utf-8');
-        echo json_encode(['Result'=>'OK', 'Files'=> implode($this->file_names,'')]);
+        echo json_encode(['Result'=>'OK', 'Files'=> implode('', $this->file_names)]);
     }
 
     function sending_write_result() {
@@ -576,21 +580,32 @@ class CTable extends ExtendedCallable {
 
     function execute_query($query){
         if ($query != NULL) {
+            $error_txt = '';
             $query->compile();
             $sqlquery = $query->sql($this->engine);
-            $stmt = $this->db->prepare($sqlquery);
+            try {
+                $stmt = $this->db->prepare($sqlquery);
+            } catch(Exception $e) {
+                $stmt = false;
+                $error_txt = $e->getMessage();
+            }
             if($this->log_query){
                 error_log('SQL: '.$sqlquery);
             }
             if(is_bool($stmt)){
-                $error_txt = implode(' ',$this->db->errorInfo());
+                $error_txt = 'PREPARE ERROR: '.$error_txt;
                 error_log('QUERY: '.$sqlquery);
                 error_log('ERROR STMT: '.$error_txt);
                 $this->send_error($error_txt);
                 return false;
             }
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $exec_result = $stmt->execute($query->params($this->engine));
+            try {
+                $exec_result = $stmt->execute($query->params($this->engine));
+            } catch(Exception $e) {
+                $exec_result = false;
+                $error_txt = $e->getMessage();
+            }
             if($exec_result !== false){
                 $rdata = [];
                 while($row = $stmt->fetch()){
@@ -601,10 +616,10 @@ class CTable extends ExtendedCallable {
                 }
                 return $rdata;
             }else{
-                $error_txt = implode(' ',$this->db->errorInfo());
+                $error_txt = 'EXECUTE ERROR: '.$error_txt;
                 error_log('QUERY: '.$sqlquery);
                 error_log('ERROR QUERY: '.$error_txt);
-                $this->send_error($error_txt.' IN '.$sqlquery);
+                $this->send_error($error_txt.' IN '.$sqlquery.' WITH '.var_export($query->params($this->engine), true));
                 return false;
             }
         }

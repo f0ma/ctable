@@ -1,0 +1,52 @@
+.table tbody tr td, .table thead tr th, .table tfoot tr th {
+    vertical-align:middle;
+}
+
+.table tbody tr:last-child td, .table tbody tr:last-child th {
+  border-bottom-width: 1px;
+}
+
+.input {
+    min-width: 8em;
+}
+
+.ctable-table-container {
+    min-height: 21em;
+}
+
+.ctable-loader-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity .3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ctable-loader-wrapper-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    opacity: 0.5;
+    z-index: 8;
+    transition: opacity .3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ctable-loader-wrapper-active .button {
+    width: 10em;
+    height: 3em;
+    position: fixed;
+    top: 30%;
+}

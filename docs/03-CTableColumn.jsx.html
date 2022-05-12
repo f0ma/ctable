@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: 03-CTableColumn.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: 03-CTableColumn.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Base column class.
+ *
+ * This basic implementation can make search and sorting.
+ *
+ * @arg this.props.role {string} Control role: 'header', 'search', 'cell', 'footer', 'editor'.
+ * @arg this.props.column {int} Currnet column index.
+ * @arg this.props.row {int} Currnet row index, -1 for new row.
+ * @arg this.props.sorting {undefined|string} Column sorting order: 'ASC', 'DESC' or ''. No sorting in `undefined`.
+ * @arg this.props.searching {undefined|string} Column searching: query string or ''. No search in `undefined`.
+ */
+
+class CTableColumn extends Component {
+
+    /**
+     * Trivial constructor. Call super() to create Component correctly.
+     */
+    constructor() {
+        super();
+
+        this.searchCleared = this.searchCleared.bind(this);
+        this.searchChanged = this.searchChanged.bind(this);
+        this.sortingChanged = this.sortingChanged.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({searching: this.props.search});
+    }
+
+    searchCleared(e) {
+        this.setState({searching: null});
+        this.props.table.change_search_for_column(this.props.column, null);
+    }
+
+    searchChanged(e) {
+        this.setState({searching: e.target.value});
+        this.props.table.change_search_for_column(this.props.column, e.target.value);
+    }
+
+    sortingChanged(e) {
+        var order = null;
+        if (this.props.sorting == 'ASC'){
+            order = 'DESC';
+        } else if (this.props.sorting == 'DESC'){
+            order = null;
+        } else if (this.props.sorting == null){
+            order = 'ASC';
+        }
+        this.props.table.change_sort_for_column(this.props.column, order);
+    }
+
+    /**
+     * Build search bar for column.
+     *
+     * For override in subclesses.
+     *
+     * @return {PreactNode} Search control.
+     */
+
+    render_search() {
+        if (typeof this.props.searching === 'undefined') {
+            // do nothing
+        } else {
+            return &lt;div class="control has-icons-right">
+                       &lt;input class="input" value={this.state.searching} onChange={this.searchChanged} type="text"/>
+                       &lt;span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.searchCleared}>⊗&lt;/span>
+                   &lt;/div>
+        }
+    }
+
+    /**
+     * Build header of column.
+     *
+     * For override in subclesses.
+     *
+     * @return {PreactNode} Header control.
+     */
+
+    render_header() {
+        if (typeof this.props.sorting === 'undefined') {
+            return &lt;b>{this.title()}&lt;/b>;
+        } else {
+            var arrow = '';
+            if (this.props.sorting == 'ASC'){
+                arrow = '↓';
+            } else if (this.props.sorting == 'DESC'){
+                arrow = '↑';
+            } else if (this.props.sorting == null){
+                arrow = '⇵';
+            }
+            return &lt;b>&lt;a onClick={this.sortingChanged}>&lt;span class="icon" style="display:inline">{arrow}&lt;/span>&amp;nbsp;{this.title()}&lt;/a>&lt;/b>;
+        }
+    }
+
+    /**
+     * Return current cell value.
+     *
+     * For use in subclesses.
+     *
+     * @return {*} Current cell value, default for new record or null if default is not set.
+     */
+
+    value() {
+        if (this.props.row >= 0){
+            return this.props.table.state.records[this.props.row][this.props.table.state.columns[this.props.column].name];
+        }
+        if (typeof this.props.table.state.columns[this.props.column].default === 'undefined'){
+            return null;
+        } else {
+            return this.props.table.state.columns[this.props.column].default;
+        }
+    }
+
+    /**
+     * Return current row values.
+     *
+     * For use in subclesses.
+     *
+     * @return {Object|null} Current row dictionary.
+     */
+
+    row() {
+        if (this.props.row >= 0){
+            return this.props.table.state.records[this.props.row];
+        }
+        return null;
+    }
+
+    /**
+     * Return column name.
+     *
+     * For use in subclesses.
+     *
+     * @return {string} Current column name.
+     */
+
+    name() {
+        return this.props.table.state.columns[this.props.column].name;
+    }
+
+    /**
+     * Return column title.
+     *
+     * For use in subclesses.
+     *
+     * @return {string} Current column title.
+     */
+
+    title() {
+        return this.props.table.state.columns[this.props.column].title;
+    }
+
+    /**
+     * Build view cell of table.
+     *
+     * For override in subclesses.
+     *
+     * @return {PreactNode} Header control.
+     */
+
+    render_cell() {
+        return &lt;span>{this.value()}&lt;/span>;
+    }
+
+    /**
+     * Build editor control for cell.
+     *
+     * For override in subclesses.
+     *
+     * @return {PreactNode} Editor control: `div` with `class="field"`.
+     */
+
+    render_editor(){
+    }
+
+    /**
+     * Build footer of column.
+     *
+     * For override in subclesses.
+     *
+     * @return {PreactNode} Footer control.
+     */
+
+    render_footer() {
+    }
+
+    /**
+     * Callback called if changes in another editor happens.
+     *
+     * For use in subclesses with `CTable.notify_changes` and `CTable.subscribe_to_changes`.
+     *
+     * @param {int} row Affected row
+     * @param {int} col Affected column
+     * @param {*} value New value
+     */
+
+    on_changes(row, col, value) {
+    }
+
+    /**
+     * Main render method.
+     *
+     * Call specific method by this.props.role.
+     *
+     * @return {PreactNode} Cell control.
+     */
+
+    render() {
+        if(this.props.role == 'header'){
+            return this.render_header();
+        }
+        if(this.props.role == 'search'){
+            return this.render_search();
+        }
+        if(this.props.role == 'footer'){
+            return this.render_footer();
+        }
+        if(this.props.role == 'cell'){
+            return this.render_cell();
+        }
+        if(this.props.role == 'editor'){
+            return this.render_editor();
+        }
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Thu May 12 2022 20:08:37 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
