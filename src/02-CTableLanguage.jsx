@@ -28,7 +28,8 @@ var ctable_lang = {
         file_filter_yes: 'Have a file',
         reload: 'Reload',
         loading: 'Loading...',
-        all: 'All'
+        all: 'All',
+        file_only_one: 'Only one file should be uploaded'
     },
     ru: {
         current_page: 'Страница',
@@ -59,7 +60,8 @@ var ctable_lang = {
         file_filter_yes: 'Файл есть',
         reload: 'Перезагрузить',
         loading: 'Загрузка...',
-        all: 'Все'
+        all: 'Все',
+        file_only_one: 'Может быть загружен только один файл'
     }
 }
 

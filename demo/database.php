@@ -17,3 +17,7 @@ if( time() - $mtime > 60*15){
 }
 
 $db = new PDO("sqlite:".$dblocrw);
+
+//$db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, TRUE);
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);

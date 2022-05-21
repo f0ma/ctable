@@ -1,16 +1,6 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
-
-use Latitude\QueryBuilder\Engine\MySqlEngine;
-use Latitude\QueryBuilder\Engine\CommonEngine;
-use Latitude\QueryBuilder\QueryFactory;
-use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\search;
-use function Latitude\QueryBuilder\group;
-use function Latitude\QueryBuilder\func;
-use function Latitude\QueryBuilder\alias;
-use function Latitude\QueryBuilder\on;
+require __DIR__ .'/PDQLQuery.php';
 
 function startsWith($haystack, $needle) {
     return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
@@ -63,8 +53,6 @@ class CTable extends ExtendedCallable {
     var $primary_table;
     var $param;
     var $query;
-    var $factory;
-    var $engine;
     var $data;
     var $key_columns_values;
     var $data_values;
@@ -74,6 +62,11 @@ class CTable extends ExtendedCallable {
     var $options_columns;
     var $key_columns;
     var $log_query;
+    var $upload_dir = NULL;
+
+    function set_upload_dir($dir){
+        $this->upload_dir = $dir;
+    }
 
     function send_error($text){
         header('Content-Type: application/json;charset=utf-8');
@@ -81,22 +74,13 @@ class CTable extends ExtendedCallable {
         die();
     }
 
-    function __construct($db, $primary_table, $key_columns, $engine = NULL, $log_query = FALSE){
+    function __construct($db, $primary_table, $key_columns, $log_query = FALSE){
         $this->db = $db;
         $this->log_query = $log_query;
-
-        if ($engine == NULL){
-            $this->engine = new MySqlEngine();
-        } else {
-            $this->engine = $engine;
-        }
 
         // INTERNAL DATA API
 
         // FOR ALL QUERY:
-
-        // Query factory
-        $this->factory = new QueryFactory($this->engine);
 
         // Allow query
         $this->allowed_query = ['select', 'options', 'insert', 'update', 'delete', 'upload', 'download', 'custom_read', 'custom_write'];
@@ -264,17 +248,13 @@ class CTable extends ExtendedCallable {
 
     function setting_readable_columns(){
         if($this->readable_columns !== NULL){
-            foreach($this->readable_columns as $col){
-                $this->query->addColumns($col);
-            }
+            $this->query->select($this->readable_columns);
         }
     }
 
     function setting_options_columns(){
         if($this->options_columns !== NULL){
-            foreach($this->options_columns as $col){
-                $this->query->addColumns($col);
-            }
+            $this->query->select($this->options_columns);
         }
     }
 
@@ -309,21 +289,25 @@ class CTable extends ExtendedCallable {
 
 
     function building_select_query() {
-        $this->query = $this->factory->select()->from($this->primary_table);
+        $this->query = new PDQLQuery();
+        $this->query->select()->from($this->primary_table);
     }
 
     function building_options_query() {
-        $this->query = $this->factory->select()->from($this->primary_table);
+        $this->query = new PDQLQuery();
+        $this->query->select()->from($this->primary_table);
     }
 
     function building_insert_query() {
-        $this->query = $this->factory->insert($this->primary_table, $this->data_values);
+        $this->query = new PDQLQuery();
+        $this->query->table($this->primary_table)->insert($this->data_values);
     }
 
     function building_update_query() {
-        $this->query = $this->factory->update($this->primary_table, $this->data_values);
+        $this->query = new PDQLQuery();
+        $this->query->table($this->primary_table)->update($this->data_values);
         foreach($this->key_columns_values as $col => $val){
-            $this->query->andWhere(field($col)->eq($val));
+            $this->query->where_eq([$col], $val);
         }
     }
 
@@ -332,7 +316,7 @@ class CTable extends ExtendedCallable {
         $this->file_names = [];
 
         foreach ($_FILES as $key => $value){
-            if(count($this->files) > $this->files_max_count){
+            if(count($_FILES) > $this->files_max_count){
                 break;
             }
             if($_FILES[$key]['size'] > $this->files_max_size){
@@ -346,14 +330,20 @@ class CTable extends ExtendedCallable {
 
             $this->files[] = $_FILES[$key]['tmp_name'];
             $this->file_names[] = "$hash:".$name.':'.$timestamp.';';
-            //move_uploaded_file($_FILES[$key]['tmp_name'], 'uploads/' . $hash .'.'. $ext);
+            if($this->upload_dir !== NULL){
+                $fname = $this->upload_dir.'/' . $hash .'.'. $ext;
+                if($this->log_query)
+                    error_log("Writing upload file to ".$fname);
+                move_uploaded_file($_FILES[$key]['tmp_name'], $fname);
+            }
         }
     }
 
     function building_delete_query() {
-        $this->query = $this->factory->delete($this->primary_table);
+        $this->query = new PDQLQuery();
+        $this->query->table($this->primary_table)->delete();
         foreach($this->key_columns_values as $col => $val){
-            $this->query->andWhere(field($col)->eq($val));
+            $this->query->where_eq([$col], $val);
         }
     }
 
@@ -361,7 +351,7 @@ class CTable extends ExtendedCallable {
         if(array_key_exists('column_orders', $this->param)){
             foreach($this->param['column_orders'] as $col => $ord){
                 if (in_array($ord, ['ASC','DESC'])){
-                    $this->query->orderBy($col, $ord);
+                    $this->query->order_by($col, $ord);
                 }
             }
         }
@@ -370,24 +360,30 @@ class CTable extends ExtendedCallable {
             foreach($this->param['column_searches'] as $col => $val){
                 if (strpos($col,'+') !== FALSE){
                     $ccolumns = explode('+', $col);
-                    $rule = search($ccolumns[0])->contains($val);
-                    foreach(array_slice($ccolumns, 1) as $ccol){
-                        $rule = $rule->or(search($ccol)->contains($val));
+                    $this->query->where_begin('OR');
+                    foreach($ccolumns as $ccol){
+                        $this->query->where_like([$ccol], "%".$val."%");
                     }
-                    $this->query->andWhere(group($rule));
+                    $this->query->where_end();
+
                 } else {
                     if ($val == '%any'){
                     //pass do not add filter
                     } elseif ($val == '%empty'){
-                        $this->query->andWhere(field($col)->eq(''));
+                        $this->query->where_eq([$col], "");
                     } elseif ($val == '%notempty'){
-                        $this->query->andWhere(field($col)->notEq(''));
+                        $this->query->where_neq([$col], "");;
+                    } elseif ($val == '%nodata'){
+                        $this->query->where_begin('OR');
+                        $this->query->where_is_null([$col]);
+                        $this->query->where_eq([$col], "");
+                        $this->query->where_end();
                     } elseif ($val == '%null'){
-                        $this->query->andWhere(field($col)->isNull());
+                        $this->query->where_is_null([$col]);
                     } elseif ($val == '%notnull'){
-                        $this->query->andWhere(field($col)->isNotNull());
+                        $this->query->where_is_not_null([$col]);
                     } else {
-                        $this->query->andWhere(search($col)->contains($val));
+                        $this->query->where_like([$col], "%".$val."%");
                     }
                 }
             }
@@ -398,15 +394,20 @@ class CTable extends ExtendedCallable {
                 if ($val == '%any'){
                     //pass do not add filter
                 } elseif ($val == '%empty'){
-                    $this->query->andWhere(field($col)->eq(''));
+                    $this->query->where_eq([$col], "");
                 } elseif ($val == '%notempty'){
-                    $this->query->andWhere(field($col)->notEq(''));
+                    $this->query->where_neq([$col], "");
+                } elseif ($val == '%nodata'){
+                    $this->query->where_begin('OR');
+                    $this->query->where_is_null([$col]);
+                    $this->query->where_eq([$col], "");
+                    $this->query->where_end();
                 } elseif ($val == '%null'){
-                    $this->query->andWhere(field($col)->isNull());
+                    $this->query->where_is_null([$col]);
                 } elseif ($val == '%notnull'){
-                    $this->query->andWhere(field($col)->isNotNull());
+                    $this->query->where_is_not_null([$col]);
                 } else {
-                    $this->query->andWhere(field($col)->eq($val));
+                    $this->query->where_eq([$col], $val);
                 }
             }
         }
@@ -426,11 +427,16 @@ class CTable extends ExtendedCallable {
             return;
         }
 
-        if((in_array($this->operation, ['select','download'])) && (get_class($this->engine) == 'Latitude\QueryBuilder\Engine\MySqlEngine')){
-            $this->query->calcFoundRows(true);
-        }
+        if($this->log_query)
+            error_log($this->query->sql());
 
-        $this->data = $this->execute_query($this->query);
+        try {
+            $this->data = $this->query->execute($this->db);
+        } catch (PDQLQueryException $e) {
+            $this->send_error($e->getMessage());
+        } catch (PDOException $e) {
+            $this->send_error($e->getMessage());
+        }
 
         if ($this->data === false) {
             return; // Error in query
@@ -440,21 +446,7 @@ class CTable extends ExtendedCallable {
             $this->data = [];
         }
 
-        if (in_array($this->operation, ['select','download'])) {
-            if(get_class($this->engine) == 'Latitude\QueryBuilder\Engine\MySqlEngine'){
-                $this->total_records = $this->db->query('SELECT FOUND_ROWS()')->fetch()[0];
-            } else {
-                $this->call_with_extends('building_read_query');
-                $this->call_with_extends('applying_filters');
-                $dcount = $this->execute_query($this->query);
-                if ($dcount === true){
-                    $this->total_records = 0;
-                } else {
-                    $this->total_records = count($dcount);
-                }
-            }
-
-        }
+        $this->total_records = $this->query->row_count();
     }
 
     function sending_result() {
@@ -574,40 +566,4 @@ class CTable extends ExtendedCallable {
             echo json_encode(['Result' => 'OK', 'Options' => $repacked], JSON_UNESCAPED_UNICODE);
     }
 
-    function execute_query($query){
-        if ($query != NULL) {
-            $query->compile();
-            $sqlquery = $query->sql($this->engine);
-            $stmt = $this->db->prepare($sqlquery);
-            if($this->log_query){
-                error_log('SQL: '.$sqlquery);
-            }
-            if(is_bool($stmt)){
-                $error_txt = implode(' ',$this->db->errorInfo());
-                error_log('QUERY: '.$sqlquery);
-                error_log('ERROR STMT: '.$error_txt);
-                $this->send_error($error_txt);
-                return false;
-            }
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $exec_result = $stmt->execute($query->params($this->engine));
-            if($exec_result !== false){
-                $rdata = [];
-                while($row = $stmt->fetch()){
-                    $rdata[]=$row;
-                }
-                if(count($rdata) == 0){
-                    return true;
-                }
-                return $rdata;
-            }else{
-                $error_txt = implode(' ',$this->db->errorInfo());
-                error_log('QUERY: '.$sqlquery);
-                error_log('ERROR QUERY: '.$error_txt);
-                $this->send_error($error_txt.' IN '.$sqlquery);
-                return false;
-            }
-        }
-        return true;
-    }
 }

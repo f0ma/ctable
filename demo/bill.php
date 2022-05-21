@@ -9,6 +9,6 @@ class MyTable extends CTable {
 
 }
 
-$t = new MyTable($db, 'bill', ['id'], new SqliteEngine());
+$t = new MyTable($db, 'bill', ['id']);
 $t->process();
  

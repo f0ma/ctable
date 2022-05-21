@@ -88,7 +88,11 @@ class CUploadColumn extends CTableColumn{
     }
 
     filterChanged(e){
-        this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        if(e.target.value == ''){
+            this.props.table.change_filter_for_column(this.props.column, null);
+        } else {
+            this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        }
     }
 
     render_search() {
@@ -98,7 +102,7 @@ class CUploadColumn extends CTableColumn{
             return <div class="select">
                      <select onChange={this.filterChanged} value={this.props.filtering}>
                        <option value=''>{this.props.table.props.lang.no_filter}</option>
-                       <option value='%null'>{this.props.table.props.lang.file_filter_no}</option>
+                       <option value='%nodata'>{this.props.table.props.lang.file_filter_no}</option>
                        <option value='%notempty'>{this.props.table.props.lang.file_filter_yes}</option>
                      </select>
                    </div>;
@@ -113,6 +117,11 @@ class CUploadColumn extends CTableColumn{
     editorChanged(e) {
 
         var form_data = new FormData();
+
+        if(e.target.files.length > 1 && (!this.props.multiple)){
+            alert(this.props.table.props.lang.file_only_one);
+            return;
+        }
 
         for(var file_index = 0; file_index < e.target.files.length; file_index++){
             if(this.props.max_file_size){
@@ -133,8 +142,11 @@ class CUploadColumn extends CTableColumn{
 
         var self = this;
 
+        this.props.table.setState({waiting_active: true});
+
         fetch(this.props.upload_endpoint, {method: 'POST', body: form_data})
         .then(function(response){
+            self.props.table.setState({waiting_active: false}); // always disable table waiting
             if (response.ok) {return response.json();}
             else {alert(self.props.table.props.lang.server_error + response.status)} })
         .then(function (result) {
