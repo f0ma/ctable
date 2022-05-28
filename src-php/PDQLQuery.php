@@ -38,23 +38,32 @@ class PDQLQuery {
     var $exec_result = NULL;
     var $statment = NULL;
 
-    function _is_assoc_array(array $array) {
+    var $query_uid = NULL;
+
+    var $found_rows = 0;
+    var $count_found_rows = FALSE;
+
+    function __construct(){
+      $this->query_uid = substr(uniqid(),-5);
+    }
+
+    function _is_assoc_array($array) {
         if(!is_array($array)) return FALSE;
         return count(array_filter(array_keys($array), 'is_string')) == count($array);
     }
 
-    function _is_seq_array(array $array) {
+    function _is_seq_array($array) {
         if(!is_array($array)) return FALSE;
         return count(array_filter(array_keys($array), 'is_integer')) == count($array);
     }
 
     function _next_autovar(){
-        $avar = ":var_auto_{$this->autovar_index}";
+        $avar = ":var_{$this->query_uid}_{$this->autovar_index}";
         $this->autovar_index += 1;
         return $avar;
     }
 
-    function _autoformat_id(string $id){
+    function _autoformat_id($id){
         if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', $id)){
             $cmps = explode('.', $id);
             $qcmps = [];
@@ -66,7 +75,7 @@ class PDQLQuery {
         return $id;
     }
 
-    function column(string $id){
+    function column($id){
         if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', $id)){
             $cmps = explode('.', $id);
             $qcmps = [];
@@ -93,6 +102,10 @@ class PDQLQuery {
     function one(){
         $this->_one = true;
         return $this;
+    }
+
+    function count_found($cf = TRUE){
+        $this->count_found_rows = $cf;
     }
 
     function select(){
@@ -232,40 +245,49 @@ class PDQLQuery {
         return $rarg;
     }
 
+    function clause_binary_op($arg1, $op, $arg2){
+        return $this->where($this->_prepare_argument($arg1).' '.$op.' '.$this->_prepare_argument($arg2));
+    }
+
+    function clause_unary_op($arg1, $op){
+        $pp1 = $this->_prepare_argument($arg1);
+        return $this->where($pp1.' '.$op);
+    }
+
     function where_eq($column, $value){
-        return $this->where($this->_prepare_argument($column).' = '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, "=", $value);
     }
 
     function where_ge($column, $value){
-        return $this->where($this->_prepare_argument($column).' >= '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, ">=", $value);
     }
 
     function where_le($column, $value){
-        return $this->where($this->_prepare_argument($column).' <= '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, "<=", $value);
     }
 
     function where_neq($column, $value){
-        return $this->where($this->_prepare_argument($column).' <> '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, "<>", $value);
     }
 
     function where_gt($column, $value){
-        return $this->where($this->_prepare_argument($column).' > '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, ">", $value);
     }
 
     function where_lt($column, $value){
-        return $this->where($this->_prepare_argument($column).' < '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, "<", $value);
     }
 
     function where_like($column, $value){
-        return $this->where($this->_prepare_argument($column).' LIKE '.$this->_prepare_argument($value));
+        return $this->clause_binary_op($column, "LIKE", $value);
     }
 
     function where_is_null($column){
-        return $this->where($this->_prepare_argument($column).' IS NULL');
+        return $this->clause_unary_op($column, "IS NULL");
     }
 
     function where_is_not_null($column){
-        return $this->where($this->_prepare_argument($column).' IS NOT NULL');
+        return $this->clause_unary_op($column, "IS NOT NULL");
     }
 
     function having($term, $vars = []){
@@ -295,14 +317,20 @@ class PDQLQuery {
             throw new PDQLQueryException('Joins available only for select');
 
         if($kind == ''){
-            $this->last_join_term = '';
+            $this->last_join_term = ' JOIN';
         } else {
             $this->last_join_term = $kind." JOIN";
         }
 
-        if(is_array($table))
-            $this->last_join_table = $this->_prepare_argument($table);
-        else
+        if(is_array($table)){
+            if($this->_is_assoc_array($table) && count($table) == 1){
+                $k = array_keys($table)[0];
+                $v = $table[$k];
+                $this->last_join_table = $this->_autoformat_id($v).' AS '.$this->_autoformat_id($k);
+            } else {
+                $this->last_join_table = $this->_prepare_argument($table);
+            }
+        } else
             $this->last_join_table = $this->_autoformat_id($table);
 
         return $this;
@@ -471,7 +499,8 @@ class PDQLQuery {
         if(count($this->order_by_list) > 0){
             $terms = [];
             foreach($this->order_by_list as $c => $ord){
-                $terms[]= $this->_autoformat_id($c).' '.$ord;
+                $col = $this->_autoformat_id($c);
+                $terms[]= $col.' '.$ord;
             }
             $s = " ORDER BY ".implode(', ',$terms);
         }
@@ -616,8 +645,12 @@ class PDQLQuery {
         }
     }
 
-    function sql_sub(){
-        return '('.substr($this->sql(),0,-1).')';
+    function sql_sub($alias = NULL){
+        $sq = '('.substr($this->sql(),0,-1).')';
+        if($alias) {
+            $sq.=' AS `'.$alias.'`';
+        }
+        return $sq;
     }
 
     function variables(){
@@ -636,9 +669,16 @@ class PDQLQuery {
         return $this->where_list;
     }
 
-    function row_count(){
+    function rows_count(){
          if($this->exec_result === FALSE)
              throw new PDQLQueryException('Trying to get row_count for failed request');
+         return $this->statment->rowCount();
+    }
+
+    function rows_found(){
+         if($this->exec_result === FALSE)
+             throw new PDQLQueryException('Trying to get row_found for failed request');
+         return $this->found_rows;
     }
 
     // ok, any, empty, not_empty, affected, not_affected
@@ -660,7 +700,20 @@ class PDQLQuery {
 
         $rdata = [];
 
-        $rdata = $this->statment->fetchAll();
+        if($this->query_kind == 'select')
+            $rdata = $this->statment->fetchAll();
+
+        if($this->query_kind == 'select' && $this->count_found_rows){
+             $nr = clone $this;
+             $nr->_limit = NULL;
+             $nr->_offset = NULL;
+             $nr->select_columns = ['N' => 'COUNT(*)'];
+             $st = $db->prepare($nr->sql());
+             $st->execute($this->variables());
+             $this->found_rows = $st->fetch()['N'];
+        } else {
+            $this->found_rows = 0;
+        }
 
         if($this->statment->rowCount() > 0 && $accept == 'not_affected')
             throw new PDQLQueryException('Query rowCount is not 0, but should be "not_affected"');
@@ -668,11 +721,18 @@ class PDQLQuery {
         if($this->statment->rowCount() == 0 && $accept == 'affected')
             throw new PDQLQueryException('Query rowCount is 0, but should be "affected"');
 
+        if($this->statment->rowCount() != 1 && $accept == 'one_affected')
+            throw new PDQLQueryException('Query rowCount is 0, but should be "affected"');
+
+
         if(count($rdata) > 0 && $accept == 'empty')
             throw new PDQLQueryException('Query result is empty, but should be "not_empty"');
 
         if(count($rdata) == 0 && $accept == 'not_empty')
             throw new PDQLQueryException('Query result is not empty, but should be "empty"');
+
+        if(count($rdata) != 1 && $accept == 'one')
+            throw new PDQLQueryException('Query result is not one, but should be "one"');
 
         return $rdata;
     }

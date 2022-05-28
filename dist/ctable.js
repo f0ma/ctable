@@ -139,6 +139,7 @@ var ctable_lang = {
  * @arg this.props.row {int} Currnet row index, -1 for new row.
  * @arg this.props.sorting {undefined|string} Column sorting order: 'ASC', 'DESC' or ''. No sorting in `undefined`.
  * @arg this.props.searching {undefined|string} Column searching: query string or ''. No search in `undefined`.
+ * @arg this.props.exact {undefined|boolean} Search only on exact match.
  */
 class CTableColumn extends Component {
   /**
@@ -161,14 +162,29 @@ class CTableColumn extends Component {
     this.setState({
       searching: null
     });
-    this.props.table.change_search_for_column(this.props.column, null);
+
+    if (typeof this.props.exact === 'undefined' || this.props.exact == false) {
+      this.props.table.change_search_for_column(this.props.column, null);
+    } else {
+      this.props.table.change_filter_for_column(this.props.column, null);
+    }
   }
 
   searchChanged(e) {
+    if (e.target.value === "") {
+      this.searchCleared(e);
+      return;
+    }
+
     this.setState({
       searching: e.target.value
     });
-    this.props.table.change_search_for_column(this.props.column, e.target.value);
+
+    if (typeof this.props.exact === 'undefined' || this.props.exact == false) {
+      this.props.table.change_search_for_column(this.props.column, e.target.value);
+    } else {
+      this.props.table.change_filter_for_column(this.props.column, e.target.value);
+    }
   }
 
   sortingChanged(e) {
@@ -384,6 +400,7 @@ class CTableColumn extends Component {
  * @arg this.props.no_delete {undefined|Boolean} Disable Delete button if true.
  * @arg this.props.no_add {undefined|Boolean} Disable Add button if true.
  * @arg this.props.no_menu {undefined|Boolean} Disable Extra menu.
+ * @arg this.props.left_align {undefined|Boolean} Disable force right align.
  */
 class CActionColumn extends CTableColumn {
   constructor() {
@@ -396,10 +413,16 @@ class CActionColumn extends CTableColumn {
     this.discardClicked = this.discardClicked.bind(this);
     this.saveClicked = this.saveClicked.bind(this);
     this.deleteClicked = this.deleteClicked.bind(this);
+    this.menu_actions = [];
     this.setState({
       menu_active: false,
       search_menu_id: makeID()
     });
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.menu_actions = [[this.reloadClicked, this.props.table.props.lang.reload]];
   }
 
   newClicked(e) {
@@ -452,7 +475,7 @@ class CActionColumn extends CTableColumn {
   render_editor() {
     return h("div", {
       class: "field has-addons",
-      style: "justify-content: right;"
+      style: this.props.left_align ? "" : "justify-content: right;"
     }, h("div", {
       class: "control"
     }, h("button", {
@@ -469,7 +492,7 @@ class CActionColumn extends CTableColumn {
   render_cell() {
     return h("div", {
       class: "field has-addons",
-      style: "justify-content: right;"
+      style: this.props.left_align ? "" : "justify-content: right;"
     }, this.props.no_edit ? '' : h("div", {
       class: "control"
     }, h("button", {
@@ -491,8 +514,8 @@ class CActionColumn extends CTableColumn {
 
   render_search() {
     return h("div", {
-      class: this.state.menu_active ? 'field has-addons dropdown is-right is-active' : 'field has-addons dropdown is-right',
-      style: "justify-content: right;"
+      class: this.state.menu_active ? 'field has-addons dropdown is-active' + (this.props.left_align ? '' : 'is-right') : 'field has-addons dropdown' + (this.props.left_align ? '' : ' is-right'),
+      style: this.props.left_align ? "" : "justify-content: right;"
     }, this.props.no_add ? '' : h("div", {
       class: "control"
     }, h("button", {
@@ -515,14 +538,17 @@ class CActionColumn extends CTableColumn {
     }, "\u2261")), h("div", {
       class: "dropdown-menu",
       id: this.state.search_menu_id,
-      role: "menu"
+      role: "menu",
+      style: this.state.menu_active ? "display:inherit;" : ""
     }, h("div", {
       class: "dropdown-content"
-    }, h("a", {
-      href: "",
-      class: "dropdown-item",
-      onClick: this.reloadClicked
-    }, this.props.table.props.lang.reload)))));
+    }, this.menu_actions.map(function (item) {
+      return h("a", {
+        href: "",
+        class: "dropdown-item",
+        onClick: item[0]
+      }, item[1]);
+    })))));
   }
 
 }
@@ -1655,7 +1681,8 @@ class CTable extends Component {
       this.changes.filter(function (item) {
         return item[0] == row;
       }).map(function (item) {
-        if (!self.state.columns[item[1]].is_key && self.state.columns[item[1]].name != '') {
+        if (self.state.columns[item[1]].name != '') {
+          //                if ((!self.state.columns[item[1]].is_key) && (self.state.columns[item[1]].name != '')){
           xvalues[self.state.columns[item[1]].name] = item[2];
         }
       });

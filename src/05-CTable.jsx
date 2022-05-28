@@ -197,7 +197,8 @@ class CTable extends Component {
         } else {
             cmd = 'insert=';
             this.changes.filter(function(item){return item[0] == row;}).map(function (item) {
-                if ((!self.state.columns[item[1]].is_key) && (self.state.columns[item[1]].name != '')){
+                if (self.state.columns[item[1]].name != ''){
+//                if ((!self.state.columns[item[1]].is_key) && (self.state.columns[item[1]].name != '')){
                     xvalues[self.state.columns[item[1]].name] = item[2];
                 }
             });

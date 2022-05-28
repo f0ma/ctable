@@ -74,6 +74,7 @@ class PDQLQueryTest extends TestCase
 
     public function testAutoVars() {
         $q = new PDQLQuery();
+        $q->query_uid = 'auto';
         $q->select()->from('test')->where_eq(['x'], 10)->where_gt('y', ['q'])->where_le(['a'], ['b'])->where_is_null(['s']);
         $this->assertEquals($q->sql(), "SELECT * FROM `test` WHERE `x` = :var_auto_0 AND :var_auto_1 > `q` AND `a` <= `b` AND `s` IS NULL;");
         $this->assertEquals($q->variables(), ['var_auto_0' => 10, 'var_auto_1' => 'y']);

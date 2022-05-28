@@ -430,7 +430,13 @@ class CTable extends ExtendedCallable {
         if($this->log_query)
             error_log($this->query->sql());
 
+        #var_dump($this->query->sql());
+        #var_dump($this->query->variables());
+
         try {
+            if (in_array($this->operation, ['select','download','options'])){
+                $this->query->count_found();
+            }
             $this->data = $this->query->execute($this->db);
         } catch (PDQLQueryException $e) {
             $this->send_error($e->getMessage());
@@ -446,7 +452,7 @@ class CTable extends ExtendedCallable {
             $this->data = [];
         }
 
-        $this->total_records = $this->query->row_count();
+        $this->total_records = $this->query->rows_found();
     }
 
     function sending_result() {

@@ -8,6 +8,7 @@
  * @arg this.props.row {int} Currnet row index, -1 for new row.
  * @arg this.props.sorting {undefined|string} Column sorting order: 'ASC', 'DESC' or ''. No sorting in `undefined`.
  * @arg this.props.searching {undefined|string} Column searching: query string or ''. No search in `undefined`.
+ * @arg this.props.exact {undefined|boolean} Search only on exact match.
  */
 
 class CTableColumn extends Component {
@@ -29,12 +30,24 @@ class CTableColumn extends Component {
 
     searchCleared(e) {
         this.setState({searching: null});
-        this.props.table.change_search_for_column(this.props.column, null);
+        if(typeof this.props.exact === 'undefined' || this.props.exact == false){
+            this.props.table.change_search_for_column(this.props.column, null);
+        } else {
+            this.props.table.change_filter_for_column(this.props.column, null);
+        }
     }
 
     searchChanged(e) {
+        if (e.target.value === "") {
+            this.searchCleared(e);
+            return;
+        }
         this.setState({searching: e.target.value});
-        this.props.table.change_search_for_column(this.props.column, e.target.value);
+        if(typeof this.props.exact === 'undefined' || this.props.exact == false){
+            this.props.table.change_search_for_column(this.props.column, e.target.value);
+        } else {
+            this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        }
     }
 
     sortingChanged(e) {
