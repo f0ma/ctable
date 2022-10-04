@@ -73,7 +73,7 @@ class CUploadColumn extends CTableColumn{
          var fileinfo = this.value_parser(this.value());
 
         if (!fileinfo.uploaded){
-            return <a class="button is-info is-outlined" disabled="true"><span class="file-icon">⊖</span>{this.props.table.props.lang.no_file}</a>;
+            return <a class="button is-info is-outlined" disabled="true"><span class="material-icons">attach_file</span> {this.props.table.props.lang.no_file}</a>;
         }
 
         if (fileinfo.count == 1){
@@ -81,9 +81,9 @@ class CUploadColumn extends CTableColumn{
             if (this.props.links_endpoint) {
                 filelink = {"href":fileinfo.filelink, "target": "_blank", "disabled": false};
             }
-            return h("a",{"class": "button is-info is-outlined", "disabled": true, ...filelink}, <><span class="file-icon">⊖</span>{fileinfo.filelabel[0]}</>);
+            return h("a",{"class": "button is-info is-outlined", "disabled": true, ...filelink}, <><span class="material-icons">attach_file</span>{fileinfo.filelabel[0]}</>);
         } else {
-            return <a class="button is-info is-outlined" disabled="true"><span class="file-icon">⊖</span>{this.props.table.props.lang.multiple_files} {fileinfo.count}</a>;
+            return <a class="button is-info is-outlined" disabled="true"><span class="material-icons">attach_file</span> {this.props.table.props.lang.multiple_files} {fileinfo.count}</a>;
         }
     }
 
@@ -162,13 +162,13 @@ class CUploadColumn extends CTableColumn{
             return <><label class="label">{this.title()}</label>
                    <div class="field has-addons">
                        <div class="control">
-                           <button class="button is-info" disabled="true"><span class="file-icon">⊖</span>{this.props.table.props.lang.no_file}</button>
+                           <button class="button is-info" disabled="true"><span class="material-icons">attach_file</span> {this.props.table.props.lang.no_file}</button>
                         </div>
                         <div class="control">
-                            <button class="button is-info is-danger" disabled="true">⊗</button>
+                            <button class="button is-info is-danger" disabled="true"><span class="material-icons">delete</span></button>
                         </div>
                         <div class="control">
-                            <button class="button is-info">↥</button>
+                            <button class="button is-info"><span class="material-icons">upload</span></button>
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
                     </div>
@@ -184,13 +184,13 @@ class CUploadColumn extends CTableColumn{
             return <><label class="label">{this.title()}</label>
                    <div class="field has-addons">
                        <div class="control">
-                           {h("a",{"class": "button is-info", ...filelink}, <><span class="file-icon">⊖</span>{this.state.fileinfo.filelabel[0]}</>)}
+                           {h("a",{"class": "button is-info", ...filelink}, <><span class="material-icons">attach_file</span> {this.state.fileinfo.filelabel[0]}</>)}
                         </div>
                         <div class="control">
-                            <button class="button is-info is-danger" onClick={this.editorCleared}>⊗</button>
+                            <button class="button is-info is-danger" onClick={this.editorCleared}><span class="material-icons">delete</span></button>
                         </div>
                         <div class="control">
-                            <button class="button is-info">↥</button>
+                            <button class="button is-info"><span class="material-icons">upload</span></button>
                             <input class="file-input" type="file" name="file" multiple={this.props.multiple ? "true" : "false"} onChange={this.editorChanged}/>
                         </div>
                     </div>

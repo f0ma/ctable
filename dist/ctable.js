@@ -481,12 +481,16 @@ class CActionColumn extends CTableColumn {
     }, h("button", {
       class: "button is-primary",
       onClick: this.saveClicked
-    }, this.props.table.props.lang.save)), h("div", {
+    }, h("span", {
+      class: "material-icons"
+    }, "save"), " ", this.props.table.props.lang.save)), h("div", {
       class: "control"
     }, h("button", {
       class: "button is-warning",
       onClick: this.discardClicked
-    }, this.props.table.props.lang.discard)));
+    }, h("span", {
+      class: "material-icons"
+    }, "cancel"), " ", this.props.table.props.lang.discard)));
   }
 
   render_cell() {
@@ -501,7 +505,9 @@ class CActionColumn extends CTableColumn {
       onClick: this.editClicked
     }, h("span", {
       class: "icon"
-    }, "\u270E"))), this.props.no_delete ? '' : h("div", {
+    }, h("span", {
+      class: "material-icons"
+    }, "edit")))), this.props.no_delete ? '' : h("div", {
       class: "control"
     }, h("button", {
       class: "button is-danger",
@@ -509,12 +515,14 @@ class CActionColumn extends CTableColumn {
       onClick: this.deleteClicked
     }, h("span", {
       class: "icon"
-    }, "\u2297"))));
+    }, h("span", {
+      class: "material-icons"
+    }, "delete")))));
   }
 
   render_search() {
     return h("div", {
-      class: this.state.menu_active ? 'field has-addons dropdown is-active' + (this.props.left_align ? '' : 'is-right') : 'field has-addons dropdown' + (this.props.left_align ? '' : ' is-right'),
+      class: this.state.menu_active ? 'field has-addons dropdown is-active' + (this.props.left_align ? '' : ' is-right') : 'field has-addons dropdown' + (this.props.left_align ? '' : ' is-right'),
       style: this.props.left_align ? "" : "justify-content: right;"
     }, this.props.no_add ? '' : h("div", {
       class: "control"
@@ -524,7 +532,9 @@ class CActionColumn extends CTableColumn {
       onClick: this.newClicked
     }, h("span", {
       class: "icon"
-    }, "\u2295"))), this.props.no_menu ? '' : h("div", {
+    }, h("span", {
+      class: "material-icons"
+    }, "add_circle")))), this.props.no_menu ? '' : h("div", {
       class: "control"
     }, h("button", {
       class: this.state.menu_active ? "button is-info dropdown-trigger is-inverted" : "button is-info dropdown-trigger",
@@ -535,7 +545,9 @@ class CActionColumn extends CTableColumn {
       onBlur: this.menuLeave
     }, h("span", {
       class: "icon"
-    }, "\u2261")), h("div", {
+    }, h("span", {
+      class: "material-icons"
+    }, "menu"))), h("div", {
       class: "dropdown-menu",
       id: this.state.search_menu_id,
       role: "menu",
@@ -1048,7 +1060,9 @@ class CSubtableColumn extends CTableColumn {
       onClick: this.openSubtableClicked
     }, h("span", {
       class: "icon"
-    }, "\u2BA1"))));
+    }, h("span", {
+      class: "material-icons"
+    }, "menu_open")))));
   }
 
 }
@@ -1080,13 +1094,21 @@ class CTextColumn extends CTableColumn {
   }
 
   editorChanged(e) {
+    var ed_value = null;
+
+    if (e.target.tagName == 'DIV') {
+      ed_value = e.target.innerHTML;
+    } else {
+      ed_value = e.target.value;
+    }
+
     this.setState({
-      value: e.target.value
+      value: ed_value
     });
-    this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+    this.props.table.notify_changes(this.props.row, this.props.column, ed_value);
 
     if (this.props.validate) {
-      if (e.target.value.match(this.props.validate)) {
+      if (ed_value.match(this.props.validate)) {
         this.props.table.notify_valids(this.props.row, this.props.column, true);
         this.setState({
           editor_valid: true
@@ -1100,19 +1122,153 @@ class CTextColumn extends CTableColumn {
     }
   }
 
+  execRoleCommand(e) {
+    var role = e.target.dataset.role ?? e.target.parentElement.dataset.role;
+    document.execCommand(role, false, null);
+  }
+
   render_editor() {
-    var textarea = h("textarea", {
-      class: !this.state.editor_valid ? "textarea is-danger" : "textarea",
-      onChange: this.editorChanged,
-      placeholder: this.props.placeholder
-    }, this.state.value);
-    var input = h("input", {
-      class: !this.state.editor_valid ? "input is-danger" : "input",
-      type: "text",
-      value: this.state.value,
-      onChange: this.editorChanged,
-      placeholder: this.props.placeholder
-    });
+    var form_control = null;
+
+    if (this.props.textarea == true) {
+      form_control = h("textarea", {
+        class: !this.state.editor_valid ? "textarea is-danger" : "textarea",
+        onChange: this.editorChanged,
+        placeholder: this.props.placeholder
+      }, this.state.value);
+    }
+
+    if (this.props.richtext == true) {
+      form_control = h(Fragment, null, h("div", {
+        style: "text-align:center; padding:5px;"
+      }, h("span", {
+        class: "is-grouped"
+      }, h("a", {
+        class: "button",
+        "data-role": "undo",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "undo")), h("a", {
+        class: "button",
+        "data-role": "redo",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "redo"))), h("span", {
+        class: "is-grouped"
+      }, h("a", {
+        class: "button",
+        "data-role": "bold",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_bold")), h("a", {
+        class: "button",
+        "data-role": "italic",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_italic")), h("a", {
+        class: "button",
+        "data-role": "underline",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_underlined")), h("a", {
+        class: "button",
+        "data-role": "strikeThrough",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_strikethrough"))), h("span", {
+        class: "is-grouped"
+      }, h("a", {
+        class: "button",
+        "data-role": "justifyLeft",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_align_left")), h("a", {
+        class: "button",
+        "data-role": "justifyCenter",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_align_center")), h("a", {
+        class: "button",
+        "data-role": "justifyRight",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_align_right")), h("a", {
+        class: "button",
+        "data-role": "justifyFull",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_align_justify"))), h("span", {
+        class: "is-grouped"
+      }, h("a", {
+        class: "button",
+        "data-role": "indent",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_indent_increase")), h("a", {
+        class: "button",
+        "data-role": "outdent",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_indent_decrease"))), h("span", {
+        class: "is-grouped"
+      }, h("a", {
+        class: "button",
+        "data-role": "insertUnorderedList",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_list_bulleted")), h("a", {
+        class: "button",
+        "data-role": "insertOrderedList",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "format_list_numbered"))), h("span", {
+        class: "is-grouped"
+      }, h("a", {
+        class: "button",
+        "data-role": "subscript",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "subscript")), h("a", {
+        class: "button",
+        "data-role": "superscript",
+        onClick: this.execRoleCommand
+      }, h("span", {
+        class: "material-icons"
+      }, "superscript")))), h("div", {
+        class: !this.state.editor_valid ? "textarea is-danger ctable-wysiwyg-editor" : "textarea ctable-wysiwyg-editor",
+        onfocusout: this.editorChanged,
+        dangerouslySetInnerHTML: {
+          __html: this.state.value
+        },
+        contenteditable: true
+      }));
+    }
+
+    if (form_control === null) {
+      form_control = h("input", {
+        class: !this.state.editor_valid ? "input is-danger" : "input",
+        type: "text",
+        value: this.state.value,
+        onChange: this.editorChanged,
+        placeholder: this.props.placeholder
+      });
+    }
+
     return h("div", {
       class: "field",
       ref: this.ref
@@ -1120,7 +1276,7 @@ class CTextColumn extends CTableColumn {
       class: "label"
     }, this.title()), h("div", {
       class: "control"
-    }, this.props.textarea == true ? textarea : input), this.props.footnote ? h("div", {
+    }, form_control), this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }
@@ -1235,8 +1391,8 @@ class CUploadColumn extends CTableColumn {
         class: "button is-info is-outlined",
         disabled: "true"
       }, h("span", {
-        class: "file-icon"
-      }, "\u2296"), this.props.table.props.lang.no_file);
+        class: "material-icons"
+      }, "attach_file"), " ", this.props.table.props.lang.no_file);
     }
 
     if (fileinfo.count == 1) {
@@ -1255,15 +1411,15 @@ class CUploadColumn extends CTableColumn {
         "disabled": true,
         ...filelink
       }, h(Fragment, null, h("span", {
-        class: "file-icon"
-      }, "\u2296"), fileinfo.filelabel[0]));
+        class: "material-icons"
+      }, "attach_file"), fileinfo.filelabel[0]));
     } else {
       return h("a", {
         class: "button is-info is-outlined",
         disabled: "true"
       }, h("span", {
-        class: "file-icon"
-      }, "\u2296"), this.props.table.props.lang.multiple_files, " ", fileinfo.count);
+        class: "material-icons"
+      }, "attach_file"), " ", this.props.table.props.lang.multiple_files, " ", fileinfo.count);
     }
   }
 
@@ -1367,17 +1523,21 @@ class CUploadColumn extends CTableColumn {
         class: "button is-info",
         disabled: "true"
       }, h("span", {
-        class: "file-icon"
-      }, "\u2296"), this.props.table.props.lang.no_file)), h("div", {
+        class: "material-icons"
+      }, "attach_file"), " ", this.props.table.props.lang.no_file)), h("div", {
         class: "control"
       }, h("button", {
         class: "button is-info is-danger",
         disabled: "true"
-      }, "\u2297")), h("div", {
+      }, h("span", {
+        class: "material-icons"
+      }, "delete"))), h("div", {
         class: "control"
       }, h("button", {
         class: "button is-info"
-      }, "\u21A5"), h("input", {
+      }, h("span", {
+        class: "material-icons"
+      }, "upload")), h("input", {
         class: "file-input",
         type: "file",
         name: "file",
@@ -1408,17 +1568,21 @@ class CUploadColumn extends CTableColumn {
         "class": "button is-info",
         ...filelink
       }, h(Fragment, null, h("span", {
-        class: "file-icon"
-      }, "\u2296"), this.state.fileinfo.filelabel[0]))), h("div", {
+        class: "material-icons"
+      }, "attach_file"), " ", this.state.fileinfo.filelabel[0]))), h("div", {
         class: "control"
       }, h("button", {
         class: "button is-info is-danger",
         onClick: this.editorCleared
-      }, "\u2297")), h("div", {
+      }, h("span", {
+        class: "material-icons"
+      }, "delete"))), h("div", {
         class: "control"
       }, h("button", {
         class: "button is-info"
-      }, "\u21A5"), h("input", {
+      }, h("span", {
+        class: "material-icons"
+      }, "upload")), h("input", {
         class: "file-input",
         type: "file",
         name: "file",

@@ -14,7 +14,7 @@ CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.
 * Expanding sub-table support
 * Multilanguage (currently English and Russian)
 * Easily extends by column class inheritance
-* Good looking and mobile-ready with [Bulma CSS](http://bulma.io)
+* Good looking and mobile-ready with [Bulma CSS](http://bulma.io) and [Material Design Icons](https://github.com/google/material-design-icons)
 
 ## Documentation
 
