@@ -4,6 +4,7 @@
  * This column for text editing.
  *
  * @arg this.props.textarea {undefined|Boolean} Switch editor to textarea.
+ * @arg this.props.richtext {undefined|Boolean} Switch editor to rich text editor with HTML content.
  * @arg this.props.placeholder {string} Placeholder for column editor.
  * @arg this.props.validate {undefined|string} Input validation regex.
  */
