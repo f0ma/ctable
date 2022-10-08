@@ -15,16 +15,27 @@ class CTagColumn extends CTableColumn{
         this.filterChanged = this.filterChanged.bind(this);
         this.addClicked = this.addClicked.bind(this);
         this.deleteClicked = this.deleteClicked.bind(this);
+        this.showTagPanel = this.showTagPanel.bind(this);
+        this.hideTagPanel = this.hideTagPanel.bind(this);
 
 
-        this.state = {options: [], values: []}
+        this.state = {options: [], values: [], editor_panel_opened:false}
         this.ref = createRef();
     }
 
     componentDidMount() {
         this.setState({options: this.props.options,
-                       values: this.value() === null ? [] : this.value().split(",")
-        });
+                       values: this.value() === null ? [] : this.value().split(","),
+                       editor_panel_opened:false});
+    }
+
+    showTagPanel(e){
+        if(e.target.classList.contains("delete")) return;
+        this.setState({editor_panel_opened:true});
+    }
+
+    hideTagPanel(){
+        this.setState({editor_panel_opened:false});
     }
 
     render_cell() {
@@ -63,6 +74,7 @@ class CTagColumn extends CTableColumn{
     }
 
     addClicked(e){
+        e.preventDefault();
         var add_filtred = this.state.values.concat(e.target.dataset.tagname);
         this.setState({values: add_filtred});
         this.props.table.notify_changes(this.props.row, this.props.column, add_filtred === [] ? null : add_filtred.join(','));
@@ -70,16 +82,24 @@ class CTagColumn extends CTableColumn{
 
     render_editor() {
         var self = this;
-        var alltag = <div class="tags" style="margin-top: 4px;">{this.props.options.map(function(c,i){ return <span class="tag is-medium" data-tagname={c[0]} onClick={self.addClicked}>{c[1]}</span>; })}</div>;
+        var alltag = <div class="tags" style="margin-left: 1em; margin-right: 1em;">{this.props.options.map(function(c,i){ return <span class="tag button" data-tagname={c[0]} onMouseDown={self.addClicked}>{c[1]}</span>; })}</div>;
         var cvalues = this.state.options.filter(function(item){return self.state.values.indexOf(item[0]) != -1;});
-        var taglist = <div class="tags">{cvalues.map(function(c,i){ return <span class="tag is-medium">{c[1]}<button class="delete is-small" data-tagname={c[0]} onClick={self.deleteClicked}></button></span>; })}</div>;
+        var taglist = <div class="tags" style="margin-right: 2em;">{cvalues.map(function(c,i){ return <span class="tag">{c[1]}<button class="delete is-small" data-tagname={c[0]} onClick={self.deleteClicked}></button></span>; })}</div>;
 
         return <div class="field" ref={this.ref}>
                    <label class="label">{this.title()}</label>
                    <div class="control">
-                      <div class="input">{taglist}</div>
+                       <div class={this.state.editor_panel_opened ? "dropdown is-active" : "dropdown"} style="width: 100%;">
+                         <div class="dropdown-trigger" style="width: 100%;">
+                           <button class="input select" onClick={this.showTagPanel} onBlur={this.hideTagPanel}>{taglist}</button>
+                         </div>
+                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                           <div class="dropdown-content">
+                             {alltag}
+                           </div>
+                         </div>
+                       </div>
                    </div>
-                   {alltag}
                    {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
                </div>;
     }

@@ -137,6 +137,7 @@ var ctable_lang = {
  * @arg this.props.role {string} Control role: 'header', 'search', 'cell', 'footer', 'editor'.
  * @arg this.props.column {int} Currnet column index.
  * @arg this.props.row {int} Currnet row index, -1 for new row.
+ * @arg this.props.tab {int} Editor page, -1 for show on all pages.
  * @arg this.props.sorting {undefined|string} Column sorting order: 'ASC', 'DESC' or ''. No sorting in `undefined`.
  * @arg this.props.searching {undefined|string} Column searching: query string or ''. No search in `undefined`.
  * @arg this.props.exact {undefined|boolean} Search only on exact match.
@@ -223,7 +224,9 @@ class CTableColumn extends Component {
         class: "icon is-small is-right",
         style: "pointer-events: all; cursor: pointer",
         onClick: this.searchCleared
-      }, "\u2297"));
+      }, h("span", {
+        class: "material-icons"
+      }, "cancel")));
     }
   }
   /**
@@ -657,6 +660,174 @@ class CDynamicSelectColumn extends CTableColumn {
   }
 
 }
+/**
+ * Plain upload column.
+ *
+ * Simple column for uploading files.
+ *
+ * @arg {string} this.props.upload_endpoint - Endpoint for uploading files.
+ * @arg {string} this.props.links_endpoint -  Endpoint for links to files.
+ * @arg {undefined | int} this.props.max_file_size - Maximum file size.
+ * @arg {undefined | string[]} this.props.allowed_extentions - Allowed file extention.
+ */
+class CPlainUploadColumn extends CTableColumn {
+  constructor() {
+    super();
+    this.filterChanged = this.filterChanged.bind(this);
+    this.uploadChanged = this.uploadChanged.bind(this);
+    this.editorChanged = this.editorChanged.bind(this);
+    this.ref = createRef();
+  }
+
+  componentDidMount() {
+    this.setState({
+      value: this.value()
+    });
+  }
+
+  render_cell() {
+    if (!this.value()) {
+      return h("a", {
+        class: "button is-info",
+        disabled: "true"
+      }, h("span", {
+        class: "material-icons"
+      }, "attach_file"), " ", this.props.table.props.lang.no_file);
+    }
+
+    if (typeof this.props.links_endpoint === 'undefined') {
+      return h("a", {
+        class: "button is-info"
+      }, h("span", {
+        class: "material-icons"
+      }, "attach_file"), this.value());
+    }
+
+    return h("a", {
+      class: "button is-info",
+      href: this.props.links_endpoint + this.value()
+    }, h("span", {
+      class: "material-icons"
+    }, "attach_file"), this.value());
+  }
+
+  filterChanged(e) {
+    if (e.target.value == '') {
+      this.props.table.change_filter_for_column(this.props.column, null);
+    } else {
+      this.props.table.change_filter_for_column(this.props.column, e.target.value);
+    }
+
+    this.setState({
+      value: e.target.value
+    });
+  }
+
+  render_search() {
+    if (typeof this.props.filtering === 'undefined') {// do nothing
+    } else {
+      return h("div", {
+        class: "select"
+      }, h("select", {
+        onChange: this.filterChanged,
+        value: this.props.filtering
+      }, h("option", {
+        value: ""
+      }, this.props.table.props.lang.no_filter), h("option", {
+        value: "%nodata"
+      }, this.props.table.props.lang.file_filter_no), h("option", {
+        value: "%notempty"
+      }, this.props.table.props.lang.file_filter_yes)));
+    }
+  }
+
+  editorChanged(e) {
+    this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+    this.setState({
+      value: e.target.value
+    });
+  }
+
+  uploadChanged(e) {
+    var form_data = new FormData();
+
+    if (e.target.files.length != 1) {
+      alert(this.props.table.props.lang.file_only_one);
+      return;
+    }
+
+    if (this.props.max_file_size) {
+      if (e.target.files[0].size > this.props.max_file_size) {
+        alert(this.props.table.props.lang.file_to_large);
+        return;
+      }
+    }
+
+    if (this.props.allowed_extentions) {
+      if (this.props.allowed_extentions.filter(item => e.target.files[0].name.toLowerCase().endsWith(item)).length == 0) {
+        alert(this.props.table.props.lang.file_wrong_extention);
+        return;
+      }
+    }
+
+    form_data.append("file", e.target.files[0]);
+    var self = this;
+    this.props.table.setState({
+      waiting_active: true
+    });
+    fetch(this.props.upload_endpoint, {
+      method: 'POST',
+      body: form_data
+    }).then(function (response) {
+      self.props.table.setState({
+        waiting_active: false
+      }); // always disable table waiting
+
+      if (response.ok) {
+        return response.json();
+      } else {
+        alert(self.props.table.props.lang.server_error + response.status);
+      }
+    }).then(function (result) {
+      if (!result) return;
+
+      if (result.Result == 'OK') {
+        self.props.table.notify_changes(self.props.row, self.props.column, result.Filename);
+        self.setState({
+          value: result.Filename
+        });
+      }
+    });
+  }
+
+  render_editor() {
+    return h(Fragment, null, h("label", {
+      class: "label"
+    }, this.title()), h("div", {
+      class: "field has-addons"
+    }, h("div", {
+      class: "control"
+    }, h("input", {
+      class: "input",
+      value: this.state.value,
+      onChange: this.editorChanged
+    })), h("div", {
+      class: "control"
+    }, h("button", {
+      class: "button is-info"
+    }, h("span", {
+      class: "material-icons"
+    }, "upload")), h("input", {
+      class: "file-input",
+      type: "file",
+      name: "file",
+      onChange: this.uploadChanged
+    }))), this.props.footnote ? h("div", {
+      class: "help"
+    }, this.props.footnote) : '');
+  }
+
+}
 class SearchableSelect extends Component {
   constructor() {
     super();
@@ -828,7 +999,9 @@ class SearchableSelect extends Component {
       class: "icon is-small is-right",
       style: "pointer-events: all; cursor: pointer",
       onClick: this.filterCleared
-    }, "\u2297")))), h("div", {
+    }, h("span", {
+      class: "material-icons"
+    }, "cancel"))))), h("div", {
       class: "dropdown-menu",
       id: this.state.menu_id,
       role: "menu"
@@ -1069,7 +1242,7 @@ class CSubtableColumn extends CTableColumn {
 /**
  * Tags column.
  *
- * This column for tags multiselect. Value will be comma-separated list of tags or empty string.
+ * This column for tags multiselect. Value will be comma-separated set of tags or empty string.
  *
  * @arg {List[]} this.props.options - Tag list.
  * @arg {string} this.props.options[].0 - Tag key.
@@ -1081,9 +1254,12 @@ class CTagColumn extends CTableColumn {
     this.filterChanged = this.filterChanged.bind(this);
     this.addClicked = this.addClicked.bind(this);
     this.deleteClicked = this.deleteClicked.bind(this);
+    this.showTagPanel = this.showTagPanel.bind(this);
+    this.hideTagPanel = this.hideTagPanel.bind(this);
     this.state = {
       options: [],
-      values: []
+      values: [],
+      editor_panel_opened: false
     };
     this.ref = createRef();
   }
@@ -1091,7 +1267,21 @@ class CTagColumn extends CTableColumn {
   componentDidMount() {
     this.setState({
       options: this.props.options,
-      values: this.value() === null ? [] : this.value().split(",")
+      values: this.value() === null ? [] : this.value().split(","),
+      editor_panel_opened: false
+    });
+  }
+
+  showTagPanel(e) {
+    if (e.target.classList.contains("delete")) return;
+    this.setState({
+      editor_panel_opened: true
+    });
+  }
+
+  hideTagPanel() {
+    this.setState({
+      editor_panel_opened: false
     });
   }
 
@@ -1148,6 +1338,7 @@ class CTagColumn extends CTableColumn {
   }
 
   addClicked(e) {
+    e.preventDefault();
     var add_filtred = this.state.values.concat(e.target.dataset.tagname);
     this.setState({
       values: add_filtred
@@ -1159,22 +1350,23 @@ class CTagColumn extends CTableColumn {
     var self = this;
     var alltag = h("div", {
       class: "tags",
-      style: "margin-top: 4px;"
+      style: "margin-left: 1em; margin-right: 1em;"
     }, this.props.options.map(function (c, i) {
       return h("span", {
-        class: "tag is-medium",
+        class: "tag button",
         "data-tagname": c[0],
-        onClick: self.addClicked
+        onMouseDown: self.addClicked
       }, c[1]);
     }));
     var cvalues = this.state.options.filter(function (item) {
       return self.state.values.indexOf(item[0]) != -1;
     });
     var taglist = h("div", {
-      class: "tags"
+      class: "tags",
+      style: "margin-right: 2em;"
     }, cvalues.map(function (c, i) {
       return h("span", {
-        class: "tag is-medium"
+        class: "tag"
       }, c[1], h("button", {
         class: "delete is-small",
         "data-tagname": c[0],
@@ -1189,8 +1381,22 @@ class CTagColumn extends CTableColumn {
     }, this.title()), h("div", {
       class: "control"
     }, h("div", {
-      class: "input"
-    }, taglist)), alltag, this.props.footnote ? h("div", {
+      class: this.state.editor_panel_opened ? "dropdown is-active" : "dropdown",
+      style: "width: 100%;"
+    }, h("div", {
+      class: "dropdown-trigger",
+      style: "width: 100%;"
+    }, h("button", {
+      class: "input select",
+      onClick: this.showTagPanel,
+      onBlur: this.hideTagPanel
+    }, taglist)), h("div", {
+      class: "dropdown-menu",
+      id: "dropdown-menu",
+      role: "menu"
+    }, h("div", {
+      class: "dropdown-content"
+    }, alltag)))), this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }
@@ -1205,11 +1411,15 @@ class CTagColumn extends CTableColumn {
  * @arg this.props.richtext {undefined|Boolean} Switch editor to rich text editor with HTML content.
  * @arg this.props.placeholder {string} Placeholder for column editor.
  * @arg this.props.validate {undefined|string} Input validation regex.
+ * @arg this.props.input_hints {string[]} Input hints list.
+ * @arg this.props.input_hints.0 {string} Hints text added to input.
+ * @arg this.props.input_hints.1 {string} Hints button text.
  */
 class CTextColumn extends CTableColumn {
   constructor() {
     super();
     this.editorChanged = this.editorChanged.bind(this);
+    this.hintClicked = this.hintClicked.bind(this);
     this.ref = createRef();
   }
 
@@ -1253,6 +1463,14 @@ class CTextColumn extends CTableColumn {
     }
   }
 
+  hintClicked(e) {
+    var result = this.state.value !== null ? this.state.value + e.target.dataset.hintvalue : e.target.dataset.hintvalue;
+    this.setState({
+      value: result
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, result);
+  }
+
   execRoleCommand(e) {
     var role = e.target.dataset.role ?? e.target.parentElement.dataset.role;
     document.execCommand(role, false, null);
@@ -1260,6 +1478,7 @@ class CTextColumn extends CTableColumn {
 
   render_editor() {
     var form_control = null;
+    var self = this;
 
     if (this.props.textarea == true) {
       form_control = h("textarea", {
@@ -1407,7 +1626,16 @@ class CTextColumn extends CTableColumn {
       class: "label"
     }, this.title()), h("div", {
       class: "control"
-    }, form_control), this.props.footnote ? h("div", {
+    }, form_control), this.props.input_hints ? h("div", {
+      class: "tags",
+      style: "margin-top: 0.2em;"
+    }, this.props.input_hints.map(function (c, i) {
+      return h("span", {
+        class: "tag button",
+        "data-hintvalue": c[0],
+        onClick: self.hintClicked
+      }, c[1]);
+    })) : '', this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }
@@ -1739,7 +1967,9 @@ class CUploadColumn extends CTableColumn {
       }, h("button", {
         class: "button is-info is-danger",
         onClick: this.editorCleared
-      }, "\u2297")), h("div", {
+      }, h("span", {
+        class: "material-icons"
+      }, "cancel"))), h("div", {
         class: "control"
       }, h("button", {
         class: "button is-info"
@@ -1764,6 +1994,7 @@ class CUploadColumn extends CTableColumn {
  * @arg {string} this.props.endpoint - Url to endpoint.
  * @arg {Object} this.props.params - Additional parameters to select query
  * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
+ * @arg {String[]} this.props.tabs - Tabs names.
  * @arg {Object} this.props.filters - Set presistent filter as column => value.
  * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
  * @arg {string} this.props.columns[].name - Name of column.
@@ -1780,6 +2011,7 @@ class CTable extends Component {
     this.toNextPage = this.toNextPage.bind(this);
     this.toPrevPage = this.toPrevPage.bind(this);
     this.toPage = this.toPage.bind(this);
+    this.toTab = this.toTab.bind(this);
     this.state = {
       records: [],
       columns: [],
@@ -1790,6 +2022,7 @@ class CTable extends Component {
       records_on_page: 25,
       total_records: 0,
       total_pages: 0,
+      current_tab: 0,
       waiting_active: false
     };
     this.changes = [];
@@ -2324,6 +2557,12 @@ class CTable extends Component {
     this.reload();
   }
 
+  toTab(e) {
+    this.setState({
+      current_tab: e.target.dataset.tabindex
+    });
+  }
+
   get_pages() {
     if (this.state.total_records == 0) {
       return [0];
@@ -2356,7 +2595,42 @@ class CTable extends Component {
     var self = this;
     var tbody = h("tbody", null, self.state.opened_editors.includes(-1) ? h("tr", null, h("td", {
       colspan: self.visible_column_count()
-    }, self.state.columns.map(function (column, j) {
+    }, h("div", {
+      class: "panel",
+      style: "padding: 0.5em"
+    }, typeof self.props.tabs !== 'undefined' ? h("div", {
+      class: "panel-tabs"
+    }, " ", self.props.tabs.map(function (tab, k) {
+      return h("a", {
+        class: self.state.current_tab == k ? "" : "is-active",
+        "data-tabindex": k,
+        onClick: self.toTab
+      }, tab);
+    }), " ") : '', typeof self.props.tabs !== 'undefined' ? h(Fragment, null, self.props.tabs.map(function (tab, k) {
+      return h("div", {
+        class: self.state.current_tab == k ? "" : "is-hidden"
+      }, self.state.columns.map(function (column, j) {
+        return h(Fragment, null, column.hide_editor != true && column.tab == k ? h(column.kind, {
+          role: "editor",
+          is_new: true,
+          table: self,
+          column: j,
+          row: -1,
+          key: j * 1000000,
+          ...column
+        }) : '');
+      }));
+    }), self.state.columns.map(function (column, j) {
+      return h(Fragment, null, column.hide_editor != true && column.tab == -1 ? h(column.kind, {
+        role: "editor",
+        is_new: true,
+        table: self,
+        column: j,
+        row: -1,
+        key: j * 1000000,
+        ...column
+      }) : '');
+    })) : self.state.columns.map(function (column, j) {
       return h(Fragment, null, column.hide_editor != true ? h(column.kind, {
         role: "editor",
         is_new: true,
@@ -2366,7 +2640,7 @@ class CTable extends Component {
         key: j * 1000000,
         ...column
       }) : '');
-    }))) : '', self.state.records.map(function (cell, i) {
+    })))) : '', self.state.records.map(function (cell, i) {
       return h(Fragment, null, " ", h("tr", {
         class: self.state.opened_editors.includes(i) || self.state.opened_subtables.includes(i) ? "is-selected" : ""
       }, " ", self.state.columns.map(function (column, j) {
@@ -2380,7 +2654,42 @@ class CTable extends Component {
         })) : '';
       }), " "), self.state.opened_editors.includes(i) ? h("tr", null, h("td", {
         colspan: self.visible_column_count()
-      }, self.state.columns.map(function (column, j) {
+      }, h("div", {
+        class: "panel",
+        style: "padding: 0.5em"
+      }, typeof self.props.tabs !== 'undefined' ? h("div", {
+        class: "panel-tabs"
+      }, " ", self.props.tabs.map(function (tab, k) {
+        return h("a", {
+          class: self.state.current_tab == k ? "" : "is-active",
+          "data-tabindex": k,
+          onClick: self.toTab
+        }, tab);
+      }), " ") : '', typeof self.props.tabs !== 'undefined' ? h(Fragment, null, self.props.tabs.map(function (tab, k) {
+        return h("div", {
+          class: self.state.current_tab == k ? "" : "is-hidden"
+        }, self.state.columns.map(function (column, j) {
+          return h(Fragment, null, column.hide_editor != true && column.tab == k ? h(column.kind, {
+            role: "editor",
+            is_new: false,
+            table: self,
+            column: j,
+            row: i,
+            key: j * 1000000 + i,
+            ...column
+          }) : '');
+        }));
+      }), self.state.columns.map(function (column, j) {
+        return h(Fragment, null, column.hide_editor != true && column.tab == -1 ? h(column.kind, {
+          role: "editor",
+          is_new: false,
+          table: self,
+          column: j,
+          row: i,
+          key: j * 1000000 + i,
+          ...column
+        }) : '');
+      })) : self.state.columns.map(function (column, j) {
         return h(Fragment, null, column.hide_editor != true ? h(column.kind, {
           role: "editor",
           is_new: false,
@@ -2390,7 +2699,7 @@ class CTable extends Component {
           key: j * 1000000 + i,
           ...column
         }) : '');
-      }))) : '', self.state.opened_subtables.includes(i) ? h("tr", null, h("td", {
+      })))) : '', self.state.opened_subtables.includes(i) ? h("tr", null, h("td", {
         colspan: self.visible_column_count()
       }, h(CTable, {
         lang: self.props.lang,

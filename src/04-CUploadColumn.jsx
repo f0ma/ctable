@@ -203,7 +203,7 @@ class CUploadColumn extends CTableColumn{
                            {h("a",{"class": "button is-info", "disabled": true}, <><span class="file-icon">⊖</span>{this.props.table.props.lang.multiple_files} {this.state.fileinfo.count}</>)}
                         </div>
                         <div class="control">
-                            <button class="button is-info is-danger" onClick={this.editorCleared}>⊗</button>
+                            <button class="button is-info is-danger" onClick={this.editorCleared}><span class="material-icons">cancel</span></button>
                         </div>
                         <div class="control">
                             <button class="button is-info">↥</button>

@@ -6,6 +6,7 @@
  * @arg this.props.role {string} Control role: 'header', 'search', 'cell', 'footer', 'editor'.
  * @arg this.props.column {int} Currnet column index.
  * @arg this.props.row {int} Currnet row index, -1 for new row.
+ * @arg this.props.tab {int} Editor page, -1 for show on all pages.
  * @arg this.props.sorting {undefined|string} Column sorting order: 'ASC', 'DESC' or ''. No sorting in `undefined`.
  * @arg this.props.searching {undefined|string} Column searching: query string or ''. No search in `undefined`.
  * @arg this.props.exact {undefined|boolean} Search only on exact match.
@@ -76,7 +77,8 @@ class CTableColumn extends Component {
         } else {
             return <div class="control has-icons-right">
                        <input class="input" value={this.state.searching} onChange={this.searchChanged} type="text"/>
-                       <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.searchCleared}>⊗</span>
+                       <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.searchCleared}><span class="material-icons">cancel</span></span>
+
                    </div>
         }
     }

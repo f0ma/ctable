@@ -60,6 +60,10 @@
   margin: 0 auto;
 }
 
+.panel-tabs {
+    border: none !important;
+}
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;

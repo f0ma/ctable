@@ -7,6 +7,9 @@
  * @arg this.props.richtext {undefined|Boolean} Switch editor to rich text editor with HTML content.
  * @arg this.props.placeholder {string} Placeholder for column editor.
  * @arg this.props.validate {undefined|string} Input validation regex.
+ * @arg this.props.input_hints {string[]} Input hints list.
+ * @arg this.props.input_hints.0 {string} Hints text added to input.
+ * @arg this.props.input_hints.1 {string} Hints button text.
  */
 
 
@@ -15,6 +18,7 @@ class CTextColumn extends CTableColumn{
         super();
 
         this.editorChanged = this.editorChanged.bind(this);
+        this.hintClicked = this.hintClicked.bind(this);
 
         this.ref = createRef();
     }
@@ -48,6 +52,12 @@ class CTextColumn extends CTableColumn{
         }
     }
 
+    hintClicked(e) {
+        var result = this.state.value !== null ? this.state.value + e.target.dataset.hintvalue : e.target.dataset.hintvalue;
+        this.setState({value: result});
+        this.props.table.notify_changes(this.props.row, this.props.column, result);
+    }
+
     execRoleCommand(e) {
         var role = e.target.dataset.role ?? e.target.parentElement.dataset.role;
         document.execCommand(role, false, null);
@@ -56,6 +66,7 @@ class CTextColumn extends CTableColumn{
     render_editor() {
 
         var form_control = null;
+        var self = this;
 
         if (this.props.textarea == true){
             form_control = <textarea class={!this.state.editor_valid ? "textarea is-danger" : "textarea"} onChange={this.editorChanged} placeholder={this.props.placeholder}>{this.state.value}</textarea>;
@@ -105,7 +116,8 @@ class CTextColumn extends CTableColumn{
                    <div class="control">
                        {form_control}
                    </div>
-                    {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
+                   {this.props.input_hints ? <div class="tags"  style="margin-top: 0.2em;">{this.props.input_hints.map(function(c,i){ return <span class="tag button" data-hintvalue={c[0]} onClick={self.hintClicked}>{c[1]}</span>; })}</div> : ''}
+                   {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
                </div>;
     }
 }

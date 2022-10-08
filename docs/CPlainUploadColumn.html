@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: CActionColumn</title>
+    <title>JSDoc: Class: CPlainUploadColumn</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: CActionColumn</h1>
+    <h1 class="page-title">Class: CPlainUploadColumn</h1>
 
     
 
@@ -28,9 +28,11 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>CActionColumn<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>CPlainUploadColumn<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Action buttons column.</div>
+            <div class="class-description">Plain upload column.
+
+Simple column for uploading files.</div>
         
     
 </header>
@@ -45,7 +47,7 @@
     
 
     
-    <h4 class="name" id="CActionColumn"><span class="type-signature"></span>new CActionColumn<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="CPlainUploadColumn"><span class="type-signature"></span>new CPlainUploadColumn<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -85,16 +87,13 @@
 
         <tr>
             
-                <td class="name"><code>this.props.no_edit</code></td>
+                <td class="name"><code>this.props.upload_endpoint</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
+<span class="param-type">string</span>
 
 
             
@@ -104,23 +103,20 @@
 
             
 
-            <td class="description last">Disable Edit button if true.</td>
+            <td class="description last">Endpoint for uploading files.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>this.props.no_delete</code></td>
+                <td class="name"><code>this.props.links_endpoint</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
+<span class="param-type">string</span>
 
 
             
@@ -130,14 +126,14 @@
 
             
 
-            <td class="description last">Disable Delete button if true.</td>
+            <td class="description last">Endpoint for links to files.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>this.props.no_add</code></td>
+                <td class="name"><code>this.props.max_file_size</code></td>
             
 
             <td class="type">
@@ -146,7 +142,7 @@
 <span class="param-type">undefined</span>
 |
 
-<span class="param-type">Boolean</span>
+<span class="param-type">int</span>
 
 
             
@@ -156,14 +152,14 @@
 
             
 
-            <td class="description last">Disable Add button if true.</td>
+            <td class="description last">Maximum file size.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>this.props.no_menu</code></td>
+                <td class="name"><code>this.props.allowed_extentions</code></td>
             
 
             <td class="type">
@@ -172,7 +168,7 @@
 <span class="param-type">undefined</span>
 |
 
-<span class="param-type">Boolean</span>
+<span class="param-type">Array.&lt;string></span>
 
 
             
@@ -182,33 +178,7 @@
 
             
 
-            <td class="description last">Disable Extra menu.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.left_align</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Disable force right align.</td>
+            <td class="description last">Allowed file extention.</td>
         </tr>
 
     
@@ -249,7 +219,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="04-CActionColumn.jsx.html">04-CActionColumn.jsx</a>, <a href="04-CActionColumn.jsx.html#line11">line 11</a>
+        <a href="04-CPlainUploadColumn.jsx.html">04-CPlainUploadColumn.jsx</a>, <a href="04-CPlainUploadColumn.jsx.html#line12">line 12</a>
     </li></ul></dd>
     
 

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: 04-CPlainUploadColumn.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: 04-CPlainUploadColumn.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Plain upload column.
+ *
+ * Simple column for uploading files.
+ *
+ * @arg {string} this.props.upload_endpoint - Endpoint for uploading files.
+ * @arg {string} this.props.links_endpoint -  Endpoint for links to files.
+ * @arg {undefined | int} this.props.max_file_size - Maximum file size.
+ * @arg {undefined | string[]} this.props.allowed_extentions - Allowed file extention.
+ */
+
+class CPlainUploadColumn extends CTableColumn{
+    constructor() {
+        super();
+
+        this.filterChanged = this.filterChanged.bind(this);
+        this.uploadChanged = this.uploadChanged.bind(this);
+        this.editorChanged = this.editorChanged.bind(this);
+
+        this.ref = createRef();
+    }
+
+    componentDidMount() {
+        this.setState({value: this.value()});
+    }
+
+    render_cell() {
+        if (!this.value()){
+            return &lt;a class="button is-info" disabled="true">&lt;span class="material-icons">attach_file&lt;/span> {this.props.table.props.lang.no_file}&lt;/a>;
+        }
+
+        if (typeof this.props.links_endpoint === 'undefined'){
+            return &lt;a class="button is-info">&lt;span class="material-icons">attach_file&lt;/span>{this.value()}&lt;/a>;
+        }
+
+        return &lt;a class="button is-info" href={this.props.links_endpoint + this.value()}>&lt;span class="material-icons">attach_file&lt;/span>{this.value()}&lt;/a>;
+    }
+
+    filterChanged(e){
+        if(e.target.value == ''){
+            this.props.table.change_filter_for_column(this.props.column, null);
+        } else {
+            this.props.table.change_filter_for_column(this.props.column, e.target.value);
+        }
+        this.setState({value: e.target.value});
+    }
+
+    render_search() {
+        if (typeof this.props.filtering === 'undefined') {
+            // do nothing
+        } else {
+            return &lt;div class="select">
+                     &lt;select onChange={this.filterChanged} value={this.props.filtering}>
+                       &lt;option value=''>{this.props.table.props.lang.no_filter}&lt;/option>
+                       &lt;option value='%nodata'>{this.props.table.props.lang.file_filter_no}&lt;/option>
+                       &lt;option value='%notempty'>{this.props.table.props.lang.file_filter_yes}&lt;/option>
+                     &lt;/select>
+                   &lt;/div>;
+        }
+    }
+
+    editorChanged(e) {
+        this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
+        this.setState({value: e.target.value});
+    }
+
+    uploadChanged(e) {
+
+        var form_data = new FormData();
+
+        if(e.target.files.length != 1){
+            alert(this.props.table.props.lang.file_only_one);
+            return;
+        }
+
+        if(this.props.max_file_size){
+            if(e.target.files[0].size > this.props.max_file_size){
+                alert(this.props.table.props.lang.file_to_large);
+                return;
+            }
+        }
+
+        if(this.props.allowed_extentions){
+            if (this.props.allowed_extentions.filter(item => e.target.files[0].name.toLowerCase().endsWith(item)).length == 0){
+                alert(this.props.table.props.lang.file_wrong_extention);
+                return;
+            }
+        }
+
+        form_data.append("file", e.target.files[0]);
+
+        var self = this;
+
+        this.props.table.setState({waiting_active: true});
+
+        fetch(this.props.upload_endpoint, {method: 'POST', body: form_data})
+        .then(function(response){
+            self.props.table.setState({waiting_active: false}); // always disable table waiting
+            if (response.ok) {return response.json();}
+            else {alert(self.props.table.props.lang.server_error + response.status)} })
+        .then(function (result) {
+            if (!result) return;
+            if(result.Result == 'OK'){
+               self.props.table.notify_changes(self.props.row, self.props.column, result.Filename);
+               self.setState({value: result.Filename});
+            }});
+    }
+
+    render_editor() {
+            return &lt;>&lt;label class="label">{this.title()}&lt;/label>
+                   &lt;div class="field has-addons">
+                       &lt;div class="control">
+                           &lt;input class="input" value={this.state.value} onChange={this.editorChanged}>&lt;/input>
+                        &lt;/div>
+                        &lt;div class="control">
+                            &lt;button class="button is-info">&lt;span class="material-icons">upload&lt;/span>&lt;/button>
+                            &lt;input class="file-input" type="file" name="file" onChange={this.uploadChanged}/>
+                        &lt;/div>
+                    &lt;/div>
+                    {this.props.footnote ? &lt;div class="help">{this.props.footnote}&lt;/div> : ''}
+                    &lt;/>;
+    }
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CPlainUploadColumn.html">CPlainUploadColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTagColumn.html">CTagColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Oct 08 2022 23:44:15 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

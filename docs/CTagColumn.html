@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: CActionColumn</title>
+    <title>JSDoc: Class: CTagColumn</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: CActionColumn</h1>
+    <h1 class="page-title">Class: CTagColumn</h1>
 
     
 
@@ -28,9 +28,11 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>CActionColumn<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>CTagColumn<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Action buttons column.</div>
+            <div class="class-description">Tags column.
+
+This column for tags multiselect. Value will be comma-separated set of tags or empty string.</div>
         
     
 </header>
@@ -45,7 +47,7 @@
     
 
     
-    <h4 class="name" id="CActionColumn"><span class="type-signature"></span>new CActionColumn<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="CTagColumn"><span class="type-signature"></span>new CTagColumn<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -85,16 +87,13 @@
 
         <tr>
             
-                <td class="name"><code>this.props.no_edit</code></td>
+                <td class="name"><code>this.props.options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
+<span class="param-type">Array.&lt;List></span>
 
 
             
@@ -104,23 +103,62 @@
 
             
 
-            <td class="description last">Disable Edit button if true.</td>
+            <td class="description last">Tag list.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>0</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Tag key.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>this.props.no_delete</code></td>
+                <td class="name"><code>1</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
+<span class="param-type">string</span>
 
 
             
@@ -130,85 +168,14 @@
 
             
 
-            <td class="description last">Disable Delete button if true.</td>
+            <td class="description last">Tag text.</td>
         </tr>
 
     
+    </tbody>
+</table>
 
-        <tr>
-            
-                <td class="name"><code>this.props.no_add</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
-
-
-            
             </td>
-
-            
-
-            
-
-            <td class="description last">Disable Add button if true.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.no_menu</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Disable Extra menu.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.left_align</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Disable force right align.</td>
         </tr>
 
     
@@ -249,7 +216,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="04-CActionColumn.jsx.html">04-CActionColumn.jsx</a>, <a href="04-CActionColumn.jsx.html#line11">line 11</a>
+        <a href="04-CTagColumn.jsx.html">04-CTagColumn.jsx</a>, <a href="04-CTagColumn.jsx.html#line11">line 11</a>
     </li></ul></dd>
     
 

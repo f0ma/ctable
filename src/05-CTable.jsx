@@ -6,6 +6,7 @@
  * @arg {string} this.props.endpoint - Url to endpoint.
  * @arg {Object} this.props.params - Additional parameters to select query
  * @arg {undefined|Boolean} this.props.no_pagination - Disable pagination.
+ * @arg {String[]} this.props.tabs - Tabs names.
  * @arg {Object} this.props.filters - Set presistent filter as column => value.
  * @arg {Object[]} this.props.columns -  List of columns. Each column will be passed as props to column object.
  * @arg {string} this.props.columns[].name - Name of column.
@@ -24,6 +25,7 @@ class CTable extends Component {
         this.toNextPage = this.toNextPage.bind(this);
         this.toPrevPage = this.toPrevPage.bind(this);
         this.toPage = this.toPage.bind(this);
+        this.toTab = this.toTab.bind(this);
 
         this.state = {
             records:[],
@@ -38,6 +40,7 @@ class CTable extends Component {
             records_on_page: 25,
             total_records: 0,
             total_pages: 0,
+            current_tab:0,
             waiting_active: false,
         };
 
@@ -510,6 +513,10 @@ class CTable extends Component {
         this.reload();
     }
 
+    toTab(e){
+        this.setState({current_tab: e.target.dataset.tabindex})
+    }
+
 
     get_pages(){
         if (this.state.total_records == 0){
@@ -539,12 +546,25 @@ class CTable extends Component {
 
         var tbody = <tbody>
             {self.state.opened_editors.includes(-1) ? <tr><td colspan={self.visible_column_count()}>
-                {
-                self.state.columns.map(function(column,j){
+                <div class="panel" style="padding: 0.5em">
+                {typeof self.props.tabs !== 'undefined' ? <div class="panel-tabs"> {self.props.tabs.map(function(tab,k){return <a class={self.state.current_tab == k ? "" : "is-active"} data-tabindex={k} onClick={self.toTab}>{tab}</a>; })} </div> : '' }
+                {typeof self.props.tabs !== 'undefined' ?<>
+                  {self.props.tabs.map(function(tab,k){return <div class={self.state.current_tab == k ? "" : "is-hidden"}>
+                      {self.state.columns.map(function(column,j){
+                           return <>
+                               {(column.hide_editor != true && column.tab == k) ? h(column.kind, { role: "editor", is_new:true, table: self, column: j, row: -1, key: j*1000000, ...column }) : ''}
+                           </>; })}
+                  </div>; })}
+                  {self.state.columns.map(function(column,j){
+                           return <>
+                               {(column.hide_editor != true && column.tab == -1) ? h(column.kind, { role: "editor", is_new:true, table: self, column: j, row: -1, key: j*1000000, ...column }) : ''}
+                           </>; })}</>
+                : self.state.columns.map(function(column,j){
                     return <>
                         {column.hide_editor != true ? h(column.kind, { role: "editor", is_new:true, table: self, column: j, row: -1, key: j*1000000, ...column }) : ''}
                     </>; })
                 }
+                </div>
                 </td></tr> : ''}
 
             {self.state.records.map(function(cell,i){
@@ -552,11 +572,25 @@ class CTable extends Component {
                     self.state.columns.map(function(column,j){return (column.hide_column != true ? <td>                           {h(column.kind, { role: "cell", table: self, column: j, row: i, key: j*1000000+i, ...column })}</td> : '');})
                 } </tr>
                 {self.state.opened_editors.includes(i) ? <tr><td colspan={self.visible_column_count()}>
-                {
-                self.state.columns.map(function (column,j){return <>
-                    {column.hide_editor != true ? h(column.kind, { role: "editor", is_new:false, table: self, column: j, row: i, key: j*1000000+i, ...column }) : ''}
-                </>;})
+                <div class="panel" style="padding: 0.5em">
+                {typeof self.props.tabs !== 'undefined' ? <div class="panel-tabs"> {self.props.tabs.map(function(tab,k){return <a class={self.state.current_tab == k ? "" : "is-active"} data-tabindex={k} onClick={self.toTab}>{tab}</a>; })} </div> : '' }
+                {typeof self.props.tabs !== 'undefined' ?<>
+                  {self.props.tabs.map(function(tab,k){return <div class={self.state.current_tab == k ? "" : "is-hidden"}>
+                      {self.state.columns.map(function(column,j){
+                           return <>
+                               {(column.hide_editor != true && column.tab == k) ? h(column.kind, { role: "editor", is_new:false, table: self, column: j, row: i, key: j*1000000+i, ...column }) : ''}
+                           </>; })}
+                  </div>; })}
+                  {self.state.columns.map(function(column,j){
+                           return <>
+                               {(column.hide_editor != true && column.tab == -1) ? h(column.kind, { role: "editor", is_new:false, table: self, column: j, row: i, key: j*1000000+i, ...column }) : ''}
+                           </>; })}</>
+                : self.state.columns.map(function(column,j){
+                    return <>
+                        {column.hide_editor != true ? h(column.kind, { role: "editor", is_new:false, table: self, column: j, row: i, key: j*1000000+i, ...column }) : ''}
+                    </>; })
                 }
+                </div>
                 </td></tr> : ''}
                 {self.state.opened_subtables.includes(i) ? <tr><td colspan={self.visible_column_count()}>
                 {h(CTable, {lang:self.props.lang, ...self.subtables_params[i]})}

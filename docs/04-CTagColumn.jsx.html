@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: 04-CTagColumn.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: 04-CTagColumn.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Tags column.
+ *
+ * This column for tags multiselect. Value will be comma-separated set of tags or empty string.
+ *
+ * @arg {List[]} this.props.options - Tag list.
+ * @arg {string} this.props.options[].0 - Tag key.
+ * @arg {string} this.props.options[].1 - Tag text.
+ */
+
+class CTagColumn extends CTableColumn{
+    constructor() {
+        super();
+
+        this.filterChanged = this.filterChanged.bind(this);
+        this.addClicked = this.addClicked.bind(this);
+        this.deleteClicked = this.deleteClicked.bind(this);
+        this.showTagPanel = this.showTagPanel.bind(this);
+        this.hideTagPanel = this.hideTagPanel.bind(this);
+
+
+        this.state = {options: [], values: [], editor_panel_opened:false}
+        this.ref = createRef();
+    }
+
+    componentDidMount() {
+        this.setState({options: this.props.options,
+                       values: this.value() === null ? [] : this.value().split(","),
+                       editor_panel_opened:false});
+    }
+
+    showTagPanel(e){
+        if(e.target.classList.contains("delete")) return;
+        this.setState({editor_panel_opened:true});
+    }
+
+    hideTagPanel(){
+        this.setState({editor_panel_opened:false});
+    }
+
+    render_cell() {
+        var self = this;
+        var cvl = this.value() === null ? [] : this.value().split(",");
+        var cvalues = this.state.options.filter(function(item){return cvl.indexOf(item[0]) != -1;});
+        return &lt;div class="tags">{cvalues.map(function(c,i){ return &lt;span class="tag is-medium">{c[1]}&lt;/span>; })}&lt;/div>;
+    }
+
+    filterChanged(e) {
+        if(e.target.value == ''){
+            this.props.table.change_search_for_column(this.props.column, null);
+        } else {
+            this.props.table.change_search_for_column(this.props.column, e.target.value);
+        }
+    }
+
+    render_search() {
+        if (typeof this.props.searching === 'undefined') {
+            // do nothing
+        } else {
+            return &lt;div class="select">
+                     &lt;select onChange={this.filterChanged} value={this.props.searching}>
+                       &lt;option value=''>{this.props.table.props.lang.no_filter}&lt;/option>
+                       {this.state.options.map(function(item){return &lt;option value={item[0]}>{item[1]}&lt;/option>; })}
+                     &lt;/select>
+                   &lt;/div>;
+        }
+    }
+
+    deleteClicked(e){
+        var tag = e.target.dataset.tagname;
+        var del_filtred = this.state.values.filter(function(item){return item != tag;});
+        this.setState({values: del_filtred});
+        this.props.table.notify_changes(this.props.row, this.props.column, del_filtred === [] ? null : del_filtred.join(','));
+    }
+
+    addClicked(e){
+        e.preventDefault();
+        var add_filtred = this.state.values.concat(e.target.dataset.tagname);
+        this.setState({values: add_filtred});
+        this.props.table.notify_changes(this.props.row, this.props.column, add_filtred === [] ? null : add_filtred.join(','));
+    }
+
+    render_editor() {
+        var self = this;
+        var alltag = &lt;div class="tags" style="margin-left: 1em; margin-right: 1em;">{this.props.options.map(function(c,i){ return &lt;span class="tag button" data-tagname={c[0]} onMouseDown={self.addClicked}>{c[1]}&lt;/span>; })}&lt;/div>;
+        var cvalues = this.state.options.filter(function(item){return self.state.values.indexOf(item[0]) != -1;});
+        var taglist = &lt;div class="tags" style="margin-right: 2em;">{cvalues.map(function(c,i){ return &lt;span class="tag">{c[1]}&lt;button class="delete is-small" data-tagname={c[0]} onClick={self.deleteClicked}>&lt;/button>&lt;/span>; })}&lt;/div>;
+
+        return &lt;div class="field" ref={this.ref}>
+                   &lt;label class="label">{this.title()}&lt;/label>
+                   &lt;div class="control">
+                       &lt;div class={this.state.editor_panel_opened ? "dropdown is-active" : "dropdown"} style="width: 100%;">
+                         &lt;div class="dropdown-trigger" style="width: 100%;">
+                           &lt;button class="input select" onClick={this.showTagPanel} onBlur={this.hideTagPanel}>{taglist}&lt;/button>
+                         &lt;/div>
+                         &lt;div class="dropdown-menu" id="dropdown-menu" role="menu">
+                           &lt;div class="dropdown-content">
+                             {alltag}
+                           &lt;/div>
+                         &lt;/div>
+                       &lt;/div>
+                   &lt;/div>
+                   {this.props.footnote ? &lt;div class="help">{this.props.footnote}&lt;/div> : ''}
+               &lt;/div>;
+    }
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CPlainUploadColumn.html">CPlainUploadColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTagColumn.html">CTagColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Oct 08 2022 23:44:15 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -23,7 +23,7 @@
   </section>
   <script>
       var subcolumns = [{name:"id", title: "ID", kind: CTableColumn, hide_editor:true, is_key:true},
-                        {name:"sum", title: "Summ", kind: CTextColumn, sorting:null},
+                        {name:"sum", title: "Summ", kind: CTextColumn, input_hints:[['5','5'],['10','10'],['15','15']], sorting:null},
                         {name:"state", title: "Status", kind: CSelectColumn, options:[[1,'Created'],[2,'Processing'], [3,'Complete']], sorting:null},
                         {name:"date", title: "Date", kind: CTextColumn, sorting:null},
                         {name: "", "title": "Action", kind: CActionColumn }];
@@ -32,17 +32,18 @@
       var columns = [
                 {name: "id", title: "ID", kind: CTableColumn, hide_column:true, hide_editor:true, is_key:true},
                 {name: "",  title: 'Bills', kind: CSubtableColumn, config:{columns: subcolumns, endpoint: "bill.php", no_pagination: true, button_hint:"Открыть счета"}, keys:[['account_id', 'id']]},
-                {name: "firstname", title: "Firstname", kind: CTextColumn, sorting:null,  searching:null, textarea: true, footnote: "Fill this."},
-                {name: "lastname", title: "Lastname", kind: CTextColumn, sorting:null,  searching:null},
-                {name: "status", title: "Status", kind: CSearchDyncmicSelectColumn, sorting:null, filtering:null, endpoint: 'opts.php'},
-                {name: "reg_date", title: "Date", kind: CTextColumn, sorting:null,  searching:null, default: '2022-01-01', validate:'^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$'},
-                {name: "image", title: "Image", kind: CUploadColumn, upload_endpoint: 'account.php', links_endpoint: '/files/', max_file_size: 1000000, allowed_extentions:['.png'], filtering:null, footnote:'Upload .png files'},
-                {name: "tags", title: "Tags", kind: CTagColumn, sorting:null,  searching:null, options:[['tag1','Tag 1'],['tag2','Tag 2'],['tag3','Tag 3']], footnote: "Fill this."},
-                {name: "", "title": "Action", kind: CActionColumn}
+                {name: "firstname", title: "Firstname", kind: CTextColumn, sorting:null,  searching:null, textarea: true, footnote: "Fill this.", tab:0},
+                {name: "lastname", title: "Lastname", kind: CTextColumn, sorting:null,  searching:null, tab:0},
+                {name: "status", title: "Status", kind: CSearchDyncmicSelectColumn, sorting:null, filtering:null, endpoint: 'opts.php', tab:0},
+                {name: "reg_date", title: "Date", kind: CTextColumn, sorting:null,  searching:null, default: '2022-01-01', validate:'^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$', tab:1},
+                {name: "image", title: "Image", kind: CPlainUploadColumn, upload_endpoint: 'account.php', links_endpoint: '/files', max_file_size: 1000000, allowed_extentions:['.png'], filtering:null, footnote:'Upload .png files', tab:1},
+                {name: "tags", title: "Tags", kind: CTagColumn, sorting:null,  searching:null, options:[['tag1','Tag 1'],['tag2','Tag 2'],['tag3','Tag 3']], footnote: "Fill this.", tab:1},
+                {name: "", "title": "Action", kind: CActionColumn, tab:-1}
             ];
 
       render(h(CTable, {columns: columns, endpoint: "account.php",
-                        lang: ctable_lang.en, no_pagination: true, params: {test: 1}}),
+                        lang: ctable_lang.en, no_pagination: true, params: {test: 1},
+                        tabs:['Main', 'Additional']}),
                         document.getElementById("mytab"));
   </script>
   </body>

@@ -135,7 +135,7 @@ class SearchableSelect extends Component {
                            {this.props.title ? <label class="label">{this.props.title}</label> : ''}
                            <p class="control is-expanded has-icons-right">
                                <input class="input" type="input" onFocus={this.dropdownMenuEnter} onBlur={this.dropdownMenuLeave} value={this.value2text(this.state.current_item)} readonly/>
-                               <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.filterCleared}>⊗</span>
+                               <span class="icon is-small is-right" style="pointer-events: all; cursor: pointer" onClick={this.filterCleared}><span class="material-icons">cancel</span></span>
                            </p>
                        </div>
                    </div>
