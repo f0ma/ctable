@@ -676,6 +676,7 @@ class CPlainUploadColumn extends CTableColumn {
     this.filterChanged = this.filterChanged.bind(this);
     this.uploadChanged = this.uploadChanged.bind(this);
     this.editorChanged = this.editorChanged.bind(this);
+    this.editorCleared = this.editorCleared.bind(this);
     this.ref = createRef();
   }
 
@@ -748,6 +749,13 @@ class CPlainUploadColumn extends CTableColumn {
     });
   }
 
+  editorCleared() {
+    this.props.table.notify_changes(this.props.row, this.props.column, "");
+    this.setState({
+      value: ""
+    });
+  }
+
   uploadChanged(e) {
     var form_data = new FormData();
 
@@ -813,6 +821,15 @@ class CPlainUploadColumn extends CTableColumn {
       onChange: this.editorChanged
     })), h("div", {
       class: "control"
+    }, h("a", {
+      class: "button is-info",
+      target: "_blank",
+      href: this.state.value === null || this.state.value === '' ? false : this.props.links_endpoint + this.state.value,
+      disabled: this.state.value === null || this.state.value === '' ? true : false
+    }, h("span", {
+      class: "material-icons"
+    }, "attach_file"))), h("div", {
+      class: "control"
     }, h("button", {
       class: "button is-info"
     }, h("span", {
@@ -822,7 +839,14 @@ class CPlainUploadColumn extends CTableColumn {
       type: "file",
       name: "file",
       onChange: this.uploadChanged
-    }))), this.props.footnote ? h("div", {
+    })), h("div", {
+      class: "control"
+    }, h("button", {
+      class: "button is-danger",
+      onClick: this.editorCleared
+    }, h("span", {
+      class: "material-icons"
+    }, "cancel")))), this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }
@@ -1748,7 +1772,7 @@ class CUploadColumn extends CTableColumn {
     if (!fileinfo.uploaded) {
       return h("a", {
         class: "button is-info is-outlined",
-        disabled: "true"
+        disabled: true
       }, h("span", {
         class: "material-icons"
       }, "attach_file"), " ", this.props.table.props.lang.no_file);
@@ -1775,7 +1799,7 @@ class CUploadColumn extends CTableColumn {
     } else {
       return h("a", {
         class: "button is-info is-outlined",
-        disabled: "true"
+        disabled: true
       }, h("span", {
         class: "material-icons"
       }, "attach_file"), " ", this.props.table.props.lang.multiple_files, " ", fileinfo.count);
@@ -1880,14 +1904,14 @@ class CUploadColumn extends CTableColumn {
         class: "control"
       }, h("button", {
         class: "button is-info",
-        disabled: "true"
+        disabled: true
       }, h("span", {
         class: "material-icons"
       }, "attach_file"), " ", this.props.table.props.lang.no_file)), h("div", {
         class: "control"
       }, h("button", {
         class: "button is-info is-danger",
-        disabled: "true"
+        disabled: true
       }, h("span", {
         class: "material-icons"
       }, "delete"))), h("div", {

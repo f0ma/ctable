@@ -20,7 +20,6 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background: #fff;
     opacity: 0;
     z-index: -1;
     transition: opacity .3s;
@@ -35,13 +34,22 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background: #fff;
     opacity: 0.5;
     z-index: 8;
     transition: opacity .3s;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.ctable-loader-wrapper-active {
+  background: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ctable-loader-wrapper-active {
+    background: #000;
+  }
 }
 
 .ctable-loader-wrapper-active .button {

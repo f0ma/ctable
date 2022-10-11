@@ -16,6 +16,7 @@ class CPlainUploadColumn extends CTableColumn{
         this.filterChanged = this.filterChanged.bind(this);
         this.uploadChanged = this.uploadChanged.bind(this);
         this.editorChanged = this.editorChanged.bind(this);
+        this.editorCleared = this.editorCleared.bind(this);
 
         this.ref = createRef();
     }
@@ -62,6 +63,11 @@ class CPlainUploadColumn extends CTableColumn{
     editorChanged(e) {
         this.props.table.notify_changes(this.props.row, this.props.column, e.target.value);
         this.setState({value: e.target.value});
+    }
+
+    editorCleared() {
+        this.props.table.notify_changes(this.props.row, this.props.column, "");
+        this.setState({value: ""});
     }
 
     uploadChanged(e) {
@@ -113,8 +119,14 @@ class CPlainUploadColumn extends CTableColumn{
                            <input class="input" value={this.state.value} onChange={this.editorChanged}></input>
                         </div>
                         <div class="control">
+                           <a class="button is-info" target="_blank" href={this.state.value === null || this.state.value === '' ? false : this.props.links_endpoint + this.state.value} disabled={this.state.value === null || this.state.value === '' ? true : false}><span class="material-icons">attach_file</span></a>
+                        </div>
+                        <div class="control">
                             <button class="button is-info"><span class="material-icons">upload</span></button>
                             <input class="file-input" type="file" name="file" onChange={this.uploadChanged}/>
+                        </div>
+                        <div class="control">
+                            <button class="button is-danger" onClick={this.editorCleared}><span class="material-icons">cancel</span></button>
                         </div>
                     </div>
                     {this.props.footnote ? <div class="help">{this.props.footnote}</div> : ''}
