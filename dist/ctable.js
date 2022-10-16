@@ -812,6 +812,10 @@ class CPlainUploadColumn extends CTableColumn {
           value: result.Filename
         });
       }
+
+      if (result.Result == 'Error') {
+        alert(result.Message);
+      }
     });
   }
 

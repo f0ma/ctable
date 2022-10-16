@@ -118,6 +118,9 @@ class CPlainUploadColumn extends CTableColumn{
             if(result.Result == 'OK'){
                self.props.table.notify_changes(self.props.row, self.props.column, result.Filename);
                self.setState({value: result.Filename});
+            }
+            if(result.Result == 'Error'){
+               alert(result.Message);
             }});
     }
 
