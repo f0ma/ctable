@@ -270,6 +270,15 @@ class CTableColumn extends Component {
 
 
   value() {
+    var self = this;
+    var changes = this.props.table.changes.filter(function (item) {
+      return item[0] == self.props.row && item[1] == self.props.column;
+    });
+
+    if (changes.length == 1) {
+      return changes[0][2];
+    }
+
     if (this.props.row >= 0) {
       return this.props.table.state.records[this.props.row][this.props.table.state.columns[this.props.column].name];
     }
