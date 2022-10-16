@@ -99,7 +99,7 @@ class CPlainUploadColumn extends CTableColumn{
         var xkeys = {};
 
         this.props.table.state.columns.map(function (item, i) {
-            if(item.is_key == true){
+            if(item.is_key == true && self.props.row >= 0){
                 xkeys[item.name] = self.props.table.state.records[self.props.row][item.name];
             }
         });
