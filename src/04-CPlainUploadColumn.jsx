@@ -96,6 +96,15 @@ class CPlainUploadColumn extends CTableColumn{
         form_data.append("file", e.target.files[0]);
 
         var self = this;
+        var xkeys = {};
+
+        this.props.table.state.columns.map(function (item, i) {
+            if(item.is_key == true){
+                xkeys[item.name] = self.props.table.state.records[self.props.row][item.name];
+            }
+        });
+
+        form_data.append("keys", JSON.stringify(xkeys));
 
         this.props.table.setState({waiting_active: true});
 
