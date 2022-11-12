@@ -147,8 +147,10 @@ class CTable extends Component {
 
         this.setState({waiting_active: true});
 
-        fetch(this.props.endpoint, { method: "POST", body: 'delete='+JSON.stringify(xkeys),
-                                     headers: {'Content-Type':'application/x-www-form-urlencoded'} })
+        var fd = new FormData();
+        fd.append('delete', JSON.stringify(xkeys));
+
+        fetch(this.props.endpoint, { method: "POST", body: fd})
         .then(function(response){
             if (response.ok) { return response.json(); }
             else {
@@ -184,7 +186,7 @@ class CTable extends Component {
 
         var xvalues = {};
         var self = this;
-        var cmd = 'update=';
+        var cmd = 'update';
 
         if (row >= 0){
             this.state.columns.map(function (item, i) {
@@ -198,7 +200,7 @@ class CTable extends Component {
                 }
             });
         } else {
-            cmd = 'insert=';
+            cmd = 'insert';
             this.changes.filter(function(item){return item[0] == row;}).map(function (item) {
                 if (self.state.columns[item[1]].name != ''){
 //                if ((!self.state.columns[item[1]].is_key) && (self.state.columns[item[1]].name != '')){
@@ -213,8 +215,10 @@ class CTable extends Component {
 
         this.setState({waiting_active: true});
 
-        fetch(this.props.endpoint, { method: "POST", body: cmd+JSON.stringify(xvalues),
-                                     headers: {'Content-Type':'application/x-www-form-urlencoded'} })
+        var fd = new FormData();
+        fd.append(cmd, JSON.stringify(xvalues));
+
+        fetch(this.props.endpoint, { method: "POST", body: fd})
         .then(function(response){
             if (response.ok) {return response.json();}
             else {

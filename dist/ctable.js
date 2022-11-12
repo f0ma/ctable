@@ -2183,12 +2183,11 @@ class CTable extends Component {
     this.setState({
       waiting_active: true
     });
+    var fd = new FormData();
+    fd.append('delete', JSON.stringify(xkeys));
     fetch(this.props.endpoint, {
       method: "POST",
-      body: 'delete=' + JSON.stringify(xkeys),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      body: fd
     }).then(function (response) {
       if (response.ok) {
         return response.json();
@@ -2233,7 +2232,7 @@ class CTable extends Component {
     if (this.changes.length == 0) return;
     var xvalues = {};
     var self = this;
-    var cmd = 'update=';
+    var cmd = 'update';
 
     if (row >= 0) {
       this.state.columns.map(function (item, i) {
@@ -2249,7 +2248,7 @@ class CTable extends Component {
         }
       });
     } else {
-      cmd = 'insert=';
+      cmd = 'insert';
       this.changes.filter(function (item) {
         return item[0] == row;
       }).map(function (item) {
@@ -2269,12 +2268,11 @@ class CTable extends Component {
     this.setState({
       waiting_active: true
     });
+    var fd = new FormData();
+    fd.append(cmd, JSON.stringify(xvalues));
     fetch(this.props.endpoint, {
       method: "POST",
-      body: cmd + JSON.stringify(xvalues),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      body: fd
     }).then(function (response) {
       if (response.ok) {
         return response.json();
