@@ -9,7 +9,7 @@ CTable is a JS library to make CRUD (CReate, Update, Delete) web tables.
 * Reactive design ([preact](https://preactjs.com/))
 * Asynchronous (fetch based)
 * Server technology agnostic (JSON based communications)
-* Optional server side PHP library and SQL query constructor
+* Server side library for PHP and Python
 * Server-side sorting and pagination
 * Expanding sub-table support
 * Multilanguage (currently English and Russian)
