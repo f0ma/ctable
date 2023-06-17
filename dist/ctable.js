@@ -929,7 +929,7 @@ class SearchableSelect extends Component {
       menu_active: false
     });
 
-    if (e.relatedTarget !== null) {
+    if (e.relatedTarget !== null && e.relatedTarget.classList.contains("dropdown-item")) {
       e.relatedTarget.click();
     }
   }

@@ -45,7 +45,7 @@ class SearchableSelect extends Component {
 
         this.setState({menu_active: false});
 
-        if(e.relatedTarget !== null){
+        if (e.relatedTarget !== null && e.relatedTarget.classList.contains("dropdown-item")) {
             e.relatedTarget.click();
         }
     }
