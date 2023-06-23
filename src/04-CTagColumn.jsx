@@ -75,9 +75,11 @@ class CTagColumn extends CTableColumn{
 
     addClicked(e){
         e.preventDefault();
-        var add_filtred = this.state.values.concat(e.target.dataset.tagname);
-        this.setState({values: add_filtred});
-        this.props.table.notify_changes(this.props.row, this.props.column, add_filtred === [] ? null : add_filtred.join(','));
+        if(!this.state.values.includes(e.target.dataset.tagname)){
+            var add_filtred = this.state.values.concat(e.target.dataset.tagname);
+            this.setState({values: add_filtred});
+            this.props.table.notify_changes(this.props.row, this.props.column, add_filtred === [] ? null : add_filtred.join(','));
+        }
     }
 
     render_editor() {
