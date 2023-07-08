@@ -86,6 +86,7 @@ var ctable_lang = {
     server_error: 'Server side error: ',
     no_filter: 'No filter',
     no_file: 'No file',
+    file_present: 'File present',
     multiple_files: 'Files: ',
     file_to_large: 'File too large',
     file_wrong_extention: 'File have a wrong type',
@@ -118,6 +119,7 @@ var ctable_lang = {
     server_error: 'Ошибка сервера: ',
     no_filter: 'Нет фильтра',
     no_file: 'Нет файла',
+    file_present: 'Файл загружен',
     multiple_files: 'Файлы: ',
     file_to_large: 'Файл слишком велик',
     file_wrong_extention: 'Файл имеет недопустимый тип',
@@ -1038,7 +1040,7 @@ class CPlainUploadColumn extends CTableColumn {
         class: "button is-info"
       }, h("span", {
         class: "material-icons"
-      }, "attach_file"), this.value());
+      }, "attach_file"), this.props.table.props.lang.file_present);
     }
 
     return h("a", {
@@ -1046,7 +1048,7 @@ class CPlainUploadColumn extends CTableColumn {
       href: this.props.links_endpoint + this.value()
     }, h("span", {
       class: "material-icons"
-    }, "attach_file"), this.value());
+    }, "attach_file"), this.props.table.props.lang.file_present);
   }
 
   filterChanged(e) {

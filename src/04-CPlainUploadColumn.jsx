@@ -31,10 +31,10 @@ class CPlainUploadColumn extends CTableColumn{
         }
 
         if (typeof this.props.links_endpoint === 'undefined'){
-            return <a class="button is-info"><span class="material-icons">attach_file</span>{this.value()}</a>;
+            return <a class="button is-info"><span class="material-icons">attach_file</span>{this.props.table.props.lang.file_present}</a>;
         }
 
-        return <a class="button is-info" href={this.props.links_endpoint + this.value()}><span class="material-icons">attach_file</span>{this.value()}</a>;
+        return <a class="button is-info" href={this.props.links_endpoint + this.value()}><span class="material-icons">attach_file</span>{this.props.table.props.lang.file_present}</a>;
     }
 
     filterChanged(e){
