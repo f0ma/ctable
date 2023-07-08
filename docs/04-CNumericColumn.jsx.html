@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: 04-CNumericColumn.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: 04-CNumericColumn.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Text edit class.
+ *
+ * This column for text editing.
+ *
+ * @arg this.props.placeholder {string} Placeholder for column editor.
+ * @arg this.props.domain {string} Domain numbers: 'integer' or 'float'
+ * @arg this.props.minimum {float} Minimum.
+ * @arg this.props.maximum {float} Maximum.
+ * @arg this.props.step {integer} Step.
+ * @arg this.props.round {integer} Step.
+ * @arg this.props.input_hints {string[]} Input hints list.
+ * @arg this.props.input_hints.0 {string} Hints text added to input.
+ * @arg this.props.input_hints.1 {string} Hints button text.
+ */
+
+class CTextColumn extends CTableColumn{
+    constructor() {
+        super();
+
+        this.editorChanged = this.editorChanged.bind(this);
+        this.hintClicked = this.hintClicked.bind(this);
+
+        this.ref = createRef();
+    }
+
+    componentDidMount() {
+        this.setState({editor_valid: true, value: this.value()});
+    }
+
+    render_cell() {
+        if(this.props.domain == 'integer')
+            return &lt;span>{this.value()}&lt;/span>;
+        if(this.props.domain == 'float')
+            return &lt;span>{this.value().toFixed(this.props.round)}&lt;/span>;
+    }
+
+    numeric_value_extractor(v){
+        if(this.props.domain == 'integer')
+            return parseInt(v);
+        if(this.props.domain == 'float')
+            return parseFloat(v.replace(',','.'));
+    }
+
+    numeric_validator(v){
+        if(this.props.domain == 'integer')
+            return (v.match(/^[+-]\d+$/));
+        if(this.props.domain == 'float')
+            return !/^\s*$/.test(v) &amp;&amp; !isNaN(v.replace(',','.'));
+    }
+
+    editorChanged(e) {
+        var ed_value = e.target.value;
+
+        this.setState({value: ed_value});
+        this.props.table.notify_changes(this.props.row, this.props.column, ed_value);
+
+        if (numeric_validator(ed_value)){
+            this.props.table.notify_valids(this.props.row, this.props.column, true);
+            this.setState({editor_valid: true});
+        }
+    }
+
+    hintClicked(e) {
+        var result = this.state.value !== null ? this.state.value + e.target.dataset.hintvalue : e.target.dataset.hintvalue;
+        this.setState({value: result});
+        this.props.table.notify_changes(this.props.row, this.props.column, result);
+    }
+
+
+    addStep(e) {
+        var v = this.state.value + this.props.step;
+        this.setState({value: v});
+        this.props.table.notify_changes(this.props.row, this.props.column, v);
+    }
+
+    removeStep(e) {
+        var v = this.state.value - this.props.step;
+        this.setState({value: v});
+        this.props.table.notify_changes(this.props.row, this.props.column, v);
+    }
+
+    render_editor() {
+        var self = this;
+
+        return &lt;div class="field" ref={this.ref}>
+                   &lt;label class="label">{this.title()}&lt;/label>
+                   &lt;div class="field has-addons">
+                   &lt;div class="control">
+                       &lt;input class={!this.state.editor_valid ? "input is-danger" : "input"} type="text" value={this.state.value} onChange={this.editorChanged} placeholder={this.props.placeholder}/>
+                   &lt;/div>
+                   &lt;div class="control">
+                       &lt;button class="button is-info" onClick={this.addStep}>+&lt;/button>
+                       &lt;button class="button is-info" onClick={this.removeStep}>-&lt;/button>
+                   &lt;/div>
+                   &lt;/div>
+                   {this.props.input_hints ? &lt;div class="tags"  style="margin-top: 0.2em;">{this.props.input_hints.map(function(c,i){ return &lt;span class="tag button" data-hintvalue={c[0]} onClick={self.hintClicked}>{c[1]}&lt;/span>; })}&lt;/div> : ''}
+                   {this.props.footnote ? &lt;div class="help">{this.props.footnote}&lt;/div> : ''}
+               &lt;/div>;
+    }
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CPlainUploadColumn.html">CPlainUploadColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTagColumn.html">CTagColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun Jun 25 2023 23:25:55 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

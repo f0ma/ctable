@@ -577,6 +577,157 @@ class CActionColumn extends CTableColumn {
 
 }
 /**
+ * Date edit class.
+ *
+ * This column for date editing.
+ * @arg this.props.years_range {int[]} Years range.
+ * @arg this.props.years_range.0 {int} Minimum.
+ * @arg this.props.years_range.1 {int} Maximum.
+ *
+ */
+function parseISOString(s) {
+  var b = s.split(/\D+/);
+  return new Date(Date.UTC(b[0], --b[1], b[2]));
+}
+
+function createGOSTString(d) {
+  return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getFullYear());
+}
+
+function createISOString(d) {
+  return String(d.getFullYear()) + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+class CDateColumn extends CTableColumn {
+  constructor() {
+    super();
+    this.editorChanged = this.editorChanged.bind(this);
+    this.hintClicked = this.hintClicked.bind(this);
+    this.ref_day = createRef();
+    this.ref_month = createRef();
+    this.ref_year = createRef();
+  }
+
+  componentDidMount() {
+    this.setState({
+      editor_valid: true,
+      value: this.value()
+    });
+  }
+
+  render_cell() {
+    if (this.value()) {
+      var d = parseISOString(this.value());
+      return h("span", null, createGOSTString(d));
+    } else {
+      return h("span", null);
+    }
+  }
+
+  editorChanged(e) {
+    var ed_value = this.ref_year.current.value + '-' + this.ref_month.current.value + '-' + this.ref_day.current.value;
+    this.setState({
+      value: ed_value
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, ed_value);
+
+    if (ed_value.match(/^\d\d\d\d-\d\d-\d\d$/)) {
+      this.props.table.notify_valids(this.props.row, this.props.column, true);
+      this.setState({
+        editor_valid: true
+      });
+    }
+  }
+
+  hintClicked(e) {
+    this.setState({
+      value: e.target.dataset.hintvalue
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, e.target.dataset.hintvalue);
+  }
+
+  value() {
+    var v = super.value();
+
+    if (v === null || v === "") {
+      var ds = createISOString(new Date());
+      this.props.table.notify_changes(this.props.row, this.props.column, ds);
+      return ds;
+    }
+
+    return v;
+  }
+
+  render_editor() {
+    var self = this;
+    var date = parseISOString(this.value());
+    var ymin = 1900;
+    var maxscale = 200;
+
+    if (this.props.years_range) {
+      ymin = this.props.years_range[0];
+      maxscale = this.props.years_range[1] - this.props.years_range[0] + 1;
+    }
+
+    return h("div", {
+      class: "field",
+      ref: this.ref
+    }, h("label", {
+      class: "label"
+    }, this.title()), h("div", {
+      class: "field has-addons"
+    }, h("div", {
+      class: "control"
+    }, h("div", {
+      class: "select"
+    }, h("select", {
+      value: String(date.getDate()).padStart(2, '0'),
+      onChange: this.editorChanged,
+      ref: this.ref_day
+    }, [...Array(30).keys()].map(function (k) {
+      return h("option", {
+        value: String(k + 1).padStart(2, '0')
+      }, String(k + 1).padStart(2, '0'));
+    })))), h("div", {
+      class: "control"
+    }, h("div", {
+      class: "select"
+    }, h("select", {
+      value: String(date.getMonth() + 1).padStart(2, '0'),
+      onChange: this.editorChanged,
+      ref: this.ref_month
+    }, [...Array(11).keys()].map(function (k) {
+      return h("option", {
+        value: String(k + 1).padStart(2, '0')
+      }, String(k + 1).padStart(2, '0'));
+    })))), h("div", {
+      class: "control"
+    }, h("div", {
+      class: "select"
+    }, h("select", {
+      value: String(date.getFullYear()).padStart(2, '0'),
+      onChange: this.editorChanged,
+      ref: this.ref_year
+    }, [...Array(maxscale).keys()].map(function (k) {
+      return h("option", {
+        value: String(k + ymin)
+      }, String(k + ymin));
+    }))))), this.props.input_hints ? h("div", {
+      class: "tags",
+      style: "margin-top: 0.2em;"
+    }, this.props.input_hints.map(function (c, i) {
+      return h("span", {
+        class: "tag button",
+        "data-hintvalue": c[0],
+        onClick: self.hintClicked
+      }, c[1]);
+    })) : '', this.props.footnote ? h("div", {
+      class: "help"
+    }, this.props.footnote) : '');
+  }
+
+}
+/**
  * Select column with dynamic items loaded from server.
  *
  * This column for selecting from dropdown.
@@ -664,6 +815,183 @@ class CDynamicSelectColumn extends CTableColumn {
         value: item[0]
       }, item[1]);
     })))), this.props.footnote ? h("div", {
+      class: "help"
+    }, this.props.footnote) : '');
+  }
+
+}
+/**
+ * Numeric edit class.
+ *
+ * This column for numbers editing (integer or float).
+ *
+ * @arg this.props.placeholder {string} Placeholder for column editor.
+ * @arg this.props.domain {string} Domain numbers: 'integer' or 'float'
+ * @arg this.props.minimum {float} Minimum.
+ * @arg this.props.maximum {float} Maximum.
+ * @arg this.props.step {float} Step.
+ * @arg this.props.round {float} Step.
+ * @arg this.props.input_hints {string[]} Input hints list.
+ * @arg this.props.input_hints.0 {float} Hints text added to input.
+ * @arg this.props.input_hints.1 {string} Hints button text.
+ */
+class CNumericColumn extends CTableColumn {
+  constructor() {
+    super();
+    this.editorChanged = this.editorChanged.bind(this);
+    this.hintClicked = this.hintClicked.bind(this);
+    this.addStep = this.addStep.bind(this);
+    this.removeStep = this.removeStep.bind(this);
+    this.numeric_validator = this.numeric_validator.bind(this);
+    this.numeric_value_extractor = this.numeric_value_extractor.bind(this);
+    this.ref = createRef();
+  }
+
+  componentDidMount() {
+    this.setState({
+      editor_valid: true,
+      value: this.value()
+    });
+  }
+
+  render_cell() {
+    if (this.props.domain == 'integer') return h("span", null, this.value());
+    if (this.props.domain == 'float') if (this.props.round) return h("span", null, parseFloat(this.value()).toFixed(this.props.round));else return h("span", null, parseFloat(this.value()).toFixed(2));
+  }
+
+  numeric_value_extractor(v) {
+    var val = 0;
+    if (this.props.domain == 'integer') if (typeof v == "string") val = parseInt(v);else val = v;
+    if (this.props.domain == 'float') if (typeof v == "string") val = parseFloat(v.replace(',', '.'));else val = v;
+    if (this.props.minimum) if (val < this.props.minimum) val = this.props.minimum;
+    if (this.props.maximum) if (val > this.props.maximum) val = this.props.maximum;
+    return val;
+  }
+
+  numeric_validator(v) {
+    if (this.props.domain == 'integer') if (typeof v == "string") return v.match(/^[+-]\d+$/);
+    if (this.props.domain == 'float') if (typeof v == "string") return !/^\s*$/.test(v) && !isNaN(v.replace(',', '.'));
+    return true;
+  }
+
+  editorChanged(e) {
+    var ed_value = this.numeric_value_extractor(e.target.value);
+    this.setState({
+      value: ed_value
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, ed_value);
+
+    if (this.numeric_validator(ed_value)) {
+      this.props.table.notify_valids(this.props.row, this.props.column, true);
+      this.setState({
+        editor_valid: true
+      });
+    }
+  }
+
+  hintClicked(e) {
+    this.setState({
+      value: e.target.dataset.hintvalue
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, e.target.dataset.hintvalue);
+  }
+
+  addStep(e) {
+    var v = this.numeric_value_extractor(this.state.value);
+
+    if (this.props.step) {
+      v = v + this.props.step;
+    } else {
+      v = v + 1;
+    }
+
+    if (this.props.maximum) if (v > this.props.maximum) v = this.props.maximum;
+    this.setState({
+      value: v
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, v);
+  }
+
+  removeStep(e) {
+    var v = this.numeric_value_extractor(this.state.value);
+
+    if (this.props.step) {
+      v = v - this.props.step;
+    } else {
+      v = v - 1;
+    }
+
+    if (this.props.minimum) if (v < this.props.minimum) v = this.props.minimum;
+    this.setState({
+      value: v
+    });
+    this.props.table.notify_changes(this.props.row, this.props.column, v);
+  }
+
+  render_editor() {
+    var self = this;
+    var minput = '';
+    var mvalue = '0';
+
+    if (this.value() != null && this.value() != "") {
+      mvalue = this.value();
+    }
+
+    if (self.props.domain == 'integer') {
+      minput = h("input", {
+        class: !this.state.editor_valid ? "input is-danger" : "input",
+        type: "text",
+        value: mvalue,
+        onChange: this.editorChanged,
+        placeholder: this.props.placeholder
+      });
+    }
+
+    if (self.props.domain == 'float') {
+      if (this.props.round) minput = h("input", {
+        class: !this.state.editor_valid ? "input is-danger" : "input",
+        type: "text",
+        value: parseFloat(mvalue).toFixed(this.props.round),
+        onChange: this.editorChanged,
+        placeholder: this.props.placeholder
+      });else minput = h("input", {
+        class: !this.state.editor_valid ? "input is-danger" : "input",
+        type: "text",
+        value: parseFloat(mvalue).toFixed(2),
+        onChange: this.editorChanged,
+        placeholder: this.props.placeholder
+      });
+    }
+
+    return h("div", {
+      class: "field",
+      ref: this.ref
+    }, h("label", {
+      class: "label"
+    }, this.title()), h("div", {
+      class: "field has-addons"
+    }, h("div", {
+      class: "control"
+    }, minput), h("div", {
+      class: "control"
+    }, h("button", {
+      class: "button is-info",
+      onClick: this.addStep
+    }, "+")), h("div", {
+      class: "control"
+    }, h("button", {
+      class: "button is-info",
+      onClick: this.removeStep
+    }, "-"))), this.props.input_hints ? h("div", {
+      class: "tags",
+      style: "margin-top: 0.2em;"
+    }, this.props.input_hints.map(function (c, i) {
+      return h("span", {
+        class: "tag button",
+        "data-hintvalue": c[0],
+        onClick: self.hintClicked
+      }, c[1]);
+    })) : '', this.props.footnote ? h("div", {
       class: "help"
     }, this.props.footnote) : '');
   }

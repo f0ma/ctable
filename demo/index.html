@@ -23,9 +23,9 @@
   </section>
   <script>
       var subcolumns = [{name:"id", title: "ID", kind: CTableColumn, hide_editor:true, is_key:true},
-                        {name:"sum", title: "Summ", kind: CTextColumn, input_hints:[['5','5'],['10','10'],['15','15']], sorting:null},
+                        {name:"sum", title: "Summ", kind: CNumericColumn, input_hints:[[5,'5'],[10,'10'],[15,'15']], sorting:null, domain:'float', minimum: 5, maximum: 20, step: 3},
                         {name:"state", title: "Status", kind: CSelectColumn, options:[[1,'Created'],[2,'Processing'], [3,'Complete']], sorting:null},
-                        {name:"date", title: "Date", kind: CTextColumn, sorting:null},
+                        {name:"date", title: "Date", kind: CDateColumn, sorting:null},
                         {name: "", "title": "Action", kind: CActionColumn }];
 
 
@@ -35,7 +35,7 @@
                 {name: "firstname", title: "Firstname", kind: CTextColumn, sorting:null,  searching:null, textarea: true, footnote: "Fill this.", tab:0},
                 {name: "lastname", title: "Lastname", kind: CTextColumn, sorting:null,  searching:null, tab:0},
                 {name: "status", title: "Status", kind: CSearchDyncmicSelectColumn, sorting:null, filtering:null, endpoint: 'opts.php', tab:0},
-                {name: "reg_date", title: "Date", kind: CTextColumn, sorting:null,  searching:null, default: '2022-01-01', validate:'^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$', tab:1},
+                {name: "reg_date", title: "Date", kind: CDateColumn, sorting:null,  searching:null, default: '2022-01-01', years_range:[1920,2020], tab:1},
                 {name: "image", title: "Image", kind: CPlainUploadColumn, upload_endpoint: 'account.php', links_endpoint: '/files', max_file_size: 1000000, allowed_extentions:['.png'], filtering:null, footnote:'Upload .png files', tab:1},
                 {name: "tags", title: "Tags", kind: CTagColumn, sorting:null,  searching:null, options:[['tag1','Tag 1'],['tag2','Tag 2'],['tag3','Tag 3']], footnote: "Fill this.", tab:1},
                 {name: "", "title": "Action", kind: CActionColumn, tab:-1}
