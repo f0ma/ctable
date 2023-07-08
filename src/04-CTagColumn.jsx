@@ -6,6 +6,8 @@
  * @arg {List[]} this.props.options - Tag list.
  * @arg {string} this.props.options[].0 - Tag key.
  * @arg {string} this.props.options[].1 - Tag text.
+ * @arg {string} this.props.endpoint - Endpoint for loading options.
+ * @arg {Object} this.props.params - Additional parameters to select query
  */
 
 class CTagColumn extends CTableColumn{
@@ -24,9 +26,14 @@ class CTagColumn extends CTableColumn{
     }
 
     componentDidMount() {
-        this.setState({options: this.props.options,
-                       values: this.value() === null ? [] : this.value().split(","),
+        this.setState({values: this.value() === null ? [] : this.value().split(","),
                        editor_panel_opened:false});
+
+        if (typeof this.props.endpoint === 'undefined') {
+            this.setState({options: this.props.options})
+        } else {
+            this.props.table.load_options(this.props.endpoint, this.props.params, this, this.ref);
+        }
     }
 
     showTagPanel(e){
@@ -84,7 +91,7 @@ class CTagColumn extends CTableColumn{
 
     render_editor() {
         var self = this;
-        var alltag = <div class="tags" style="margin-left: 1em; margin-right: 1em;">{this.props.options.map(function(c,i){ return <span class="tag button" data-tagname={c[0]} onMouseDown={self.addClicked}>{c[1]}</span>; })}</div>;
+        var alltag = <div class="tags" style="margin-left: 1em; margin-right: 1em;">{this.state.options.map(function(c,i){ return <span class="tag button" data-tagname={c[0]} onMouseDown={self.addClicked}>{c[1]}</span>; })}</div>;
         var cvalues = this.state.options.filter(function(item){return self.state.values.indexOf(item[0]) != -1;});
         var taglist = <div class="tags" style="margin-right: 2em;">{cvalues.map(function(c,i){ return <span class="tag">{c[1]}<button class="delete is-small" data-tagname={c[0]} onClick={self.deleteClicked}></button></span>; })}</div>;
 

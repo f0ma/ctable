@@ -1619,6 +1619,8 @@ class CSubtableColumn extends CTableColumn {
  * @arg {List[]} this.props.options - Tag list.
  * @arg {string} this.props.options[].0 - Tag key.
  * @arg {string} this.props.options[].1 - Tag text.
+ * @arg {string} this.props.endpoint - Endpoint for loading options.
+ * @arg {Object} this.props.params - Additional parameters to select query
  */
 class CTagColumn extends CTableColumn {
   constructor() {
@@ -1638,10 +1640,17 @@ class CTagColumn extends CTableColumn {
 
   componentDidMount() {
     this.setState({
-      options: this.props.options,
       values: this.value() === null ? [] : this.value().split(","),
       editor_panel_opened: false
     });
+
+    if (typeof this.props.endpoint === 'undefined') {
+      this.setState({
+        options: this.props.options
+      });
+    } else {
+      this.props.table.load_options(this.props.endpoint, this.props.params, this, this.ref);
+    }
   }
 
   showTagPanel(e) {
@@ -1726,7 +1735,7 @@ class CTagColumn extends CTableColumn {
     var alltag = h("div", {
       class: "tags",
       style: "margin-left: 1em; margin-right: 1em;"
-    }, this.props.options.map(function (c, i) {
+    }, this.state.options.map(function (c, i) {
       return h("span", {
         class: "tag button",
         "data-tagname": c[0],

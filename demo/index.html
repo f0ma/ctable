@@ -37,7 +37,7 @@
                 {name: "status", title: "Status", kind: CSearchDyncmicSelectColumn, sorting:null, filtering:null, endpoint: 'opts.php', tab:0},
                 {name: "reg_date", title: "Date", kind: CDateColumn, sorting:null,  searching:null, default: '2022-01-01', years_range:[1920,2020], tab:1},
                 {name: "image", title: "Image", kind: CPlainUploadColumn, upload_endpoint: 'account.php', links_endpoint: '/files', max_file_size: 1000000, allowed_extentions:['.png'], filtering:null, footnote:'Upload .png files', tab:1},
-                {name: "tags", title: "Tags", kind: CTagColumn, sorting:null,  searching:null, options:[['tag1','Tag 1'],['tag2','Tag 2'],['tag3','Tag 3']], footnote: "Fill this.", tab:1},
+                {name: "tags", title: "Tags", kind: CTagColumn, sorting:null,  searching:null, endpoint:"tags.php", footnote: "Fill this.", tab:1},
                 {name: "", "title": "Action", kind: CActionColumn, tab:-1}
             ];
 

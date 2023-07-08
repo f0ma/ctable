@@ -27,27 +27,33 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Text edit class.
+ * Numeric edit class.
  *
- * This column for text editing.
+ * This column for numbers editing (integer or float).
  *
  * @arg this.props.placeholder {string} Placeholder for column editor.
  * @arg this.props.domain {string} Domain numbers: 'integer' or 'float'
  * @arg this.props.minimum {float} Minimum.
  * @arg this.props.maximum {float} Maximum.
- * @arg this.props.step {integer} Step.
- * @arg this.props.round {integer} Step.
+ * @arg this.props.step {float} Step.
+ * @arg this.props.round {float} Step.
  * @arg this.props.input_hints {string[]} Input hints list.
- * @arg this.props.input_hints.0 {string} Hints text added to input.
+ * @arg this.props.input_hints.0 {float} Hints text added to input.
  * @arg this.props.input_hints.1 {string} Hints button text.
  */
 
-class CTextColumn extends CTableColumn{
+class CNumericColumn extends CTableColumn{
     constructor() {
         super();
 
         this.editorChanged = this.editorChanged.bind(this);
         this.hintClicked = this.hintClicked.bind(this);
+
+        this.addStep = this.addStep.bind(this);
+        this.removeStep = this.removeStep.bind(this);
+
+        this.numeric_validator = this.numeric_validator.bind(this);
+        this.numeric_value_extractor = this.numeric_value_extractor.bind(this);
 
         this.ref = createRef();
     }
@@ -60,50 +66,85 @@ class CTextColumn extends CTableColumn{
         if(this.props.domain == 'integer')
             return &lt;span>{this.value()}&lt;/span>;
         if(this.props.domain == 'float')
-            return &lt;span>{this.value().toFixed(this.props.round)}&lt;/span>;
+            if(this.props.round)
+                return &lt;span>{parseFloat(this.value()).toFixed(this.props.round)}&lt;/span>;
+            else
+                return &lt;span>{parseFloat(this.value()).toFixed(2)}&lt;/span>;
     }
 
     numeric_value_extractor(v){
+        var val = 0;
         if(this.props.domain == 'integer')
-            return parseInt(v);
+            if(typeof(v) == "string")
+                val = parseInt(v);
+            else
+                val = v;
         if(this.props.domain == 'float')
-            return parseFloat(v.replace(',','.'));
+            if(typeof(v) == "string")
+                val = parseFloat(v.replace(',','.'));
+            else
+                val = v;
+        if(this.props.minimum)
+            if(val &lt; this.props.minimum)
+                val = this.props.minimum;
+        if(this.props.maximum)
+            if(val > this.props.maximum)
+                val = this.props.maximum;
+        return val;
     }
 
     numeric_validator(v){
         if(this.props.domain == 'integer')
-            return (v.match(/^[+-]\d+$/));
+            if(typeof(v) == "string")
+                return (v.match(/^[+-]\d+$/));
         if(this.props.domain == 'float')
-            return !/^\s*$/.test(v) &amp;&amp; !isNaN(v.replace(',','.'));
+            if(typeof(v) == "string")
+                return !/^\s*$/.test(v) &amp;&amp; !isNaN(v.replace(',','.'));
+        return true;
     }
 
     editorChanged(e) {
-        var ed_value = e.target.value;
+        var ed_value = this.numeric_value_extractor(e.target.value);
 
         this.setState({value: ed_value});
         this.props.table.notify_changes(this.props.row, this.props.column, ed_value);
 
-        if (numeric_validator(ed_value)){
+        if (this.numeric_validator(ed_value)){
             this.props.table.notify_valids(this.props.row, this.props.column, true);
             this.setState({editor_valid: true});
         }
     }
 
     hintClicked(e) {
-        var result = this.state.value !== null ? this.state.value + e.target.dataset.hintvalue : e.target.dataset.hintvalue;
-        this.setState({value: result});
-        this.props.table.notify_changes(this.props.row, this.props.column, result);
+        this.setState({value: e.target.dataset.hintvalue});
+        this.props.table.notify_changes(this.props.row, this.props.column, e.target.dataset.hintvalue);
     }
 
 
     addStep(e) {
-        var v = this.state.value + this.props.step;
+        var v = this.numeric_value_extractor(this.state.value);
+        if(this.props.step){
+            v = v + this.props.step;
+        } else {
+            v = v + 1;
+        }
+        if(this.props.maximum)
+            if(v > this.props.maximum)
+                v = this.props.maximum;
         this.setState({value: v});
         this.props.table.notify_changes(this.props.row, this.props.column, v);
     }
 
     removeStep(e) {
-        var v = this.state.value - this.props.step;
+        var v = this.numeric_value_extractor(this.state.value);
+        if(this.props.step){
+            v = v - this.props.step;
+        } else {
+            v = v - 1;
+        }
+        if(this.props.minimum)
+            if(v &lt; this.props.minimum)
+                v = this.props.minimum;
         this.setState({value: v});
         this.props.table.notify_changes(this.props.row, this.props.column, v);
     }
@@ -111,14 +152,34 @@ class CTextColumn extends CTableColumn{
     render_editor() {
         var self = this;
 
+        var minput = '';
+
+        var mvalue = '0';
+        if (this.value() != null &amp;&amp; this.value() != ""){
+            mvalue = this.value();
+        }
+
+        if(self.props.domain == 'integer'){
+            minput = &lt;input class={!this.state.editor_valid ? "input is-danger" : "input"} type="text" value={mvalue} onChange={this.editorChanged} placeholder={this.props.placeholder}/>;
+        }
+
+        if(self.props.domain == 'float'){
+            if (this.props.round)
+                minput = &lt;input class={!this.state.editor_valid ? "input is-danger" : "input"} type="text" value={parseFloat(mvalue).toFixed(this.props.round)} onChange={this.editorChanged} placeholder={this.props.placeholder}/>;
+            else
+                minput = &lt;input class={!this.state.editor_valid ? "input is-danger" : "input"} type="text" value={parseFloat(mvalue).toFixed(2)} onChange={this.editorChanged} placeholder={this.props.placeholder}/>;
+        }
+
         return &lt;div class="field" ref={this.ref}>
                    &lt;label class="label">{this.title()}&lt;/label>
                    &lt;div class="field has-addons">
                    &lt;div class="control">
-                       &lt;input class={!this.state.editor_valid ? "input is-danger" : "input"} type="text" value={this.state.value} onChange={this.editorChanged} placeholder={this.props.placeholder}/>
+                       {minput}
                    &lt;/div>
                    &lt;div class="control">
                        &lt;button class="button is-info" onClick={this.addStep}>+&lt;/button>
+                   &lt;/div>
+                   &lt;div class="control">
                        &lt;button class="button is-info" onClick={this.removeStep}>-&lt;/button>
                    &lt;/div>
                    &lt;/div>
@@ -138,13 +199,13 @@ class CTextColumn extends CTableColumn{
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CPlainUploadColumn.html">CPlainUploadColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTagColumn.html">CTagColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CNumericColumn.html">CNumericColumn</a></li><li><a href="CPlainUploadColumn.html">CPlainUploadColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTagColumn.html">CTagColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul><h3>Global</h3><ul><li><a href="global.html#parseISOString">parseISOString</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun Jun 25 2023 23:25:55 GMT+0300 (Москва, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat Jul 08 2023 19:56:05 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>
