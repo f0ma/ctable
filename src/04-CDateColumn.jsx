@@ -96,14 +96,14 @@ class CDateColumn extends CTableColumn{
                    <div class="control">
                        <div class="select">
                          <select value={String(date.getDate()).padStart(2,'0')} onChange={this.editorChanged} ref={this.ref_day}>
-                            {[...Array(30).keys()].map(function (k){return <option value={String(k+1).padStart(2,'0')}>{String(k+1).padStart(2,'0')}</option>;})}
+                            {[...Array(31).keys()].map(function (k){return <option value={String(k+1).padStart(2,'0')}>{String(k+1).padStart(2,'0')}</option>;})}
                          </select>
                        </div>
                    </div>
                    <div class="control">
                        <div class="select">
                          <select value={String(date.getMonth()+1).padStart(2,'0')} onChange={this.editorChanged} ref={this.ref_month}>
-                            {[...Array(11).keys()].map(function (k){return <option value={String(k+1).padStart(2,'0')}>{String(k+1).padStart(2,'0')}</option>;})}
+                            {[...Array(12).keys()].map(function (k){return <option value={String(k+1).padStart(2,'0')}>{String(k+1).padStart(2,'0')}</option>;})}
                          </select>
                        </div>
                    </div>

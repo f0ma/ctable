@@ -123,8 +123,8 @@ var ctable_lang = {
     multiple_files: 'Файлы: ',
     file_to_large: 'Файл слишком велик',
     file_wrong_extention: 'Файл имеет недопустимый тип',
-    file_filter_no: 'Файла нет',
-    file_filter_yes: 'Файл есть',
+    file_filter_no: 'Нет файла',
+    file_filter_yes: 'Файл загружен',
     reload: 'Перезагрузить',
     loading: 'Загрузка...',
     all: 'Все',
@@ -686,7 +686,7 @@ class CDateColumn extends CTableColumn {
       value: String(date.getDate()).padStart(2, '0'),
       onChange: this.editorChanged,
       ref: this.ref_day
-    }, [...Array(30).keys()].map(function (k) {
+    }, [...Array(31).keys()].map(function (k) {
       return h("option", {
         value: String(k + 1).padStart(2, '0')
       }, String(k + 1).padStart(2, '0'));
@@ -698,7 +698,7 @@ class CDateColumn extends CTableColumn {
       value: String(date.getMonth() + 1).padStart(2, '0'),
       onChange: this.editorChanged,
       ref: this.ref_month
-    }, [...Array(11).keys()].map(function (k) {
+    }, [...Array(12).keys()].map(function (k) {
       return h("option", {
         value: String(k + 1).padStart(2, '0')
       }, String(k + 1).padStart(2, '0'));
