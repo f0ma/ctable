@@ -1,0 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-15 23:16+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CTable.jsx:59
+msgid "Add"
+msgstr ""
+
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39
+msgid "Save"
+msgstr ""
+
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39
+msgid "Save all"
+msgstr ""
+
+#: src/CEditorPanel.jsx:29 src/CEditorPanel.jsx:42
+msgid "Cancel"
+msgstr ""
+
+#: src/CTable.jsx:60
+msgid "Edit"
+msgstr ""
+
+#: src/CTable.jsx:61
+msgid "Duplicate"
+msgstr ""
+
+#: src/CTable.jsx:62
+msgid "Delete"
+msgstr ""
+
+#: src/CTable.jsx:64
+msgid "Enter"
+msgstr ""
+
+#: src/CTable.jsx:65
+msgid "Go back"
+msgstr ""
+
+#: src/CTable.jsx:67
+msgid "Filter"
+msgstr ""
+
+#: src/CTable.jsx:68
+msgid "Sorting"
+msgstr ""
+
+#: src/CTable.jsx:69
+msgid "Columns"
+msgstr ""
+
+#: src/CTable.jsx:72
+msgid "Select all"
+msgstr ""
+
+#: src/CTable.jsx:73
+msgid "Clear all"
+msgstr ""
+
+#: src/CTable.jsx:76
+msgid "Zoom In"
+msgstr ""
+
+#: src/CTable.jsx:77
+msgid "Zoom Out"
+msgstr ""
+
+#: src/CTable.jsx:78
+msgid "Reset Zoom"
+msgstr ""
+
+#: src/Header.jsx:5
+msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+msgstr ""

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CTable.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CTable.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @typedef {Function} CTable#OnEditorChanges
+ * @param {string} colname
+ * @param {bool} is_modified
+ * @param {*} value
+ * @param {bool} valid
+ */
+
+/**
+ * @typedef {Object} CTable#EditorChange
+ * @property {bool} is_modified
+ * @property {*} value
+ * @property {bool} valid
+ */
+
+/**
+* @event CTable#cteditorchanged
+* @property {string} initiator
+* @property {CTable#EditorChange[]} changes
+*/
+
+
+/**
+ * Base table class.
+ *
+ * @arg this.props.server {Object} JRPC object.
+ *
+ * @fires CTable#cteditorchanged
+ */
+
+class CTable extends Component {
+
+  constructor() {
+    super();
+
+    this.topButtonClick = this.topButtonClick.bind(this);
+    this.headerXScroll = this.headerXScroll.bind(this);
+    this.tableXScroll = this.tableXScroll.bind(this);
+    this.onRowClick = this.onRowClick.bind(this);
+    this.onTableSelectDropdownClick = this.onTableSelectDropdownClick.bind(this);
+    this.onTableSelectClick = this.onTableSelectClick.bind(this);
+    this.onSaveClick = this.onSaveClick.bind(this);
+    this.onCancelClick = this.onCancelClick.bind(this);
+    this.onEditorChanges = this.onEditorChanges.bind(this);
+    this.reloadData = this.reloadData.bind(this);
+    this.getAffectedKeys = this.getAffectedKeys.bind(this);
+    this.showError = this.showError.bind(this);
+
+    this.setState({
+      width: 50,
+      fontSize: 100,
+      table_list: [],
+      current_table: {},
+      links: [],
+      progress: true,
+      last_row_clicked: null,
+      topline_buttons: [
+
+        {name:"add", icon: "add", label:_("Add"), enabled: true, style:"is-primary", icon_only:false},
+        {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:false},
+        {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:false},
+        {name:"delete", icon: "delete", label:_("Delete"), enabled: false, style:"is-danger", icon_only:false},
+
+        {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: true, style:"", icon_only:false},
+        {name:"back", icon: "arrow_back", label:_("Go back"), enabled: true, style:"", icon_only:false},
+
+        {name:"filter", icon: "filter_alt", label:_("Filter"), enabled: true, style:"", icon_only:false},
+        {name:"sort", icon: "sort", label:_("Sorting"), enabled: true, style:"", icon_only:false},
+        {name:"columns", icon: "list_alt", label:_("Columns"), enabled: true, style:"", icon_only:false},
+
+
+        {name:"select_all", icon: "select_all", label:_("Select all"), enabled: true, style:"", icon_only:true},
+        {name:"clear_all", icon: "remove_selection", label:_("Clear all"), enabled: true, style:"", icon_only:true},
+
+
+        {name:"zoom_in", icon: "zoom_in", label:_("Zoom In"), enabled: true, style:"", icon_only:true},
+        {name:"zoom_out", icon: "zoom_out", label:_("Zoom Out"), enabled: true, style:"", icon_only:true},
+        {name:"zoom_reset", icon: "search", label:_("Reset Zoom"), enabled: false, style:"", icon_only:true},
+      ],
+      table_columns :[ ],
+      table_rows:[ ],
+      table_row_status:[ ],
+      table_select_menu_active: false,
+      editor_show: false,
+      editor_affected_rows: [],
+      editor_changes: {},
+      editor_operation: '',
+    });
+
+  }
+
+  componentDidMount() {
+      var self = this;
+      self.props.server.version().then(x => console.log(x));
+      let tables_p = self.props.server.CTableServer.tables();
+      let links_p = self.props.server.CTableServer.links();
+
+      self.props.server.slots.tableChanged.push(this.reloadData);
+
+      Promise.all([tables_p, links_p]).then(x => {
+        self.state.table_list = x[0];
+        self.state.current_table = x[0][0];
+        self.state.width = x[0][0].width;
+        self.state.links = x[1];
+
+        self.setState({});
+
+        let table_columns_p = self.props.server.CTableServer.columns(self.state.current_table.name).then((c) => {
+          this.setState({table_columns: c}, () => {self.reloadData()})
+        });
+
+      });
+  }
+
+  reloadData(){
+    this.setState({progress: true});
+
+    var keys = this.getAffectedKeys();
+
+    let table_rows_p = this.props.server.CTableServer.select(this.state.current_table.name).then((r) => {
+      this.state.table_rows = r;
+      this.state.table_row_status = [];
+      this.state.table_rows.forEach(x => {
+
+
+        var issel = false;
+
+        keys.forEach(w =>{ if(!issel) {issel = Object.keys(w).map(q => w[q] == x[q]).every(u => u)} });
+
+        this.state.table_row_status.push({selected: issel});
+
+      })
+      this.state.progress = false;
+      this.state.last_row_clicked = null;
+      this.setState({}, () => {
+        this.enablePanelButtons()
+      });
+    });
+  }
+
+  topButtonClick(e) {
+    var tg = unwind_button(e);
+
+
+    if(tg.dataset['name'] == "zoom_in" || tg.dataset['name'] == "zoom_out" || tg.dataset['name'] == "zoom_reset") {
+
+        if(tg.dataset['name'] == "zoom_in"){
+          if (this.state.fontSize &lt; 300){
+              this.state.fontSize = this.state.fontSize + 25;
+          }
+
+        }
+
+        if(tg.dataset['name'] == "zoom_out"){
+          if (this.state.fontSize > 25){
+            this.state.fontSize = this.state.fontSize - 25;
+          }
+        }
+
+        if(tg.dataset['name'] == "zoom_reset"){
+          this.state.fontSize = 100;
+        }
+
+
+        if (this.state.fontSize != 100)
+          this.state.topline_buttons.filter(x => x.name == "zoom_reset").forEach(x => x.enabled = true);
+        else
+          this.state.topline_buttons.filter(x => x.name == "zoom_reset").forEach(x => x.enabled = false);
+
+        this.setState({});
+        return;
+
+    }
+
+
+    if(tg.dataset['name'] == "select_all"){
+      if(this.state.editor_show == true) return;
+      this.state.table_row_status = [];
+      this.state.table_rows.forEach(x => {this.state.table_row_status.push({selected: true})});
+      this.setState({}, () => this.enablePanelButtons());
+      return;
+    }
+
+    if(tg.dataset['name'] == "clear_all"){
+      if(this.state.editor_show == true) return;
+      this.state.table_row_status = [];
+      this.state.table_rows.forEach(x => {this.state.table_row_status.push({selected: false})});
+      this.setState({}, () => this.enablePanelButtons());
+      return;
+    }
+
+
+    if(tg.dataset['name'] == "add"){
+      this.setState({editor_show: true, editor_affected_rows: [], editor_changes: {}, editor_operation: 'add'});
+      return;
+    }
+
+    if(tg.dataset['name'] == "edit"){
+      this.setState({editor_show: true, editor_affected_rows: this.state.table_rows.filter((x,i) => this.state.table_row_status[i].selected), editor_changes: {}, editor_operation: 'edit'});
+      return;
+    }
+
+    if(tg.dataset['name'] == "duplicate"){
+      if(this.getAffectedKeys().length == 0) return; // no rows affected
+      this.setState({progress: true});
+      this.props.server.CTableServer.duplicate(this.state.current_table.name, this.getAffectedKeys()).then(()=> {this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false})});
+    }
+
+    if(tg.dataset['name'] == "delete"){
+      if(this.getAffectedKeys().length == 0) return; // no rows affected
+      this.setState({progress: true});
+      this.props.server.CTableServer.delete(this.state.current_table.name, this.getAffectedKeys()).then(()=> {this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false})});
+
+    }
+
+  }
+
+  getAffectedKeys(){
+    var affected_rows = this.state.table_rows.filter((x,i) => this.state.table_row_status[i].selected);
+    var keys = this.state.table_columns.filter((x) => x.is_key).map((x) => x.name);
+    var keys_values = affected_rows.map((x) => {
+      var res = {};
+      keys.forEach((k) => res[k] = x[k]);
+      return res;
+    });
+    return keys_values;
+  }
+
+  headerXScroll(e){
+    document.querySelector(".ctable-scroll-main-table").scrollLeft = e.target.scrollLeft;
+  }
+
+  tableXScroll(e){
+    document.querySelector(".ctable-scroll-head-table").scrollLeft = e.target.scrollLeft;
+  }
+
+  onRowClick(e){
+    if(this.state.editor_show == true) return;
+    var tg = unwind_tr(e);
+    var ns = [];
+    var nv = this.state.last_row_clicked;
+    this.state.last_row_clicked = Number(tg.dataset['rowindex']);
+
+    if (e.getModifierState("Shift")){
+      if (nv !== null){
+        if (nv > Number(tg.dataset['rowindex'])){
+            while (nv >= Number(tg.dataset['rowindex'])){
+              ns.push(nv);
+              nv = nv - 1;
+            }
+        } else {
+            while (nv &lt;= Number(tg.dataset['rowindex'])){
+              ns.push(nv);
+              nv = nv + 1;
+            }
+        }
+      }
+    } else {
+      ns = [Number(tg.dataset['rowindex'])];
+    }
+
+    //console.log(ns);
+
+    var target_state = !this.state.table_row_status[Number(tg.dataset['rowindex'])].selected;
+    ns.forEach((n) => {this.state.table_row_status[n].selected = target_state});
+    this.setState({}, () => this.enablePanelButtons());
+  }
+
+  enablePanelButtons(){
+    var sel_count = this.state.table_row_status.filter(x => x.selected == true).length;
+
+    if(sel_count == 0) {
+      this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
+      this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
+      this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = false);
+    } else {
+      this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = true);
+      this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = true);
+      this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = true);
+    }
+
+    this.setState({});
+  }
+
+  onTableSelectDropdownClick(){
+    this.setState({table_select_menu_active: !this.state.table_select_menu_active});
+  }
+
+  onTableSelectClick(x){
+    var tbl = this.state.table_list.filter(y => y.label == x.target.dataset.label)[0];
+    this.setState({current_table: tbl, table_select_menu_active: false, width: tbl.width});
+  }
+
+
+  onSaveClick(){
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true &amp;&amp; this.state.editor_changes[x].valid == false).length > 0){
+      return; //Has invalid fields
+    }
+
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true).length == 0){
+      return; //Has no modified fields
+    }
+
+    var modified_data = Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true &amp;&amp; this.state.editor_changes[x].valid == true);
+    var data_to_send = {};
+    modified_data.forEach(x => {data_to_send[x] = this.state.editor_changes[x].value});
+
+
+    if(this.state.editor_operation == 'add'){
+      this.setState({progress: true});
+      this.props.server.CTableServer.insert(this.state.current_table.name, data_to_send).then(()=> {this.setState({editor_show: false}); this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false});});
+    }
+
+    if(this.state.editor_operation == 'edit'){
+      if(this.state.editor_affected_rows.length == 0) return; // no rows affected
+      this.setState({editor_show: false, progress: true});
+      this.props.server.CTableServer.update(this.state.current_table.name, this.getAffectedKeys(), data_to_send).then(()=> {this.setState({editor_show: false});  this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false});});
+    }
+
+  }
+
+  showError(e){
+    alert(String(e.code) + ": " + e.message);
+  }
+
+  onCancelClick(){
+    this.setState({editor_show: false, editor_changes: [], editor_operation: ''});
+  }
+
+  onEditorChanges(colname, is_modified, value, valid){
+      this.state.editor_changes[colname] = {is_modified: is_modified, value: value, valid: valid};
+
+      this.base.querySelectorAll(".ctable-editor-control div").forEach(x => x.dispatchEvent(new CustomEvent("cteditorchanged", { detail: {initiator:colname, changes:this.state.editor_changes} })));
+  }
+
+  render() {
+
+  var self = this;
+
+  return &lt;div>
+  &lt;section class="section pt-3 pb-0 pl-0 pr-0 ctable-top-panel">
+    &lt;div class="ctable-top-panel-block" style={sty("max-width", (self.state.width+2)+"em")}>
+      &lt;div  class="pl-3 pr-3">
+        &lt;table class="ctable-title-table">
+          &lt;colgroup>
+            &lt;col span="1" style="width: 20%;"/>
+            &lt;col span="1" style="width: 60%;"/>
+            &lt;col span="1" style="width: 20%;"/>
+          &lt;/colgroup>
+          &lt;tr>
+            &lt;td>
+              &lt;div class={cls("dropdown", self.state.table_select_menu_active ? "is-active" : "")}>
+                &lt;div class="dropdown-trigger">
+                  &lt;button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onTableSelectDropdownClick}>
+                    &lt;span class="icon">&lt;span class="material-symbols-outlined">menu&lt;/span>&lt;/span>
+                    &lt;span class="icon is-small">&lt;span class="material-symbols-outlined">arrow_drop_down&lt;/span>&lt;/span>
+                  &lt;/button>
+                &lt;/div>
+                &lt;div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  &lt;div class="dropdown-content">
+                    {self.state.table_list.map(x =>
+                        &lt;a class={cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : "")} data-label={x.name} onClick={this.onTableSelectClick}>&lt;span class="material-symbols-outlined-small">lists&lt;/span> {x.label}&lt;/a>
+                    )}
+                    &lt;hr class="dropdown-divider" />
+                    {self.state.links.map(x =>
+                      &lt;a class="dropdown-item" href={x.url}>&lt;span class="material-symbols-outlined-small">link&lt;/span> {x.label}&lt;/a>
+                    )}
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+            &lt;/td>
+            &lt;td>
+              &lt;div class="ctable-top-panel-text">
+                &lt;div class="is-hidden-mobile" style="display:inline-block;">&lt;span class="material-symbols-outlined-small">lists&lt;/span>&amp;nbsp;{self.state.current_table.label}&lt;/div>
+              &lt;/div>
+            &lt;/td>
+            &lt;td class="has-text-right">
+              &lt;div class="dropdown is-right">
+                &lt;div class="dropdown-trigger">
+                  &lt;button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu">
+                    &lt;span class="icon">&lt;span class="material-symbols-outlined">person&lt;/span>&lt;/span>
+                    &lt;span class="icon is-small">&lt;span class="material-symbols-outlined">arrow_drop_down&lt;/span>&lt;/span>
+                  &lt;/button>
+                &lt;/div>
+                &lt;div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  &lt;div class="dropdown-content has-text-left">
+                    &lt;a class="dropdown-item">&lt;span class="material-symbols-outlined-small">login&lt;/span> Войти в систему&lt;/a>
+                    &lt;hr class="dropdown-divider" />
+                    &lt;a class="dropdown-item">&lt;span class="material-symbols-outlined-small">logout&lt;/span> Выйти из системы&lt;/a>
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+            &lt;/td>
+          &lt;/tr>
+        &lt;/table>
+      &lt;/div>
+      &lt;div  class="ctable-scroll-button-panel">
+        &lt;div class="ctable-button-panel" style={sty("width", "80em")}>
+          {self.state.topline_buttons.filter(x => x.enabled).map(x =>
+            &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+              &lt;button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onClick={this.topButtonClick}>&lt;span class="material-symbols-outlined">{x.icon}&lt;/span>{x.icon_only ? "" : " "+x.label}&lt;/button>
+            &lt;/div>
+          )}
+        &lt;/div>
+      &lt;/div>
+      &lt;CHeaderTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
+    &lt;/div>
+  &lt;/section>
+  &lt;CPageTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show}/>
+  {self.state.editor_show ? &lt;CEditorPanel width={self.state.width} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
+  &lt;/div>;
+
+  }
+
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 15 2025 23:44:09 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

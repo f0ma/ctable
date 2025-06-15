@@ -1,50 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CTable Demo page</title>
-    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.3/css/bulma.css">
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/bulma-prefers-dark" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CTable v3</title>
+    <link rel="stylesheet" href="bulma.css">
     <link rel="stylesheet" href="ctable.css">
-    <script src= 'https://unpkg.com/preact@10.6.5/dist/preact.umd.js' ></script>
-    <script src="ctable.js" ></script>
+
   </head>
-  <body>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-        CTable Demo page
-      </h1>
-      <p>&nbsp;</p>
-    </div>
-    <div class="container" id="mytab">
-    </div>
-  </section>
-  <script>
-      var subcolumns = [{name:"id", title: "ID", kind: CTableColumn, hide_editor:true, is_key:true},
-                        {name:"sum", title: "Summ", kind: CNumericColumn, input_hints:[[5,'5'],[10,'10'],[15,'15']], sorting:null, domain:'float', minimum: 5, maximum: 20, step: 3},
-                        {name:"state", title: "Status", kind: CSelectColumn, options:[[1,'Created'],[2,'Processing'], [3,'Complete']], sorting:null},
-                        {name:"date", title: "Date", kind: CDateColumn, sorting:null},
-                        {name: "", "title": "Action", kind: CActionColumn }];
-
-
-      var columns = [
-                {name: "id", title: "ID", kind: CTableColumn, hide_column:true, hide_editor:true, is_key:true},
-                {name: "",  title: 'Bills', kind: CSubtableColumn, config:{columns: subcolumns, endpoint: "bill.php", no_pagination: true, button_hint:"Открыть счета"}, keys:[['account_id', 'id']]},
-                {name: "firstname", title: "Firstname", kind: CTextColumn, sorting:null,  searching:null, textarea: true, footnote: "Fill this.", tab:0},
-                {name: "lastname", title: "Lastname", kind: CTextColumn, sorting:null,  searching:null, tab:0},
-                {name: "status", title: "Status", kind: CSearchDyncmicSelectColumn, sorting:null, filtering:null, endpoint: 'opts.php', tab:0},
-                {name: "reg_date", title: "Date", kind: CDateColumn, sorting:null,  searching:null, default: '2022-01-01', years_range:[1920,2020], tab:1},
-                {name: "image", title: "Image", kind: CPlainUploadColumn, upload_endpoint: 'account.php', links_endpoint: '/files', max_file_size: 1000000, allowed_extentions:['.png'], filtering:null, footnote:'Upload .png files', tab:1},
-                {name: "tags", title: "Tags", kind: CTagColumn, sorting:null,  searching:null, endpoint:"tags.php", footnote: "Fill this.", tab:1},
-                {name: "", "title": "Action", kind: CActionColumn, tab:-1}
-            ];
-
-      render(h(CTable, {columns: columns, endpoint: "account.php",
-                        lang: ctable_lang.en, no_pagination: true, params: {test: 1},
-                        tabs:['Main', 'Additional']}),
-                        document.getElementById("mytab"));
-  </script>
+  <body id="main">
+    <script src="preact.umd.js"></script>
+    <script src="ctable.js"></script>
+    <script src="ru_lang.js"></script>
+    <script src="rpc.php?format=js&var=jrpc"></script>
+    <script>
+     render(h(CTable, {server: jrpc}), document.getElementById("main"));
+    </script>
   </body>
 </html>

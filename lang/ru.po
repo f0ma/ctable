@@ -1,0 +1,95 @@
+# Russian translations for ctable package
+# Английские переводы для пакета ctable.
+# Copyright (C) 2025 THE ctable'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ctable package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ctable 3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-15 22:12+0300\n"
+"PO-Revision-Date: 2025-05-20 01:28+0300\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Language: ru_RU\n"
+"X-Source-Language: C\n"
+
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CTable.jsx:59
+msgid "Add"
+msgstr "Добавить"
+
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39
+msgid "Save all"
+msgstr "Сохранить все"
+
+#: src/CEditorPanel.jsx:29 src/CEditorPanel.jsx:42
+msgid "Cancel"
+msgstr "Отменить"
+
+#: src/CTable.jsx:60
+msgid "Edit"
+msgstr "Правка"
+
+#: src/CTable.jsx:61
+msgid "Duplicate"
+msgstr "Создать копию"
+
+#: src/CTable.jsx:62
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/CTable.jsx:64
+msgid "Enter"
+msgstr "Войти"
+
+#: src/CTable.jsx:65
+msgid "Go back"
+msgstr "Выйти"
+
+#: src/CTable.jsx:67
+msgid "Filter"
+msgstr "Фильтр"
+
+#: src/CTable.jsx:68
+msgid "Sorting"
+msgstr "Сортировка"
+
+#: src/CTable.jsx:69
+msgid "Columns"
+msgstr "Столбцы"
+
+#: src/CTable.jsx:72
+msgid "Select all"
+msgstr "Выбрать все"
+
+#: src/CTable.jsx:73
+msgid "Clear all"
+msgstr "Очистить все"
+
+#: src/CTable.jsx:76
+msgid "Zoom In"
+msgstr "Увеличить"
+
+#: src/CTable.jsx:77
+msgid "Zoom Out"
+msgstr "Уменьшить"
+
+#: src/CTable.jsx:78
+msgid "Reset Zoom"
+msgstr "Сбросить масштаб"
+
+#: src/Header.jsx:5
+#, fuzzy
+msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+msgstr "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

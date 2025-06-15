@@ -1,0 +1,93 @@
+{
+  "name": "account",
+  "label": "Accounts",
+  "width": 60,
+  "columns": [
+    {
+      "name": "id",
+      "label": "ID",
+      "is_key": true,
+      "width": 3,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell"
+    },
+    {
+      "name": "firstname",
+      "label": "Firstname",
+      "is_key": false,
+      "width": 8,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell",
+      "editor_actor": "CLineEditor",
+      "editor_hint": "Enter firstname",
+      "editor_validate": "^[a-zA-Z]+$",
+      "editor_allow_null": false
+    },
+    {
+      "name": "lastname",
+      "label": "Lastname",
+      "is_key": false,
+      "width": 8,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell",
+      "editor_actor": "CLineEditor",
+      "editor_hint": "Enter lastname",
+      "editor_placeholder": "",
+      "editor_default": "t2",
+      "editor_validate": "",
+      "editor_allow_null": false
+    },
+    {
+      "name": "reg_date",
+      "label": "Reg date",
+      "is_key": false,
+      "width": 6,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell",
+      "editor_actor": "CLineEditor",
+      "editor_hint": "Enter reg date",
+      "editor_placeholder": "",
+      "editor_default": "2000-01-01",
+      "editor_validate": "^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$",
+      "editor_allow_null": false
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "is_key": false,
+      "width": 8,
+      "enabled": true,
+      "cell_actor": "CSelectCell",
+      "editor_actor": "CSelectEditor",
+      "editor_hint": "",
+      "editor_placeholder": "",
+      "editor_default": "1",
+      "editor_allow_null": true,
+      "options": [
+        {
+          "value": "0",
+          "label": "Unknown"
+        },
+        {
+          "value": "1",
+          "label": "OK"
+        },
+        {
+          "value": "2",
+          "label": "Error"
+        }
+      ]
+    },
+    {
+      "name": "tags",
+      "label": "Tags",
+      "is_key": false,
+      "width": 6,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell",
+      "editor_actor": "CLineEditor",
+      "editor_allow_null": true,
+      "editor_default": ""
+    }
+  ]
+}

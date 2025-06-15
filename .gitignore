@@ -1,6 +1,8 @@
 demo/demo.real.db
 demo/demo.timestamp
-demo/vendor
-src-php/vendor
+demo/bulma.css
+demo/bulma.css.map
+demo/material-symbols-outlined.woff2
+demo/preact.umd.js
+demo/preact.umd.js.map
 node_modules
-src-py/__pycache__

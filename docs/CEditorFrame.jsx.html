@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CEditorFrame.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CEditorFrame.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @event CEditorFrame#cteditorreset
+ */
+
+/**
+ * @event CEditorFrame#cteditortonull
+ */
+
+/**
+ * @event CEditorFrame#cteditorundo
+ */
+
+/**
+ * Editor frame class.
+ *
+ * @arg this.props.column {Object} Table column.
+ * @arg this.props.column.name {string} Column name
+ * @arg this.props.column.label {string} Column label
+ * @arg this.props.column.editor_hint {string} Editor hint
+ * @arg this.props.column.editor_allow_null {bool} Allow null
+ * @arg this.props.column.editor_default {*} Editor default value
+ *
+ * @arg this.props.onEditorChanges {function} Editor changes callback.
+ * @arg this.props.row {Object} Row to edit, null if add, first if batch.
+ * @arg this.props.add {bool} Is adding.
+ * @arg this.props.batch {bool} Is batch editing.
+ *
+ *
+ * @fires CEditorFrame#cteditorreset
+ * @fires CEditorFrame#cteditortonull
+ * @fires CEditorFrame#cteditorundo
+ */
+
+class CEditorFrame extends Component {
+
+    constructor() {
+        super();
+        this.onEnabledChanged = this.onEnabledChanged.bind(this);
+        this.onEditorChanges = this.onEditorChanges.bind(this);
+        this.onResetClicked = this.onResetClicked.bind(this);
+        this.onNullClicked = this.onNullClicked.bind(this);
+        this.onUndoClicked = this.onUndoClicked.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            editor_enabled: this.props.add ? true : false,
+            editor_value: null,
+            editor_valid: null,
+        });
+    }
+
+    onEnabledChanged(e){
+        this.setState({editor_enabled: e.target.checked}, () => {this.props.onEditorChanges(this.props.column.name, false, this.state.editor_value, this.state.editor_valid)});
+    }
+
+    onEditorChanges(colname, is_modified, value, valid){
+        this.setState({editor_value: value, editor_valid: valid});
+        if(this.state.editor_enabled) {
+            this.props.onEditorChanges(colname, true, value, valid);
+        } else {
+            if(is_modified){
+                this.setState({editor_enabled: true});
+                this.props.onEditorChanges(colname, true, value, valid);
+            } else {
+                this.props.onEditorChanges(colname, false, value, valid);
+            }
+        }
+    }
+
+    onResetClicked(){
+        this.base.querySelector(".ctable-editor-control div").dispatchEvent(new CustomEvent("cteditorreset"));
+    }
+
+    onNullClicked(){
+        this.base.querySelector(".ctable-editor-control div").dispatchEvent(new CustomEvent("cteditortonull"));
+    }
+
+    onUndoClicked(){
+        this.base.querySelector(".ctable-editor-control div").dispatchEvent(new CustomEvent("cteditorundo"));
+    }
+
+    render () {
+
+        var self = this;
+
+        return &lt;div>
+        &lt;div class="field is-grouped">
+        &lt;p class="control is-expanded mt-2">
+        &lt;label class="checkbox label"> {this.props.batch ? &lt;input type="checkbox" checked={self.state.editor_enabled} onChange={self.onEnabledChanged}/> : "" } {self.props.column.label}:&lt;/label>
+        &lt;/p>
+        {self.props.column.editor_allow_null ? &lt;p class="control">
+        &lt;button class="button is-small" tabindex="-1" onClick={self.onNullClicked}>&lt;span class="material-symbols-outlined">hide_source&lt;/span>&lt;/button>
+        &lt;/p> : "" }
+        {typeof self.props.column.editor_default !== 'undefined' ? &lt;p class="control">
+        &lt;button class="button is-small" tabindex="-1" onClick={self.onResetClicked}>&lt;span class="material-symbols-outlined">restart_alt&lt;/span>&lt;/button>
+        &lt;/p> : "" }
+        {self.props.add || self.props.batch ? "" : &lt;p class="control">
+            &lt;button class="button is-small" tabindex="-1" onClick={self.onUndoClicked}>&lt;span class="material-symbols-outlined">undo&lt;/span>&lt;/button>
+        &lt;/p>}
+        &lt;/div>
+        &lt;div class="field ctable-editor-control">
+        {self.props.column.editor_actor == "CSelectEditor" ? &lt;CSelectEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
+        {self.props.column.editor_actor == "CLineEditor" ? &lt;CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
+
+        {self.props.column.editor_hint ? &lt;p class="help">{self.props.column.editor_hint}&lt;/p> : ""}
+        &lt;/div>
+        &lt;/div>;
+    }
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 15 2025 23:44:09 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

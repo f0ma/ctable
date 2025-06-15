@@ -30,9 +30,7 @@
     
         <h2><span class="attribs"><span class="type-signature"></span></span>CTable<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Main component.
-
-Includes server interaction logic, pagination, and other.</div>
+            <div class="class-description">Base table class.</div>
         
     
 </header>
@@ -87,30 +85,7 @@ Includes server interaction logic, pagination, and other.</div>
 
         <tr>
             
-                <td class="name"><code>this.props.endpoint</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Url to endpoint.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.params</code></td>
+                <td class="name"><code>this.props.server</code></td>
             
 
             <td class="type">
@@ -126,220 +101,7 @@ Includes server interaction logic, pagination, and other.</div>
 
             
 
-            <td class="description last">Additional parameters to select query</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.no_pagination</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">undefined</span>
-|
-
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Disable pagination.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.tabs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;String></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Tabs names.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.filters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Set presistent filter as column => value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.columns</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">List of columns. Each column will be passed as props to column object.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Name of column.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>title</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Title of column.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>kind</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Class</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column class derived from CTableColumn.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>footnote</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Footnote for column editor.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last">JRPC object.</td>
         </tr>
 
     
@@ -380,7 +142,7 @@ Includes server interaction logic, pagination, and other.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line18">line 18</a>
+        <a href="CTable.jsx.html">CTable.jsx</a>, <a href="CTable.jsx.html#line31">line 31</a>
     </li></ul></dd>
     
 
@@ -394,6 +156,11 @@ Includes server interaction logic, pagination, and other.</div>
 
 
 
+
+<h5>Fires:</h5>
+<ul>
+    <li><a href="CTable.html#event:cteditorchanged">CTable#event:cteditorchanged</a></li>
+</ul>
 
 
 
@@ -428,39 +195,38 @@ Includes server interaction logic, pagination, and other.</div>
     
 
     
-        <h3 class="subsection-title">Methods</h3>
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
 
         
+                
+<h4 class="name" id="EditorChange">EditorChange</h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
             
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
 
     
 
-    
-    <h4 class="name" id="change_filter_for_column"><span class="type-signature"></span>change_filter_for_column<span class="signature">(col, value)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Change filtering for column.
-
-For call from column class. Reload table.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
+<table class="props">
     <thead>
     <tr>
         
@@ -482,13 +248,13 @@ For call from column class. Reload table.
 
         <tr>
             
-                <td class="name"><code>col</code></td>
+                <td class="name"><code>is_modified</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">bool</span>
 
 
             
@@ -498,7 +264,7 @@ For call from column class. Reload table.
 
             
 
-            <td class="description last">Column number.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -521,14 +287,35 @@ For call from column class. Reload table.
 
             
 
-            <td class="description last">Filter value.</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
     </tbody>
 </table>
-
-
 
 
 
@@ -562,7 +349,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line250">line 250</a>
+        <a href="CTable.jsx.html">CTable.jsx</a>, <a href="CTable.jsx.html#line9">line 9</a>
     </li></ul></dd>
     
 
@@ -578,38 +365,18 @@ For call from column class. Reload table.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
             
+                
 
     
 
     
-    <h4 class="name" id="change_search_for_column"><span class="type-signature"></span>change_search_for_column<span class="signature">(col, value)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="OnEditorChanges"><span class="type-signature"></span>OnEditorChanges<span class="signature">(colname, is_modified, value, valid)</span><span class="type-signature"></span></h4>
     
 
     
 
 
-
-<div class="description">
-    Change searching for column.
-
-For call from column class. Reload table.
-</div>
 
 
 
@@ -644,13 +411,13 @@ For call from column class. Reload table.
 
         <tr>
             
-                <td class="name"><code>col</code></td>
+                <td class="name"><code>colname</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">string</span>
 
 
             
@@ -660,7 +427,30 @@ For call from column class. Reload table.
 
             
 
-            <td class="description last">Column number.</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>is_modified</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -683,7 +473,30 @@ For call from column class. Reload table.
 
             
 
-            <td class="description last">Search value.</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -724,7 +537,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line265">line 265</a>
+        <a href="CTable.jsx.html">CTable.jsx</a>, <a href="CTable.jsx.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -754,24 +567,25 @@ For call from column class. Reload table.
 
 
 
+            
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
         
             
 
     
 
     
-    <h4 class="name" id="change_sort_for_column"><span class="type-signature"></span>change_sort_for_column<span class="signature">(col, value)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="event:cteditorchanged">cteditorchanged</h4>
     
 
     
 
 
 
-<div class="description">
-    Change sorting for column.
-
-For call from column class. Reload table.
-</div>
 
 
 
@@ -781,10 +595,14 @@ For call from column class. Reload table.
 
 
 
-    <h5>Parameters:</h5>
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
     
 
-<table class="params">
+<table class="props">
     <thead>
     <tr>
         
@@ -806,30 +624,7 @@ For call from column class. Reload table.
 
         <tr>
             
-                <td class="name"><code>col</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column number.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>initiator</code></td>
             
 
             <td class="type">
@@ -845,7 +640,30 @@ For call from column class. Reload table.
 
             
 
-            <td class="description last">Sort order: "ASC", "DESC" and "" for no sorting.</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>changes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="CTable.html#EditorChange">CTable#EditorChange</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -855,8 +673,6 @@ For call from column class. Reload table.
 
 
 
-
-
 <dl class="details">
 
     
@@ -886,7 +702,7 @@ For call from column class. Reload table.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line280">line 280</a>
+        <a href="CTable.jsx.html">CTable.jsx</a>, <a href="CTable.jsx.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -905,308 +721,12 @@ For call from column class. Reload table.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="column_by_name"><span class="type-signature"></span>column_by_name<span class="signature">(name)</span><span class="type-signature"> &rarr; {int|null}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Getting column index by column name.
-
-For call from column class.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column name.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line70">line 70</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Column index in current table or `null`.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">int</span>
-|
-
-<span class="param-type">null</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="delete_row"><span class="type-signature"></span>delete_row<span class="signature">(row)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Delete row action.
-
-For call from column class. Reload table.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row number.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line137">line 137</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
+<h5>Listeners of This Event:</h5>
+<ul>
+    <li><a href="CLineEditor.html#onOtherEditorChanged">CLineEditor#onOtherEditorChanged</a></li>
+
+    <li><a href="CSelectEditor.html#onOtherEditorChanged">CSelectEditor#onOtherEditorChanged</a></li>
+</ul>
 
 
 
@@ -1220,1503 +740,6 @@ For call from column class. Reload table.
 
 
         
-            
-
-    
-
-    
-    <h4 class="name" id="edit_row"><span class="type-signature"></span>edit_row<span class="signature">(row)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Toggle row editor interface.
-
-For call from column class.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row number. `-1` for new record.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line111">line 111</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="notify_changes"><span class="type-signature"></span>notify_changes<span class="signature">(col, row, value)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Notify that value in editor is changed.
-
-Value stored in table cache and will be sended then `save_row` called.
-All subscribed widgets will be notifed by `on_changes` call.
-
-For call from column class.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>col</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column number.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row number. -1 in new row.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Any</span>
-|
-
-<span class="param-type">null</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Value. Set null - reset changes.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line298">line 298</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="notify_valids"><span class="type-signature"></span>notify_valids<span class="signature">(col, row, is_valid)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Notify that value in editor is valid or invalid.
-
-If any editor notified about invalid value, row will not be saved.
-
-For call from column class.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>col</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column number.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row number. -1 in new row.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>is_valid</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Validation status.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line318">line 318</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="open_subtable"><span class="type-signature"></span>open_subtable<span class="signature">(row, keys, config)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Open subtable in table.
-
-For call from column class.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row index.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>keys</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;List></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Constrains for subtable.
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Subtable column name.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Current table column name which value will be used as constrain.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>config</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Subtable props including columns.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line91">line 91</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="reload"><span class="type-signature"></span>reload<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Reloading table data.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line344">line 344</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="row_changes_summary"><span class="type-signature"></span>row_changes_summary<span class="signature">(row, only_changes)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Getting row with unsaved changes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">Row index. -1 in new row.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>only_changes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">Getting only changes or full row with changes.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line420">line 420</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Unsaved values.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="save_row"><span class="type-signature"></span>save_row<span class="signature">(row)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Save row action.
-
-For call from column class. Reload table.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Row number. `-1` for new record.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line181">line 181</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="subscribe_to_changes"><span class="type-signature"></span>subscribe_to_changes<span class="signature">(row, col, ref, obj)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Subscribe editor to notification about other column changed.
-
-Editor should provide ref for unsubscribe if closed.
-
-For call from column class.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>row</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Current row number. -1 in new row.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>col</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Observed column number.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ref</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">PreactRef</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Reference to editor.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="CTableColumn.html">CTableColumn</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object to interact.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line336">line 336</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="visible_column_count"><span class="type-signature"></span>visible_column_count<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Return count of visible columns.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="05-CTable.jsx.html">05-CTable.jsx</a>, <a href="05-CTable.jsx.html#line543">line 543</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
     
 </article>
 
@@ -2728,13 +751,13 @@ For call from column class.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CActionColumn.html">CActionColumn</a></li><li><a href="CDynamicSelectColumn.html">CDynamicSelectColumn</a></li><li><a href="CNumericColumn.html">CNumericColumn</a></li><li><a href="CPlainUploadColumn.html">CPlainUploadColumn</a></li><li><a href="CSelectColumn.html">CSelectColumn</a></li><li><a href="CSubtableColumn.html">CSubtableColumn</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li><li><a href="CTagColumn.html">CTagColumn</a></li><li><a href="CTextColumn.html">CTextColumn</a></li><li><a href="CUploadColumn.html">CUploadColumn</a></li></ul><h3>Global</h3><ul><li><a href="global.html#parseISOString">parseISOString</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTableColumn.html">CTableColumn</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun Jul 09 2023 01:42:51 GMT+0300 (Москва, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 15 2025 23:44:09 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>

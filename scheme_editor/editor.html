@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CTable v3 Scheme editor</title>
+    <link rel="stylesheet" id="theme-link" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" id="iconlib-link" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
+  </head>
+  <body>
+  <div id="actions-panel">Load file: <input id="load-button" type="file" accept=".json" class="file-input"/> <button id="save-button" class="btn btn-secondary">Save file...</button></div>
+  <div id="json-editor-form" style="margin-top:2em;"></div>
+  <script>
+  var jedata = {
+  "title": "CTable Column Schema Editor",
+  "schema": {
+    "title": "CTable",
+    "type": "object",
+    "required": ["name", "label", "width", "columns"],
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string"
+      },
+      "label": {
+        "title": "Label",
+        "type": "string"
+      },
+      "width": {
+        "title": "Max table width",
+        "type": "number",
+        "minimum": 1
+      },
+      "columns": {
+        "title": "Table columns",
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "title": "Column",
+          "type": "object",
+          "required": ["name", "label", "is_key", "width", "enabled", "cell_actor"],
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "is_key":{
+              "title": "Is key?",
+              "type": "boolean"
+            },
+            "width": {
+              "title": "Width",
+              "type": "number"
+            },
+            "enabled": {
+              "title": "Enabled",
+              "type": "boolean"
+            },
+            "cell_actor": {
+              "title": "Cell display actor",
+              "type": "string",
+              "enum": [
+                "CPlainTextCell",
+                "CSelectCell"
+              ]
+            },
+            "editor_actor": {
+              "title": "Editor actor",
+              "type": "string",
+              "enum": [
+                "CLineEditor",
+                "CSelectEditor"
+              ]
+            },
+            "editor_hint": {
+              "title": "Editor hint",
+              "type": "string"
+            },
+            "editor_placeholder": {
+              "title": "Editor placeholder",
+              "type": "string"
+            },
+            "editor_default": {
+              "title": "Editor default",
+              "type": "string"
+            },
+            "editor_validate": {
+              "title": "Editor Validate",
+              "type": "string"
+            },
+            "editor_allow_null":{
+              "title": "Editor allow NULL",
+              "type": "boolean"
+            },
+            "options": {
+              "title": "Select options",
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "title": "Option",
+                "type": "object",
+                "required": ["value", "label"],
+                "properties": {
+                  "value": {
+                    "title": "Value",
+                    "type": "string"
+                  },
+                  "label": {
+                    "title": "Label",
+                    "type": "string"
+                  },
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "startval": {
+  },
+  "theme":"bootstrap4",
+  "iconlib": "fontawesome5"
+};
+
+
+
+  const editor = new JSONEditor(document.querySelector("#json-editor-form"), jedata);
+
+
+  document.querySelector("#save-button").addEventListener("click", function(e) {
+      const filename = 'table.json';
+      const value = editor.getValue();
+      const blob = new Blob([JSON.stringify(value, null, 2)], {
+      type: 'application/json;charset=utf-8'
+    });
+
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+      var a = document.createElement('a');
+      a.download = filename;
+      a.href = URL.createObjectURL(blob);
+      a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+      a.click();
+    }
+  });
+
+  document.querySelector("#load-button").addEventListener("change", function(e) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        editor.setValue(JSON.parse(event.target.result));
+      };
+      reader.readAsText(event.target.files[0]);
+  });
+
+
+  </script>
+  </body>
+</head>

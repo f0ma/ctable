@@ -1,15 +1,28 @@
 {
   "name": "ctable",
-  "version": "2.0",
+  "version": "3.0.0",
+  "description": "Advanced CRUD tables",
+  "config": {
+    "js": "src/Header.jsx src/CPlainTextCell.jsx src/CSelectCell.jsx src/CHeaderTable.jsx src/CPageTable.jsx src/CSelectEditor.jsx src/CLineEditor.jsx src/CEditorFrame.jsx src/CEditorPanel.jsx src/CTable.jsx lang/ru_lang.js",
+    "css": "src/CTable.css"
+  },
   "scripts": {
-    "build": "babel src --out-file dist/ctable.js",
-    "docs": "jsdoc src/*.jsx -d docs"
+    "build": "npm run mkjs && npm run mkcss && npm run mkdocs",
+    "mkjs": "babel $npm_package_config_js --out-file dist/ctable.js -s ",
+    "watch": "babel $npm_package_config_js --out-file dist/ctable.js -s -w",
+    "mkcss": "concat -o dist/ctable.css $npm_package_config_css",
+    "mkdocs": "jsdoc src/*.jsx -d docs",
+    "mkpo": "xgettext --output=lang/ctable.pot --language=JavaScript --from-code utf-8 src/*.jsx && msgmerge -U lang/ru.po lang/ctable.pot && po2json lang/ru.po lang/ru.json -f mf && concat -o lang/ru_lang.js lang/ru_head.js lang/ru.json lang/tail.js",
+    "mkdemo": "wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js -d demo/ && wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js.map -d demo/ && wget https://github.com/marella/material-symbols/raw/refs/heads/main/font/400/material-symbols-outlined.woff2 -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css.map -d demo/"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.8",
-    "@babel/core": "^7.16.12",
-    "@babel/plugin-transform-react-jsx": "^7.16.7",
-    "@babel/preset-react": "^7.16.7",
-    "jsdoc": "^3.6.10"
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.1",
+    "@babel/plugin-transform-react-jsx": "^7.27.1",
+    "@babel/preset-react": "^7.27.1",
+    "concat": "^1.0.3",
+    "jsdoc": "^4.0.4",
+    "node-wget": "^0.4.3",
+    "po2json": "^0.4.5"
   }
 }

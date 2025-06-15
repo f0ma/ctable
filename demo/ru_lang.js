@@ -1,0 +1,1 @@
+../lang/ru_lang.js

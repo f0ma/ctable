@@ -1,0 +1,4 @@
+var ctable_lang_ru =
+
+{"Add":"Добавить","Save":"Сохранить","Save all":"Сохранить все","Cancel":"Отменить","Edit":"Правка","Duplicate":"Создать копию","Delete":"Удалить","Enter":"Войти","Go back":"Выйти","Filter":"Фильтр","Sorting":"Сортировка","Columns":"Столбцы","Select all":"Выбрать все","Clear all":"Очистить все","Zoom In":"Увеличить","Zoom Out":"Уменьшить","Reset Zoom":"Сбросить масштаб"}
+;
