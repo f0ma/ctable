@@ -99,18 +99,58 @@
     margin:auto;
 }
 
-.ctable-scroll-button-panel::-webkit-scrollbar {
+/*.ctable-scroll-button-panel::-webkit-scrollbar {
     display: none;
 }
 
 .ctable-scroll-button-panel{
-    -ms-overflow-style: none;  /* IE and Edge */
+    -ms-overflow-style: none;
     scrollbar-width: none;
     overflow-x:scroll;
 }
 
 .ctable-button-panel{
     margin: auto;
+}*/
+
+.ctable-command-panel{
+    padding-top: 0.3em;
+}
+
+.ctable-button-row{
+    vertical-align: top;
+    margin-left:0.5em;
+    margin-right:0.5em;
+}
+
+.ctable-button-row-left{
+    display:inline-block;
+    overflow: hidden;
+    max-height: 2.1em;
+    max-width:calc(100% - 4em);
+    width:calc(100% - 4em);
+}
+
+a.dropdown-item.is-primary.is-soft {
+    background-color: rgb(0, 102, 87);
+    color: rgb(204, 255, 247);
+}
+
+a.dropdown-item.is-warning.is-soft {
+    background-color: rgb(102, 71, 0);
+    color: rgb(255, 240, 204);
+}
+
+a.dropdown-item.is-danger.is-soft {
+    background-color: rgb(102, 0, 20);
+    color: rgb(255, 204, 214);
+}
+
+.ctable-button-row-right{
+    display: inline-block;
+    width: 4em;
+    vertical-align: top;
+    margin-top: 0.25em;
 }
 
 .ctable-scroll-main-table {
@@ -122,7 +162,7 @@
 
 .ctable-main-table {
     margin:auto;
-    margin-top:calc(5rem + 2.4em);
+    margin-top:calc(8.1rem + 1.5em);
 }
 
 .ctable-top-panel {
@@ -136,7 +176,6 @@
 .ctable-top-panel-text {
     max-height:2.2em;
     overflow:clip;
-    padding-top:0.5em;
     text-align:center;
 }
 

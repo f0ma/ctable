@@ -1,0 +1,85 @@
+{
+  "name": "bill",
+  "label": "Bill",
+  "width": 60,
+  "columns": [
+    {
+      "name": "id",
+      "label": "ID",
+      "is_key": true,
+      "width": 3,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell"
+    },
+    {
+      "name": "account_id",
+      "label": "AID",
+      "is_key": true,
+      "width": 3,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell"
+    },
+    {
+      "name": "date",
+      "label": "Date",
+      "is_key": false,
+      "width": 6,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell",
+      "editor_actor": "CLineEditor",
+      "editor_hint": "Enter reg date",
+      "editor_placeholder": "",
+      "editor_default": "2000-01-01",
+      "editor_validate": "^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$",
+      "editor_allow_null": false
+    },
+    {
+      "name": "sum",
+      "label": "Sum",
+      "is_key": false,
+      "width": 6,
+      "enabled": true,
+      "cell_actor": "CPlainTextCell",
+      "editor_actor": "CLineEditor",
+      "editor_hint": "Summ",
+      "editor_placeholder": "0.0",
+      "editor_default": "0.0",
+      "editor_validate": "^[0-9]+(\\.[0-9]+)?$",
+      "editor_allow_null": false
+    },
+    {
+      "name": "state",
+      "label": "Status",
+      "is_key": false,
+      "width": 8,
+      "enabled": true,
+      "cell_actor": "CSelectCell",
+      "editor_actor": "CSelectEditor",
+      "editor_hint": "",
+      "editor_placeholder": "",
+      "editor_default": "1",
+      "editor_allow_null": true,
+      "options": [
+        {
+          "value": "0",
+          "label": "Unknown"
+        },
+        {
+          "value": "1",
+          "label": "OK"
+        },
+        {
+          "value": "2",
+          "label": "Error"
+        },
+        {
+          "value": "3",
+          "label": "Success"
+        }
+      ]
+    }
+  ],
+  "subtables": [ ],
+  "default_sorting": [ ],
+  "default_filtering": [ ]
+}

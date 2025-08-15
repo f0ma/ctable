@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-15 23:16+0300\n"
+"POT-Creation-Date: 2025-06-29 19:22+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CTable.jsx:59
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CTable.jsx:67
 msgid "Add"
 msgstr ""
 
@@ -33,56 +34,85 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/CTable.jsx:60
+#: src/CTable.jsx:68
 msgid "Edit"
 msgstr ""
 
-#: src/CTable.jsx:61
+#: src/CTable.jsx:69
 msgid "Duplicate"
 msgstr ""
 
-#: src/CTable.jsx:62
+#: src/CTable.jsx:70
 msgid "Delete"
 msgstr ""
 
-#: src/CTable.jsx:64
+#: src/CTable.jsx:72
 msgid "Enter"
 msgstr ""
 
-#: src/CTable.jsx:65
+#: src/CTable.jsx:73
 msgid "Go back"
 msgstr ""
 
-#: src/CTable.jsx:67
+#: src/CTable.jsx:75
 msgid "Filter"
 msgstr ""
 
-#: src/CTable.jsx:68
+#: src/CTable.jsx:76
 msgid "Sorting"
 msgstr ""
 
-#: src/CTable.jsx:69
+#: src/CTable.jsx:77
 msgid "Columns"
 msgstr ""
 
-#: src/CTable.jsx:72
+#: src/CTable.jsx:79
 msgid "Select all"
 msgstr ""
 
-#: src/CTable.jsx:73
+#: src/CTable.jsx:80
 msgid "Clear all"
 msgstr ""
 
-#: src/CTable.jsx:76
+#: src/CTable.jsx:82
 msgid "Zoom In"
 msgstr ""
 
-#: src/CTable.jsx:77
+#: src/CTable.jsx:83
 msgid "Zoom Out"
 msgstr ""
 
-#: src/CTable.jsx:78
+#: src/CTable.jsx:84
 msgid "Reset Zoom"
+msgstr ""
+
+#: src/CTable.jsx:221
+#, javascript-format
+msgid "Duplicate %d record?"
+msgid_plural "Duplicate %d records?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/CTable.jsx:231
+#, javascript-format
+msgid "Delete %d record?"
+msgid_plural "Delete %d records?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/CTable.jsx:343
+#, javascript-format
+msgid "Update %d record?"
+msgid_plural "Update %d records?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/CTable.jsx:403
+msgid "Yes"
+msgstr ""
+
+#: src/CTable.jsx:404
+msgid "No"
 msgstr ""
 
 #: src/Header.jsx:5

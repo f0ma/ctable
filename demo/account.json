@@ -86,8 +86,32 @@
       "enabled": true,
       "cell_actor": "CPlainTextCell",
       "editor_actor": "CLineEditor",
-      "editor_allow_null": true,
-      "editor_default": ""
+      "editor_default": "",
+      "editor_allow_null": true
+    }
+  ],
+  "subtables": [
+    {
+      "name": "bill",
+      "label": "Bill",
+      "mapping": [
+        [
+          "id",
+          "account_id"
+        ]
+      ]
+    }
+  ],
+  "default_sorting": [
+    {
+      "lastname": "asc"
+    }
+  ],
+  "default_filtering": [
+    {
+      "column": "lastname",
+      "operator": "eq",
+      "value": "Lambert"
     }
   ]
 }

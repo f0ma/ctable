@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ctable 3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-15 22:12+0300\n"
+"POT-Creation-Date: 2025-06-29 19:22+0300\n"
 "PO-Revision-Date: 2025-05-20 01:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Language: ru_RU\n"
 "X-Source-Language: C\n"
 
-#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CTable.jsx:59
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CTable.jsx:67
 msgid "Add"
 msgstr "Добавить"
 
@@ -37,57 +37,89 @@ msgstr "Сохранить все"
 msgid "Cancel"
 msgstr "Отменить"
 
-#: src/CTable.jsx:60
+#: src/CTable.jsx:68
 msgid "Edit"
 msgstr "Правка"
 
-#: src/CTable.jsx:61
+#: src/CTable.jsx:69
 msgid "Duplicate"
 msgstr "Создать копию"
 
-#: src/CTable.jsx:62
+#: src/CTable.jsx:70
 msgid "Delete"
 msgstr "Удалить"
 
-#: src/CTable.jsx:64
+#: src/CTable.jsx:72
 msgid "Enter"
 msgstr "Войти"
 
-#: src/CTable.jsx:65
+#: src/CTable.jsx:73
 msgid "Go back"
 msgstr "Выйти"
 
-#: src/CTable.jsx:67
+#: src/CTable.jsx:75
 msgid "Filter"
 msgstr "Фильтр"
 
-#: src/CTable.jsx:68
+#: src/CTable.jsx:76
 msgid "Sorting"
 msgstr "Сортировка"
 
-#: src/CTable.jsx:69
+#: src/CTable.jsx:77
 msgid "Columns"
 msgstr "Столбцы"
 
-#: src/CTable.jsx:72
+#: src/CTable.jsx:79
 msgid "Select all"
 msgstr "Выбрать все"
 
-#: src/CTable.jsx:73
+#: src/CTable.jsx:80
 msgid "Clear all"
 msgstr "Очистить все"
 
-#: src/CTable.jsx:76
+#: src/CTable.jsx:82
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: src/CTable.jsx:77
+#: src/CTable.jsx:83
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: src/CTable.jsx:78
+#: src/CTable.jsx:84
 msgid "Reset Zoom"
 msgstr "Сбросить масштаб"
+
+#: src/CTable.jsx:221
+#, javascript-format
+msgid "Duplicate %d record?"
+msgid_plural "Duplicate %d records?"
+msgstr[0] "Создать копию %d записи?"
+msgstr[1] "Создать копию %d записей?"
+msgstr[2] "Создать копию %d записей?"
+
+#: src/CTable.jsx:231
+#, javascript-format
+msgid "Delete %d record?"
+msgid_plural "Delete %d records?"
+msgstr[0] "Удалить %d запись?"
+msgstr[1] "Удалить %d записи?"
+msgstr[2] "Удалить %d записей?"
+
+#: src/CTable.jsx:343
+#, javascript-format
+msgid "Update %d record?"
+msgid_plural "Update %d records?"
+msgstr[0] "Обновить %d запись?"
+msgstr[1] "Обновить %d записи?"
+msgstr[2] "Обновить %d записей?"
+
+#: src/CTable.jsx:403
+msgid "Yes"
+msgstr "Да"
+
+#: src/CTable.jsx:404
+msgid "No"
+msgstr "Нет"
 
 #: src/Header.jsx:5
 #, fuzzy

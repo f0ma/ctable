@@ -1,33 +1,111 @@
 <?php
 
-$dbloc = "demo.db";
-$dblocrw = "demo.real.db";
-$dbmtime = "demo.timestamp";
-
-$mtime = 0;
-
-if (file_exists($dbmtime)){
-    $mtime = file_get_contents($dbmtime);
-}
-
-if( time() - $mtime > 60*15){
-    unlink($dblocrw);
-    copy($dbloc,$dblocrw);
-    file_put_contents($dbmtime, time());
-}
-
-$db = new PDO("sqlite:".$dblocrw);
-
-//$db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, TRUE);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
+require "Database.php";
 
 $tableChanged = new JsonRPCSignal('tableChanged');
 
+function apply_path ($q, $columns, $path){
+    $query_kind = $q->top_level_query();
+
+    if($query_kind == "select" || $query_kind == "update" || $query_kind == "delete"){
+        foreach($path as $p){
+            if(isset($p["mapping"])){
+                foreach($p["mapping"] as $m){
+                    if(!in_array($m[1], $columns)) throw new Exception("Unexpected column ".$m[1]);
+                    $q->query[$query_kind]['where'][]=["eq"=>[$m[1],["const"=>$p['keys'][$m[0]]]]];
+                }
+            }
+        }
+    }
+
+    if($query_kind == "insert"){
+        if(isset($q->query[$query_kind]['select'])) {
+            foreach($path as $p){
+                if(isset($p["mapping"])){
+                    foreach($p["mapping"] as $m){
+                        if(!in_array($m[1], $columns)) throw new Exception("Unexpected column ".$m[1]);
+                        $q->query[$query_kind]['columns'][]=$m[1];
+                        $q->query[$query_kind]['select']['columns'][]=$m[1];
+                        $q->query[$query_kind]['select']['where'][]=["eq"=>[$m[1],["const"=>$p['keys'][$m[0]]]]];
+                    }
+                }
+            }
+        } else {
+            foreach($path as $p){
+                if(isset($p["mapping"])){
+                    foreach($p["mapping"] as $m){
+                        if(!in_array($m[1], $columns)) throw new Exception("Unexpected column ".$m[1]);
+                        $q->query[$query_kind]['columns'][]=$m[1];
+                        $q->query[$query_kind]['values'][]=["const"=>$p['keys'][$m[0]]];
+                    }
+                }
+            }
+        }
+    }
+
+    //return $q;
+}
+
+function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0){
+    $query_kind = $q->top_level_query();
+    if ($query_kind != "select") throw new Exception("Filters uses with select only");
+
+    $allowed_filters = ["eq","neq","ge","gt","le","lt","like"];
+    if($filter !== NULL){
+        foreach($filter as $f){
+            if(!in_array($f[0], $allowed_filters)) throw new Exception("Unexpected filter ".$f[0]);
+            if(!in_array($f[1], $columns)) throw new Exception("Unexpected column ".$f[1]);
+            $q->query['select']['where'][]=[$f[0]=>[$f[1],["const"=>$f[2]]]];
+        }
+    }
+    error_log(var_export($order, true));
+    if($order !== NULL){
+        foreach($order as $sord){
+            foreach($sord as $cl => $ord){
+                if(!in_array($cl, $columns)) throw new Exception("Unexpected column ".$cl);
+                if(!in_array($ord, ["asc","desc"])) throw new Exception("Unexpected order ".$ord);
+                $q->query['select']['order_by'][]=[$cl=>$ord];
+            }
+        }
+    }
+    if($limit !== NULL){
+        if ($limit != 0){
+            $q->query['select']['limit']=$limit;
+            }
+    }
+    if($offset !== NULL){
+        if ($offset != 0){
+            $q->query['select']['offset']=$offset;
+        }
+    }
+
+    //return $q;
+}
+
 class CTableServer extends JsonRPCHandler {
+
+    private $table_configs = [];
+    private $table_classes = [];
+    private $table_files = [];
+
+    function __construct(){
+        foreach (glob("*.table.php") as $filename) {
+            list($class_name, $tail) = explode('.', $filename, 2);
+            if(!class_exists($class_name)){
+                require $filename;
+            }
+            $table_info = $class_name::load_table_config();
+            $this->table_configs[$table_info['name']] = $table_info;
+            $this->table_classes[$table_info['name']] = $class_name;
+        }
+    }
+
     public function tables() {
-        return [["name"=>"account", "label"=>"Accounts", "width" => 60]];
+        $result = [];
+        foreach($this->table_configs as $k => $v){
+            $result[]=["name"=>$v["name"], "label"=>$v["label"], "width" => $v["width"], "default_sorting" => $v["default_sorting"], "default_filtering" => $v["default_filtering"]];
+        }
+        return $result;
     }
 
     public function links() {
@@ -35,95 +113,71 @@ class CTableServer extends JsonRPCHandler {
     }
 
     public function columns($table_name) {
-        if($table_name == 'account'){
-            return json_decode(file_get_contents('account.json'), true)['columns'];
+        return $this->table_configs[$table_name]['columns'];
+    }
+
+    public function subtables($table_name) {
+        if(!isset($this->table_configs[$table_name]['subtables']))
+            return [];
+        return $this->table_configs[$table_name]['subtables'];
+    }
+
+    public function select($path, $filter=[], $order=[], $limit=0, $offset=0) {
+
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        return $qhandler->select($path, $filter,$order,$limit,$offset);
+    }
+
+    public function insert($path, $data) {
+
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        $qhandler->insert($path, $data);
+    }
+
+    public function update($path, $keys, $data) {
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        foreach ($keys as $k){
+            $qhandler->update($path, $k, $data);
         }
     }
 
-    public function select($table_name, $filter=[], $order=[], $limit=100, $offset=0) {
-        global $db;
-        if($table_name == 'account'){
-            $stmt = $db->query("SELECT `id`, `firstname`, `lastname`, `reg_date`, `status`, `image`, `tags` FROM `account`");
-            return $stmt->fetchAll();
+    public function duplicate($path, $keys) {
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        foreach ($keys as $k){
+            $qhandler->duplicate($path, $k);
         }
-        return [];
+
+
     }
 
-    public function insert($table_name, $data) {
-        global $db;
-        //global $tableChanged;
-        if($table_name == 'account'){
-            $col_list = [];
-            $set_list = [];
-            $key_list = [];
+    public function delete($path, $keys) {
+        $target = end($path)["table"];
 
-            foreach(['firstname', 'lastname', 'reg_date', 'status', 'image', 'tags'] as $col){
-                if(array_key_exists($col, $data)){
-                    $col_list[]='`'.$col.'`';
-                    $set_list[]=':'.$col;
-                    $key_list[]=$col;
-                }
-            }
+        $qhandler = new $this->table_classes[$target]();
 
-            $stmt = $db->prepare("INSERT INTO `account` (".implode(', ', $col_list).") VALUES (".implode(', ', $set_list).")");
-
-            foreach($key_list as $col){
-                $stmt->bindParam(':'.$col , $data[$col], PDO::PARAM_STR);
-            }
-
-            $stmt->execute();
-        }
-        //$tableChanged->emit($table_name);
-    }
-
-    public function update($table_name, $keys, $data) {
-        global $db;
-        //global $tableChanged;
-        if($table_name == 'account'){
-            foreach ($keys as $k){
-                $set_expr = [];
-                foreach($data as $col => $val){
-                    $set_expr[]= "`$col` = :$col";
-                }
-                $stmt = $db->prepare("UPDATE `account` SET ".implode(", ", $set_expr)." WHERE `id` = :id");
-                $stmt->bindParam(':id', $k['id'], PDO::PARAM_INT);
-                foreach($data as $col => $val){
-                    $stmt->bindParam(':'.$col, $data[$col], PDO::PARAM_STR);
-                }
-                $stmt->execute();
-            }
-        }
-        //$tableChanged->emit($table_name);
-    }
-
-    public function duplicate($table_name, $keys) {
-        global $db;
-        //global $tableChanged;
-        if($table_name == 'account'){
-            foreach ($keys as $k){
-                $stmt = $db->prepare("INSERT INTO `account` (`firstname`, `lastname`, `reg_date`, `status`, `image`, `tags`) SELECT `firstname`, `lastname`, `reg_date`, `status`, `image`, `tags` FROM `account` WHERE `id` = :id");
-                $stmt->bindParam(':id', $k['id'], PDO::PARAM_INT);
-                $stmt->execute();
-            }
-            //$tableChanged->emit($table_name);
+        foreach ($keys as $k){
+            $qhandler->delete($path, $k);
         }
 
     }
 
-    public function delete($table_name, $keys) {
-        global $db;
-        //global $tableChanged;
-        if($table_name == 'account'){
-            foreach ($keys as $k){
-                $stmt = $db->prepare("DELETE FROM `account` WHERE `id` = :id");
-                $stmt->bindParam(':id', $k['id'], PDO::PARAM_INT);
-                $stmt->execute();
-            }
-            //$tableChanged->emit($table_name);
-        }
-    }
+    public function options($path, $filter=[], $limit=0) {
+        $target = end($path)["table"];
 
-    public function options($table_name, $filter=[], $limit=100) {
-        return [ "1"=>"Jones", "2"=>"Joan", "3"=>"Gill"];
+        $qhandler = new $this->table_classes[$target]();
+
+        return $qhandler->options($path, $filter, $limit);
     }
 }

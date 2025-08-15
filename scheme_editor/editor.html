@@ -17,7 +17,7 @@
   "schema": {
     "title": "CTable",
     "type": "object",
-    "required": ["name", "label", "width", "columns"],
+    "required": ["name", "label", "width", "columns", "subtables", "default_sorting", "default_filtering"],
     "properties": {
       "name": {
         "title": "Name",
@@ -116,6 +116,74 @@
                   },
                 }
               }
+            }
+          }
+        }
+      },
+      "subtables":{
+        "title": "Subtables",
+        "type": "array",
+        "minItems": 0,
+        "items": {
+          "title": "Subtable",
+          "type": "object",
+          "required": ["name", "label", "mapping"],
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "mapping": {
+              "title": "Mapping",
+              "type": "array",
+              "minItems": 0,
+              "items": {
+                "title": "Map",
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "title": "M",
+                  "type": "String"
+                }
+              }
+            }
+          }
+        }
+      },
+      "default_sorting":{
+        "title": "Default sorting",
+        "type": "array",
+        "minItems": 0,
+        "items": {
+          "title": "Sorting",
+          "type": "object"
+        }
+      },
+      "default_filtering":{
+        "title": "Default filtering",
+        "type": "array",
+        "minItems": 0,
+        "items": {
+          "title": "Sorting",
+          "type": "object",
+          "required": ["column", "operator", "value"],
+          "properties": {
+            "column": {
+              "title": "Column",
+              "type": "string"
+            },
+            "operator": {
+              "title": "Operator",
+              "type": "string"
+            },
+            "value": {
+              "title": "Value",
+              "type": "string"
             }
           }
         }

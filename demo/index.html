@@ -12,8 +12,9 @@
     <script src="preact.umd.js"></script>
     <script src="ctable.js"></script>
     <script src="ru_lang.js"></script>
-    <script src="rpc.php?format=js&var=jrpc"></script>
-    <script>
+    <script type="module">
+     import { jrpc } from "./rpc.php?format=js";
+
      render(h(CTable, {server: jrpc}), document.getElementById("main"));
     </script>
   </body>

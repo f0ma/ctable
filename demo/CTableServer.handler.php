@@ -1,1 +1,1 @@
-../jsonrpc/CTable.handler.php
+../jsonrpc/CTableServer.handler.php

@@ -13,8 +13,8 @@ function makeID() {
 
 function _(s){
     if (navigator.language == "ru-RU") {
-        if (s in ctable_lang_ru && ctable_lang_ru[s] !== "")
-            return ctable_lang_ru[s];
+        if (s in ctable_lang_ru && ctable_lang_ru[s][1] !== "")
+            return ctable_lang_ru[s][1];
         else
             return s;
     }
@@ -22,6 +22,22 @@ function _(s){
         return s;
 
 }
+
+function N_(s1,s2,n){
+    plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
+
+    if (navigator.language == "ru-RU") {
+        if (s1 in ctable_lang_ru && ctable_lang_ru[s1][plural+1] !== "")
+            return ctable_lang_ru[s1][plural+1].replace("%d", n);
+        else
+            return (n == 1 ? s1 : s2).replace("%d", n);;
+    }
+    else
+        return (n == 1 ? s1 : s2).replace("%d", n);;
+
+}
+
+
 
 // This functions adopted from Just Clone library
 // https://github.com/angus-c/just
@@ -83,9 +99,9 @@ function sty(...x){
     return stychunks.join(' ');
 }
 
-function unwind_button(e){
+function unwind_button_or_link(e){
     var tg = e.target;
-    if(tg.tagName != "BUTTON"){
+    if(tg.tagName != "BUTTON" && tg.tagName != "A"){
         tg = tg.parentElement;
     }
     return tg;
@@ -98,3 +114,7 @@ function unwind_tr(e){
     }
     return tg;
 }
+
+
+
+

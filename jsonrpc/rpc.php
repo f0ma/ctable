@@ -74,6 +74,7 @@ function JsonRPCAPIDiscover(){
         $refc = new ReflectionClass($class_name);
 
         foreach($refc->getMethods() as $refm){
+            if (str_starts_with($refm->name, "_")) continue;
             $api[$api_class][$refm->name] = [];
             foreach($refm->getParameters() as $p){
                 $api[$api_class][$refm->name][] = $p->name;
@@ -114,6 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER["CONTENT_TYPE"] == "applic
         $respList = [];
 
         foreach($callList as $data){
+
+            ob_start();
 
             try {
 
@@ -178,8 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER["CONTENT_TYPE"] == "applic
 
                 }
 
-                ob_start();
-
                 $GLOBALS['JsonRPCSignalList'] = [];
                 $result = $handler->{$method_name}(...$data['params']);
                 usleep(300000);
@@ -196,13 +197,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER["CONTENT_TYPE"] == "applic
 
             } catch (JsonRPCException $exception) {
                 if (isset($data["id"])){
-                    $respList[]=["jsonrpc" => "2.0", "error" => ["code" => $exception->JsonRPCErrorCode(), "message" => $exception->getMessage()], "id" => $data["id"]];
+                    $respList[]=["jsonrpc" => "2.0", "error" => ["code" => $exception->JsonRPCErrorCode(), "message" => $exception->getMessage(), "file" =>  basename($exception->getFile()), "line" =>$exception->getLine()], "id" => $data["id"]];
                 } else {
-                    $respList[]=["jsonrpc" => "2.0", "error" => ["code" => $exception->JsonRPCErrorCode(), "message" => $exception->getMessage()], "id" => NULL];
+                    $respList[]=["jsonrpc" => "2.0", "error" => ["code" => $exception->JsonRPCErrorCode(), "message" => $exception->getMessage(), "file" =>  basename($exception->getFile()), "line" =>$exception->getLine()], "id" => NULL];
                 }
             } catch (Throwable $exception) {
                 if (isset($data["id"])){
-                    $respList[]=["jsonrpc" => "2.0", "error" => ["code" => -32603, "message" => $exception->getMessage()], "id" => $data["id"]];
+                    $respList[]=["jsonrpc" => "2.0", "error" => ["code" => -32603, "message" => $exception->getMessage(), "file" =>  basename($exception->getFile()), "line" =>$exception->getLine()], "id" => $data["id"]];
                 }
             } finally {
                 ob_end_clean();
@@ -218,44 +219,117 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER["CONTENT_TYPE"] == "applic
 
 
     } catch (\JsonException $exception) {
-        echo json_encode(["jsonrpc" => "2.0", "error" => ["code" => -32700, "message" => $exception->getMessage()], "id" => null]);
+        echo json_encode(["jsonrpc" => "2.0", "error" => ["code" => -32700, "message" => $exception->getMessage(), "file" =>  basename($exception->getFile()), "line" =>$exception->getLine()], "id" => null]);
     } catch (JsonRPCException $exception) {
-        echo json_encode(["jsonrpc" => "2.0", "error" => ["code" => $exception->JsonRPCErrorCode(), "message" => $exception->getMessage()], "id" => null]);
+        echo json_encode(["jsonrpc" => "2.0", "error" => ["code" => $exception->JsonRPCErrorCode(), "message" => $exception->getMessage(), "file" =>  basename($exception->getFile()), "line" =>$exception->getLine()], "id" => null]);
     } catch (Throwable $e) {
-        echo json_encode(["jsonrpc" => "2.0", "error" => ["code" => -32099, "message" => $exception->getMessage()], "id" => null]);
+        echo json_encode(["jsonrpc" => "2.0", "error" => ["code" => -32099, "message" => $exception->getMessage(), "file" =>  basename($exception->getFile()), "line" =>$exception->getLine()], "id" => null]);
     }
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET["format"] == "js") {
 
-    $var_name= "jrpc";
-    $var_url= "rpc.php";
+    $var_url = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
     $api = JsonRPCAPIDiscover();
 
-    if(isset($_GET["var"]))
-        $var_name = preg_replace("/[^a-zA-Z0-9_]+/", "", $_GET["var"]);
+    $js = <<<EOF
+export var jrpc= {};
 
-    $js = file_get_contents('jsonrpc.js');
+    jrpc.call_uid = 1000;
+    jrpc.call_queue = {};
+    jrpc.slots = {};
+    jrpc.url = _rpcurl;
 
-    $js = str_replace("_jrpc",$var_name, $js);
+    jrpc.connect = function (method, handler) {
+    jrpc.slots[method] = handler;
+}
+
+jrpc.call = function (method, params) {
+jrpc.call_uid += 1;
+var this_call_uid = "cl"+jrpc.call_uid;
+jrpc.call_queue[this_call_uid] = [{"jsonrpc":"2.0", "method":method, "params":params, "id":this_call_uid}, null, null];
+
+var callPromise = new Promise((resolve, reject) => {
+setTimeout(function() {
+var calls_without_fetch = Object.values(jrpc.call_queue).filter(x => x[1] === null).map(x => x[0]["id"]);
+
+if(calls_without_fetch.length > 0){
+    var fp = fetch(jrpc.url,
+    { method: "POST",
+    headers: { "Content-type": "application/json"},
+    body:  JSON.stringify(calls_without_fetch.map(x => jrpc.call_queue[x][0])) })
+    .then(response => response.json())
+    .then(function(response){
+    if (!Array.isArray(response)){
+        response = [response];
+}
+response.forEach(function (x) {
+if(typeof x.id === 'undefined'){
+    if(typeof jrpc.slots[x.method] !== 'undefined')
+        setTimeout(function() {
+        if(typeof x.params !== 'undefined'){
+            jrpc.slots[x.method].forEach(y=>y(...x.params));
+} else {
+    jrpc.slots[x.method].forEach(y=>y());
+}
+}, 0);
+}
+else if(x.id === null && x.error){
+    calls_without_fetch.forEach(w => jrpc.call_queue[w][2] = x);
+}
+else {
+    jrpc.call_queue[x.id][2] = x;
+}
+});
+
+});
+calls_without_fetch.forEach(x => jrpc.call_queue[x][1] = fp);
+}
+
+jrpc.call_queue[this_call_uid][1].then(x => {
+let result = jrpc.call_queue[this_call_uid][2];
+if(result.error){
+    reject(result.error);
+} else {
+    resolve(result.result);
+}
+delete jrpc.call_queue[this_call_uid];
+});
+
+},0);
+
+});
+
+return callPromise;
+
+};
+
+EOF;
+
+    $var_name = "jrpc";
+
     $js = str_replace("_rpcurl",'"'.$var_url.'"', $js);
+
+    $jsapi = "";
 
     foreach($api as $c => $m){
         if ($c == ""){
             foreach($api[$c] as $m => $p){
-                $js .= $var_name.".".$m." = function (".implode(",",$p).") {return ".$var_name.".call(\"".$m."\",[".implode(",",$p)."]);};\n";
+                $jsapi .= $var_name.".".$m." = function (".implode(",",$p).") {return ".$var_name.".call(\"".$m."\",[".implode(",",$p)."]);};\n";
             }
         } else {
-            $js .= "jrpc.".$c." = {};\n";
+            $jsapi .= "jrpc.".$c." = {};\n";
             foreach($api[$c] as $m => $p){
-                $js .= $var_name.".".$c.".".$m." = function (".implode(",",$p).") {return ".$var_name.".call(\"".$c.".".$m."\",[".implode(",",$p)."]);};\n";
+                $jsapi .= $var_name.".".$c.".".$m." = function (".implode(",",$p).") {return ".$var_name.".call(\"".$c.".".$m."\",[".implode(",",$p)."]);};\n";
             }
         }
     }
 
     foreach($GLOBALS['JsonRPCSignals'] as $a){
-        $js .= $var_name.".slots.".$a." = [];\n";
+        $jsapi .= $var_name.".slots.".$a." = [];\n";
     }
+
+    $js.= $jsapi;
 
     header('Content-Type: application/javascript');
     echo $js;
