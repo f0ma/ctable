@@ -6,4 +6,5 @@ demo/material-symbols-outlined.woff2
 demo/preact.umd.js
 demo/preact.umd.js.map
 demo/Spyc.php
+lang/*~
 node_modules

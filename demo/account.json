@@ -109,9 +109,9 @@
   ],
   "default_filtering": [
     {
-      "column": "lastname",
-      "operator": "eq",
-      "value": "Lambert"
+      "column": "id",
+      "operator": "gt",
+      "value": "5"
     }
   ]
 }

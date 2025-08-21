@@ -99,6 +99,16 @@ function unwind_tr(e) {
   }
   return tg;
 }
+function unwind_th(e) {
+  var tg = e.target;
+  if (tg.tagName != "TH") {
+    tg = tg.parentElement;
+  }
+  return tg;
+}
+function deep_copy(x) {
+  return JSON.parse(JSON.stringify(x));
+}
 class CPlainTextCell extends Component {
   render() {
     return h(Fragment, null, this.props.value === null ? h("span", {
@@ -131,6 +141,33 @@ class CSelectCell extends Component {
  */
 
 class CHeaderTable extends Component {
+  constructor() {
+    super();
+    this.onHeaderClick = this.onHeaderClick.bind(this);
+  }
+  onHeaderClick(x) {
+    var th = unwind_th(x);
+    var colname = th.dataset["column"];
+    var newcol = this.props.table.state.view_sorting;
+    newcol.forEach(y => {
+      if (y.name == colname) {
+        if (y.sorting == "") {
+          y.sorting = "asc";
+          return;
+        }
+        if (y.sorting == "asc") {
+          y.sorting = "desc";
+          return;
+        }
+        if (y.sorting == "desc") {
+          y.sorting = "";
+          return;
+        }
+      }
+    });
+    this.props.table.state.view_sorting = newcol;
+    this.props.table.onSortingChange();
+  }
   render() {
     var self = this;
     return h("div", {
@@ -158,13 +195,17 @@ class CHeaderTable extends Component {
     })), h("thead", null, h("tr", null, self.props.view_columns.map(x => {
       if (x.enabled) {
         var sorting = this.props.view_sorting.filter(y => y.name == x.name).map(x => x.sorting)[0];
-        return self.props.columns.filter(y => y.name == x.name).map(x => h("th", null, sorting == "asc" ? h("span", {
-          class: "material-symbols-outlined",
-          style: "font-size:1em;"
+        var filtering = this.props.view_filtering.filter(y => y.column == x.name).length > 0;
+        return self.props.columns.filter(y => y.name == x.name).map(x => h("th", {
+          "data-column": x.name,
+          onClick: self.onHeaderClick
+        }, sorting == "asc" ? h("span", {
+          class: "material-symbols-outlined-small"
         }, "arrow_upward") : "", sorting == "desc" ? h("span", {
-          class: "material-symbols-outlined",
-          style: "font-size:1em;"
-        }, "arrow_downward") : "", x.label))[0];
+          class: "material-symbols-outlined-small"
+        }, "arrow_downward") : "", " ", x.label, " ", filtering ? h("span", {
+          class: "material-symbols-outlined-small"
+        }, "filter_alt") : ""))[0];
       }
     })))));
   }
@@ -182,6 +223,7 @@ class CHeaderTable extends Component {
  * @arg this.props.rows {Array} Link to CTable state table_rows
  * @arg this.props.onRowClick {function} Link to CTable action handler
  * @arg this.props.onTableXScroll {function} Link to CTable action handler
+ * @arg this.props.editorShow {bool} Is any editor opened?
  *
  */
 
@@ -800,19 +842,19 @@ class CColumnsPanel extends Component {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
-      class: "button is-small is-primary is-soft",
-      onClick: self.props.onApplyColumns
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "check_circle"), " ", _("Apply"))), h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetColumns
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset")))), self.props.table.state.view_columns.map(x => {
+    }, "refresh"), " ", _("Reset"))), h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseColumns
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close")))), self.props.table.state.view_columns.map(x => {
       return h("div", null, h("label", {
         class: "checkbox",
         style: "min-width:16em;"
@@ -840,19 +882,19 @@ class CColumnsPanel extends Component {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
-      class: "button is-small is-primary is-soft",
-      onClick: self.props.onApplyColumns
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "check_circle"), " ", _("Apply"))), h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetColumns
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))))));
+    }, "refresh"), " ", _("Reset"))), h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseColumns
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close"))))));
   }
 }
 /**
@@ -931,19 +973,19 @@ class CSortingPanel extends Component {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
-      class: "button is-small is-primary is-soft",
-      onClick: self.props.onApplySorting
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "check_circle"), " ", _("Apply"))), h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetSorting
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset")))), self.props.table.state.view_sorting.map(x => {
+    }, "refresh"), " ", _("Reset"))), h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseSorting
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close")))), self.props.table.state.view_sorting.map(x => {
       return h("div", null, h("button", {
         class: "button is-small",
         "data-column": x.name,
@@ -972,19 +1014,202 @@ class CSortingPanel extends Component {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
-      class: "button is-small is-primary is-soft",
-      onClick: self.props.onApplySorting
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "check_circle"), " ", _("Apply"))), h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetSorting
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))))));
+    }, "refresh"), " ", _("Reset"))), h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseSorting
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close"))))));
+  }
+}
+/**
+ * Column panel class.
+ *
+ * @arg this.props.table {Object} Table object.
+ * @arg this.props.width {int} Width in em.
+ *
+ */
+
+class CFilterPanel extends Component {
+  constructor() {
+    super();
+    this.onColumnChange = this.onColumnChange.bind(this);
+    this.onOperatorChange = this.onOperatorChange.bind(this);
+    this.onValueChange = this.onValueChange.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.onAddClick = this.onAddClick.bind(this);
+  }
+
+  //    onColumnEnableChanged(x){
+  //      var colname = x.target.dataset['column'];
+  //      var newcol = this.props.table.state.view_columns;
+  //      newcol.forEach(y => {if (y.name == colname) y.enabled = x.target.checked;});
+  //      this.props.table.setState({view_columns: newcol});
+  //    }
+  //
+  //    onColumnUp(x){
+  //      var colname = unwind_button_or_link(x).dataset['column'];
+  //      var colindex = -1;
+  //      var newcol = this.props.table.state.view_columns;
+  //      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
+  //      if(colindex > 0){
+  //        [newcol[colindex-1], newcol[colindex]] = [newcol[colindex], newcol[colindex-1]];
+  //        this.props.table.setState({view_columns: newcol});
+  //      }
+  //    }
+  //
+  //    onColumnDown(x){
+  //      var colname = unwind_button_or_link(x).dataset['column'];
+  //      var colindex = -1;
+  //      var newcol = this.props.table.state.view_columns;
+  //      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
+  //      if(colindex < newcol.length-1){
+  //        [newcol[colindex+1], newcol[colindex]] = [newcol[colindex], newcol[colindex+1]];
+  //        this.props.table.setState({view_columns: newcol});
+  //      }
+  //    }
+
+  onColumnChange(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering[i].column = x.target.value;
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onOperatorChange(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering[i].operator = x.target.value;
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onValueChange(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering[i].value = x.target.value;
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onDeleteClick(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering.splice(i, 1);
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onAddClick(x) {
+    this.props.table.state.view_filtering.push({
+      column: this.props.table.state.table_columns[0].name,
+      operator: "neq",
+      value: ""
+    });
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  render() {
+    var self = this;
+    return h("section", {
+      class: "section ctable-editor-section"
+    }, h("div", {
+      class: "ctable-editor-panel",
+      style: sty("width", "min(" + self.props.width + "em,100%)")
+    }, h("div", {
+      class: "field has-text-right mb-0"
+    }, h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-warning is-soft",
+      onClick: self.props.onResetFilter
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "refresh"), " ", _("Reset"))), h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseFilter
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
+      return h("div", null, h("div", {
+        class: "select"
+      }, h("select", {
+        value: x.column,
+        "data-filterindex": i,
+        onChange: self.onColumnChange
+      }, self.props.table.state.table_columns.map(y => {
+        return h("option", {
+          value: y.name
+        }, y.label);
+      }))), h("div", {
+        class: "select"
+      }, h("select", {
+        value: x.operator,
+        "data-filterindex": i,
+        onChange: self.onOperatorChange
+      }, h("option", {
+        value: "eq"
+      }, "="), h("option", {
+        value: "neq"
+      }, "!="), h("option", {
+        value: "ge"
+      }, ">="), h("option", {
+        value: "gt"
+      }, ">"), h("option", {
+        value: "le"
+      }, "<="), h("option", {
+        value: "lt"
+      }, "<"), h("option", {
+        value: "is_null"
+      }, "Is NULL"), h("option", {
+        value: "is_not_null"
+      }, "Is not NULL"), h("option", {
+        value: "like_lr"
+      }, "\u2026A\u2026"), h("option", {
+        value: "like_l"
+      }, "\u2026A"), h("option", {
+        value: "like_r"
+      }, "A\u2026"))), h("div", {
+        style: "display: inline-block;"
+      }, h("input", {
+        class: "input",
+        type: "text",
+        value: x.value,
+        "data-filterindex": i,
+        onChange: self.onValueChange
+      })), h("button", {
+        class: "button is-danger is-soft",
+        "data-filterindex": i,
+        onClick: self.onDeleteClick
+      }, h("span", {
+        class: "material-symbols-outlined"
+      }, "delete")));
+    }), h("button", {
+      class: "button is-primary is-soft mt-4",
+      onClick: self.onAddClick
+    }, " ", _("Add"), " "), h("div", {
+      class: "field has-text-right mt-5"
+    }, h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-warning is-soft",
+      onClick: self.props.onResetFilter
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "refresh"), " ", _("Reset"))), h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseFilter
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close"))))));
   }
 }
 /**
@@ -1036,11 +1261,14 @@ class CTable extends Component {
     this.askUser = this.askUser.bind(this);
     this.userResolveYes = this.userResolveYes.bind(this);
     this.userResolveNo = this.userResolveNo.bind(this);
-    this.onApplyColumns = this.onApplyColumns.bind(this);
     this.onResetColumns = this.onResetColumns.bind(this);
-    this.onApplySorting = this.onApplySorting.bind(this);
+    this.onCloseColumns = this.onCloseColumns.bind(this);
     this.onResetSorting = this.onResetSorting.bind(this);
     this.onSortingChange = this.onSortingChange.bind(this);
+    this.onCloseSorting = this.onCloseSorting.bind(this);
+    this.onResetFilter = this.onResetFilter.bind(this);
+    this.onFilterChange = this.onFilterChange.bind(this);
+    this.onCloseFilter = this.onCloseFilter.bind(this);
     this.setState({
       width: 50,
       fontSize: 100,
@@ -1205,17 +1433,18 @@ class CTable extends Component {
       view_columns: [],
       view_sorting: [],
       view_filtering: [],
-      table_return: {},
       table_path: [],
       table_path_labels: [],
       table_columns: [],
       table_subtables: [],
       table_rows: [],
       table_row_status: [],
+      return_keys: null,
       table_select_menu_active: false,
       editor_show: false,
       columns_panel_show: false,
       sorting_panel_show: false,
+      filtering_panel_show: false,
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
@@ -1236,7 +1465,7 @@ class CTable extends Component {
     Promise.all([tables_p, links_p]).then(x => {
       self.state.table_list = x[0];
       self.state.links = x[1];
-      self.loadTable(self.state.table_list[0].name);
+      self.loadTable(self.state.table_list[0].name, null);
       self.setState({});
     });
   }
@@ -1267,9 +1496,9 @@ class CTable extends Component {
     });
   }
   resetFiltering() {
-    this.state.view_filtering = this.state.current_table.default_filtering;
+    this.state.view_filtering = deep_copy(this.state.current_table.default_filtering);
   }
-  loadTable(name) {
+  loadTable(name, path_part) {
     var self = this;
     var table = self.state.table_list.filter(x => x.name == name)[0];
     let table_columns_p = self.props.server.CTableServer.columns(table.name);
@@ -1283,11 +1512,15 @@ class CTable extends Component {
       self.resetColumns();
       self.resetSorting();
       self.resetFiltering();
-
-      //self.state.view_filtering = c.map(x => { return {name:x.name, oper:x.sorting} } );
       self.state.table_subtables = sb;
       this.state.table_rows = [];
       this.state.table_row_status = [];
+      if (path_part !== null) {
+        this.state.view_columns = path_part.view_settings.view_columns;
+        this.state.view_filtering = path_part.view_settings.view_filtering;
+        this.state.view_sorting = path_part.view_settings.view_sorting;
+        this.state.return_keys = path_part.keys;
+      }
       self.setState({}, self.reloadData);
     });
   }
@@ -1295,13 +1528,19 @@ class CTable extends Component {
     this.setState({
       progress: true
     });
-    var keys = this.getAffectedKeys();
+    var keys = [];
+    if (this.state.return_keys === null) {
+      keys = this.getAffectedKeys();
+    } else {
+      keys = [this.state.return_keys];
+    }
     var sorting = this.state.view_sorting.filter(x => x.sorting != "").map(function (x) {
       return {
         [x.name]: x.sorting
       };
     });
-    let table_rows_p = this.props.server.CTableServer.select(this.full_table_path(), [], sorting).then(r => {
+    var filters = this.state.view_filtering.map(x => [x.operator, x.column, x.value]);
+    let table_rows_p = this.props.server.CTableServer.select(this.full_table_path(), filters, sorting).then(r => {
       this.state.table_rows = r['rows'];
       this.state.table_row_status = [];
       this.state.table_rows.forEach(x => {
@@ -1317,6 +1556,7 @@ class CTable extends Component {
       });
       this.state.progress = false;
       this.state.last_row_clicked = null;
+      this.state.return_keys = null;
       this.setState({}, () => {
         this.enablePanelButtons();
       });
@@ -1345,7 +1585,6 @@ class CTable extends Component {
     if (tg.dataset['name'] == "select_all") {
       if (this.state.editor_show == true) return;
       this.state.table_row_status = [];
-      this.state.table_return = {};
       this.state.table_rows.forEach(x => {
         this.state.table_row_status.push({
           selected: true
@@ -1357,7 +1596,6 @@ class CTable extends Component {
     if (tg.dataset['name'] == "clear_all") {
       if (this.state.editor_show == true) return;
       this.state.table_row_status = [];
-      this.state.table_return = {};
       this.state.table_rows.forEach(x => {
         this.state.table_row_status.push({
           selected: false
@@ -1368,7 +1606,6 @@ class CTable extends Component {
     }
     if (tg.dataset['name'] == "enter") {
       var self = this;
-      this.state.table_return = {};
       var gk = this.getAffectedKeys()[0];
       var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
       var key_const = [];
@@ -1389,32 +1626,62 @@ class CTable extends Component {
         table: this.state.current_table.name,
         keys: gk,
         label: this.state.current_table.label,
-        mapping: subtab.mapping
+        mapping: subtab.mapping,
+        view_settings: deep_copy({
+          view_columns: this.state.view_columns,
+          view_filtering: this.state.view_filtering,
+          view_sorting: this.state.view_sorting
+        }),
+        table_row_status: deep_copy(this.state.table_row_status)
       });
-      this.state.editor_show = false;
-      this.loadTable(tg.dataset['table']);
+      this.hideAllEditors();
+      this.loadTable(tg.dataset['table'], null);
       return;
     }
     if (tg.dataset['name'] == "back") {
       this.state.table_path_labels.pop();
       var path_part = this.state.table_path.pop();
-      this.state.table_return = path_part;
-      this.state.editor_show = false;
-      this.loadTable(path_part.table);
+      this.hideAllEditors();
+      this.loadTable(path_part.table, path_part);
       return;
     }
     if (tg.dataset['name'] == "columns") {
-      this.hideAllEditors();
-      this.setState({
-        columns_panel_show: true
-      });
+      if (this.state.columns_panel_show) {
+        this.setState({
+          columns_panel_show: false
+        });
+      } else {
+        this.hideAllEditors();
+        this.setState({
+          columns_panel_show: true
+        });
+      }
       return;
     }
     if (tg.dataset['name'] == "sort") {
-      this.hideAllEditors();
-      this.setState({
-        sorting_panel_show: true
-      });
+      if (this.state.sorting_panel_show) {
+        this.setState({
+          sorting_panel_show: false
+        });
+      } else {
+        this.hideAllEditors();
+        this.setState({
+          sorting_panel_show: true
+        });
+      }
+      return;
+    }
+    if (tg.dataset['name'] == "filter") {
+      if (this.state.filtering_panel_show) {
+        this.setState({
+          filtering_panel_show: false
+        });
+      } else {
+        this.hideAllEditors();
+        this.setState({
+          filtering_panel_show: true
+        });
+      }
       return;
     }
     if (tg.dataset['name'] == "reload") {
@@ -1479,12 +1746,18 @@ class CTable extends Component {
     }
   }
   full_table_path() {
-    return [].concat(this.state.table_path, [{
+    var path = this.state.table_path.map(x => {
+      return {
+        table: x.table,
+        keys: x.keys,
+        mapping: x.mapping
+      };
+    });
+    return [].concat(path, [{
       table: this.state.current_table.name
     }]);
   }
   getAffectedKeys() {
-    if (Object.keys(this.state.table_return).length !== 0) return [this.state.table_return.keys];
     var affected_rows = this.state.table_rows.filter((x, i) => this.state.table_row_status[i].selected);
     var keys = this.state.table_columns.filter(x => x.is_key).map(x => x.name);
     var keys_values = affected_rows.map(x => {
@@ -1573,7 +1846,7 @@ class CTable extends Component {
     this.setState({
       table_select_menu_active: false
     });
-    this.loadTable(tbl.name);
+    this.loadTable(tbl.name, null);
   }
   onSaveClick() {
     if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true && this.state.editor_changes[x].valid == false).length > 0) {
@@ -1645,6 +1918,7 @@ class CTable extends Component {
   }
   hideAllEditors() {
     this.setState({
+      sorting_panel_show: false,
       columns_panel_show: false,
       editor_show: false
     });
@@ -1672,7 +1946,7 @@ class CTable extends Component {
       }
     })));
   }
-  onApplyColumns() {
+  onCloseColumns() {
     this.setState({
       columns_panel_show: false
     });
@@ -1681,17 +1955,35 @@ class CTable extends Component {
     this.resetColumns();
     this.setState({});
   }
-  onApplySorting() {
+  onSortingChange() {
+    this.reloadData();
+  }
+  onFilterChange() {
+    this.reloadData();
+  }
+  onResetSorting() {
+    this.resetSorting();
+    this.setState({});
+    this.reloadData();
+  }
+  onCloseSorting() {
     this.setState({
       sorting_panel_show: false
     });
     this.reloadData();
   }
-  onSortingChange() {
+  onResetFilter() {
+    this.resetFiltering();
+    this.setState({});
     this.reloadData();
   }
-  onResetSorting() {
-    this.resetSorting();
+  onCloseFilter() {
+    this.setState({
+      filtering_panel_show: false
+    });
+    this.reloadData();
+  }
+  onApplySorting() {
     this.reloadData();
   }
   onPanel0DropdownClick() {
@@ -1945,9 +2237,11 @@ class CTable extends Component {
     }, x.icon), " ", x.label)))))))), h(CHeaderTable, {
       width: self.state.width,
       fontSize: self.state.fontSize,
+      table: self,
       columns: self.state.table_columns,
       view_columns: self.state.view_columns,
       view_sorting: self.state.view_sorting,
+      view_filtering: self.state.view_filtering,
       onHeaderXScroll: self.headerXScroll,
       progress: self.state.progress
     }))), h(CPageTable, {
@@ -1959,7 +2253,7 @@ class CTable extends Component {
       rows: self.state.table_rows,
       onRowClick: self.onRowClick,
       onTableXScroll: self.tableXScroll,
-      editorShow: self.state.editor_show
+      editorShow: self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show
     }), self.state.editor_show ? h(CEditorPanel, {
       width: self.state.width,
       columns: self.state.table_columns,
@@ -1970,14 +2264,21 @@ class CTable extends Component {
     }) : "", self.state.columns_panel_show ? h(CColumnsPanel, {
       width: self.state.width,
       table: self,
-      onApplyColumns: self.onApplyColumns,
-      onResetColumns: self.onResetColumns
+      onColumnChange: self.onColumnChange,
+      onResetColumns: self.onResetColumns,
+      onCloseColumns: self.onCloseColumns
     }) : "", self.state.sorting_panel_show ? h(CSortingPanel, {
       width: self.state.width,
       table: self,
-      onApplySorting: self.onApplySorting,
       onResetSorting: self.onResetSorting,
+      onCloseSorting: self.onCloseSorting,
       onSortingChange: self.onSortingChange
+    }) : "", self.state.filtering_panel_show ? h(CFilterPanel, {
+      width: self.state.width,
+      table: self,
+      onResetFilter: self.onResetFilter,
+      onCloseFilter: self.onCloseFilter,
+      onChangeFilter: self.onFilterChange
     }) : "");
   }
 }
@@ -1985,7 +2286,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-06-29 19:22+0300",
+    "pot-creation-date": "2025-08-17 16:20+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -1997,15 +2298,18 @@ var ctable_lang_ru = {
     "x-language": "ru_RU",
     "x-source-language": "C"
   },
+  "Reset": [null, "Сбросить"],
+  "Close": [null, "Закрыть"],
   "Add": [null, "Добавить"],
   "Save": [null, "Сохранить"],
   "Save all": [null, "Сохранить все"],
   "Cancel": [null, "Отменить"],
+  "Go back": [null, "Выйти"],
+  "Enter": [null, "Войти"],
   "Edit": [null, "Правка"],
   "Duplicate": [null, "Создать копию"],
   "Delete": [null, "Удалить"],
-  "Enter": [null, "Войти"],
-  "Go back": [null, "Выйти"],
+  "Reload": [null, "Перезагрузить"],
   "Filter": [null, "Фильтр"],
   "Sorting": [null, "Сортировка"],
   "Columns": [null, "Столбцы"],

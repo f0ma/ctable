@@ -11,6 +11,7 @@
  * @arg this.props.rows {Array} Link to CTable state table_rows
  * @arg this.props.onRowClick {function} Link to CTable action handler
  * @arg this.props.onTableXScroll {function} Link to CTable action handler
+ * @arg this.props.editorShow {bool} Is any editor opened?
  *
  */
 

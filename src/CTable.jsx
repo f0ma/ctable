@@ -53,11 +53,17 @@ class CTable extends Component {
     this.userResolveYes = this.userResolveYes.bind(this);
     this.userResolveNo = this.userResolveNo.bind(this);
 
-    this.onApplyColumns = this.onApplyColumns.bind(this);
     this.onResetColumns = this.onResetColumns.bind(this);
-    this.onApplySorting = this.onApplySorting.bind(this);
+    this.onCloseColumns = this.onCloseColumns.bind(this);
+
     this.onResetSorting = this.onResetSorting.bind(this);
     this.onSortingChange = this.onSortingChange.bind(this);
+    this.onCloseSorting = this.onCloseSorting.bind(this);
+
+    this.onResetFilter = this.onResetFilter.bind(this);
+    this.onFilterChange = this.onFilterChange.bind(this);
+    this.onCloseFilter = this.onCloseFilter.bind(this);
+
 
 
     this.setState({
@@ -102,17 +108,20 @@ class CTable extends Component {
       view_sorting: [],
       view_filtering: [],
 
-      table_return: {},
       table_path:[ ],
       table_path_labels:[ ],
       table_columns:[ ],
       table_subtables:[ ],
       table_rows:[ ],
       table_row_status:[ ],
+
+      return_keys: null,
+
       table_select_menu_active: false,
       editor_show: false,
       columns_panel_show: false,
       sorting_panel_show: false,
+      filtering_panel_show: false,
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
@@ -138,7 +147,7 @@ class CTable extends Component {
         self.state.table_list = x[0];
         self.state.links = x[1];
 
-        self.loadTable(self.state.table_list[0].name)
+        self.loadTable(self.state.table_list[0].name, null);
         self.setState({});
       });
   }
@@ -164,10 +173,10 @@ class CTable extends Component {
   }
 
   resetFiltering(){
-    this.state.view_filtering = this.state.current_table.default_filtering;
+    this.state.view_filtering = deep_copy(this.state.current_table.default_filtering);
   }
 
-  loadTable(name){
+  loadTable(name, path_part){
     var self = this;
 
     var table = self.state.table_list.filter(x => x.name == name)[0];
@@ -187,10 +196,16 @@ class CTable extends Component {
       self.resetSorting();
       self.resetFiltering();
 
-      //self.state.view_filtering = c.map(x => { return {name:x.name, oper:x.sorting} } );
       self.state.table_subtables = sb;
       this.state.table_rows = [];
       this.state.table_row_status = [];
+
+      if(path_part !== null){
+        this.state.view_columns = path_part.view_settings.view_columns;
+        this.state.view_filtering = path_part.view_settings.view_filtering;
+        this.state.view_sorting = path_part.view_settings.view_sorting;
+        this.state.return_keys = path_part.keys;
+      }
 
       self.setState({}, self.reloadData);
     });
@@ -199,13 +214,20 @@ class CTable extends Component {
   reloadData(){
     this.setState({progress: true});
 
-    var keys = this.getAffectedKeys();
+    var keys = [];
+    if(this.state.return_keys === null){
+      keys = this.getAffectedKeys();
+    } else {
+      keys = [this.state.return_keys];
+    }
 
     var sorting = this.state.view_sorting.filter(x => x.sorting != "").map(function (x) {
       return {[x.name]: x.sorting};
     });
 
-    let table_rows_p = this.props.server.CTableServer.select(this.full_table_path(),[],sorting).then((r) => {
+    var filters = this.state.view_filtering.map(x => [x.operator, x.column, x.value]);
+
+    let table_rows_p = this.props.server.CTableServer.select(this.full_table_path(),filters,sorting).then((r) => {
       this.state.table_rows = r['rows'];
       this.state.table_row_status = [];
       this.state.table_rows.forEach(x => {
@@ -220,6 +242,7 @@ class CTable extends Component {
       })
       this.state.progress = false;
       this.state.last_row_clicked = null;
+      this.state.return_keys = null;
       this.setState({}, () => {
         this.enablePanelButtons()
       });
@@ -264,7 +287,6 @@ class CTable extends Component {
     if(tg.dataset['name'] == "select_all"){
       if(this.state.editor_show == true) return;
       this.state.table_row_status = [];
-      this.state.table_return = {};
       this.state.table_rows.forEach(x => {this.state.table_row_status.push({selected: true})});
       this.setState({}, () => this.enablePanelButtons());
       return;
@@ -273,7 +295,6 @@ class CTable extends Component {
     if(tg.dataset['name'] == "clear_all"){
       if(this.state.editor_show == true) return;
       this.state.table_row_status = [];
-      this.state.table_return = {};
       this.state.table_rows.forEach(x => {this.state.table_row_status.push({selected: false})});
       this.setState({}, () => this.enablePanelButtons());
       return;
@@ -282,7 +303,6 @@ class CTable extends Component {
     if(tg.dataset['name'] == "enter"){
       var self = this;
 
-      this.state.table_return = {};
       var gk = this.getAffectedKeys()[0];
       var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
 
@@ -297,31 +317,48 @@ class CTable extends Component {
         self.setState({});
       }).catch((e) => {this.showError(e)});
 
-      this.state.table_path.push({table: this.state.current_table.name, keys:gk, label:this.state.current_table.label, mapping:subtab.mapping});
+      this.state.table_path.push({table: this.state.current_table.name, keys:gk, label:this.state.current_table.label, mapping:subtab.mapping, view_settings:deep_copy({view_columns: this.state.view_columns, view_filtering:this.state.view_filtering, view_sorting:this.state.view_sorting}), table_row_status:deep_copy(this.state.table_row_status)});
 
-      this.state.editor_show = false;
-      this.loadTable(tg.dataset['table']);
+      this.hideAllEditors();
+      this.loadTable(tg.dataset['table'], null);
       return;
     }
 
     if(tg.dataset['name'] == "back"){
       this.state.table_path_labels.pop();
       var path_part = this.state.table_path.pop();
-      this.state.table_return = path_part;
-      this.state.editor_show = false;
-      this.loadTable(path_part.table);
+      this.hideAllEditors();
+      this.loadTable(path_part.table, path_part);
       return;
     }
 
     if(tg.dataset['name'] == "columns"){
-      this.hideAllEditors();
-      this.setState({columns_panel_show: true});
+      if(this.state.columns_panel_show){
+        this.setState({columns_panel_show: false});
+      } else {
+        this.hideAllEditors();
+        this.setState({columns_panel_show: true});
+      }
       return;
     }
 
     if(tg.dataset['name'] == "sort"){
-      this.hideAllEditors();
-      this.setState({sorting_panel_show: true});
+      if(this.state.sorting_panel_show){
+        this.setState({sorting_panel_show: false});
+      } else {
+        this.hideAllEditors();
+        this.setState({sorting_panel_show: true});
+      }
+      return;
+    }
+
+    if(tg.dataset['name'] == "filter"){
+      if(this.state.filtering_panel_show){
+        this.setState({filtering_panel_show: false});
+      } else {
+        this.hideAllEditors();
+        this.setState({filtering_panel_show: true});
+      }
       return;
     }
 
@@ -366,13 +403,11 @@ class CTable extends Component {
   }
 
   full_table_path(){
-    return [].concat(this.state.table_path, [{table: this.state.current_table.name}]);
+    var path = this.state.table_path.map(x => { return {table:x.table, keys:x.keys, mapping:x.mapping}; });
+    return [].concat(path, [{table: this.state.current_table.name}]);
   }
 
   getAffectedKeys(){
-    if(Object.keys(this.state.table_return).length !== 0)
-      return [this.state.table_return.keys];
-
     var affected_rows = this.state.table_rows.filter((x,i) => this.state.table_row_status[i].selected);
     var keys = this.state.table_columns.filter((x) => x.is_key).map((x) => x.name);
     var keys_values = affected_rows.map((x) => {
@@ -469,7 +504,7 @@ class CTable extends Component {
   onTableSelectClick(x){
     var tbl = this.state.table_list.filter(y => y.name == x.target.dataset.label)[0];
     this.setState({table_select_menu_active: false});
-    this.loadTable(tbl.name);
+    this.loadTable(tbl.name, null);
   }
 
 
@@ -509,7 +544,7 @@ class CTable extends Component {
   }
 
   hideAllEditors(){
-    this.setState({columns_panel_show: false, editor_show: false});
+    this.setState({sorting_panel_show: false, columns_panel_show: false, editor_show: false});
   }
 
   showError(e){
@@ -526,7 +561,7 @@ class CTable extends Component {
       this.base.querySelectorAll(".ctable-editor-control div").forEach(x => x.dispatchEvent(new CustomEvent("cteditorchanged", { detail: {initiator:colname, changes:this.state.editor_changes} })));
   }
 
-  onApplyColumns(){
+  onCloseColumns(){
     this.setState({columns_panel_show: false});
   }
 
@@ -536,17 +571,38 @@ class CTable extends Component {
 
   }
 
-  onApplySorting(){
-    this.setState({sorting_panel_show: false});
+  onSortingChange(){
     this.reloadData();
   }
 
-  onSortingChange(){
+  onFilterChange(){
     this.reloadData();
   }
 
   onResetSorting(){
     this.resetSorting();
+    this.setState({});
+    this.reloadData();
+  }
+
+  onCloseSorting(){
+    this.setState({sorting_panel_show: false});
+    this.reloadData();
+  }
+
+
+  onResetFilter(){
+    this.resetFiltering();
+    this.setState({});
+    this.reloadData();
+  }
+
+  onCloseFilter(){
+    this.setState({filtering_panel_show: false});
+    this.reloadData();
+  }
+
+  onApplySorting(){
     this.reloadData();
   }
 
@@ -709,13 +765,14 @@ class CTable extends Component {
           </div>
         </div>
       </div>
-      <CHeaderTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
+      <CHeaderTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} view_filtering={self.state.view_filtering} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
     </div>
   </section>
-  <CPageTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show}/>
+  <CPageTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show }/>
   {self.state.editor_show ? <CEditorPanel width={self.state.width} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
-  {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onApplyColumns={self.onApplyColumns} onResetColumns={self.onResetColumns} />: ""}
-  {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} onApplySorting={self.onApplySorting} onResetSorting={self.onResetSorting} onSortingChange={self.onSortingChange} />: ""}
+  {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
+  {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
+  {self.state.filtering_panel_show ? <CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}
 
   </div>;
 

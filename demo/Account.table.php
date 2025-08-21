@@ -31,7 +31,13 @@ class Account {
     }
 
     public function update($path, $keys, $data) {
+        error_log(var_export($data, true));
+
+
         $q = SQLYamlQuery::simple_update("account", ["id"], $keys, ["firstname", "lastname", "reg_date", "status", "image", "tags"], $data);
+
+        error_log(var_export($q->query, true));
+
         $q->execute($this->db);
     }
 

@@ -116,5 +116,14 @@ function unwind_tr(e){
 }
 
 
+function unwind_th(e){
+    var tg = e.target;
+    if(tg.tagName != "TH"){
+        tg = tg.parentElement;
+    }
+    return tg;
+}
 
-
+function deep_copy(x) {
+    return JSON.parse(JSON.stringify(x));
+}

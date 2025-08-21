@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Advanced CRUD tables",
   "config": {
-    "js": "src/Header.jsx src/CPlainTextCell.jsx src/CSelectCell.jsx src/CHeaderTable.jsx src/CPageTable.jsx src/CSelectEditor.jsx src/CLineEditor.jsx src/CEditorFrame.jsx src/CEditorPanel.jsx src/CColumnsPanel.jsx src/CSortingPanel.jsx src/CTable.jsx lang/ru_lang.js",
+    "js": "src/Header.jsx src/CPlainTextCell.jsx src/CSelectCell.jsx src/CHeaderTable.jsx src/CPageTable.jsx src/CSelectEditor.jsx src/CLineEditor.jsx src/CEditorFrame.jsx src/CEditorPanel.jsx src/CColumnsPanel.jsx src/CSortingPanel.jsx src/CFilterPanel.jsx src/CTable.jsx lang/ru_lang.js",
     "css": "src/CTable.css"
   },
   "scripts": {
@@ -13,7 +13,7 @@
     "mkcss": "concat -o dist/ctable.css $npm_package_config_css",
     "mkdocs": "jsdoc src/*.jsx -d docs",
     "mkpo": "xgettext --output=lang/ctable.pot --language=JavaScript --keyword=N_:1,2 --from-code utf-8 src/*.jsx && msgmerge -U lang/ru.po lang/ctable.pot && po2json lang/ru.po lang/ru.json -f raw && concat -o lang/ru_lang.js lang/ru_head.js lang/ru.json lang/tail.js",
-    "mkdemo": "wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js -d demo/ && wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js.map -d demo/ && wget https://github.com/marella/material-symbols/raw/refs/heads/main/font/400/material-symbols-outlined.woff2 -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css.map -d demo/"
+    "mkdemo": "wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js -d demo/ && wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js.map -d demo/ && wget https://github.com/marella/material-symbols/raw/refs/heads/main/font/400/material-symbols-outlined.woff2 -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css.map -d demo/ && wget https://raw.githubusercontent.com/mustangostang/spyc/refs/heads/master/Spyc.php -d demo/"
   },
   "devDependencies": {
     "@babel/cli": "^7.27.2",

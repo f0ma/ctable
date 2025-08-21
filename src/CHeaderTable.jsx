@@ -14,6 +14,37 @@
 
 class CHeaderTable extends Component {
 
+    constructor() {
+        super();
+
+        this.onHeaderClick = this.onHeaderClick.bind(this);
+    }
+
+
+    onHeaderClick(x){
+        var th = unwind_th(x);
+        var colname = th.dataset["column"];
+
+        var newcol = this.props.table.state.view_sorting;
+        newcol.forEach(y => {if (y.name == colname){
+            if (y.sorting == ""){
+                y.sorting = "asc";
+                return;
+            }
+            if (y.sorting == "asc"){
+                y.sorting = "desc";
+                return;
+            }
+            if (y.sorting == "desc"){
+                y.sorting = "";
+                return;
+            }
+        }});
+        this.props.table.state.view_sorting = newcol;
+        this.props.table.onSortingChange();
+
+    }
+
     render() {
 
         var self = this;
@@ -36,10 +67,11 @@ class CHeaderTable extends Component {
         {self.props.view_columns.map(x =>{
             if (x.enabled){
                 var sorting = this.props.view_sorting.filter(y => y.name == x.name).map(x => x.sorting)[0];
+                var filtering = this.props.view_filtering.filter(y => y.column == x.name).length > 0;
 
 
                 return self.props.columns.filter(y => y.name == x.name).map(x =>
-                <th>{sorting == "asc" ? <span class="material-symbols-outlined" style="font-size:1em;">arrow_upward</span> : ""}{sorting == "desc" ? <span class="material-symbols-outlined" style="font-size:1em;">arrow_downward</span> : ""}{x.label}</th>
+                <th data-column={x.name} onClick={self.onHeaderClick}>{sorting == "asc" ? <span class="material-symbols-outlined-small">arrow_upward</span> : ""}{sorting == "desc" ? <span class="material-symbols-outlined-small">arrow_downward</span> : ""} {x.label} {filtering ? <span class="material-symbols-outlined-small">filter_alt</span> : ""}</th>
                 )[0];
             }
         })}

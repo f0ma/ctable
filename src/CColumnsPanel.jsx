@@ -54,10 +54,10 @@ class CColumnsPanel extends Component {
           <div class="ctable-editor-panel" style={sty("width","min("+self.props.width+ "em,100%)")} >
             <div class="field has-text-right mb-0">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-primary is-soft" onClick={self.props.onApplyColumns}><span class="material-symbols-outlined">check_circle</span> {_("Apply")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
+                <button class="button is-small is-soft" onClick={self.props.onCloseColumns}><span class="material-symbols-outlined">close</span> {_("Close")}</button>
               </div>
             </div>
              {self.props.table.state.view_columns.map(x => {
@@ -70,10 +70,10 @@ class CColumnsPanel extends Component {
 
             <div class="field has-text-right mt-5">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-primary is-soft" onClick={self.props.onApplyColumns}><span class="material-symbols-outlined">check_circle</span> {_("Apply")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
+                <button class="button is-small is-soft" onClick={self.props.onCloseColumns}><span class="material-symbols-outlined">close</span> {_("Close")}</button>
               </div>
             </div>
         </div>

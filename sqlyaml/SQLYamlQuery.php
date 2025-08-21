@@ -35,7 +35,7 @@ class SQLYamlQuery {
         $d = $codec::from_yaml($query);
         $d['delete']['table'] = $table;
         foreach($keys_should as $k){
-            if(!isset($keys[$k])) throw new Exception("Insuffitient key ".$k);
+            if(!array_key_exists($k, $keys)) throw new Exception("Insuffitient key ".$k);
             $d['delete']['where'][]= ['eq'=>[$k,['const' => $keys[$k]]]];
         }
         return new SQLYamlQuery($d, $codec = $codec);
@@ -53,13 +53,15 @@ class SQLYamlQuery {
         $d = $codec::from_yaml($query);
         $d['update']['table'] = $table;
         foreach($columns_may as $k){
-            if(isset($columns[$k])){
+            if(array_key_exists($k, $columns)){
+                error_log(var_export("-->".$k, true));
+
                 $d['update']['columns'][]= $k;
                 $d['update']['values'][]= ['const' => $columns[$k]];
             }
         }
         foreach($keys_should as $k){
-            if(!isset($keys[$k])) throw new Exception("Insuffitient key ".$k);
+            if(!array_key_exists($k, $keys)) throw new Exception("Insuffitient key ".$k);
             $d['update']['where'][]= ['eq'=>[$k,['const' => $keys[$k]]]];
         }
 
@@ -91,7 +93,7 @@ class SQLYamlQuery {
         $d = $codec::from_yaml($query);
         $d['insert']['table'] = $table;
         foreach($columns_may as $k){
-            if(isset($columns[$k])){
+            if(array_key_exists($k, $columns)){
                 $d['insert']['columns'][]= $k;
                 $d['insert']['values'][]= ['const' => $columns[$k]];
             }
@@ -117,7 +119,7 @@ class SQLYamlQuery {
         $d['insert']['columns'] = $columns;
 
         foreach($keys_should as $k){
-            if(!isset($keys[$k])) throw new Exception("Insuffitient key ".$k);
+            if(!array_key_exists($k, $keys)) throw new Exception("Insuffitient key ".$k);
             $d['insert']['select']['where'][]= ['eq'=>[$k,['const' => $keys[$k]]]];
         }
 
@@ -472,7 +474,7 @@ class SQLYamlQuery {
     }
 
     function s_not_in($path, $node){
-        return $this->visit(array_merge($path, ["in"]), $node[0]." NOT IN ".array_merge($path, ["in"]), $node[1]);
+        return $this->visit(array_merge($path, ["not_in"]), $node[0]." NOT IN ".array_merge($path, ["in"]), $node[1]);
     }
 
     function s_is_null($path, $node){
@@ -481,6 +483,10 @@ class SQLYamlQuery {
 
     function s_is_not_null($path, $node){
         return $this->visit(array_merge($path, ["is_not_null"]), $node[0]." IS NOT NULL ");
+    }
+
+    function s_like($path, $node){
+        return $this->visit(array_merge($path, ["like"]), $node[0])." LIKE ".$this->visit(array_merge($path, ["like"]), $node[1]);
     }
 
     function s_sql($path, $node){

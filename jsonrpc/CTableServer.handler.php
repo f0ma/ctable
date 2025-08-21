@@ -50,12 +50,26 @@ function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0)
     $query_kind = $q->top_level_query();
     if ($query_kind != "select") throw new Exception("Filters uses with select only");
 
-    $allowed_filters = ["eq","neq","ge","gt","le","lt","like"];
+    $allowed_filters = ["eq","neq","ge","gt","le","lt","like","is_null","is_not_null","like_l","like_r","like_lr"];
     if($filter !== NULL){
         foreach($filter as $f){
             if(!in_array($f[0], $allowed_filters)) throw new Exception("Unexpected filter ".$f[0]);
             if(!in_array($f[1], $columns)) throw new Exception("Unexpected column ".$f[1]);
-            $q->query['select']['where'][]=[$f[0]=>[$f[1],["const"=>$f[2]]]];
+            if(in_array($f[0], ["eq","neq","ge","gt","le","lt","like"])){
+                $q->query['select']['where'][]=[$f[0]=>[$f[1],["const"=>$f[2]]]];
+            }
+            if(in_array($f[0], ["like_l"])){
+                $q->query['select']['where'][]=['like'=>[$f[1],["const"=>"%".$f[2]]]];
+            }
+            if(in_array($f[0], ["like_r"])){
+                $q->query['select']['where'][]=['like'=>[$f[1],["const"=>$f[2]."%"]]];
+            }
+            if(in_array($f[0], ["like_lr"])){
+                $q->query['select']['where'][]=['like'=>[$f[1],["const"=>"%".$f[2]."%"]]];
+            }
+            if(in_array($f[0], ["is_null","is_not_null"])){
+                $q->query['select']['where'][]=[$f[0]=>[$f[1]]];
+            }
         }
     }
     error_log(var_export($order, true));
