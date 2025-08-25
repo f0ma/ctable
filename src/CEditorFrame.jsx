@@ -105,6 +105,7 @@ class CEditorFrame extends Component {
 
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CSelectEditor" ? <CSelectEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CLineEditor" ? <CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
+        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CDateEditor" ? <CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
 
         {self.props.column.editor_hint ? <p class="help">{self.props.column.editor_hint}</p> : <p class="help mt-4">{self.props.column.editor_hint}</p>}
         </div>

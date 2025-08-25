@@ -43,6 +43,8 @@ class CPageTable extends Component {
                           return <td onClick={self.props.onRowClick}><CPlainTextCell column={c} value={r[c.name]} row={r} /></td>;
                       if(c.cell_actor == "CSelectCell")
                           return <td onClick={self.props.onRowClick}><CSelectCell column={c} value={r[c.name]} row={r} /></td>;
+                      if(c.cell_actor == "CDateCell")
+                        return <td onClick={self.props.onRowClick}><CDateCell column={c} value={r[c.name]} row={r} /></td>;
                       }
                     })
                   }

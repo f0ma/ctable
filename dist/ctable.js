@@ -839,7 +839,7 @@ class CEditorFrame extends Component {
       row: self.props.row,
       add: self.props.add,
       batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CDateEditor" ? h(CDateEditor, {
+    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CDateEditor" ? h(CLineEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,
@@ -1230,12 +1230,30 @@ class CFilterPanel extends Component {
   onOperatorChange(x) {
     var i = Number(x.target.dataset['filterindex']);
     this.props.table.state.view_filtering[i].operator = x.target.value;
+    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
+      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+      }
+    } else {
+      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+      }
+    }
     this.props.table.setState({});
     this.props.table.onFilterChange();
   }
   onValueChange(x) {
     var i = Number(x.target.dataset['filterindex']);
     this.props.table.state.view_filtering[i].value = x.target.value;
+    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
+      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+      }
+    } else {
+      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+      }
+    }
     this.props.table.setState({});
     this.props.table.onFilterChange();
   }
@@ -1309,6 +1327,10 @@ class CFilterPanel extends Component {
       }, "<="), h("option", {
         value: "lt"
       }, "<"), h("option", {
+        value: "in"
+      }, "IN"), h("option", {
+        value: "not_in"
+      }, "NOT IN"), h("option", {
         value: "is_null"
       }, "Is NULL"), h("option", {
         value: "is_not_null"
@@ -1382,6 +1404,7 @@ class CFilterPanel extends Component {
  * Base table class.
  *
  * @arg this.props.server {Object} JRPC object.
+ * @arg this.props.allow_guest {boolean} Allow getting data without login.
  *
  * @fires CTable#cteditorchanged
  */
@@ -1606,11 +1629,17 @@ class CTable extends Component {
     self.props.server.version().then(x => console.log(x));
     let tables_p = self.props.server.CTableServer.tables();
     let links_p = self.props.server.CTableServer.links();
-    self.props.server.slots.tableChanged.push(this.reloadData);
+
+    //self.props.server.slots.tableChanged.push(this.reloadData); Slots support
+
     Promise.all([tables_p, links_p]).then(x => {
       self.state.table_list = x[0];
       self.state.links = x[1];
-      self.loadTable(self.state.table_list[0].name, null);
+      var default_table = self.state.table_list.filter(x => x.is_default);
+      if (default_table.length == 0) {
+        default_table = [self.state.table_list[0]];
+      }
+      self.loadTable(default_table[0].name, null);
       self.setState({});
     });
   }
@@ -1704,6 +1733,11 @@ class CTable extends Component {
       this.state.return_keys = null;
       this.setState({}, () => {
         this.enablePanelButtons();
+      });
+    }).catch(e => {
+      this.showError(e);
+      this.setState({
+        progress: false
       });
     });
   }
@@ -1987,7 +2021,7 @@ class CTable extends Component {
     });
   }
   onTableSelectClick(x) {
-    var tbl = this.state.table_list.filter(y => y.name == x.target.dataset.label)[0];
+    var tbl = this.state.table_list.filter(y => y.name == unwind_button_or_link(x).dataset.label)[0];
     this.setState({
       table_select_menu_active: false
     });
