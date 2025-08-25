@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CFilterPanel.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CFilterPanel.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Column panel class.
+ *
+ * @arg this.props.table {Object} Table object.
+ * @arg this.props.width {int} Width in em.
+ *
+ */
+
+class CFilterPanel extends Component {
+
+    constructor() {
+      super();
+
+      this.onColumnChange = this.onColumnChange.bind(this);
+      this.onOperatorChange = this.onOperatorChange.bind(this);
+      this.onValueChange = this.onValueChange.bind(this);
+      this.onDeleteClick =  this.onDeleteClick.bind(this);
+      this.onAddClick =  this.onAddClick.bind(this);
+
+    }
+
+//    onColumnEnableChanged(x){
+//      var colname = x.target.dataset['column'];
+//      var newcol = this.props.table.state.view_columns;
+//      newcol.forEach(y => {if (y.name == colname) y.enabled = x.target.checked;});
+//      this.props.table.setState({view_columns: newcol});
+//    }
+//
+//    onColumnUp(x){
+//      var colname = unwind_button_or_link(x).dataset['column'];
+//      var colindex = -1;
+//      var newcol = this.props.table.state.view_columns;
+//      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
+//      if(colindex > 0){
+//        [newcol[colindex-1], newcol[colindex]] = [newcol[colindex], newcol[colindex-1]];
+//        this.props.table.setState({view_columns: newcol});
+//      }
+//    }
+//
+//    onColumnDown(x){
+//      var colname = unwind_button_or_link(x).dataset['column'];
+//      var colindex = -1;
+//      var newcol = this.props.table.state.view_columns;
+//      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
+//      if(colindex &lt; newcol.length-1){
+//        [newcol[colindex+1], newcol[colindex]] = [newcol[colindex], newcol[colindex+1]];
+//        this.props.table.setState({view_columns: newcol});
+//      }
+//    }
+
+    onColumnChange(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering[i].column = x.target.value;
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    onOperatorChange(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering[i].operator = x.target.value;
+
+      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.strip());
+        }
+      } else {
+        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        }
+      }
+
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    onValueChange(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering[i].value = x.target.value;
+
+      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.strip());
+        }
+      } else {
+        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        }
+      }
+
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    onDeleteClick(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering.splice(i, 1);
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    onAddClick(x){
+      this.props.table.state.view_filtering.push({column: this.props.table.state.table_columns[0].name, operator:"neq", value:""});
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    render() {
+
+        var self = this;
+
+
+        return  &lt;section class="section ctable-editor-section" >
+          &lt;div class="ctable-editor-panel" style={sty("width","min("+self.props.width+ "em,100%)")} >
+            &lt;div class="field has-text-right mb-0">
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetFilter}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset")}&lt;/button>
+              &lt;/div>
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-soft" onClick={self.props.onCloseFilter}>&lt;span class="material-symbols-outlined">close&lt;/span> {_("Close")}&lt;/button>
+              &lt;/div>
+            &lt;/div>
+            {
+              // onChange={this.onInputChange} self.props.table.state.table_columns}
+            }
+
+             {self.props.table.state.view_filtering.map((x,i) => {
+              return &lt;div>
+                      &lt;div class="select">
+                        &lt;select  value={x.column} data-filterindex={i} onChange={self.onColumnChange}>
+                          {self.props.table.state.table_columns.map(y => {
+                            return &lt;option value={y.name}>{y.label}&lt;/option>;
+                          }) }
+                        &lt;/select>
+                      &lt;/div>
+                      &lt;div class="select">
+                        &lt;select  value={x.operator}  data-filterindex={i} onChange={self.onOperatorChange}>
+                          &lt;option value="eq">=&lt;/option>
+                          &lt;option value="neq">!=&lt;/option>
+                          &lt;option value="ge">&amp;gt;=&lt;/option>
+                          &lt;option value="gt">&amp;gt;&lt;/option>
+                          &lt;option value="le">&amp;lt;=&lt;/option>
+                          &lt;option value="lt">&amp;lt;&lt;/option>
+                          &lt;option value="in">IN&lt;/option>
+                          &lt;option value="not_in">NOT IN&lt;/option>
+                          &lt;option value="is_null">Is NULL&lt;/option>
+                          &lt;option value="is_not_null">Is not NULL&lt;/option>
+                          &lt;option value="like_lr">…A…&lt;/option>
+                          &lt;option value="like_l">…A&lt;/option>
+                          &lt;option value="like_r">A…&lt;/option>
+                        &lt;/select>
+                      &lt;/div>
+                      &lt;div style="display: inline-block;">
+                        &lt;input class="input" type="text" value={x.value} data-filterindex={i}  onChange={self.onValueChange}/>
+                      &lt;/div>
+                      &lt;button class="button is-danger is-soft" data-filterindex={i} onClick={self.onDeleteClick}>&lt;span class="material-symbols-outlined">delete&lt;/span>&lt;/button>
+                    &lt;/div>;
+            })}
+
+            &lt;button class="button is-primary is-soft mt-4" onClick={self.onAddClick}> {_("Add")} &lt;/button>
+
+            &lt;div class="field has-text-right mt-5">
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetFilter}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset")}&lt;/button>
+              &lt;/div>
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-soft" onClick={self.props.onCloseFilter}>&lt;span class="material-symbols-outlined">close&lt;/span> {_("Close")}&lt;/button>
+              &lt;/div>
+            &lt;/div>
+        &lt;/div>
+        &lt;/section>;
+    }
+}
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Aug 23 2025 17:14:50 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

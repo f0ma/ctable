@@ -24,6 +24,7 @@
  * Base table class.
  *
  * @arg this.props.server {Object} JRPC object.
+ * @arg this.props.allow_guest {boolean} Allow getting data without login.
  *
  * @fires CTable#cteditorchanged
  */
@@ -141,13 +142,18 @@ class CTable extends Component {
       let tables_p = self.props.server.CTableServer.tables();
       let links_p = self.props.server.CTableServer.links();
 
-      self.props.server.slots.tableChanged.push(this.reloadData);
+      //self.props.server.slots.tableChanged.push(this.reloadData); Slots support
 
       Promise.all([tables_p, links_p]).then(x => {
         self.state.table_list = x[0];
         self.state.links = x[1];
 
-        self.loadTable(self.state.table_list[0].name, null);
+        var default_table = self.state.table_list.filter(x => x.is_default);
+        if (default_table.length == 0){
+          default_table = [self.state.table_list[0]];
+        }
+
+        self.loadTable(default_table[0].name, null);
         self.setState({});
       });
   }
@@ -246,7 +252,7 @@ class CTable extends Component {
       this.setState({}, () => {
         this.enablePanelButtons()
       });
-    });
+    }).catch((e) => {this.showError(e); this.setState({progress: false});});
   }
 
   topButtonClick(e) {
@@ -502,7 +508,7 @@ class CTable extends Component {
   }
 
   onTableSelectClick(x){
-    var tbl = this.state.table_list.filter(y => y.name == x.target.dataset.label)[0];
+    var tbl = this.state.table_list.filter(y => y.name == unwind_button_or_link(x).dataset.label)[0];
     this.setState({table_select_menu_active: false});
     this.loadTable(tbl.name, null);
   }

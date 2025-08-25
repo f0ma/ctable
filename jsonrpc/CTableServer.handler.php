@@ -50,7 +50,7 @@ function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0)
     $query_kind = $q->top_level_query();
     if ($query_kind != "select") throw new Exception("Filters uses with select only");
 
-    $allowed_filters = ["eq","neq","ge","gt","le","lt","like","is_null","is_not_null","like_l","like_r","like_lr"];
+    $allowed_filters = ["eq","neq","ge","gt","le","lt","like","is_null","is_not_null","like_l","like_r","like_lr","in","not_in"];
     if($filter !== NULL){
         foreach($filter as $f){
             if(!in_array($f[0], $allowed_filters)) throw new Exception("Unexpected filter ".$f[0]);
@@ -69,6 +69,13 @@ function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0)
             }
             if(in_array($f[0], ["is_null","is_not_null"])){
                 $q->query['select']['where'][]=[$f[0]=>[$f[1]]];
+            }
+            if(in_array($f[0], ["in","not_in"])){
+                $li = [];
+                foreach($f[2] as $x){
+                    $li[]=["const"=>$x];
+                }
+                $q->query['select']['where'][]=[$f[0]=>[$f[1],$li]];
             }
         }
     }
@@ -117,7 +124,7 @@ class CTableServer extends JsonRPCHandler {
     public function tables() {
         $result = [];
         foreach($this->table_configs as $k => $v){
-            $result[]=["name"=>$v["name"], "label"=>$v["label"], "width" => $v["width"], "default_sorting" => $v["default_sorting"], "default_filtering" => $v["default_filtering"]];
+            $result[]=["name"=>$v["name"], "label"=>$v["label"], "width" => $v["width"], "default_sorting" => $v["default_sorting"], "default_filtering" => $v["default_filtering"], $v["is_default"]];
         }
         return $result;
     }

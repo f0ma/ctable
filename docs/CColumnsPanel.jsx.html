@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CColumnsPanel.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CColumnsPanel.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Column panel class.
+ *
+ * @arg this.props.table {Object} Table object.
+ * @arg this.props.width {int} Width in em.
+ *
+ */
+
+class CColumnsPanel extends Component {
+
+    constructor() {
+      super();
+
+      this.onColumnEnableChanged = this.onColumnEnableChanged.bind(this);
+      this.onColumnUp = this.onColumnUp.bind(this);
+      this.onColumnDown = this.onColumnDown.bind(this);
+    }
+
+    onColumnEnableChanged(x){
+      var colname = x.target.dataset['column'];
+      var newcol = this.props.table.state.view_columns;
+      newcol.forEach(y => {if (y.name == colname) y.enabled = x.target.checked;});
+      this.props.table.setState({view_columns: newcol});
+    }
+
+    onColumnUp(x){
+      var colname = unwind_button_or_link(x).dataset['column'];
+      var colindex = -1;
+      var newcol = this.props.table.state.view_columns;
+      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
+      if(colindex > 0){
+        [newcol[colindex-1], newcol[colindex]] = [newcol[colindex], newcol[colindex-1]];
+        this.props.table.setState({view_columns: newcol});
+      }
+    }
+
+    onColumnDown(x){
+      var colname = unwind_button_or_link(x).dataset['column'];
+      var colindex = -1;
+      var newcol = this.props.table.state.view_columns;
+      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
+      if(colindex &lt; newcol.length-1){
+        [newcol[colindex+1], newcol[colindex]] = [newcol[colindex], newcol[colindex+1]];
+        this.props.table.setState({view_columns: newcol});
+      }
+    }
+
+    render() {
+
+        var self = this;
+
+
+        return  &lt;section class="section ctable-editor-section" >
+          &lt;div class="ctable-editor-panel" style={sty("width","min("+self.props.width+ "em,100%)")} >
+            &lt;div class="field has-text-right mb-0">
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset")}&lt;/button>
+              &lt;/div>
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-soft" onClick={self.props.onCloseColumns}>&lt;span class="material-symbols-outlined">close&lt;/span> {_("Close")}&lt;/button>
+              &lt;/div>
+            &lt;/div>
+             {self.props.table.state.view_columns.map(x => {
+              return &lt;div>
+                          &lt;label class="checkbox" style="min-width:16em;">&lt;input type="checkbox" checked={x.enabled} data-column={x.name} onChange={self.onColumnEnableChanged}/>&amp;nbsp;{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}&lt;/label>
+                          &amp;nbsp;&lt;button class="button is-small" data-column={x.name} onClick={self.onColumnUp}>&lt;span class="material-symbols-outlined">keyboard_arrow_up&lt;/span>&lt;/button>
+                          &amp;nbsp;&lt;button class="button is-small" data-column={x.name} onClick={self.onColumnDown}>&lt;span class="material-symbols-outlined">keyboard_arrow_down&lt;/span>&lt;/button>
+                    &lt;/div>;
+            })}
+
+            &lt;div class="field has-text-right mt-5">
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset")}&lt;/button>
+              &lt;/div>
+              &lt;div class="has-text-centered m-2"  style="display:inline-block;">
+                &lt;button class="button is-small is-soft" onClick={self.props.onCloseColumns}>&lt;span class="material-symbols-outlined">close&lt;/span> {_("Close")}&lt;/button>
+              &lt;/div>
+            &lt;/div>
+        &lt;/div>
+        &lt;/section>;
+    }
+}
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Aug 23 2025 17:14:50 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -58,6 +58,17 @@ class CFilterPanel extends Component {
     onOperatorChange(x){
       var i = Number(x.target.dataset['filterindex']);
       this.props.table.state.view_filtering[i].operator = x.target.value;
+
+      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+        }
+      } else {
+        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        }
+      }
+
       this.props.table.setState({});
       this.props.table.onFilterChange();
     }
@@ -65,6 +76,17 @@ class CFilterPanel extends Component {
     onValueChange(x){
       var i = Number(x.target.dataset['filterindex']);
       this.props.table.state.view_filtering[i].value = x.target.value;
+
+      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+        }
+      } else {
+        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        }
+      }
+
       this.props.table.setState({});
       this.props.table.onFilterChange();
     }
@@ -118,6 +140,8 @@ class CFilterPanel extends Component {
                           <option value="gt">&gt;</option>
                           <option value="le">&lt;=</option>
                           <option value="lt">&lt;</option>
+                          <option value="in">IN</option>
+                          <option value="not_in">NOT IN</option>
                           <option value="is_null">Is NULL</option>
                           <option value="is_not_null">Is not NULL</option>
                           <option value="like_lr">…A…</option>

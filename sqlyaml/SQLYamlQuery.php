@@ -470,11 +470,11 @@ class SQLYamlQuery {
     }
 
     function s_in($path, $node){
-        return $this->visit(array_merge($path, ["in"]), $node[0]." IN ".array_merge($path, ["in"]), $node[1]);
+        return $this->visit(array_merge($path, ["in"]), $node[0])." IN (".$this->visit(array_merge($path, ["in"]), $node[1]).")";
     }
 
     function s_not_in($path, $node){
-        return $this->visit(array_merge($path, ["not_in"]), $node[0]." NOT IN ".array_merge($path, ["in"]), $node[1]);
+        return $this->visit(array_merge($path, ["not_in"]), $node[0])." NOT IN (".$this->visit(array_merge($path, ["not_in"]), $node[1]).")";
     }
 
     function s_is_null($path, $node){
