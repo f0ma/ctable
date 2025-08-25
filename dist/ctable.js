@@ -126,6 +126,138 @@ class CSelectCell extends Component {
     }, this.props.value) : String(labels[0]));
   }
 }
+class CDateCell extends Component {
+  render() {
+    const DATE = new Date(this.props.value);
+    const form = x => String(x).padStart(2, '0');
+    return h(Fragment, null, this.props.value === null ? h("span", {
+      class: "has-text-grey"
+    }, "NULL") : `${form(DATE.getFullYear())}-${form(DATE.getMonth() + 1)}-${form(DATE.getDate())}`);
+  }
+}
+class CDateEditor extends Component {
+  constructor() {
+    super();
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onResetClicked = this.onResetClicked.bind(this);
+    this.onNullClicked = this.onNullClicked.bind(this);
+    this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
+    this.onUndoClicked = this.onUndoClicked.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false,
+      editor_valid: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  validateAndSend() {
+    var is_valid = true;
+    var re = new RegExp(this.props.column.editor_validate);
+    if (re.test(this.state.editor_value)) {
+      is_valid = true;
+    } else {
+      is_valid = false;
+      if (this.state.editor_value === null && this.props.column.editor_allow_null) {
+        is_valid = true;
+      }
+    }
+    this.setState({
+      editor_valid: is_valid
+    }, () => {
+      this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true);
+    });
+  }
+  onInputChange(e) {
+    this.setState({
+      editor_value: e.target.value,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to NULL.
+   *
+   * @method
+   * @listens CEditorFrame#cteditortonull
+   */
+
+  onResetClicked() {
+    this.setState({
+      editor_value: this.props.column.editor_default,
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to Default
+   *
+   * @method
+   * @listens CEditorFrame#cteditorreset
+   */
+
+  onNullClicked() {
+    this.setState({
+      editor_value: null,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to value at start editing.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorundo
+   */
+
+  onUndoClicked() {
+    this.setState({
+      editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Notifiaction for changes in some editor.
+   *
+   * @method
+   * @listens CTable#cteditorchanged
+   */
+
+  onOtherEditorChanged(e) {
+    if (e.detail.initiator == this.props.column.name) return;
+  }
+  render() {
+    var self = this;
+    return h("div", {
+      class: cls("control", self.state.editor_value === null ? "has-icons-left" : ""),
+      oncteditortonull: self.onNullClicked,
+      oncteditorreset: self.onResetClicked,
+      oncteditorundo: self.onUndoClicked,
+      oncteditorchanged: self.onOtherEditorChanged
+    }, h("input", {
+      class: cls("input", self.state.editor_valid ? "" : "is-danger"),
+      type: "date",
+      placeholder: self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder,
+      value: self.state.editor_value === null ? "" : self.state.editor_value,
+      onChange: self.onInputChange
+    }), self.state.editor_value === null ? h("span", {
+      class: "icon is-small is-left"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "hide_source")) : "");
+  }
+}
 /**
  * Table head class.
  *
@@ -262,6 +394,13 @@ class CPageTable extends Component {
         if (c.cell_actor == "CSelectCell") return h("td", {
           onClick: self.props.onRowClick
         }, h(CSelectCell, {
+          column: c,
+          value: r[c.name],
+          row: r
+        }));
+        if (c.cell_actor == "CDateCell") return h("td", {
+          onClick: self.props.onRowClick
+        }, h(CDateCell, {
           column: c,
           value: r[c.name],
           row: r
@@ -695,6 +834,12 @@ class CEditorFrame extends Component {
       add: self.props.add,
       batch: self.props.batch
     }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CLineEditor" ? h(CLineEditor, {
+      column: self.props.column,
+      onEditorChanges: self.onEditorChanges,
+      row: self.props.row,
+      add: self.props.add,
+      batch: self.props.batch
+    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CDateEditor" ? h(CDateEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,
