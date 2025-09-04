@@ -29,8 +29,8 @@
       "editor_actor": "CDateEditor",
       "editor_hint": "Enter reg date",
       "editor_placeholder": "",
-      "editor_default": "2000-01-01",
-      "editor_validate": "^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$",
+      "editor_default": "01.01.2000",
+      "editor_validate": "^[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]$",
       "editor_allow_null": false
     },
     {

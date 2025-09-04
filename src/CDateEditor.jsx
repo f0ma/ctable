@@ -32,16 +32,14 @@ class CDateEditor extends Component {
         var re = new RegExp("^[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]$");
         if (re.test(this.state.display_value) && this.isValidDate(this.state.editor_value)) {
             is_valid = true;
-            console.log(is_valid);
         } else {
             is_valid = false;
-            console.log(is_valid);
-            if (this.state.display_value === null && this.props.column.editor_allow_null){
+            if (this.state.editor_value === null && this.props.column.editor_allow_null){
                 is_valid = true;
             }
         }
 
-        this.setState({editor_valid: is_valid}, () => {this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true)});
+        this.setState({editor_valid: is_valid}, () => {this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, this.state.editor_valid)});
 
     }
 
