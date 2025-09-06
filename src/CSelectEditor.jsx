@@ -57,18 +57,18 @@ class CSelectEditor extends Component {
      * Request to set value to NULL.
      *
      * @method
-     * @listens CEditorFrame#cteditortonull
+     * @listens CEditorFrame#cteditorreset
      */
 
     onResetClicked(){
-        this.setState({editor_value: this.props.column.editor_default, editor_modified: false}, () => {this.validateAndSend()});
+        this.setState({editor_value: this.props.column.editor_default, editor_modified: true}, () => {this.validateAndSend()});
     }
 
     /**
      * Request to set value to Default
      *
      * @method
-     * @listens CEditorFrame#cteditorreset
+     * @listens CEditorFrame#cteditortonull
      */
 
     onNullClicked(){

@@ -79,7 +79,7 @@ class CDateEditor extends Component {
      * Request to set value to Default
      *
      * @method
-     * @listens CEditorFrame#cteditorreset
+     * @listens CEditorFrame#cteditortonull
      */
 
     onNullClicked(){

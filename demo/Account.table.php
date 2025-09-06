@@ -13,9 +13,9 @@ class Account {
 
     public function select($path, $filter=[], $order=[], $limit=100, $offset=0) {
 
-        $q = SQLYamlQuery::simple_select("account", ["id", "firstname", "lastname", "reg_date", "status", "image", "tags"]);
+        $q = SQLYamlQuery::simple_select("account", ["id", "firstname", "lastname", "reg_date", "status", "image", "tags", "files"]);
 
-        apply_filters($q, ["id", "firstname", "lastname", "reg_date", "status", "image", "tags"], $filter, $order, $limit, $offset);
+        apply_filters($q, ["id", "firstname", "lastname", "reg_date", "status", "image", "tags", "files"], $filter, $order, $limit, $offset);
 
         error_log(var_export($q->query, true));
 
@@ -26,7 +26,7 @@ class Account {
     }
 
     public function insert($path, $data) {
-        $q = SQLYamlQuery::simple_insert("account", ["firstname", "lastname", "reg_date", "status", "image", "tags"], $data);
+        $q = SQLYamlQuery::simple_insert("account", ["firstname", "lastname", "reg_date", "status", "image", "tags", "files"], $data);
         $q->execute($this->db);
     }
 
@@ -34,7 +34,7 @@ class Account {
         error_log(var_export($data, true));
 
 
-        $q = SQLYamlQuery::simple_update("account", ["id"], $keys, ["firstname", "lastname", "reg_date", "status", "image", "tags"], $data);
+        $q = SQLYamlQuery::simple_update("account", ["id"], $keys, ["firstname", "lastname", "reg_date", "status", "image", "tags", "files"], $data);
 
         error_log(var_export($q->query, true));
 
@@ -42,7 +42,7 @@ class Account {
     }
 
     public function duplicate($path, $keys) {
-        $q = SQLYamlQuery::simple_copy("account", ["id"], $keys, ["firstname", "lastname", "reg_date", "status", "image", "tags"]);
+        $q = SQLYamlQuery::simple_copy("account", ["id"], $keys, ["firstname", "lastname", "reg_date", "status", "image", "tags", "files"]);
         $q->execute($this->db);
     }
 
@@ -66,5 +66,14 @@ class Account {
         $rows = $q->execute($this->db);
 
         return ["rows" => $rows, "keys" => ["id"], "label" => "name"];
+    }
+
+    public function download($path, $keys, $column, $index){
+        $q = SQLYamlQuery::simple_select("account", ["files"], ['id'], $keys);
+        $rows = $q->execute($this->db);
+        $row = $rows[0];
+        $parts = explode(';', $row['files']);
+        $file_info = explode(':',$parts[$index]);
+        return ["file"=>$file_info[0], "size"=>$file_info[1], "name"=>$file_info[2]];
     }
 }

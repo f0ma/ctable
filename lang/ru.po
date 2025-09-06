@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ctable 3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-17 16:20+0300\n"
+"POT-Creation-Date: 2025-09-06 22:23+0300\n"
 "PO-Revision-Date: 2025-05-20 01:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -21,18 +21,18 @@ msgstr ""
 "X-Language: ru_RU\n"
 "X-Source-Language: C\n"
 
-#: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73 src/CFilterPanel.jsx:94
-#: src/CFilterPanel.jsx:139 src/CSortingPanel.jsx:73 src/CSortingPanel.jsx:90
+#: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73 src/CFilterPanel.jsx:116
+#: src/CFilterPanel.jsx:163 src/CSortingPanel.jsx:73 src/CSortingPanel.jsx:90
 msgid "Reset"
 msgstr "Сбросить"
 
-#: src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76 src/CFilterPanel.jsx:97
-#: src/CFilterPanel.jsx:142 src/CSortingPanel.jsx:76 src/CSortingPanel.jsx:93
+#: src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76 src/CFilterPanel.jsx:119
+#: src/CFilterPanel.jsx:166 src/CSortingPanel.jsx:76 src/CSortingPanel.jsx:93
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CFilterPanel.jsx:135
-#: src/CTable.jsx:87
+#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CFilterPanel.jsx:159
+#: src/CTable.jsx:90
 msgid "Add"
 msgstr "Добавить"
 
@@ -48,64 +48,114 @@ msgstr "Сохранить все"
 msgid "Cancel"
 msgstr "Отменить"
 
-#: src/CTable.jsx:79
+#: src/CFilesCell.jsx:11
+#, javascript-format
+msgid "%d Byte"
+msgid_plural "%d Bytes"
+msgstr[0] "%d Байт"
+msgstr[1] "%d Байта"
+msgstr[2] "%d Байтов"
+
+#: src/CFilesCell.jsx:13
+#, javascript-format
+msgid "%d KiB"
+msgid_plural "%d KiB"
+msgstr[0] "%d КБайт"
+msgstr[1] "%d КБайта"
+msgstr[2] "%d КБайтов"
+
+#: src/CFilesCell.jsx:15
+#, javascript-format
+msgid "%d MiB"
+msgid_plural "%d MiB"
+msgstr[0] "%d МБайт"
+msgstr[1] "%d МБайта"
+msgstr[2] "%d МБайтов"
+
+#: src/CFilesCell.jsx:17
+#, javascript-format
+msgid "%d GiB"
+msgid_plural "%d GiB"
+msgstr[0] "%d ГБайт"
+msgstr[1] "%d ГБайта"
+msgstr[2] "%d ГБайтов"
+
+#: src/CFilesEditor.jsx:82
+#, javascript-format
+msgid "File \"%s\" is too large for upload"
+msgstr "Файл \"%s\" слишком велик для загрузки"
+
+#: src/CFilesEditor.jsx:89
+#, javascript-format
+msgid "File \"%s\" extention has not allowed"
+msgstr "Файл \"%s\" имеет расширение не разрешенное для загрузки"
+
+#: src/CFilesEditor.jsx:123
+msgid "Remove uploaded file?"
+msgstr "Удалить загруженный файл?"
+
+#: src/CFilesEditor.jsx:223
+msgid "Upload..."
+msgstr "Загрузить..."
+
+#: src/CTable.jsx:82
 msgid "Go back"
 msgstr "Выйти"
 
-#: src/CTable.jsx:81 src/CTable.jsx:82 src/CTable.jsx:83 src/CTable.jsx:84
-#: src/CTable.jsx:85
+#: src/CTable.jsx:84 src/CTable.jsx:85 src/CTable.jsx:86 src/CTable.jsx:87
+#: src/CTable.jsx:88
 msgid "Enter"
 msgstr "Войти"
 
-#: src/CTable.jsx:88
+#: src/CTable.jsx:91
 msgid "Edit"
 msgstr "Правка"
 
-#: src/CTable.jsx:89
+#: src/CTable.jsx:92
 msgid "Duplicate"
 msgstr "Создать копию"
 
-#: src/CTable.jsx:90
+#: src/CTable.jsx:93
 msgid "Delete"
 msgstr "Удалить"
 
-#: src/CTable.jsx:92
+#: src/CTable.jsx:95
 msgid "Reload"
 msgstr "Перезагрузить"
 
-#: src/CTable.jsx:94
+#: src/CTable.jsx:97
 msgid "Filter"
 msgstr "Фильтр"
 
-#: src/CTable.jsx:95
+#: src/CTable.jsx:98
 msgid "Sorting"
 msgstr "Сортировка"
 
-#: src/CTable.jsx:96
+#: src/CTable.jsx:99
 msgid "Columns"
 msgstr "Столбцы"
 
-#: src/CTable.jsx:98
+#: src/CTable.jsx:101
 msgid "Select all"
 msgstr "Выбрать все"
 
-#: src/CTable.jsx:99
+#: src/CTable.jsx:102
 msgid "Clear all"
 msgstr "Очистить все"
 
-#: src/CTable.jsx:101
+#: src/CTable.jsx:104
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: src/CTable.jsx:102
+#: src/CTable.jsx:105
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: src/CTable.jsx:103
+#: src/CTable.jsx:106
 msgid "Reset Zoom"
 msgstr "Сбросить масштаб"
 
-#: src/CTable.jsx:377
+#: src/CTable.jsx:395
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
@@ -113,7 +163,7 @@ msgstr[0] "Создать копию %d записи?"
 msgstr[1] "Создать копию %d записей?"
 msgstr[2] "Создать копию %d записей?"
 
-#: src/CTable.jsx:386
+#: src/CTable.jsx:404
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
@@ -121,7 +171,7 @@ msgstr[0] "Удалить %d запись?"
 msgstr[1] "Удалить %d записи?"
 msgstr[2] "Удалить %d записей?"
 
-#: src/CTable.jsx:529
+#: src/CTable.jsx:552
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"
@@ -129,11 +179,11 @@ msgstr[0] "Обновить %d запись?"
 msgstr[1] "Обновить %d записи?"
 msgstr[2] "Обновить %d записей?"
 
-#: src/CTable.jsx:639
+#: src/CTable.jsx:677
 msgid "Yes"
 msgstr "Да"
 
-#: src/CTable.jsx:640
+#: src/CTable.jsx:678
 msgid "No"
 msgstr "Нет"
 

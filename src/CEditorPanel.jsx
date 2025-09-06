@@ -31,7 +31,7 @@ class CEditorPanel extends Component {
             </div>
 
             {self.props.columns.filter(x => x.editor_actor).map(x => {
-                  return <CEditorFrame column={x} onEditorChanges={self.props.onEditorChanges} row={self.props.affectedRows.length == 0 ? null : self.props.affectedRows[0]} add={self.props.affectedRows.length == 0} batch={self.props.affectedRows.length > 1}/>;
+                  return <CEditorFrame column={x} onEditorChanges={self.props.onEditorChanges} table={self.props.table} row={self.props.affectedRows.length == 0 ? null : self.props.affectedRows[0]} add={self.props.affectedRows.length == 0} batch={self.props.affectedRows.length > 1}/>;
             })}
 
             <div class="field has-text-right mt-5">

@@ -88,6 +88,22 @@
       "editor_actor": "CLineEditor",
       "editor_default": "",
       "editor_allow_null": true
+    },
+    {
+      "name": "files",
+      "label": "Files",
+      "is_key": false,
+      "width": 6,
+      "enabled": true,
+      "cell_actor": "CFilesCell",
+      "editor_actor": "CFilesEditor",
+      "editor_default": null,
+      "editor_allow_null": true,
+      "editor_min_upload_count": 1,
+      "editor_max_upload_count": 4,
+      "editor_allowed_ext": [".pdf", ".docx", ".svg"],
+      "editor_max_upload_size": 1000000,
+      "editor_hint": "Allowed .pdf, .docx and .svg files"
     }
   ],
   "subtables": [

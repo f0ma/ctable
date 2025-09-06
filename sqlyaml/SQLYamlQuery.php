@@ -68,7 +68,7 @@ class SQLYamlQuery {
         return new SQLYamlQuery($d, $codec = $codec);
     }
 
-    static function simple_select($table, $columns, $codec = YamlCodecSpyc::class){
+    static function simple_select($table, $columns, $keys_should=[], $keys=[], $codec = YamlCodecSpyc::class){
         $query = <<<EOF
         ---
         select:
@@ -79,6 +79,12 @@ class SQLYamlQuery {
         $d = $codec::from_yaml($query);
         $d['select']['columns'] = $columns;
         $d['select']['from'] = [$table];
+
+        foreach($keys_should as $k){
+            if(!array_key_exists($k, $keys)) throw new Exception("Insuffitient key ".$k);
+            $d['select']['where'][]= ['eq'=>[$k,['const' => $keys[$k]]]];
+        }
+
         return new SQLYamlQuery($d, $codec = $codec);
     }
 

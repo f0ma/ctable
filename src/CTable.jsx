@@ -1,12 +1,4 @@
 /**
- * @typedef {Function} CTable#OnEditorChanges
- * @param {string} colname
- * @param {bool} is_modified
- * @param {*} value
- * @param {bool} valid
- */
-
-/**
  * @typedef {Object} CTable#EditorChange
  * @property {bool} is_modified
  * @property {*} value
@@ -65,6 +57,8 @@ class CTable extends Component {
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onCloseFilter = this.onCloseFilter.bind(this);
 
+    this.onDownloadFile = this.onDownloadFile.bind(this);
+    this.onUploadFile = this.onUploadFile.bind(this);
 
 
     this.setState({
@@ -424,6 +418,13 @@ class CTable extends Component {
     return keys_values;
   }
 
+  getKeysFromRow(row){
+    var keys = this.state.table_columns.filter((x) => x.is_key).map((x) => x.name);
+    var res = {};
+    keys.forEach((k) => { res[k] = row[k]; });
+    return res;
+  }
+
   headerXScroll(e){
     document.querySelector(".ctable-scroll-main-table").scrollLeft = e.target.scrollLeft;
   }
@@ -553,6 +554,14 @@ class CTable extends Component {
     this.setState({sorting_panel_show: false, columns_panel_show: false, editor_show: false});
   }
 
+  /**
+   * Show error for user
+   *
+   * @arg e {Object} Error object
+   * @arg e.code {Integer} Error code
+   * @arg e.message {String} Error text message
+   */
+
   showError(e){
     alert(String(e.code) + ": " + e.message);
   }
@@ -560,6 +569,15 @@ class CTable extends Component {
   onCancelClick(){
     this.setState({editor_show: false, editor_changes: [], editor_operation: ''});
   }
+
+  /**
+   * Callback for very changes in editor
+   *
+   * @arg colname {string} Column name
+   * @arg is_modified {bool} Is modified
+   * @arg value {*} Column value
+   * @arg valid {bool} Is vaid
+   */
 
   onEditorChanges(colname, is_modified, value, valid){
       this.state.editor_changes[colname] = {is_modified: is_modified, value: value, valid: valid};
@@ -620,6 +638,13 @@ class CTable extends Component {
     this.setState({panel1_menu_active: !this.state.panel1_menu_active});
   }
 
+  /**
+   * Callback for ask a question to user
+   *
+   * @arg question {string} Question text
+   * @return {Promise} Promise which resolve if user select Yes and reject in No
+   */
+
   askUser(question){
     return new Promise((resolve, reject) => {
       this.setState({ask_dialog_text: question, ask_dialog_active: true, ask_dialog_promise_resolve: resolve, ask_dialog_promise_reject: reject});
@@ -635,6 +660,38 @@ class CTable extends Component {
   userResolveNo(){
     this.setState({ask_dialog_active: false});
     this.state.ask_dialog_promise_reject();
+  }
+
+  /**
+   * Callback for downloading file
+   *
+   * @arg row {Object} Current row
+   * @arg column {Object} Current column
+   * @arg index {Integer} Index of downloading file in column
+   */
+
+  onDownloadFile(row, column, index){
+    this.props.server.CTableServer.download(this.full_table_path(), this.getKeysFromRow(row), column, index);
+  }
+
+  /**
+   * Callback for uploading file
+   *
+   * @arg row {Object} Current row
+   * @arg column {Object} Current column
+   * @arg index {Integer} Index of uploading file. -1 for appending
+   * @arg files {Object} File-input control files field
+   * @return {Promise} Promise which resolve when file succsessfuly uploaded. Argument is file description string
+   */
+
+  onUploadFile(row, column, index, files){
+    var self = this;
+    self.setState({progress: true});
+    var prm = this.props.server.upload(files);
+    prm.then(x => {
+      self.setState({progress: false});
+    });
+    return prm;
   }
 
 
@@ -774,8 +831,8 @@ class CTable extends Component {
       <CHeaderTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} view_filtering={self.state.view_filtering} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
     </div>
   </section>
-  <CPageTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show }/>
-  {self.state.editor_show ? <CEditorPanel width={self.state.width} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
+  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show }/>
+  {self.state.editor_show ? <CEditorPanel width={self.state.width} table={self} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
   {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
   {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
   {self.state.filtering_panel_show ? <CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}

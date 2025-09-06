@@ -124,7 +124,7 @@ class CTableServer extends JsonRPCHandler {
     public function tables() {
         $result = [];
         foreach($this->table_configs as $k => $v){
-            $result[]=["name"=>$v["name"], "label"=>$v["label"], "width" => $v["width"], "default_sorting" => $v["default_sorting"], "default_filtering" => $v["default_filtering"], $v["is_default"]];
+            $result[]=["name"=>$v["name"], "label"=>$v["label"], "width" => $v["width"], "default_sorting" => $v["default_sorting"], "default_filtering" => $v["default_filtering"], "is_default" => $v["is_default"]];
         }
         return $result;
     }
@@ -179,8 +179,6 @@ class CTableServer extends JsonRPCHandler {
         foreach ($keys as $k){
             $qhandler->duplicate($path, $k);
         }
-
-
     }
 
     public function delete($path, $keys) {
@@ -201,4 +199,15 @@ class CTableServer extends JsonRPCHandler {
 
         return $qhandler->options($path, $filter, $limit);
     }
+
+
+    public function download($path, $keys, $column, $index) {
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        return $qhandler->download($path, $keys, $column, $index);
+
+    }
+
 }
