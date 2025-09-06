@@ -13,6 +13,7 @@
 /**
  * Editor frame class.
  *
+ * @arg this.props.table {Object} Link to CTable instance
  * @arg this.props.column {Object} Table column.
  * @arg this.props.column.name {string} Column name
  * @arg this.props.column.label {string} Column label
@@ -106,6 +107,7 @@ class CEditorFrame extends Component {
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CSelectEditor" ? <CSelectEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CLineEditor" ? <CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CDateEditor" ? <CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
+        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CFilesEditor" ? <CFilesEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch} onDownloadFile={self.props.table.onDownloadFile} onUploadFile={self.props.table.onUploadFile} askUser={self.props.table.askUser} showError={self.props.table.showError}/> : "" }
 
         {self.props.column.editor_hint ? <p class="help">{self.props.column.editor_hint}</p> : <p class="help mt-4">{self.props.column.editor_hint}</p>}
         </div>

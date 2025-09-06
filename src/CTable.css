@@ -61,8 +61,7 @@
 .ctable-main-table td {
     border: 1px solid;
     border-color:var(--bulma-body-color);
-    padding-left:0.2em;
-    padding-right:0.2em;
+    padding:0.2em;
 }
 
 .ctable-main-table td div {

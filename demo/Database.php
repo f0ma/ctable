@@ -30,3 +30,6 @@ function connect_to_database() {
 
 }
 
+function client_config() {
+    return ["token"=>"server-key-update-in-production", "uploads_directory"=>"uploads"];
+}

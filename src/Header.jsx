@@ -110,7 +110,7 @@ function unwind_button_or_link(e){
 function unwind_tr(e){
     var tg = e.target;
     if(tg.tagName != "TR"){
-        tg = tg.parentElement;
+        tg = unwind_tr({target:tg.parentElement});
     }
     return tg;
 }
@@ -119,7 +119,7 @@ function unwind_tr(e){
 function unwind_th(e){
     var tg = e.target;
     if(tg.tagName != "TH"){
-        tg = tg.parentElement;
+        tg = unwind_tr({target:tg.parentElement});
     }
     return tg;
 }

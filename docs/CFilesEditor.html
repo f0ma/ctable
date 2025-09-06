@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: CEditorFrame</title>
+    <title>JSDoc: Class: CFilesEditor</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: CEditorFrame</h1>
+    <h1 class="page-title">Class: CFilesEditor</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>CEditorFrame<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>CFilesEditor<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Editor frame class.</div>
+            <div class="class-description">File upload editor class.</div>
         
     
 </header>
@@ -45,7 +45,7 @@
     
 
     
-    <h4 class="name" id="CEditorFrame"><span class="type-signature"></span>new CEditorFrame<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="CFilesEditor"><span class="type-signature"></span>new CFilesEditor<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -81,29 +81,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>this.props.table</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Link to CTable instance</td>
-        </tr>
-
     
 
         <tr>
@@ -173,75 +150,6 @@
 
         <tr>
             
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Column label</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>editor_hint</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Editor hint</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>editor_allow_null</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Allow null</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>editor_default</code></td>
             
 
@@ -262,23 +170,39 @@
         </tr>
 
     
-    </tbody>
-</table>
 
+        <tr>
+            
+                <td class="name"><code>editor_min_upload_count</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
             </td>
+
+            
+
+            
+
+            <td class="description last">Minimum files count</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>this.props.onEditorChanges</code></td>
+                <td class="name"><code>editor_max_upload_count</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -288,7 +212,60 @@
 
             
 
-            <td class="description last">Editor changes callback.</td>
+            <td class="description last">Maximum files count</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>editor_max_upload_size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Maximum upload size</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>editor_allowed_ext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">List of allowed extention</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -361,6 +338,121 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>this.props.onEditorChanges</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CTable.html#onEditorChanges">CTable#onEditorChanges</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Editor changes callback.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.props.onDownloadFile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CTable.html#onDownloadFile">CTable#onDownloadFile</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Download file callback.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.props.onUploadFile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CTable.html#onUploadFile">CTable#onUploadFile</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Upload file callback.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.props.askUser</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CTable.html#askUser">CTable#askUser</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Ask user callback.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.props.showError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="CTable.html#showError">CTable#showError</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Show error callback.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -398,7 +490,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="CEditorFrame.jsx.html">CEditorFrame.jsx</a>, <a href="CEditorFrame.jsx.html#line35">line 35</a>
+        <a href="CFilesEditor.jsx.html">CFilesEditor.jsx</a>, <a href="CFilesEditor.jsx.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -412,15 +504,6 @@
 
 
 
-
-<h5>Fires:</h5>
-<ul>
-    <li><a href="CEditorFrame.html#event:cteditorreset">CEditorFrame#event:cteditorreset</a></li>
-
-    <li><a href="CEditorFrame.html#event:cteditortonull">CEditorFrame#event:cteditortonull</a></li>
-
-    <li><a href="CEditorFrame.html#event:cteditorundo">CEditorFrame#event:cteditorundo</a></li>
-</ul>
 
 
 
@@ -455,11 +538,7 @@
     
 
     
-
-    
-
-    
-        <h3 class="subsection-title">Events</h3>
+        <h3 class="subsection-title">Methods</h3>
 
         
             
@@ -467,12 +546,16 @@
     
 
     
-    <h4 class="name" id="event:cteditorreset">cteditorreset</h4>
+    <h4 class="name" id="onNullClicked"><span class="type-signature"></span>onNullClicked<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    Request to set value to NULL.
+</div>
 
 
 
@@ -515,7 +598,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="CEditorFrame.jsx.html">CEditorFrame.jsx</a>, <a href="CEditorFrame.jsx.html#line1">line 1</a>
+        <a href="CFilesEditor.jsx.html">CFilesEditor.jsx</a>, <a href="CFilesEditor.jsx.html#line149">line 149</a>
     </li></ul></dd>
     
 
@@ -532,18 +615,12 @@
 
 
 
-
-
-<h5>Listeners of This Event:</h5>
+<h5>Listens to Events:</h5>
 <ul>
-    <li><a href="CDateEditor.html#onResetClicked">CDateEditor#onResetClicked</a></li>
-
-    <li><a href="CFilesEditor.html#onResetClicked">CFilesEditor#onResetClicked</a></li>
-
-    <li><a href="CLineEditor.html#onResetClicked">CLineEditor#onResetClicked</a></li>
-
-    <li><a href="CSelectEditor.html#onResetClicked">CSelectEditor#onResetClicked</a></li>
+    <li><a href="CEditorFrame.html#event:cteditortonull">CEditorFrame#event:cteditortonull</a></li>
 </ul>
+
+
 
 
 
@@ -562,12 +639,16 @@
     
 
     
-    <h4 class="name" id="event:cteditortonull">cteditortonull</h4>
+    <h4 class="name" id="onOtherEditorChanged"><span class="type-signature"></span>onOtherEditorChanged<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    Notifiaction for changes in some editor.
+</div>
 
 
 
@@ -610,7 +691,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="CEditorFrame.jsx.html">CEditorFrame.jsx</a>, <a href="CEditorFrame.jsx.html#line5">line 5</a>
+        <a href="CFilesEditor.jsx.html">CFilesEditor.jsx</a>, <a href="CFilesEditor.jsx.html#line171">line 171</a>
     </li></ul></dd>
     
 
@@ -627,18 +708,12 @@
 
 
 
-
-
-<h5>Listeners of This Event:</h5>
+<h5>Listens to Events:</h5>
 <ul>
-    <li><a href="CDateEditor.html#onNullClicked">CDateEditor#onNullClicked</a></li>
-
-    <li><a href="CFilesEditor.html#onNullClicked">CFilesEditor#onNullClicked</a></li>
-
-    <li><a href="CLineEditor.html#onNullClicked">CLineEditor#onNullClicked</a></li>
-
-    <li><a href="CSelectEditor.html#onNullClicked">CSelectEditor#onNullClicked</a></li>
+    <li><a href="CTable.html#event:cteditorchanged">CTable#event:cteditorchanged</a></li>
 </ul>
+
+
 
 
 
@@ -657,12 +732,16 @@
     
 
     
-    <h4 class="name" id="event:cteditorundo">cteditorundo</h4>
+    <h4 class="name" id="onResetClicked"><span class="type-signature"></span>onResetClicked<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    Request to set value to Default
+</div>
 
 
 
@@ -705,7 +784,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="CEditorFrame.jsx.html">CEditorFrame.jsx</a>, <a href="CEditorFrame.jsx.html#line9">line 9</a>
+        <a href="CFilesEditor.jsx.html">CFilesEditor.jsx</a>, <a href="CFilesEditor.jsx.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -722,17 +801,9 @@
 
 
 
-
-
-<h5>Listeners of This Event:</h5>
+<h5>Listens to Events:</h5>
 <ul>
-    <li><a href="CDateEditor.html#onUndoClicked">CDateEditor#onUndoClicked</a></li>
-
-    <li><a href="CFilesEditor.html#onUndoClicked">CFilesEditor#onUndoClicked</a></li>
-
-    <li><a href="CLineEditor.html#onUndoClicked">CLineEditor#onUndoClicked</a></li>
-
-    <li><a href="CSelectEditor.html#onUndoClicked">CSelectEditor#onUndoClicked</a></li>
+    <li><a href="CEditorFrame.html#event:cteditorreset">CEditorFrame#event:cteditorreset</a></li>
 </ul>
 
 
@@ -746,7 +817,106 @@
 
 
 
+
+
         
+            
+
+    
+
+    
+    <h4 class="name" id="onUndoClicked"><span class="type-signature"></span>onUndoClicked<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Request to set value to value at start editing.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="CFilesEditor.jsx.html">CFilesEditor.jsx</a>, <a href="CFilesEditor.jsx.html#line160">line 160</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+<h5>Listens to Events:</h5>
+<ul>
+    <li><a href="CEditorFrame.html#event:cteditorundo">CEditorFrame#event:cteditorundo</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
     
 </article>
 
