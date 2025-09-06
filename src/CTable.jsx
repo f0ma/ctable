@@ -516,7 +516,7 @@ class CTable extends Component {
 
 
   onSaveClick(){
-    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true && this.state.editor_changes[x].valid == false).length > 0){
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0){
       return; //Has invalid fields
     }
 
