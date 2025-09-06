@@ -236,13 +236,13 @@ class CDateEditor extends Component {
    * Request to set value to NULL.
    *
    * @method
-   * @listens CEditorFrame#cteditortonull
+   * @listens CEditorFrame#cteditorreset
    */
 
   onResetClicked() {
     this.setState({
       editor_value: this.props.column.editor_default,
-      editor_modified: false
+      editor_modified: true
     }, () => {
       this.validateAndSend();
     });
@@ -252,7 +252,7 @@ class CDateEditor extends Component {
    * Request to set value to Default
    *
    * @method
-   * @listens CEditorFrame#cteditorreset
+   * @listens CEditorFrame#cteditortonull
    */
 
   onNullClicked() {
@@ -532,13 +532,13 @@ class CSelectEditor extends Component {
    * Request to set value to NULL.
    *
    * @method
-   * @listens CEditorFrame#cteditortonull
+   * @listens CEditorFrame#cteditorreset
    */
 
   onResetClicked() {
     this.setState({
       editor_value: this.props.column.editor_default,
-      editor_modified: false
+      editor_modified: true
     }, () => {
       this.validateAndSend();
     });
@@ -548,7 +548,7 @@ class CSelectEditor extends Component {
    * Request to set value to Default
    *
    * @method
-   * @listens CEditorFrame#cteditorreset
+   * @listens CEditorFrame#cteditortonull
    */
 
   onNullClicked() {
@@ -687,13 +687,13 @@ class CLineEditor extends Component {
    * Request to set value to NULL.
    *
    * @method
-   * @listens CEditorFrame#cteditortonull
+   * @listens CEditorFrame#cteditorreset
    */
 
   onResetClicked() {
     this.setState({
       editor_value: this.props.column.editor_default,
-      editor_modified: false
+      editor_modified: true
     }, () => {
       this.validateAndSend();
     });
@@ -703,7 +703,7 @@ class CLineEditor extends Component {
    * Request to set value to Default
    *
    * @method
-   * @listens CEditorFrame#cteditorreset
+   * @listens CEditorFrame#cteditortonull
    */
 
   onNullClicked() {
@@ -776,7 +776,7 @@ class CLineEditor extends Component {
  * @arg this.props.row {Object} Row to edit, null if add, first if batch.
  * @arg this.props.add {bool} Is adding.
  * @arg this.props.batch {bool} Is batch editing.
- * @arg this.props.onEditorChanges {CTable#OnEditorChanges} Editor changes callback.
+ * @arg this.props.onEditorChanges {CTable#onEditorChanges} Editor changes callback.
  * @arg this.props.onDownloadFile {CTable#onDownloadFile} Download file callback.
  * @arg this.props.onUploadFile{CTable#onUploadFile} Upload file callback.
  * @arg this.props.askUser{CTable#askUser} Ask user callback.
@@ -1727,14 +1727,6 @@ class CFilterPanel extends Component {
   }
 }
 /**
- * @typedef {Function} CTable#OnEditorChanges
- * @param {string} colname
- * @param {bool} is_modified
- * @param {*} value
- * @param {bool} valid
- */
-
-/**
  * @typedef {Object} CTable#EditorChange
  * @property {bool} is_modified
  * @property {*} value
@@ -2385,7 +2377,7 @@ class CTable extends Component {
     this.loadTable(tbl.name, null);
   }
   onSaveClick() {
-    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true && this.state.editor_changes[x].valid == false).length > 0) {
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0) {
       return; //Has invalid fields
     }
     if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true).length == 0) {
@@ -2459,6 +2451,15 @@ class CTable extends Component {
       editor_show: false
     });
   }
+
+  /**
+   * Show error for user
+   *
+   * @arg e {Object} Error object
+   * @arg e.code {Integer} Error code
+   * @arg e.message {String} Error text message
+   */
+
   showError(e) {
     alert(String(e.code) + ": " + e.message);
   }
@@ -2469,6 +2470,16 @@ class CTable extends Component {
       editor_operation: ''
     });
   }
+
+  /**
+   * Callback for very changes in editor
+   *
+   * @arg colname {string} Column name
+   * @arg is_modified {bool} Is modified
+   * @arg value {*} Column value
+   * @arg valid {bool} Is vaid
+   */
+
   onEditorChanges(colname, is_modified, value, valid) {
     this.state.editor_changes[colname] = {
       is_modified: is_modified,
@@ -2532,6 +2543,14 @@ class CTable extends Component {
       panel1_menu_active: !this.state.panel1_menu_active
     });
   }
+
+  /**
+   * Callback for ask a question to user
+   *
+   * @arg question {string} Question text
+   * @return {Promise} Promise which resolve if user select Yes and reject in No
+   */
+
   askUser(question) {
     return new Promise((resolve, reject) => {
       this.setState({
@@ -2554,9 +2573,29 @@ class CTable extends Component {
     });
     this.state.ask_dialog_promise_reject();
   }
+
+  /**
+   * Callback for downloading file
+   *
+   * @arg row {Object} Current row
+   * @arg column {Object} Current column
+   * @arg index {Integer} Index of downloading file in column
+   */
+
   onDownloadFile(row, column, index) {
     this.props.server.CTableServer.download(this.full_table_path(), this.getKeysFromRow(row), column, index);
   }
+
+  /**
+   * Callback for uploading file
+   *
+   * @arg row {Object} Current row
+   * @arg column {Object} Current column
+   * @arg index {Integer} Index of uploading file. -1 for appending
+   * @arg files {Object} File-input control files field
+   * @return {Promise} Promise which resolve when file succsessfuly uploaded. Argument is file description string
+   */
+
   onUploadFile(row, column, index, files) {
     var self = this;
     self.setState({
