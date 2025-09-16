@@ -27,14 +27,6 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @typedef {Function} CTable#OnEditorChanges
- * @param {string} colname
- * @param {bool} is_modified
- * @param {*} value
- * @param {bool} valid
- */
-
-/**
  * @typedef {Object} CTable#EditorChange
  * @property {bool} is_modified
  * @property {*} value
@@ -93,6 +85,8 @@ class CTable extends Component {
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onCloseFilter = this.onCloseFilter.bind(this);
 
+    this.onDownloadFile = this.onDownloadFile.bind(this);
+    this.onUploadFile = this.onUploadFile.bind(this);
 
 
     this.setState({
@@ -452,6 +446,13 @@ class CTable extends Component {
     return keys_values;
   }
 
+  getKeysFromRow(row){
+    var keys = this.state.table_columns.filter((x) => x.is_key).map((x) => x.name);
+    var res = {};
+    keys.forEach((k) => { res[k] = row[k]; });
+    return res;
+  }
+
   headerXScroll(e){
     document.querySelector(".ctable-scroll-main-table").scrollLeft = e.target.scrollLeft;
   }
@@ -543,7 +544,7 @@ class CTable extends Component {
 
 
   onSaveClick(){
-    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true &amp;&amp; this.state.editor_changes[x].valid == false).length > 0){
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0){
       return; //Has invalid fields
     }
 
@@ -581,6 +582,14 @@ class CTable extends Component {
     this.setState({sorting_panel_show: false, columns_panel_show: false, editor_show: false});
   }
 
+  /**
+   * Show error for user
+   *
+   * @arg e {Object} Error object
+   * @arg e.code {Integer} Error code
+   * @arg e.message {String} Error text message
+   */
+
   showError(e){
     alert(String(e.code) + ": " + e.message);
   }
@@ -588,6 +597,15 @@ class CTable extends Component {
   onCancelClick(){
     this.setState({editor_show: false, editor_changes: [], editor_operation: ''});
   }
+
+  /**
+   * Callback for very changes in editor
+   *
+   * @arg colname {string} Column name
+   * @arg is_modified {bool} Is modified
+   * @arg value {*} Column value
+   * @arg valid {bool} Is vaid
+   */
 
   onEditorChanges(colname, is_modified, value, valid){
       this.state.editor_changes[colname] = {is_modified: is_modified, value: value, valid: valid};
@@ -648,6 +666,13 @@ class CTable extends Component {
     this.setState({panel1_menu_active: !this.state.panel1_menu_active});
   }
 
+  /**
+   * Callback for ask a question to user
+   *
+   * @arg question {string} Question text
+   * @return {Promise} Promise which resolve if user select Yes and reject in No
+   */
+
   askUser(question){
     return new Promise((resolve, reject) => {
       this.setState({ask_dialog_text: question, ask_dialog_active: true, ask_dialog_promise_resolve: resolve, ask_dialog_promise_reject: reject});
@@ -663,6 +688,38 @@ class CTable extends Component {
   userResolveNo(){
     this.setState({ask_dialog_active: false});
     this.state.ask_dialog_promise_reject();
+  }
+
+  /**
+   * Callback for downloading file
+   *
+   * @arg row {Object} Current row
+   * @arg column {Object} Current column
+   * @arg index {Integer} Index of downloading file in column
+   */
+
+  onDownloadFile(row, column, index){
+    this.props.server.CTableServer.download(this.full_table_path(), this.getKeysFromRow(row), column, index);
+  }
+
+  /**
+   * Callback for uploading file
+   *
+   * @arg row {Object} Current row
+   * @arg column {Object} Current column
+   * @arg index {Integer} Index of uploading file. -1 for appending
+   * @arg files {Object} File-input control files field
+   * @return {Promise} Promise which resolve when file succsessfuly uploaded. Argument is file description string
+   */
+
+  onUploadFile(row, column, index, files){
+    var self = this;
+    self.setState({progress: true});
+    var prm = this.props.server.upload(files);
+    prm.then(x => {
+      self.setState({progress: false});
+    });
+    return prm;
   }
 
 
@@ -802,8 +859,8 @@ class CTable extends Component {
       &lt;CHeaderTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} view_filtering={self.state.view_filtering} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
     &lt;/div>
   &lt;/section>
-  &lt;CPageTable width={self.state.width} fontSize={self.state.fontSize} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show }/>
-  {self.state.editor_show ? &lt;CEditorPanel width={self.state.width} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
+  &lt;CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show }/>
+  {self.state.editor_show ? &lt;CEditorPanel width={self.state.width} table={self} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
   {self.state.columns_panel_show ? &lt;CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
   {self.state.sorting_panel_show ? &lt;CSortingPanel width={self.state.width} table={self} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
   {self.state.filtering_panel_show ? &lt;CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}
@@ -824,13 +881,13 @@ class CTable extends Component {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilesEditor.html">CFilesEditor</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Sep 02 2025 11:52:12 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Sep 16 2025 17:07:39 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

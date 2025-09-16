@@ -214,3 +214,19 @@ tr.ctable-selected-row{
     margin-bottom: 0em !important;
     background-color: var(--bulma-skeleton-background);
 }
+
+.my-tag {
+display: inline-flex;
+align-items: center;
+gap: 0.375rem;
+padding: 0.375rem 0.75rem;
+background-color: #f5f5f5;
+color: #363636;
+border-radius: 10px;
+font-size: 0.875rem;
+font-weight: 500;
+line-height: 1;
+height: 2em;
+white-space: nowrap;
+transition: all 0.2s ease;
+}

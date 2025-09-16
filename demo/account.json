@@ -84,7 +84,10 @@
       "is_key": false,
       "width": 6,
       "enabled": true,
-      "cell_actor": "CPlainTextCell",
+      "cell_actor": "CTagsCell",
+      "singl_tag": false,
+      "max_length": 12,
+      "tag_class": "my-tag-success",
       "editor_actor": "CLineEditor",
       "editor_default": "",
       "editor_allow_null": true
