@@ -113,38 +113,380 @@ function unwind_th(e) {
 function deep_copy(x) {
   return JSON.parse(JSON.stringify(x));
 }
+class CBoolCell extends Component {
+  render() {
+    return h(Fragment, null, this.props.value === null ? h("span", {
+      class: "has-text-grey"
+    }, "NULL") : this.props.value ? _("Yes") : _("No"));
+  }
+}
+class CMultilineTextCell extends Component {
+  render() {
+    var self = this;
+    return h(Fragment, null, self.props.value === null ? h("span", {
+      class: "has-text-grey"
+    }, "NULL") : h("span", {
+      title: self.props.value.length <= self.props.column.max_length ? "" : String(self.props.value)
+    }, self.props.value.slice(0, self.props.column.max_length) + (self.props.value.length > self.props.column.max_length ? "..." : "")));
+  }
+}
+class CMultilineTextEditor extends Component {
+  constructor() {
+    super();
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onResetClicked = this.onResetClicked.bind(this);
+    this.onNullClicked = this.onNullClicked.bind(this);
+    this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
+    this.onUndoClicked = this.onUndoClicked.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false,
+      editor_valid: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  validateAndSend() {
+    if (this.props.column.editor_validate) {
+      var re = new RegExp(this.props.column.editor_validate);
+      if (re.test(this.state.editor_value)) {
+        this.setState({
+          editor_valid: true
+        }, () => {
+          this.sendChanges();
+        });
+      } else {
+        this.setState({
+          editor_valid: false
+        }, () => {
+          this.sendChanges();
+        });
+      }
+    } else {
+      this.setState({
+        editor_valid: true
+      }, () => {
+        this.sendChanges();
+      });
+    }
+  }
+  sendChanges() {
+    this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, this.state.editor_valid);
+  }
+  onInputChange(e) {
+    this.setState({
+      editor_value: e.target.value,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to NULL.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorreset
+   */
+
+  onResetClicked() {
+    this.setState({
+      editor_value: this.props.column.editor_default,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to Default
+   *
+   * @method
+   * @listens CEditorFrame#cteditortonull
+   */
+
+  onNullClicked() {
+    this.setState({
+      editor_value: null,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to value at start editing.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorundo
+   */
+
+  onUndoClicked() {
+    this.setState({
+      editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Notifiaction for changes in some editor.
+   *
+   * @method
+   * @listens CTable#cteditorchanged
+   */
+
+  onOtherEditorChanged(e) {
+    if (e.detail.initiator == this.props.column.name) return;
+  }
+  onFastTextInput(val) {
+    this.state.editor_value = this.state.editor_value + this.props.column.hint_sep + val;
+    this.setState({
+      editor_value: this.state.editor_value,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  _renderToolbar() {
+    var self = this;
+    var buttons = self.props.column.hints;
+    return h("div", {
+      class: "field mb-2"
+    }, h("div", {
+      class: "control"
+    }, h("div", {
+      class: "buttons are-small is-flex is-flex-wrap-wrap"
+    }, buttons.map(([label, val]) => h("button", {
+      type: "button",
+      class: "button is-light is-small mb-2 mr-2",
+      onClick: () => this.onFastTextInput(val),
+      title: `Вставить: ${label}`
+    }, label)))));
+  }
+  render() {
+    var self = this;
+    return h("div", {
+      class: cls("control", self.state.editor_value === null ? "has-icons-left" : ""),
+      oncteditortonull: self.onNullClicked,
+      oncteditorreset: self.onResetClicked,
+      oncteditorundo: self.onUndoClicked,
+      oncteditorchanged: self.onOtherEditorChanged
+    }, console.log(document.activeElement), self._renderToolbar(), h("textarea", {
+      class: cls("textarea", self.state.editor_valid ? "" : "is-danger"),
+      placeholder: self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder,
+      value: self.state.editor_value === null ? "" : self.state.editor_value,
+      onInput: self.onInputChange
+    }), self.state.editor_value === null ? h("span", {
+      class: "icon is-small is-left"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "hide_source")) : "");
+  }
+}
+class CBoolEditor extends Component {
+  constructor() {
+    super();
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onResetClicked = this.onResetClicked.bind(this);
+    this.onNullClicked = this.onNullClicked.bind(this);
+    this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
+    this.onUndoClicked = this.onUndoClicked.bind(this);
+    this.validateAndSend = this.validateAndSend.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false,
+      editor_valid: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  onInputChange(e) {
+    this.setState({
+      editor_value: e.target.value,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  validateAndSend() {
+    var self = this;
+    var is_valid = true;
+    self.state.editor_value = self.state.editor_value === "-1" || self.state.editor_value === -1 ? null : self.state.editor_value === "1" || self.state.editor_value === 1 ? 1 : 0;
+    if (self.state.editor_value !== null && self.state.editor_value !== 0 && self.state.editor_value !== 1) {
+      is_valid = false;
+      if (self.state.editor_value === null && self.props.column.editor_allow_null) {
+        is_valid = true;
+      }
+    }
+    this.setState({
+      editor_valid: is_valid
+    }, () => {
+      this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true);
+    });
+  }
+
+  /**
+   * Request to set value to NULL.
+   *
+   * @method
+   * @listens CEditorFrame#cteditortonull
+   */
+
+  onResetClicked() {
+    this.setState({
+      editor_value: this.props.column.editor_default,
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to Default
+   *
+   * @method
+   * @listens CEditorFrame#cteditorreset
+   */
+
+  onNullClicked() {
+    this.setState({
+      editor_value: null,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to value at start editing.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorundo
+   */
+
+  onUndoClicked() {
+    this.setState({
+      editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Notifiaction for changes in some editor.
+   *
+   * @method
+   * @listens CTable#cteditorchanged
+   */
+
+  onOtherEditorChanged(e) {
+    if (e.detail.initiator == this.props.column.name) return;
+  }
+  render() {
+    var self = this;
+    var items = [{
+      value: 1,
+      label: _("Yes")
+    }, {
+      value: 0,
+      label: _("No")
+    }];
+    return h("div", {
+      class: cls("control", self.state.editor_value === null ? "has-icons-left" : ""),
+      oncteditortonull: self.onNullClicked,
+      oncteditorreset: self.onResetClicked,
+      oncteditorundo: self.onUndoClicked,
+      oncteditorchanged: self.onOtherEditorChanged
+    }, h("div", {
+      class: cls("select", self.state.editor_valid ? "" : "is-danger")
+    }, h("select", {
+      onChange: this.onInputChange,
+      value: self.state.editor_value
+    }, items.map(item => {
+      return h("option", {
+        value: item.value
+      }, item.label);
+    }), self.props.column.editor_allow_null ? h("option", {
+      value: "-1",
+      selected: true
+    }, "NULL") : "")), self.state.editor_value === null ? h("span", {
+      class: "icon is-small is-left"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "hide_source")) : "");
+  }
+}
 class CTagsCell extends Component {
   render() {
     var self = this;
-    if (this.props.singl_tag) {
-      if (this.props.value.length < this.props.column.max_length) {
-        return h(Fragment, null, this.props.value === null ? h("span", {
-          class: "has-text-grey"
-        }, "NULL") : h("span", {
-          class: "my-tag"
-        }, "this.props.value"));
-      } else {
-        return h(Fragment, null, this.props.value === null ? h("span", {
-          class: "has-text-grey"
-        }, "NULL") : h("span", {
-          title: this.props.value
-        }, this.props.value.slice(0, this.props.column.max_length) + "..."));
-      }
-    } else {
-      return h(Fragment, null, this.props.value === null ? h("span", {
+    if (self.props.value === null) {
+      return h("span", {
         class: "has-text-grey"
-      }, "NULL") : this.props.value.split(";").map(item => {
-        if (item.length < this.props.column.max_length) {
-          return h("span", {
-            class: "my-tag"
-          }, item);
+      }, "NULL");
+    } else {
+      if (self.props.column.options === undefined) {
+        if (self.props.column.singl_tag) {
+          if (self.props.value.length < self.props.column.max_length) {
+            return h("span", {
+              class: "tag"
+            }, self.props.value);
+          } else {
+            return h("span", {
+              class: "tag",
+              title: self.props.value
+            }, self.props.value.slice(0, self.props.column.max_length) + "...");
+          }
         } else {
-          return h("span", {
-            class: "my-tag",
-            title: item
-          }, item.slice(0, this.props.column.max_length) + "...");
+          return self.props.value.split(";").map(item => {
+            if (item.length < self.props.column.max_length) {
+              return h("span", {
+                class: "tag"
+              }, item);
+            } else {
+              return h("span", {
+                class: "tag",
+                title: item
+              }, item.slice(0, self.props.column.max_length) + "...");
+            }
+          });
         }
-      }));
+        ;
+      } else {
+        if (self.props.column.singl_tag) {
+          var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
+          if (labels[0].length < self.props.column.max_length) {
+            return h("span", {
+              class: "tag"
+            }, labels[0]);
+          } else {
+            return h("span", {
+              class: "tag",
+              title: labels[self.props.value]
+            }, labels[0].slice(0, self.props.column.max_length) + "...");
+          }
+        } else {
+          return self.props.value.split(";").map(item => {
+            var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
+            if (labels[0].length < self.props.column.max_length) {
+              return h("span", {
+                class: "tag"
+              }, labels[0]);
+            } else {
+              return h("span", {
+                class: "tag",
+                title: labels[0]
+              }, labels[0].slice(0, self.props.column.max_length) + "...");
+            }
+          });
+        }
+      }
     }
   }
 }
@@ -178,14 +520,32 @@ class CPlainTextCell extends Component {
     }, "NULL") : String(this.props.value));
   }
 }
-class CSelectCell extends Component {
+class CSelectCell {
   render() {
-    var labels = this.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
-    return h(Fragment, null, this.props.value === null ? h("span", {
-      class: "has-text-grey"
-    }, "NULL") : labels.length == 0 ? h("span", {
-      class: "has-text-grey"
-    }, this.props.value) : String(labels[0]));
+    var self = this;
+    if (self.props.value === null) {
+      return h("span", {
+        class: "has-text-grey"
+      }, "NULL");
+    } else {
+      if (self.props.column.singl_select || self.props.column.singl_select === undefined) {
+        var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
+        return h(Fragment, null, labels.length == 0 ? h("span", {
+          class: "tag"
+        }, this.props.value) : h("span", {
+          class: "tag"
+        }, String(labels[0])));
+      } else {
+        return self.props.value.split(";").map(item => {
+          var labels = self.props.column.options.filter(x => x.value == item).map(x => x.label);
+          return h(Fragment, null, labels.length == 0 ? h("span", {
+            class: "tag"
+          }, item) : h("span", {
+            class: "tag"
+          }, String(labels[0])));
+        });
+      }
+    }
   }
 }
 class CDateCell extends Component {
@@ -560,6 +920,22 @@ class CPageTable extends Component {
         if (c.cell_actor == "CTagsCell") return h("td", {
           onClick: self.props.onRowClick
         }, h(CTagsCell, {
+          column: c,
+          value: r[c.name],
+          row: r,
+          onDownloadFile: self.props.table.onDownloadFile
+        }));
+        if (c.cell_actor == "CBoolCell") return h("td", {
+          onClick: self.props.onRowClick
+        }, h(CBoolCell, {
+          column: c,
+          value: r[c.name],
+          row: r,
+          onDownloadFile: self.props.table.onDownloadFile
+        }));
+        if (c.cell_actor == "CMultilineTextCell") return h("td", {
+          onClick: self.props.onRowClick
+        }, h(CMultilineTextCell, {
           column: c,
           value: r[c.name],
           row: r,
@@ -1279,6 +1655,18 @@ class CEditorFrame extends Component {
       add: self.props.add,
       batch: self.props.batch
     }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CFilesEditor" ? h(CFilesEditor, {
+      column: self.props.column,
+      onEditorChanges: self.onEditorChanges,
+      row: self.props.row,
+      add: self.props.add,
+      batch: self.props.batch
+    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CBoolEditor" ? h(CBoolEditor, {
+      column: self.props.column,
+      onEditorChanges: self.onEditorChanges,
+      row: self.props.row,
+      add: self.props.add,
+      batch: self.props.batch
+    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CMultilineTextEditor" ? h(CMultilineTextEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,

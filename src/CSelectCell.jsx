@@ -1,7 +1,18 @@
-class CSelectCell extends Component {
-
+class CSelectCell {
     render() {
-        var labels = this.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
-        return <>{this.props.value === null ? <span class="has-text-grey">NULL</span> : (labels.length == 0 ? <span class="has-text-grey">{this.props.value}</span> : String(labels[0]))}</>;
+        var self = this;
+        if (self.props.value === null) {
+            return <span class="has-text-grey">NULL</span>;
+        } else {
+            if (self.props.column.singl_select || self.props.column.singl_select === undefined) {
+                var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
+                return <>{labels.length == 0 ? <span class="tag">{this.props.value}</span> : <span class="tag">{String(labels[0])}</span>}</>
+            } else {
+                return self.props.value.split(";").map(item => {
+                    var labels = self.props.column.options.filter(x => x.value == item).map(x => x.label);
+                    return <>{labels.length == 0 ? <span class="tag">{item}</span> : <span class="tag">{String(labels[0])}</span>}</>
+                })
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-class CBoolEditor extends Component {
+class CTagsEditor extends Component {
 
     constructor() {
         super();
@@ -8,7 +8,6 @@ class CBoolEditor extends Component {
         this.onNullClicked = this.onNullClicked.bind(this);
         this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
         this.onUndoClicked = this.onUndoClicked.bind(this);
-        this.validateAndSend = this.validateAndSend.bind(this);
     }
 
     componentDidMount() {
@@ -20,41 +19,43 @@ class CBoolEditor extends Component {
 
     }
 
-    onInputChange(e){
-        this.setState({editor_value: e.target.value, editor_modified: true}, () => {this.validateAndSend()});
+    validateAndSend() {
+        if(this.props.column.editor_validate) {
+            var re = new RegExp(this.props.column.editor_validate);
+            if (re.test(this.state.editor_value)) {
+                this.setState({editor_valid: true}, () => {this.sendChanges()});
+            } else {
+                this.setState({editor_valid: false}, () => {this.sendChanges()});
+            }
+        } else {
+            this.setState({editor_valid: true}, () => {this.sendChanges()});
+        }
     }
 
-    validateAndSend(){
-        var self = this;
-        var is_valid = true;
-        self.state.editor_value = (self.state.editor_value === "-1" || self.state.editor_value === -1) ? null : (self.state.editor_value === "1" || self.state.editor_value === 1) ? 1 : 0;
-        if (self.state.editor_value !== null && self.state.editor_value !== 0 && self.state.editor_value !== 1){
-            is_valid = false;
-            if (self.state.editor_value === null && self.props.column.editor_allow_null){
-                is_valid = true;
-            }
-        }
+    sendChanges(){
+        this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, this.state.editor_valid);
+    }
 
-        this.setState({editor_valid: is_valid}, () => {this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true)});
-
+    onInputChange(e){
+        this.setState({editor_value: e.target.value, editor_modified: true}, () => {this.validateAndSend()});
     }
 
     /**
      * Request to set value to NULL.
      *
      * @method
-     * @listens CEditorFrame#cteditortonull
+     * @listens CEditorFrame#cteditorreset
      */
 
     onResetClicked(){
-        this.setState({editor_value: this.props.column.editor_default, editor_modified: false}, () => {this.validateAndSend()});
+        this.setState({editor_value: this.props.column.editor_default, editor_modified: true}, () => {this.validateAndSend()});
     }
 
     /**
      * Request to set value to Default
      *
      * @method
-     * @listens CEditorFrame#cteditorreset
+     * @listens CEditorFrame#cteditortonull
      */
 
     onNullClicked(){
@@ -83,22 +84,16 @@ class CBoolEditor extends Component {
         if(e.detail.initiator == this.props.column.name) return;
     }
 
+    
+
     render () {
 
         var self = this;
-        var items = [
-            {value: 1, label: _("Yes")},
-            {value: 0, label: _("No")},
-        ];
 
         return   <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
-          <div class={cls("select", self.state.editor_valid ? "" : "is-danger")}>
-            <select onChange={this.onInputChange} value={self.state.editor_value}>
-              {items.map((item) => {return <option value={item.value}>{item.label}</option>;})}
-              {self.props.column.editor_allow_null ? <option value="-1" selected>NULL</option> : ""}
-            </select>
-          </div>
-          {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
-        </div>;
+        <textarea class={cls("textarea", self.state.editor_valid ? "" : "is-danger")} placeholder={self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder} value={self.state.editor_value === null ? "" : self.state.editor_value} onInput={self.onInputChange}/>
+        {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
+        </div>
+        ;
     }
 }

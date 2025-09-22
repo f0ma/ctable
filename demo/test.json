@@ -1,0 +1,133 @@
+{
+  "name": "test",
+  "label": "Test",
+  "width": 60,
+  "columns": [
+    {
+      "name": "id",
+      "label": "ID",
+      "is_key": true,
+      "width": 3,
+      "enabled" : true,
+      "cell_actor": "CPlainTextCell"
+    },
+    {
+      "name": "text",
+      "label": "Text",
+      "is_key": false,
+      "width": 10,
+      "enabled" : true,
+      "cell_actor": "CMultilineTextCell",
+      "max_length": 100,
+      "editor_actor": "CMultilineTextEditor",
+      "ishints" : true,
+      "hint_sep": ";",
+      "hints": [
+        [
+          "bold",
+          "Bold"
+        ],
+        [
+          "italic",
+          "Italic"
+        ],
+        [
+          "underline",
+          "Underline"
+        ],
+        [
+          "strikethrough",
+          "Strikethrough"
+        ],
+        [
+          "code",
+          "Code"
+        ],
+        [
+          "quote",
+          "Quote"
+        ],
+        [
+          "link",
+          "Link"
+        ],
+        [
+          "image",
+          "Image"
+        ],
+        [
+          "ul",
+          "Unordered list"
+        ],
+        [
+          "ol",
+          "Ordered list"
+        ],
+        [
+          "clean",
+          "Remove styles"
+        ],[
+          "bold",
+          "Bold"
+        ],
+        [
+          "italic",
+          "Italic"
+        ],
+        [
+          "underline",
+          "Underline"
+        ],
+        [
+          "strikethrough",
+          "Strikethrough"
+        ],
+        [
+          "code",
+          "Code"
+        ],
+        [
+          "quote",
+          "Quote"
+        ],
+        [
+          "link",
+          "Link"
+        ],
+        [
+          "image",
+          "Image"
+        ],
+        [
+          "ul",
+          "Unordered list"
+        ],
+        [
+          "ol",
+          "Ordered list"
+        ],
+        [
+          "clean",
+          "Remove styles"
+        ]
+      ],
+      "editor_default": "",
+      "editor_validate": "",
+      "editor_allow_null": false
+    },
+    {
+      "name": "verify",
+      "label": "Verify",
+      "width": 6,
+      "is_key": false,
+      "enabled" : true,
+      "cell_actor": "CBoolCell",
+      "editor_actor": "CBoolEditor",
+      "editor_default": false,
+      "editor_allow_null": true
+    }
+  ],
+  "subtables": [ ],
+  "default_sorting": [ ],
+  "default_filtering": [ ]
+}
