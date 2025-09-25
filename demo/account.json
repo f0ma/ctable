@@ -87,11 +87,22 @@
       "width": 6,
       "enabled": true,
       "cell_actor": "CTagsCell",
-      "max_length": 12,
-      "singl_tag": false,
-      "editor_actor": "CLineEditor",
+      "max_length": 10,
+      "editor_actor": "CTagsEditor",
       "editor_default": "",
-      "editor_allow_null": true
+      "editor_allow_null": true,
+      "options": [
+        "tag1",
+        "tag2",
+        "tag3",
+        "tag4",
+        "tag5",
+        "tag6",
+        "tag7",
+        "tag8",
+        "tag9",
+        "tag10"
+      ]
     },
     {
       "name": "files",

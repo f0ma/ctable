@@ -118,7 +118,6 @@ class CMultilineTextEditor extends Component {
         var self = this;
 
         return   <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
-            {console.log(document.activeElement)}
             {self._renderToolbar()}
         <textarea class={cls("textarea", self.state.editor_valid ? "" : "is-danger")} placeholder={self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder} value={self.state.editor_value === null ? "" : self.state.editor_value} onInput={self.onInputChange}/>
         {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }

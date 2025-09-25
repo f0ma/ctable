@@ -8,32 +8,33 @@ class CTagsEditor extends Component {
         this.onNullClicked = this.onNullClicked.bind(this);
         this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
         this.onUndoClicked = this.onUndoClicked.bind(this);
+        this.validateAndSend = this.validateAndSend.bind(this);
     }
 
     componentDidMount() {
         this.setState({
-            editor_value: (this.props.add || this.props.batch) ? this.props.column.editor_default : this.props.row[this.props.column.name],
+            editor_value: (this.props.add || this.props.batch) ? this.props.column.editor_default : this.props.row[this.props.column.name].split(";"),
                       editor_modified: false,
                       editor_valid: false,
         }, () => {this.validateAndSend()});
 
     }
 
-    validateAndSend() {
-        if(this.props.column.editor_validate) {
-            var re = new RegExp(this.props.column.editor_validate);
-            if (re.test(this.state.editor_value)) {
-                this.setState({editor_valid: true}, () => {this.sendChanges()});
-            } else {
-                this.setState({editor_valid: false}, () => {this.sendChanges()});
-            }
-        } else {
-            this.setState({editor_valid: true}, () => {this.sendChanges()});
+    validateAndSend(){
+        var is_valid = true;
+        var self = this;
+        self.state.editor_value = typeof(self.state.editor_value) == "string" ? self.state.editor_value.split(";") : self.state.editor_value;
+        console.log(typeof(self.state.editor_value));
+        self.state.editor_value = self.state.editor_value === null ? "" : self.state.editor_value.filter(x => x != "").join(";");
+        if (self.state.editor_value === ""){
+            self.state.editor_value = null;
         }
-    }
-
-    sendChanges(){
-        this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, this.state.editor_valid);
+        if (self.state.editor_value === null && !this.props.column.editor_allow_null){
+            is_valid = false;
+        }
+        
+        this.setState({editor_valid: is_valid}, () => {this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true)});
+        
     }
 
     onInputChange(e){
@@ -84,16 +85,62 @@ class CTagsEditor extends Component {
         if(e.detail.initiator == this.props.column.name) return;
     }
 
-    
+    onRemoveTag(tag){
+        return () => {
+            var self = this;
+            self.state.editor_value = typeof(self.state.editor_value) == "string" ? self.state.editor_value.split(";") : self.state.editor_value;
+            this.setState({editor_value: this.state.editor_value.filter(x => x != tag), editor_modified: true}, () => {this.validateAndSend()});
+        }
+    }
+
+    onAddTag(tag){
+        return () => {
+            var self = this;
+            self.state.editor_value = typeof(self.state.editor_value) == "string" ? self.state.editor_value.split(";") : self.state.editor_value;
+            if(!self.state.editor_value.includes(tag)){
+                this.setState({editor_value: (self.state.editor_value === null ? [] : self.state.editor_value).concat([tag]), editor_modified: true}, () => {this.validateAndSend()});
+            }
+        }
+    }
+
+    renderTags(){
+        var self = this;
+        console.log(self.state.editor_value);
+        if (self.state.editor_value === undefined) {
+            return <span class="has-text-grey">NULL</span>;
+        } else {
+            return (
+                self.props.column.options.map(tag => {
+                    if (self.props.column.max_length === undefined || tag.length <= self.props.column.max_length) {
+                        return (
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <button class="tag" onClick={self.onAddTag(tag)}>{tag}</button>
+                                    {self.state.editor_value === null ? "" :(self.state.editor_value.includes(tag) ? <button class="tag is-delete" onClick={self.onRemoveTag(tag)}></button> : "")}
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        return (
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <button class="tag" title={tag} onClick={self.onAddTag(tag)}>{tag.slice(0, self.props.column.max_length) + "..."}</button>
+                                    {self.state.editor_value === null ? "" :(self.state.editor_value.includes(tag) ? <button class="tag is-delete" onClick={self.onRemoveTag(tag)}></button> : "")}
+                                </div>
+                            </div>
+                        );
+                    }
+                })
+            );
+        }
+    }
 
     render () {
 
         var self = this;
 
-        return   <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
-        <textarea class={cls("textarea", self.state.editor_valid ? "" : "is-danger")} placeholder={self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder} value={self.state.editor_value === null ? "" : self.state.editor_value} onInput={self.onInputChange}/>
-        {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
-        </div>
-        ;
+        return   <div class={cls("control field is-grouped is-grouped-multiline", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
+            {self.renderTags()}
+        </div>;
     }
 }

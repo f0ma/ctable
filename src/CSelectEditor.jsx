@@ -36,10 +36,6 @@ class CSelectEditor extends Component {
 
     }
 
-    onInputChange(e){
-        this.setState({editor_value: e.target.value, editor_modified: true}, () => {this.validateAndSend()});
-    }
-
     validateAndSend(){
         var is_valid = true;
         if (this.props.column.options.filter(x => x.value == this.state.editor_value).length == 0){
@@ -48,9 +44,13 @@ class CSelectEditor extends Component {
                 is_valid = true;
             }
         }
-
+        
         this.setState({editor_valid: is_valid}, () => {this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true)});
-
+        
+    }
+    
+    onInputChange(e){
+        this.setState({editor_value: e.target.value, editor_modified: true}, () => {this.validateAndSend()});
     }
 
     /**
