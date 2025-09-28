@@ -60,6 +60,8 @@ class CTable extends Component {
     this.onDownloadFile = this.onDownloadFile.bind(this);
     this.onUploadFile = this.onUploadFile.bind(this);
 
+    this.getOptionsForField = this.getOptionsForField.bind(this);
+
 
     this.setState({
       width: 50,
@@ -109,6 +111,7 @@ class CTable extends Component {
       table_subtables:[ ],
       table_rows:[ ],
       table_row_status:[ ],
+      table_options: { },
 
       return_keys: null,
 
@@ -231,22 +234,74 @@ class CTable extends Component {
       this.state.table_rows = r['rows'];
       this.state.table_row_status = [];
       this.state.table_rows.forEach(x => {
-
-
         var issel = false;
-
         keys.forEach(w =>{ if(!issel) {issel = Object.keys(w).map(q => w[q] == x[q]).every(u => u)} });
-
         this.state.table_row_status.push({selected: issel});
-
       })
       this.state.progress = false;
       this.state.last_row_clicked = null;
       this.state.return_keys = null;
-      this.setState({}, () => {
-        this.enablePanelButtons()
+
+      var cell_link_columns = this.state.table_columns.filter(x => x.cell_actor == "CLinkCell");
+      var editor_link_columns = this.state.table_columns.filter(x => x.cell_actor == "CLinkEditor");
+
+      var link_columns_names = [];
+      var link_columns_tables = [];
+      var link_columns_table_columns = [];
+      var link_columns_values = [];
+
+      cell_link_columns.forEach(x => { if(link_columns_names.indexOf(x.name)<0){
+        link_columns_names.push(x.name);
+        link_columns_tables.push(x.cell_link);
+        link_columns_table_columns.push(x.cell_link_key);
+        link_columns_values.push([]);
+      }});
+      editor_link_columns.forEach(x => { if(link_columns_names.indexOf(x.name)<0){
+        link_columns_names.push(x.name);
+        link_columns_tables.push(x.editor_link);
+        link_columns_table_columns.push(x.editor_link_key);
+        link_columns_values.push([]);
+      }});
+
+      this.state.table_rows.forEach(x => {
+        link_columns_names.forEach((y,i) => {
+          if(link_columns_values[i].indexOf(x[y]) < 0) {
+            link_columns_values[i].push(x[y]);
+          }
+        });
+      });
+
+      this.state.table_options = {};
+
+      var full_path = this.full_table_path();
+
+      var table_option_p = link_columns_names.map((x,i) => {
+        full_path[full_path.length-1].table = link_columns_tables[i];
+        return this.props.server.CTableServer.options(full_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w =>{
+          this.state.table_options[link_columns_tables[i]] = {};
+          w.rows.forEach(q => {this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];});
+        });
+      });
+
+      Promise.all(table_option_p).then( x => {
+          this.setState({}, () => {
+            this.enablePanelButtons()
+          });
       });
     }).catch((e) => {this.showError(e); this.setState({progress: false});});
+  }
+
+  getOptionsForField(column_name, query){
+    var column = this.state.table_columns.filter(x => x.name == column_name)[0];
+
+    var full_path = this.full_table_path();
+    full_path[full_path.length-1].table = column.editor_link;
+
+    if (query != ""){
+      return this.props.server.CTableServer.options(full_path, [["like_lr", "name", query]]);
+    }
+
+    return this.props.server.CTableServer.options(full_path);
   }
 
   topButtonClick(e) {
@@ -510,7 +565,7 @@ class CTable extends Component {
 
   onTableSelectClick(x){
     var tbl = this.state.table_list.filter(y => y.name == unwind_button_or_link(x).dataset.label)[0];
-    this.setState({table_select_menu_active: false});
+    this.setState({table_select_menu_active: false, table_path_labels: [], table_path: []});
     this.loadTable(tbl.name, null);
   }
 

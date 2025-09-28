@@ -13,11 +13,18 @@
     },
     {
       "name": "account_id",
-      "label": "AID",
+      "label": "Account",
       "is_key": true,
-      "width": 3,
+      "width": 5,
       "enabled": true,
-      "cell_actor": "CPlainTextCell"
+      "cell_actor": "CLinkCell",
+      "cell_link":"account",
+      "cell_link_key":"id",
+      "cell_multilink": false,
+      "editor_actor": "CLinkEditor",
+      "editor_link":"account",
+      "editor_link_key":"id",
+      "editor_multilink": false
     },
     {
       "name": "date",

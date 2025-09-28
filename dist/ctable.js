@@ -188,6 +188,22 @@ class CFilesCell extends Component {
     }));
   }
 }
+class CLinkCell extends Component {
+  render() {
+    var table = this.props.column.cell_link;
+    var view = "";
+    if (this.props.value in this.props.options[table]) {
+      view = String(this.props.options[table][this.props.value]) + ' (' + this.props.value + ')';
+    } else {
+      view = h("span", {
+        class: "has-text-grey"
+      }, this.props.value);
+    }
+    return h(Fragment, null, this.props.value === null ? h("span", {
+      class: "has-text-grey"
+    }, "NULL") : view);
+  }
+}
 class CDateEditor extends Component {
   constructor() {
     super();
@@ -311,6 +327,218 @@ class CDateEditor extends Component {
     }, "hide_source")) : "");
   }
 }
+/**
+ * Link editor class.
+ *
+ * @arg this.props.column {Object} Table column.
+ * @arg this.props.column.name {string} Column name
+ * @arg this.props.column.editor_default {*} Editor default value
+ *
+ * @arg this.props.row {Object} Row to edit, null if add, first if batch.
+ * @arg this.props.add {bool} Is adding.
+ * @arg this.props.batch {bool} Is batch editing.
+ * @arg this.props.onEditorChanges {CTable#OnEditorChanges} Editor changes callback.
+ *
+ */
+
+class CLinkEditor extends Component {
+  constructor() {
+    super();
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onResetClicked = this.onResetClicked.bind(this);
+    this.onNullClicked = this.onNullClicked.bind(this);
+    this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
+    this.onUndoClicked = this.onUndoClicked.bind(this);
+    this.onSelectDropdownClick = this.onSelectDropdownClick.bind(this);
+    this.onSelectItem = this.onSelectItem.bind(this);
+    this.onOptionsInputChange = this.onOptionsInputChange.bind(this);
+  }
+  componentDidMount() {
+    var self = this;
+    this.setState({
+      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false,
+      editor_valid: false,
+      select_dropdown_active: false,
+      options_history: clone(this.props.options[this.props.column.cell_link]),
+      options_current: clone(this.props.options[this.props.column.cell_link]),
+      options_input: "",
+      input_id: makeID()
+    }, () => {
+      this.validateAndSend();
+    });
+    this.props.getOptionsForField(this.props.column.name, "").then(w => {
+      var opt = {};
+      w.rows.forEach(q => {
+        opt[q[w.keys[0]]] = q[w.label];
+      });
+      self.setState({
+        options_current: opt,
+        options_history: {
+          ...opt,
+          ...self.state.options_history
+        }
+      });
+    });
+  }
+  validateAndSend() {
+    this.sendChanges();
+  }
+  sendChanges() {
+    if (this.props.row === null) {
+      this.props.onEditorChanges(this.props.column.name, true, this.state.editor_value, true);
+    } else {
+      this.props.onEditorChanges(this.props.column.name, this.state.editor_value == this.props.row[this.props.column.name], this.state.editor_value, true);
+    }
+  }
+  onInputChange(e) {
+    this.setState({
+      editor_value: e.target.value,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to NULL.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorreset
+   */
+
+  onResetClicked() {
+    this.setState({
+      editor_value: this.props.column.editor_default,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to Default
+   *
+   * @method
+   * @listens CEditorFrame#cteditortonull
+   */
+
+  onNullClicked() {
+    this.setState({
+      editor_value: null,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to value at start editing.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorundo
+   */
+
+  onUndoClicked() {
+    this.setState({
+      editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Notifiaction for changes in some editor.
+   *
+   * @method
+   * @listens CTable#cteditorchanged
+   */
+
+  onOtherEditorChanged(e) {
+    if (e.detail.initiator == this.props.column.name) return;
+  }
+  onSelectDropdownClick() {
+    this.setState({
+      select_dropdown_active: !this.state.select_dropdown_active
+    }, () => {
+      document.getElementById(this.state.input_id).focus();
+    });
+  }
+  onSelectItem(e) {
+    var el = unwind_button_or_link(e);
+    this.setState({
+      editor_value: parseInt(el.dataset['value']),
+      select_dropdown_active: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  onOptionsInputChange(e) {
+    var self = this;
+    this.setState({
+      options_input: e.target.value
+    }, () => {
+      self.props.getOptionsForField(this.props.column.name, self.state.options_input).then(w => {
+        var opt = {};
+        w.rows.forEach(q => {
+          opt[q[w.keys[0]]] = q[w.label];
+        });
+        self.setState({
+          options_current: opt,
+          options_history: {
+            ...opt,
+            ...self.state.options_history
+          }
+        });
+      });
+    });
+  }
+  render() {
+    var self = this;
+
+    //onBlur={this.dropdownMenuLeave}
+
+    return h("div", {
+      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")
+    }, h("div", {
+      class: "dropdown-trigger"
+    }, h("button", {
+      class: "button",
+      "aria-haspopup": "true",
+      "aria-controls": "dropdown-menu",
+      onClick: this.onSelectDropdownClick
+    }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
+      class: "icon is-small"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "arrow_drop_down")))), h("div", {
+      class: "dropdown-menu",
+      role: "menu"
+    }, h("div", {
+      class: "dropdown-content"
+    }, h("p", {
+      class: "dropdown-item"
+    }, h("input", {
+      class: "input",
+      type: "input",
+      value: self.state.options_input,
+      onInput: self.onOptionsInputChange,
+      id: this.state.input_id
+    }))), h("div", {
+      class: "dropdown-content",
+      style: "overflow: auto; max-height: 12em;"
+    }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
+      class: "dropdown-item",
+      "data-value": x,
+      onClick: self.onSelectItem
+    }, self.state.options_current[x], " (", x, ")")) : "")));
+  }
+}
+
+// {aw_options.map(function(item){
+// item_count += 1;
+// return <a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}</a>;})}
 /**
  * Table head class.
  *
@@ -466,6 +694,14 @@ class CPageTable extends Component {
           value: r[c.name],
           row: r,
           onDownloadFile: self.props.table.onDownloadFile
+        }));
+        if (c.cell_actor == "CLinkCell") return h("td", {
+          onClick: self.props.onRowClick
+        }, h(CLinkCell, {
+          column: c,
+          value: r[c.name],
+          row: r,
+          options: self.props.table.state.table_options
         }));
       }
     })))))));
@@ -1191,6 +1427,14 @@ class CEditorFrame extends Component {
       onUploadFile: self.props.table.onUploadFile,
       askUser: self.props.table.askUser,
       showError: self.props.table.showError
+    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CLinkEditor" ? h(CLinkEditor, {
+      column: self.props.column,
+      onEditorChanges: self.onEditorChanges,
+      row: self.props.row,
+      add: self.props.add,
+      batch: self.props.batch,
+      options: self.props.table.state.table_options,
+      getOptionsForField: self.props.table.getOptionsForField
     }) : "", self.props.column.editor_hint ? h("p", {
       class: "help"
     }, self.props.column.editor_hint) : h("p", {
@@ -1778,6 +2022,7 @@ class CTable extends Component {
     this.onCloseFilter = this.onCloseFilter.bind(this);
     this.onDownloadFile = this.onDownloadFile.bind(this);
     this.onUploadFile = this.onUploadFile.bind(this);
+    this.getOptionsForField = this.getOptionsForField.bind(this);
     this.setState({
       width: 50,
       fontSize: 100,
@@ -1948,6 +2193,7 @@ class CTable extends Component {
       table_subtables: [],
       table_rows: [],
       table_row_status: [],
+      table_options: {},
       return_keys: null,
       table_select_menu_active: false,
       editor_show: false,
@@ -2072,8 +2318,50 @@ class CTable extends Component {
       this.state.progress = false;
       this.state.last_row_clicked = null;
       this.state.return_keys = null;
-      this.setState({}, () => {
-        this.enablePanelButtons();
+      var cell_link_columns = this.state.table_columns.filter(x => x.cell_actor == "CLinkCell");
+      var editor_link_columns = this.state.table_columns.filter(x => x.cell_actor == "CLinkEditor");
+      var link_columns_names = [];
+      var link_columns_tables = [];
+      var link_columns_table_columns = [];
+      var link_columns_values = [];
+      cell_link_columns.forEach(x => {
+        if (link_columns_names.indexOf(x.name) < 0) {
+          link_columns_names.push(x.name);
+          link_columns_tables.push(x.cell_link);
+          link_columns_table_columns.push(x.cell_link_key);
+          link_columns_values.push([]);
+        }
+      });
+      editor_link_columns.forEach(x => {
+        if (link_columns_names.indexOf(x.name) < 0) {
+          link_columns_names.push(x.name);
+          link_columns_tables.push(x.editor_link);
+          link_columns_table_columns.push(x.editor_link_key);
+          link_columns_values.push([]);
+        }
+      });
+      this.state.table_rows.forEach(x => {
+        link_columns_names.forEach((y, i) => {
+          if (link_columns_values[i].indexOf(x[y]) < 0) {
+            link_columns_values[i].push(x[y]);
+          }
+        });
+      });
+      this.state.table_options = {};
+      var full_path = this.full_table_path();
+      var table_option_p = link_columns_names.map((x, i) => {
+        full_path[full_path.length - 1].table = link_columns_tables[i];
+        return this.props.server.CTableServer.options(full_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w => {
+          this.state.table_options[link_columns_tables[i]] = {};
+          w.rows.forEach(q => {
+            this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];
+          });
+        });
+      });
+      Promise.all(table_option_p).then(x => {
+        this.setState({}, () => {
+          this.enablePanelButtons();
+        });
       });
     }).catch(e => {
       this.showError(e);
@@ -2081,6 +2369,15 @@ class CTable extends Component {
         progress: false
       });
     });
+  }
+  getOptionsForField(column_name, query) {
+    var column = this.state.table_columns.filter(x => x.name == column_name)[0];
+    var full_path = this.full_table_path();
+    full_path[full_path.length - 1].table = column.editor_link;
+    if (query != "") {
+      return this.props.server.CTableServer.options(full_path, [["like_lr", "name", query]]);
+    }
+    return this.props.server.CTableServer.options(full_path);
   }
   topButtonClick(e) {
     var tg = unwind_button_or_link(e);
@@ -2372,7 +2669,9 @@ class CTable extends Component {
   onTableSelectClick(x) {
     var tbl = this.state.table_list.filter(y => y.name == unwind_button_or_link(x).dataset.label)[0];
     this.setState({
-      table_select_menu_active: false
+      table_select_menu_active: false,
+      table_path_labels: [],
+      table_path: []
     });
     this.loadTable(tbl.name, null);
   }

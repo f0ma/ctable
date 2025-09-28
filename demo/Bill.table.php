@@ -16,7 +16,7 @@ class Bill {
         $q = SQLYamlQuery::simple_select("bill", ["id", "account_id", "date", "sum", "state"]);
 
         apply_path($q, ["account_id"], $path);
-        apply_filters($q, $filter, $order, $limit, $offset);
+        apply_filters($q, ["id", "account_id", "date", "sum", "state"], $filter, $order, $limit, $offset);
 
         $rows = $q->execute($this->db, [], $accept = 'ok', $calc_rows = TRUE);
         $num = $q->found_rows();
@@ -33,15 +33,18 @@ class Bill {
     }
 
     public function update($path, $keys, $data) {
-        $q = SQLYamlQuery::simple_update("bill", ["id"], $keys, ["date", "sum", "state"], $data);
+        $q = SQLYamlQuery::simple_update("bill", ["id"], $keys, ["account_id", "date", "sum", "state"], $data);
+        error_log(var_export($q->query, true));
 
-        apply_path($q, ["account_id"], $path);
+        //$q->execute($this->db);
+
+        //apply_path($q, ["account_id"], $path);
 
         $q->execute($this->db);
     }
 
     public function duplicate($path, $keys) {
-        $q = SQLYamlQuery::simple_copy("bill", ["id"], $keys, ["date", "sum", "state"]);
+        $q = SQLYamlQuery::simple_copy("bill", ["id"], $keys, ["account_id", "date", "sum", "state"]);
 
         apply_path($q, ["account_id"], $path);
 

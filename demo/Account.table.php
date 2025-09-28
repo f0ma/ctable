@@ -57,7 +57,7 @@ class Account {
         $q->query['select']['columns'][]=["sql"=>"CONCAT(`firstname`,\" \",`lastname`) as `name`"];
 
 
-        apply_filters($q, ["id", "name"], $filter, ['name'=>"asc"], $limit, 0);
+        apply_filters($q, ["id", "name"], $filter, [['name'=>"asc"]], $limit, 0);
 
         error_log(var_export($q->query, true));
 
