@@ -1,21 +1,4 @@
-/**
- * Line editor class.
- *
- * @arg this.props.column {Object} Table column.
- * @arg this.props.column.name {string} Column name
- * @arg this.props.column.editor_default {*} Editor default value
- * @arg this.props.column.editor_placeholder {string} Editor placeholder
- * @arg this.props.column.editor_validate {string} Validate regex
- *
- * @arg this.props.row {Object} Row to edit, null if add, first if batch.
- * @arg this.props.add {bool} Is adding.
- * @arg this.props.batch {bool} Is batch editing.
- * @arg this.props.onEditorChanges {CTable#OnEditorChanges} Editor changes callback.
- *
- */
-
-
-class CLineEditor extends Component {
+class CMultilineTextEditor extends Component {
 
     constructor() {
         super();
@@ -101,13 +84,44 @@ class CLineEditor extends Component {
         if(e.detail.initiator == this.props.column.name) return;
     }
 
+    onFastTextInput(val) {
+        this.state.editor_value = this.state.editor_value + this.props.column.hint_sep + val;
+        this.setState({editor_value: this.state.editor_value, editor_modified: true}, () => {this.validateAndSend()});
+    }
+    
+    _renderToolbar() {
+        var self = this;
+        var buttons = self.props.column.hints;
+
+        return (
+            <div class="field mb-2">
+                <div class="control">
+                    <div class="buttons are-small is-flex is-flex-wrap-wrap">
+                    {buttons.map(([label, val]) => (
+                        <button
+                            type="button"
+                            class="button is-light is-small mb-2 mr-2"
+                            onClick={() => this.onFastTextInput(val)}
+                            title={`Вставить: ${label}`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+        );
+    }
+
     render () {
 
         var self = this;
 
         return   <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
-        <input class={cls("input", self.state.editor_valid ? "" : "is-danger")} type="text" placeholder={self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder} value={self.state.editor_value === null ? "" : self.state.editor_value} onInput={self.onInputChange}/>
+            {self._renderToolbar()}
+        <textarea class={cls("textarea", self.state.editor_valid ? "" : "is-danger")} placeholder={self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder} value={self.state.editor_value === null ? "" : self.state.editor_value} onInput={self.onInputChange}/>
         {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
-        </div>;
+        </div>
+        ;
     }
 }

@@ -48,6 +48,14 @@ class CPageTable extends Component {
                         return <td onClick={self.props.onRowClick}><CDateCell column={c} value={r[c.name]} row={r} /></td>;
                       if(c.cell_actor == "CFilesCell")
                         return <td onClick={self.props.onRowClick}><CFilesCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
+                      if(c.cell_actor == "CNumbersCell")
+                        return <td onClick={self.props.onRowClick}><CNumbersCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
+                      if(c.cell_actor == "CTagsCell")
+                        return <td onClick={self.props.onRowClick}><CTagsCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
+                      if(c.cell_actor == "CBoolCell")
+                        return <td onClick={self.props.onRowClick}><CBoolCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
+                      if(c.cell_actor == "CMultilineTextCell")
+                        return <td onClick={self.props.onRowClick}><CMultilineTextCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
                       if(c.cell_actor == "CLinkCell")
                         return <td onClick={self.props.onRowClick}><CLinkCell column={c} value={r[c.name]} row={r} options={self.props.table.state.table_options} /></td>;
                       }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CBoolEditor.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CBoolEditor.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>class CSelectEditor extends Component {
+
+    constructor() {
+        super();
+
+        this.onInputChange = this.onInputChange.bind(this);
+        this.onResetClicked = this.onResetClicked.bind(this);
+        this.onNullClicked = this.onNullClicked.bind(this);
+        this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
+        this.onUndoClicked = this.onUndoClicked.bind(this);
+        this.validateAndSend = this.validateAndSend.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            editor_value: (this.props.add || this.props.batch) ? this.props.column.editor_default : this.props.row[this.props.column.name],
+                      editor_modified: false,
+                      editor_valid: false,
+        }, () => {this.validateAndSend()});
+
+    }
+
+    onInputChange(e){
+        this.setState({editor_value: e.target.value, editor_modified: true}, () => {this.validateAndSend()});
+    }
+
+    validateAndSend(){
+        var is_valid = true;
+        if (this.props.column.options.filter(x => x.value == this.state.editor_value).length == 0){
+            is_valid = false;
+            if (this.state.editor_value === null &amp;&amp; this.props.column.editor_allow_null){
+                is_valid = true;
+            }
+        }
+
+        this.setState({editor_valid: is_valid}, () => {this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true)});
+
+    }
+
+    /**
+     * Request to set value to NULL.
+     *
+     * @method
+     * @listens CEditorFrame#cteditortonull
+     */
+
+    onResetClicked(){
+        this.setState({editor_value: this.props.column.editor_default, editor_modified: false}, () => {this.validateAndSend()});
+    }
+
+    /**
+     * Request to set value to Default
+     *
+     * @method
+     * @listens CEditorFrame#cteditorreset
+     */
+
+    onNullClicked(){
+        this.setState({editor_value: null, editor_modified: true}, () => {this.validateAndSend()});
+    }
+
+    /**
+     * Request to set value to value at start editing.
+     *
+     * @method
+     * @listens CEditorFrame#cteditorundo
+     */
+
+    onUndoClicked(){
+        this.setState({editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name] , editor_modified: false}, () => {this.validateAndSend()});
+    }
+
+    /**
+     * Notifiaction for changes in some editor.
+     *
+     * @method
+     * @listens CTable#cteditorchanged
+     */
+
+    onOtherEditorChanged(e){
+        if(e.detail.initiator == this.props.column.name) return;
+    }
+
+    render () {
+
+        var self = this;
+
+        return   &lt;div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
+          &lt;div class={cls("select", self.state.editor_valid ? "" : "is-danger")}>
+            &lt;select onChange={this.onInputChange} value={self.state.editor_value === null ? &lt;span class="has-text-grey">NULL&lt;/span> : (this.props.value ? "Yes" : "No")}>
+              {[{value: true, label: "Yes"},{value: false, label: "No"},{value: null, label: "Null"}].map((item) => {return &lt;option value={item.value}>{item.label}&lt;/option>;})}
+            &lt;/select>
+          &lt;/div>
+          {self.state.editor_value === null ? &lt;span class="icon is-small is-left">&lt;span class="material-symbols-outlined">hide_source&lt;/span>&lt;/span> : "" }
+        &lt;/div>;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilesEditor.html">CFilesEditor</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Sep 17 2025 17:06:37 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

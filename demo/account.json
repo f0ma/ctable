@@ -30,6 +30,7 @@
       "width": 8,
       "enabled": true,
       "cell_actor": "CPlainTextCell",
+      "max_length": 50,
       "editor_actor": "CLineEditor",
       "editor_hint": "Enter lastname",
       "editor_placeholder": "",
@@ -58,6 +59,7 @@
       "width": 8,
       "enabled": true,
       "cell_actor": "CSelectCell",
+      "singl_select": true,
       "editor_actor": "CSelectEditor",
       "editor_hint": "",
       "editor_placeholder": "",
@@ -84,10 +86,23 @@
       "is_key": false,
       "width": 6,
       "enabled": true,
-      "cell_actor": "CPlainTextCell",
-      "editor_actor": "CLineEditor",
+      "cell_actor": "CTagsCell",
+      "max_length": 10,
+      "editor_actor": "CTagsEditor",
       "editor_default": "",
-      "editor_allow_null": true
+      "editor_allow_null": true,
+      "options": [
+        "tag1",
+        "tag2",
+        "tag3",
+        "tag4",
+        "tag5",
+        "tag6",
+        "tag7",
+        "tag8",
+        "tag9",
+        "tag10"
+      ]
     },
     {
       "name": "files",
