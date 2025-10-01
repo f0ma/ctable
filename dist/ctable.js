@@ -120,95 +120,7 @@ class CBoolCell extends Component {
     }, "NULL") : this.props.value ? _("Yes") : _("No"));
   }
 }
-<<<<<<< HEAD
-class CSelectCell extends Component {
-  render() {
-    var labels = this.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
-    return h(Fragment, null, this.props.value === null ? h("span", {
-      class: "has-text-grey"
-    }, "NULL") : labels.length == 0 ? h("span", {
-      class: "has-text-grey"
-    }, this.props.value) : String(labels[0]));
-  }
-}
-class CDateCell extends Component {
-  render() {
-    const DATE = new Date(this.props.value);
-    const form = x => String(x).padStart(2, '0');
-    return h(Fragment, null, this.props.value === null ? h("span", {
-      class: "has-text-grey"
-    }, "NULL") : `${form(DATE.getFullYear())}-${form(DATE.getMonth() + 1)}-${form(DATE.getDate())}`);
-  }
-}
-class CFilesCell extends Component {
-  constructor() {
-    super();
-    this.onDownloadClicked = this.onDownloadClicked.bind(this);
-  }
-  size_to_text(n) {
-    if (n <= 1024) {
-      return N_("%d Byte", "%d Bytes", n);
-    } else if (n <= 1024 * 1024) {
-      return N_("%d KiB", "%d KiB", Math.round(n / 1024));
-    } else if (n <= 1024 * 1024 * 1024) {
-      return N_("%d MiB", "%d MiB", Math.round(n / 1024 / 1024));
-    }
-    return N_("%d GiB", "%d GiB", Math.round(n / 1024 / 1024 / 1024));
-  }
-  onDownloadClicked(e) {
-    var tg = unwind_button_or_link(e);
-    this.props.onDownloadFile(this.props.row, tg.dataset['column'], tg.dataset['index']);
-    e.stopPropagation();
-  }
-  render() {
-    var self = this;
-    var files = [];
-    if (this.props.value !== null && this.props.value !== "") {
-      var mfiles = this.props.value.split(";");
-      mfiles.forEach(x => {
-        var w = x.split(':');
-        files.push({
-          file: w[0],
-          size: w[1],
-          name: w[2]
-        });
-      });
-    }
-    return h(Fragment, null, this.props.value === null ? h("span", {
-      class: "has-text-grey"
-    }, "NULL") : files.map((x, i) => {
-      return h("button", {
-        class: "button is-small",
-        title: x.name + " (" + self.size_to_text(x.size) + ")",
-        "data-column": self.props.column.name,
-        "data-index": i,
-        onClick: self.onDownloadClicked
-      }, h("span", {
-        class: "material-symbols-outlined-small"
-      }, "download"));
-    }));
-  }
-}
-class CLinkCell extends Component {
-  render() {
-    var table = this.props.column.cell_link;
-    var view = "";
-    if (this.props.value in this.props.options[table]) {
-      view = String(this.props.options[table][this.props.value]) + ' (' + this.props.value + ')';
-    } else {
-      view = h("span", {
-        class: "has-text-grey"
-      }, this.props.value);
-    }
-    return h(Fragment, null, this.props.value === null ? h("span", {
-      class: "has-text-grey"
-    }, "NULL") : view);
-  }
-}
-class CDateEditor extends Component {
-=======
 class CBoolEditor extends Component {
->>>>>>> baty951-master
   constructor() {
     super();
     this.onInputChange = this.onInputChange.bind(this);
@@ -256,13 +168,13 @@ class CBoolEditor extends Component {
    * Request to set value to NULL.
    *
    * @method
-   * @listens CEditorFrame#cteditorreset
+   * @listens CEditorFrame#cteditortonull
    */
 
   onResetClicked() {
     this.setState({
       editor_value: this.props.column.editor_default,
-      editor_modified: true
+      editor_modified: false
     }, () => {
       this.validateAndSend();
     });
@@ -272,7 +184,7 @@ class CBoolEditor extends Component {
    * Request to set value to Default
    *
    * @method
-   * @listens CEditorFrame#cteditortonull
+   * @listens CEditorFrame#cteditorreset
    */
 
   onNullClicked() {
@@ -467,7 +379,11 @@ class CMultilineTextEditor extends Component {
     if (e.detail.initiator == this.props.column.name) return;
   }
   onFastTextInput(val) {
-    this.state.editor_value = this.state.editor_value + this.props.column.hint_sep + val;
+    if (this.state.editor_value) {
+      this.state.editor_value = this.state.editor_value + this.props.column.hint_sep + val;
+    } else {
+      this.state.editor_value = val;
+    }
     this.setState({
       editor_value: this.state.editor_value,
       editor_modified: true
@@ -475,20 +391,20 @@ class CMultilineTextEditor extends Component {
       this.validateAndSend();
     });
   }
-  _renderToolbar() {
+  renderToolbar() {
     var self = this;
     var buttons = self.props.column.hints;
     return h("div", {
-      class: "field mb-2"
+      class: "field mt-2"
     }, h("div", {
       class: "control"
     }, h("div", {
       class: "buttons are-small is-flex is-flex-wrap-wrap"
     }, buttons.map(([label, val]) => h("button", {
       type: "button",
-      class: "button is-light is-small mb-2 mr-2",
+      class: "button is-small",
       onClick: () => this.onFastTextInput(val),
-      title: `Вставить: ${label}`
+      title: val.slice(0, self.props.column.max_length) + (val.length > 32 ? "..." : "")
     }, label)))));
   }
   render() {
@@ -499,7 +415,7 @@ class CMultilineTextEditor extends Component {
       oncteditorreset: self.onResetClicked,
       oncteditorundo: self.onUndoClicked,
       oncteditorchanged: self.onOtherEditorChanged
-    }, self._renderToolbar(), h("textarea", {
+    }, h("textarea", {
       class: cls("textarea", self.state.editor_valid ? "" : "is-danger"),
       placeholder: self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder,
       value: self.state.editor_value === null ? "" : self.state.editor_value,
@@ -508,7 +424,7 @@ class CMultilineTextEditor extends Component {
       class: "icon is-small is-left"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "hide_source")) : "");
+    }, "hide_source")) : "", self.renderToolbar());
   }
 }
 class CTagsCell extends Component {
@@ -523,15 +439,22 @@ class CTagsCell extends Component {
       return self.props.value.map(item => {
         if (item == "") {
           return "";
-        } else if (self.props.column.max_length === undefined || item.length <= self.props.column.max_length) {
+        }
+        ;
+        var item_label = item;
+        var item_label_list = self.props.column.options.filter(x => x[0] == item);
+        if (item_label_list.length > 0) {
+          item_label = item_label_list[0][1];
+        }
+        if (self.props.column.max_length === undefined || item_label.length <= self.props.column.max_length) {
           return h("span", {
             class: "tag"
-          }, item);
+          }, item_label);
         } else {
           return h("span", {
             class: "tag",
-            title: item
-          }, item.slice(0, self.props.column.max_length) + "...");
+            title: item_label
+          }, item_label.slice(0, self.props.column.max_length) + "...");
         }
       });
     }
@@ -540,16 +463,17 @@ class CTagsCell extends Component {
 class CTagsEditor extends Component {
   constructor() {
     super();
-    this.onInputChange = this.onInputChange.bind(this);
     this.onResetClicked = this.onResetClicked.bind(this);
     this.onNullClicked = this.onNullClicked.bind(this);
     this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
     this.onUndoClicked = this.onUndoClicked.bind(this);
     this.validateAndSend = this.validateAndSend.bind(this);
+    this.onRemoveTag = this.onRemoveTag.bind(this);
+    this.onAddTag = this.onAddTag.bind(this);
   }
   componentDidMount() {
     this.setState({
-      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name].split(";"),
+      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
       editor_modified: false,
       editor_valid: false
     }, () => {
@@ -558,28 +482,16 @@ class CTagsEditor extends Component {
   }
   validateAndSend() {
     var is_valid = true;
-    var self = this;
-    self.state.editor_value = typeof self.state.editor_value == "string" ? self.state.editor_value.split(";") : self.state.editor_value;
-    console.log(typeof self.state.editor_value);
-    self.state.editor_value = self.state.editor_value === null ? "" : self.state.editor_value.filter(x => x != "").join(";");
-    if (self.state.editor_value === "") {
-      self.state.editor_value = null;
+    if (this.state.editor_value === "" && this.props.column.editor_minimum_tags > 0) {
+      is_valid = false;
     }
-    if (self.state.editor_value === null && !this.props.column.editor_allow_null) {
+    if (this.state.editor_value === null && !this.props.column.editor_allow_null) {
       is_valid = false;
     }
     this.setState({
       editor_valid: is_valid
     }, () => {
-      this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, true);
-    });
-  }
-  onInputChange(e) {
-    this.setState({
-      editor_value: e.target.value,
-      editor_modified: true
-    }, () => {
-      this.validateAndSend();
+      this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, is_valid);
     });
   }
 
@@ -641,69 +553,92 @@ class CTagsEditor extends Component {
   onOtherEditorChanged(e) {
     if (e.detail.initiator == this.props.column.name) return;
   }
-  onRemoveTag(tag) {
-    return () => {
-      var self = this;
-      self.state.editor_value = typeof self.state.editor_value == "string" ? self.state.editor_value.split(";") : self.state.editor_value;
-      this.setState({
-        editor_value: this.state.editor_value.filter(x => x != tag),
-        editor_modified: true
-      }, () => {
-        this.validateAndSend();
-      });
-    };
+  onRemoveTag(e) {
+    var tag = unwind_button_or_link(e).dataset['tag'];
+    var nv = this.state.editor_value;
+    if (this.state.editor_value == null || this.state.editor_value == "") {
+      return;
+    } else {
+      var actived = this.state.editor_value.split(";");
+      actived = actived.filter(x => x != tag);
+      actived.sort();
+      nv = actived.join(";");
+    }
+    this.setState({
+      editor_value: nv,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
   }
-  onAddTag(tag) {
-    return () => {
-      var self = this;
-      self.state.editor_value = typeof self.state.editor_value == "string" ? self.state.editor_value.split(";") : self.state.editor_value;
-      if (!self.state.editor_value.includes(tag)) {
-        this.setState({
-          editor_value: (self.state.editor_value === null ? [] : self.state.editor_value).concat([tag]),
-          editor_modified: true
-        }, () => {
-          this.validateAndSend();
-        });
-      }
-    };
+  onAddTag(e) {
+    var tag = unwind_button_or_link(e).dataset['tag'];
+    var nv = "";
+    if (this.state.editor_value === null || this.state.editor_value == "") {
+      nv = tag;
+    } else {
+      var actived = this.state.editor_value.split(";");
+      actived.push(tag);
+      actived.sort();
+      nv = actived.join(";");
+    }
+    this.setState({
+      editor_value: nv,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
   }
   renderTags() {
     var self = this;
-    console.log(self.state.editor_value);
-    if (self.state.editor_value === undefined) {
-      return h("span", {
+    if (self.state.editor_value === undefined) return;
+    if (self.state.editor_value === null) {
+      return h("div", {
+        class: "input"
+      }, h("span", {
         class: "has-text-grey"
-      }, "NULL");
+      }, "NULL"));
     } else {
-      return self.props.column.options.map(tag => {
-        if (self.props.column.max_length === undefined || tag.length <= self.props.column.max_length) {
-          return h("div", {
-            class: "control"
-          }, h("div", {
-            class: "tags has-addons"
-          }, h("button", {
-            class: "tag",
-            onClick: self.onAddTag(tag)
-          }, tag), self.state.editor_value === null ? "" : self.state.editor_value.includes(tag) ? h("button", {
-            class: "tag is-delete",
-            onClick: self.onRemoveTag(tag)
-          }) : ""));
-        } else {
-          return h("div", {
-            class: "control"
-          }, h("div", {
-            class: "tags has-addons"
-          }, h("button", {
-            class: "tag",
-            title: tag,
-            onClick: self.onAddTag(tag)
-          }, tag.slice(0, self.props.column.max_length) + "..."), self.state.editor_value === null ? "" : self.state.editor_value.includes(tag) ? h("button", {
-            class: "tag is-delete",
-            onClick: self.onRemoveTag(tag)
-          }) : ""));
-        }
-      });
+      var actived = self.state.editor_value.split(";");
+      var tags = self.props.column.options.filter(x => actived.includes(x[0]));
+      return h("div", {
+        class: "input"
+      }, tags.map(([tag, label]) => {
+        return h("div", {
+          class: "control"
+        }, h("div", {
+          class: "tags has-addons mr-2"
+        }, h("button", {
+          class: "tag"
+        }, label), h("button", {
+          class: "tag is-delete",
+          "data-tag": tag,
+          onClick: self.onRemoveTag
+        })));
+      }));
     }
+  }
+  renderToolbar() {
+    var self = this;
+    var buttons = self.props.column.options;
+    if (self.state.editor_value === undefined) return;
+    if (self.state.editor_value !== null) {
+      var actived = self.state.editor_value.split(";");
+      buttons = buttons.filter(x => !actived.includes(x[0]));
+    }
+    return h("div", {
+      class: "field"
+    }, h("div", {
+      class: "control"
+    }, h("div", {
+      class: "buttons are-small is-flex is-flex-wrap-wrap"
+    }, buttons.map(([val, label]) => h("button", {
+      type: "button",
+      class: "button is-small",
+      "data-tag": val,
+      onClick: self.onAddTag,
+      title: label.slice(0, self.props.column.max_length) + (label.length > 32 ? "..." : "")
+    }, label)))));
   }
   render() {
     var self = this;
@@ -713,7 +648,7 @@ class CTagsEditor extends Component {
       oncteditorreset: self.onResetClicked,
       oncteditorundo: self.onUndoClicked,
       oncteditorchanged: self.onOtherEditorChanged
-    }, self.renderTags());
+    }, self.renderTags(), self.renderToolbar());
   }
 }
 class CNumbersCell extends Component {
@@ -754,7 +689,7 @@ class CSelectCell {
         class: "has-text-grey"
       }, "NULL");
     } else {
-      if (self.props.column.singl_select || self.props.column.singl_select === undefined) {
+      if (self.props.column.single_select || self.props.column.single_select === undefined) {
         var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
         return h(Fragment, null, labels.length == 0 ? h("span", {
           class: "tag"
@@ -899,7 +834,7 @@ class CDateEditor extends Component {
    * Request to set value to NULL.
    *
    * @method
-   * @listens CEditorFrame#cteditortonull
+   * @listens CEditorFrame#cteditorreset
    */
 
   onResetClicked() {
@@ -979,218 +914,6 @@ class CDateEditor extends Component {
     }, "hide_source")) : "");
   }
 }
-/**
- * Link editor class.
- *
- * @arg this.props.column {Object} Table column.
- * @arg this.props.column.name {string} Column name
- * @arg this.props.column.editor_default {*} Editor default value
- *
- * @arg this.props.row {Object} Row to edit, null if add, first if batch.
- * @arg this.props.add {bool} Is adding.
- * @arg this.props.batch {bool} Is batch editing.
- * @arg this.props.onEditorChanges {CTable#OnEditorChanges} Editor changes callback.
- *
- */
-
-class CLinkEditor extends Component {
-  constructor() {
-    super();
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onResetClicked = this.onResetClicked.bind(this);
-    this.onNullClicked = this.onNullClicked.bind(this);
-    this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
-    this.onUndoClicked = this.onUndoClicked.bind(this);
-    this.onSelectDropdownClick = this.onSelectDropdownClick.bind(this);
-    this.onSelectItem = this.onSelectItem.bind(this);
-    this.onOptionsInputChange = this.onOptionsInputChange.bind(this);
-  }
-  componentDidMount() {
-    var self = this;
-    this.setState({
-      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
-      editor_modified: false,
-      editor_valid: false,
-      select_dropdown_active: false,
-      options_history: clone(this.props.options[this.props.column.cell_link]),
-      options_current: clone(this.props.options[this.props.column.cell_link]),
-      options_input: "",
-      input_id: makeID()
-    }, () => {
-      this.validateAndSend();
-    });
-    this.props.getOptionsForField(this.props.column.name, "").then(w => {
-      var opt = {};
-      w.rows.forEach(q => {
-        opt[q[w.keys[0]]] = q[w.label];
-      });
-      self.setState({
-        options_current: opt,
-        options_history: {
-          ...opt,
-          ...self.state.options_history
-        }
-      });
-    });
-  }
-  validateAndSend() {
-    this.sendChanges();
-  }
-  sendChanges() {
-    if (this.props.row === null) {
-      this.props.onEditorChanges(this.props.column.name, true, this.state.editor_value, true);
-    } else {
-      this.props.onEditorChanges(this.props.column.name, this.state.editor_value == this.props.row[this.props.column.name], this.state.editor_value, true);
-    }
-  }
-  onInputChange(e) {
-    this.setState({
-      editor_value: e.target.value,
-      editor_modified: true
-    }, () => {
-      this.validateAndSend();
-    });
-  }
-
-  /**
-   * Request to set value to NULL.
-   *
-   * @method
-   * @listens CEditorFrame#cteditorreset
-   */
-
-  onResetClicked() {
-    this.setState({
-      editor_value: this.props.column.editor_default,
-      editor_modified: true
-    }, () => {
-      this.validateAndSend();
-    });
-  }
-
-  /**
-   * Request to set value to Default
-   *
-   * @method
-   * @listens CEditorFrame#cteditortonull
-   */
-
-  onNullClicked() {
-    this.setState({
-      editor_value: null,
-      editor_modified: true
-    }, () => {
-      this.validateAndSend();
-    });
-  }
-
-  /**
-   * Request to set value to value at start editing.
-   *
-   * @method
-   * @listens CEditorFrame#cteditorundo
-   */
-
-  onUndoClicked() {
-    this.setState({
-      editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name],
-      editor_modified: false
-    }, () => {
-      this.validateAndSend();
-    });
-  }
-
-  /**
-   * Notifiaction for changes in some editor.
-   *
-   * @method
-   * @listens CTable#cteditorchanged
-   */
-
-  onOtherEditorChanged(e) {
-    if (e.detail.initiator == this.props.column.name) return;
-  }
-  onSelectDropdownClick() {
-    this.setState({
-      select_dropdown_active: !this.state.select_dropdown_active
-    }, () => {
-      document.getElementById(this.state.input_id).focus();
-    });
-  }
-  onSelectItem(e) {
-    var el = unwind_button_or_link(e);
-    this.setState({
-      editor_value: parseInt(el.dataset['value']),
-      select_dropdown_active: false
-    }, () => {
-      this.validateAndSend();
-    });
-  }
-  onOptionsInputChange(e) {
-    var self = this;
-    this.setState({
-      options_input: e.target.value
-    }, () => {
-      self.props.getOptionsForField(this.props.column.name, self.state.options_input).then(w => {
-        var opt = {};
-        w.rows.forEach(q => {
-          opt[q[w.keys[0]]] = q[w.label];
-        });
-        self.setState({
-          options_current: opt,
-          options_history: {
-            ...opt,
-            ...self.state.options_history
-          }
-        });
-      });
-    });
-  }
-  render() {
-    var self = this;
-
-    //onBlur={this.dropdownMenuLeave}
-
-    return h("div", {
-      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")
-    }, h("div", {
-      class: "dropdown-trigger"
-    }, h("button", {
-      class: "button",
-      "aria-haspopup": "true",
-      "aria-controls": "dropdown-menu",
-      onClick: this.onSelectDropdownClick
-    }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
-      class: "icon is-small"
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "arrow_drop_down")))), h("div", {
-      class: "dropdown-menu",
-      role: "menu"
-    }, h("div", {
-      class: "dropdown-content"
-    }, h("p", {
-      class: "dropdown-item"
-    }, h("input", {
-      class: "input",
-      type: "input",
-      value: self.state.options_input,
-      onInput: self.onOptionsInputChange,
-      id: this.state.input_id
-    }))), h("div", {
-      class: "dropdown-content",
-      style: "overflow: auto; max-height: 12em;"
-    }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
-      class: "dropdown-item",
-      "data-value": x,
-      onClick: self.onSelectItem
-    }, self.state.options_current[x], " (", x, ")")) : "")));
-  }
-}
-
-// {aw_options.map(function(item){
-// item_count += 1;
-// return <a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}</a>;})}
 /**
  * Table head class.
  *
@@ -1347,15 +1070,6 @@ class CPageTable extends Component {
           row: r,
           onDownloadFile: self.props.table.onDownloadFile
         }));
-<<<<<<< HEAD
-        if (c.cell_actor == "CLinkCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CLinkCell, {
-          column: c,
-          value: r[c.name],
-          row: r,
-          options: self.props.table.state.table_options
-=======
         if (c.cell_actor == "CNumbersCell") return h("td", {
           onClick: self.props.onRowClick
         }, h(CNumbersCell, {
@@ -1387,7 +1101,14 @@ class CPageTable extends Component {
           value: r[c.name],
           row: r,
           onDownloadFile: self.props.table.onDownloadFile
->>>>>>> baty951-master
+        }));
+        if (c.cell_actor == "CLinkCell") return h("td", {
+          onClick: self.props.onRowClick
+        }, h(CLinkCell, {
+          column: c,
+          value: r[c.name],
+          row: r,
+          options: self.props.table.state.table_options
         }));
       }
     })))))));
@@ -1957,6 +1678,234 @@ class CFilesEditor extends Component {
     }, _("Upload..."))))) : "");
   }
 }
+class CLinkCell extends Component {
+  render() {
+    var table = this.props.column.cell_link;
+    var view = "";
+    if (this.props.value in this.props.options[table]) {
+      view = String(this.props.options[table][this.props.value]) + ' (' + this.props.value + ')';
+    } else {
+      view = h("span", {
+        class: "has-text-grey"
+      }, this.props.value);
+    }
+    return h(Fragment, null, this.props.value === null ? h("span", {
+      class: "has-text-grey"
+    }, "NULL") : view);
+  }
+}
+/**
+ * Link editor class.
+ *
+ * @arg this.props.column {Object} Table column.
+ * @arg this.props.column.name {string} Column name
+ * @arg this.props.column.editor_default {*} Editor default value
+ *
+ * @arg this.props.row {Object} Row to edit, null if add, first if batch.
+ * @arg this.props.add {bool} Is adding.
+ * @arg this.props.batch {bool} Is batch editing.
+ * @arg this.props.onEditorChanges {CTable#OnEditorChanges} Editor changes callback.
+ *
+ */
+
+class CLinkEditor extends Component {
+  constructor() {
+    super();
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onResetClicked = this.onResetClicked.bind(this);
+    this.onNullClicked = this.onNullClicked.bind(this);
+    this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
+    this.onUndoClicked = this.onUndoClicked.bind(this);
+    this.onSelectDropdownClick = this.onSelectDropdownClick.bind(this);
+    this.onSelectItem = this.onSelectItem.bind(this);
+    this.onOptionsInputChange = this.onOptionsInputChange.bind(this);
+  }
+  componentDidMount() {
+    var self = this;
+    this.setState({
+      editor_value: this.props.add || this.props.batch ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false,
+      editor_valid: false,
+      select_dropdown_active: false,
+      options_history: clone(this.props.options[this.props.column.cell_link]),
+      options_current: clone(this.props.options[this.props.column.cell_link]),
+      options_input: "",
+      input_id: makeID()
+    }, () => {
+      this.validateAndSend();
+    });
+    this.props.getOptionsForField(this.props.column.name, "").then(w => {
+      var opt = {};
+      w.rows.forEach(q => {
+        opt[q[w.keys[0]]] = q[w.label];
+      });
+      self.setState({
+        options_current: opt,
+        options_history: {
+          ...opt,
+          ...self.state.options_history
+        }
+      });
+    });
+  }
+  validateAndSend() {
+    this.sendChanges();
+  }
+  sendChanges() {
+    if (this.props.row === null) {
+      this.props.onEditorChanges(this.props.column.name, true, this.state.editor_value, true);
+    } else {
+      this.props.onEditorChanges(this.props.column.name, this.state.editor_value == this.props.row[this.props.column.name], this.state.editor_value, true);
+    }
+  }
+  onInputChange(e) {
+    this.setState({
+      editor_value: e.target.value,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to NULL.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorreset
+   */
+
+  onResetClicked() {
+    this.setState({
+      editor_value: this.props.column.editor_default,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to Default
+   *
+   * @method
+   * @listens CEditorFrame#cteditortonull
+   */
+
+  onNullClicked() {
+    this.setState({
+      editor_value: null,
+      editor_modified: true
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Request to set value to value at start editing.
+   *
+   * @method
+   * @listens CEditorFrame#cteditorundo
+   */
+
+  onUndoClicked() {
+    this.setState({
+      editor_value: this.props.add ? this.props.column.editor_default : this.props.row[this.props.column.name],
+      editor_modified: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+
+  /**
+   * Notifiaction for changes in some editor.
+   *
+   * @method
+   * @listens CTable#cteditorchanged
+   */
+
+  onOtherEditorChanged(e) {
+    if (e.detail.initiator == this.props.column.name) return;
+  }
+  onSelectDropdownClick() {
+    this.setState({
+      select_dropdown_active: !this.state.select_dropdown_active
+    }, () => {
+      document.getElementById(this.state.input_id).focus();
+    });
+  }
+  onSelectItem(e) {
+    var el = unwind_button_or_link(e);
+    this.setState({
+      editor_value: parseInt(el.dataset['value']),
+      select_dropdown_active: false
+    }, () => {
+      this.validateAndSend();
+    });
+  }
+  onOptionsInputChange(e) {
+    var self = this;
+    this.setState({
+      options_input: e.target.value
+    }, () => {
+      self.props.getOptionsForField(this.props.column.name, self.state.options_input).then(w => {
+        var opt = {};
+        w.rows.forEach(q => {
+          opt[q[w.keys[0]]] = q[w.label];
+        });
+        self.setState({
+          options_current: opt,
+          options_history: {
+            ...opt,
+            ...self.state.options_history
+          }
+        });
+      });
+    });
+  }
+  render() {
+    var self = this;
+
+    //onBlur={this.dropdownMenuLeave}
+
+    return h("div", {
+      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")
+    }, h("div", {
+      class: "dropdown-trigger"
+    }, h("button", {
+      class: "button",
+      "aria-haspopup": "true",
+      "aria-controls": "dropdown-menu",
+      onClick: this.onSelectDropdownClick
+    }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
+      class: "icon is-small"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "arrow_drop_down")))), h("div", {
+      class: "dropdown-menu",
+      role: "menu"
+    }, h("div", {
+      class: "dropdown-content"
+    }, h("p", {
+      class: "dropdown-item"
+    }, h("input", {
+      class: "input",
+      type: "input",
+      value: self.state.options_input,
+      onInput: self.onOptionsInputChange,
+      id: this.state.input_id
+    }))), h("div", {
+      class: "dropdown-content",
+      style: "overflow: auto; max-height: 12em;"
+    }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
+      class: "dropdown-item",
+      "data-value": x,
+      onClick: self.onSelectItem
+    }, self.state.options_current[x], " (", x, ")")) : "")));
+  }
+}
+
+// {aw_options.map(function(item){
+// item_count += 1;
+// return <a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}</a>;})}
 /**
  * @event CEditorFrame#cteditorreset
  */
@@ -2127,16 +2076,6 @@ class CEditorFrame extends Component {
       row: self.props.row,
       add: self.props.add,
       batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CFilesEditor" ? h(CFilesEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch,
-      onDownloadFile: self.props.table.onDownloadFile,
-      onUploadFile: self.props.table.onUploadFile,
-      askUser: self.props.table.askUser,
-      showError: self.props.table.showError
     }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CLinkEditor" ? h(CLinkEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
@@ -2732,10 +2671,7 @@ class CTable extends Component {
     this.onCloseFilter = this.onCloseFilter.bind(this);
     this.onDownloadFile = this.onDownloadFile.bind(this);
     this.onUploadFile = this.onUploadFile.bind(this);
-<<<<<<< HEAD
     this.getOptionsForField = this.getOptionsForField.bind(this);
-=======
->>>>>>> baty951-master
     this.setState({
       width: 50,
       fontSize: 100,
@@ -2983,6 +2919,13 @@ class CTable extends Component {
       self.state.current_table = table;
       self.state.width = table.width;
       self.state.table_columns = c;
+      if (self.state.table_columns === null) {
+        this.showError({
+          code: -5,
+          message: _("Columns configuration loading failure.")
+        });
+        return;
+      }
       self.resetColumns();
       self.resetSorting();
       self.resetFiltering();
@@ -3891,7 +3834,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-09-06 22:23+0300",
+    "pot-creation-date": "2025-10-01 22:47+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -3903,6 +3846,8 @@ var ctable_lang_ru = {
     "x-language": "ru_RU",
     "x-source-language": "C"
   },
+  "Yes": [null, "Да"],
+  "No": [null, "Нет"],
   "Reset": [null, "Сбросить"],
   "Close": [null, "Закрыть"],
   "Add": [null, "Добавить"],
@@ -3931,11 +3876,10 @@ var ctable_lang_ru = {
   "Zoom In": [null, "Увеличить"],
   "Zoom Out": [null, "Уменьшить"],
   "Reset Zoom": [null, "Сбросить масштаб"],
+  "Columns configuration loading failure.": [null, "Ошибка при загрузке информации о столбцах таблицы."],
   "Duplicate %d record?": ["Duplicate %d records?", "Создать копию %d записи?", "Создать копию %d записей?", "Создать копию %d записей?"],
   "Delete %d record?": ["Delete %d records?", "Удалить %d запись?", "Удалить %d записи?", "Удалить %d записей?"],
-  "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"],
-  "Yes": [null, "Да"],
-  "No": [null, "Нет"]
+  "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"]
 };
 
 //# sourceMappingURL=ctable.js.map

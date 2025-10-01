@@ -4,7 +4,7 @@ class CSelectCell {
         if (self.props.value === null) {
             return <span class="has-text-grey">NULL</span>;
         } else {
-            if (self.props.column.singl_select || self.props.column.singl_select === undefined) {
+            if (self.props.column.single_select || self.props.column.single_select === undefined) {
                 var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
                 return <>{labels.length == 0 ? <span class="tag">{this.props.value}</span> : <span class="tag">{String(labels[0])}</span>}</>
             } else {

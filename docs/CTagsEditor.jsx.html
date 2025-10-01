@@ -1,4 +1,32 @@
-class CTagsEditor extends Component {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CTagsEditor.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CTagsEditor.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>class CTagsEditor extends Component {
 
     constructor() {
         super();
@@ -25,11 +53,11 @@ class CTagsEditor extends Component {
     validateAndSend() {
         var is_valid = true;
 
-        if (this.state.editor_value === "" && this.props.column.editor_minimum_tags > 0){
+        if (this.state.editor_value === "" &amp;&amp; this.props.column.editor_minimum_tags > 0){
             is_valid = false;
         }
 
-        if (this.state.editor_value === null && !this.props.column.editor_allow_null){
+        if (this.state.editor_value === null &amp;&amp; !this.props.column.editor_allow_null){
             is_valid = false;
         }
 
@@ -118,20 +146,20 @@ class CTagsEditor extends Component {
         if (self.state.editor_value === undefined) return;
 
         if (self.state.editor_value === null) {
-            return <div class="input"><span class="has-text-grey">NULL</span></div>;
+            return &lt;div class="input">&lt;span class="has-text-grey">NULL&lt;/span>&lt;/div>;
         } else {
             var actived = self.state.editor_value.split(";");
             var tags = self.props.column.options.filter(x => actived.includes(x[0]));
             return (
-                <div class="input">
+                &lt;div class="input">
                 {tags.map(([tag, label]) => {
-                    return  <div class="control">
-                                <div class="tags has-addons mr-2">
-                                    <button class="tag">{label}</button><button class="tag is-delete" data-tag={tag} onClick={self.onRemoveTag}></button>
-                                </div>
-                            </div>;
+                    return  &lt;div class="control">
+                                &lt;div class="tags has-addons mr-2">
+                                    &lt;button class="tag">{label}&lt;/button>&lt;button class="tag is-delete" data-tag={tag} onClick={self.onRemoveTag}>&lt;/button>
+                                &lt;/div>
+                            &lt;/div>;
                 })}
-                </div>
+                &lt;/div>
             );
         }
     }
@@ -148,18 +176,18 @@ class CTagsEditor extends Component {
         }
 
         return (
-            <div class="field">
-                <div class="control">
-                    <div class="buttons are-small is-flex is-flex-wrap-wrap">
+            &lt;div class="field">
+                &lt;div class="control">
+                    &lt;div class="buttons are-small is-flex is-flex-wrap-wrap">
                     {buttons.map(([val, label]) => (
-                        <button type="button" class="button is-small" data-tag={val} onClick={self.onAddTag}
+                        &lt;button type="button" class="button is-small" data-tag={val} onClick={self.onAddTag}
                             title={label.slice(0, self.props.column.max_length) + (label.length > 32 ? "..." : "")}>
                             {label}
-                        </button>
+                        &lt;/button>
                     ))}
-                    </div>
-                </div>
-            </div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
         );
     }
 
@@ -167,9 +195,32 @@ class CTagsEditor extends Component {
 
         var self = this;
 
-        return   <div class={cls("control field is-grouped is-grouped-multiline", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
+        return   &lt;div class={cls("control field is-grouped is-grouped-multiline", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
             {self.renderTags()}
             {self.renderToolbar()}
-        </div>;
+        &lt;/div>;
     }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilesEditor.html">CFilesEditor</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CLinkEditor.html">CLinkEditor</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Oct 01 2025 22:48:48 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

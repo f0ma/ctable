@@ -194,6 +194,12 @@ class CTable extends Component {
       self.state.current_table = table;
       self.state.width = table.width;
       self.state.table_columns = c;
+      if(self.state.table_columns === null){
+        this.showError({code:-5, message:_("Columns configuration loading failure.")});
+        return;
+      }
+
+
 
       self.resetColumns();
       self.resetSorting();

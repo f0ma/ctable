@@ -6,12 +6,17 @@ class CTagsCell extends Component {
         } else {
             self.props.value = self.props.value.split(";")
             return self.props.value.map(item => {
-                if (item == "") { return "";
-                } else if (self.props.column.max_length === undefined || item.length <= self.props.column.max_length) {
-                    return <span class="tag">{item}</span>;
+                if (item == "") { return ""};
+                var item_label = item;
+                var item_label_list = self.props.column.options.filter(x => x[0] == item);
+                if (item_label_list.length > 0){
+                    item_label = item_label_list[0][1];
+                }
+                if (self.props.column.max_length === undefined || item_label.length <= self.props.column.max_length) {
+                    return <span class="tag">{item_label}</span>;
                 } else {
-                    return <span class="tag" title={item}>
-                        {item.slice(0, self.props.column.max_length) + "..."}
+                    return <span class="tag" title={item_label}>
+                        {item_label.slice(0, self.props.column.max_length) + "..."}
                     </span>;
                 }
             })

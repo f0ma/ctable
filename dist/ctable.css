@@ -214,3 +214,13 @@ tr.ctable-selected-row{
     margin-bottom: 0em !important;
     background-color: var(--bulma-skeleton-background);
 }
+
+.ctable-main-table span.tag{
+    font-size: unset;
+    margin: 0.1em;
+}
+
+.ctable-main-table button{
+    font-size: unset;
+}
+

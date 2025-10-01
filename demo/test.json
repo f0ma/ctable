@@ -21,94 +21,19 @@
       "max_length": 100,
       "editor_actor": "CMultilineTextEditor",
       "ishints" : true,
-      "hint_sep": ";",
+      "hint_sep": ", ",
       "hints": [
         [
-          "bold",
-          "Bold"
+          "text 1",
+          "Long text 1"
         ],
         [
-          "italic",
-          "Italic"
+          "text 2",
+          "Long long text 2"
         ],
         [
-          "underline",
-          "Underline"
-        ],
-        [
-          "strikethrough",
-          "Strikethrough"
-        ],
-        [
-          "code",
-          "Code"
-        ],
-        [
-          "quote",
-          "Quote"
-        ],
-        [
-          "link",
-          "Link"
-        ],
-        [
-          "image",
-          "Image"
-        ],
-        [
-          "ul",
-          "Unordered list"
-        ],
-        [
-          "ol",
-          "Ordered list"
-        ],
-        [
-          "clean",
-          "Remove styles"
-        ],[
-          "bold",
-          "Bold"
-        ],
-        [
-          "italic",
-          "Italic"
-        ],
-        [
-          "underline",
-          "Underline"
-        ],
-        [
-          "strikethrough",
-          "Strikethrough"
-        ],
-        [
-          "code",
-          "Code"
-        ],
-        [
-          "quote",
-          "Quote"
-        ],
-        [
-          "link",
-          "Link"
-        ],
-        [
-          "image",
-          "Image"
-        ],
-        [
-          "ul",
-          "Unordered list"
-        ],
-        [
-          "ol",
-          "Ordered list"
-        ],
-        [
-          "clean",
-          "Remove styles"
+          "text3",
+          "Long text 3"
         ]
       ],
       "editor_default": "",
