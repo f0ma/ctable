@@ -597,12 +597,16 @@ class CTagsEditor extends Component {
         class: "input"
       }, h("span", {
         class: "has-text-grey"
-      }, "NULL"));
+      }, "NULL"), h("span", {
+        class: "icon is-small is-left"
+      }, h("span", {
+        class: "material-symbols-outlined"
+      }, "hide_source")));
     } else {
       var actived = self.state.editor_value.split(";");
       var tags = self.props.column.options.filter(x => actived.includes(x[0]));
       return h("div", {
-        class: "input"
+        class: cls("input", self.state.editor_valid ? "" : "is-danger")
       }, tags.map(([tag, label]) => {
         return h("div", {
           class: "control"
