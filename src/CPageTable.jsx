@@ -58,6 +58,8 @@ class CPageTable extends Component {
                         return <td onClick={self.props.onRowClick}><CMultilineTextCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
                       if(c.cell_actor == "CLinkCell")
                         return <td onClick={self.props.onRowClick}><CLinkCell column={c} value={r[c.name]} row={r} options={self.props.table.state.table_options} /></td>;
+                      if(c.cell_actor == "CMultiLinkCell")
+                        return <td onClick={self.props.onRowClick}><CMultiLinkCell column={c} value={r[c.name]} row={r} options={self.props.table.state.table_options} /></td>;
                       }
                     })
                   }

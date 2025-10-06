@@ -22,50 +22,48 @@ class Test {
         $rows = $q->execute($this->db, [], $accept = 'ok', $calc_rows = TRUE);
         $num = $q->found_rows();
 
+        SQLYamlQuery::enrich_data_by_link($this->db, $rows, "members", "team", "account_id", "id", "test_id");
+
         return ["rows" => $rows, "total" => $num];
     }
 
     public function insert($path, $data) {
         $q = SQLYamlQuery::simple_insert("test", ["text", "verify"], $data);
         $q->execute($this->db);
+
+        $last_id = $this->db->lastInsertId();
+
+        SQLYamlQuery::sync_data_by_link($this->db, $data["members"], "team", "account_id", $last_id, "test_id");
     }
 
     public function update($path, $keys, $data) {
-        error_log(var_export($data, true));
 
+        if(array_key_exists("text", $data) || array_key_exists("verify", $data)){
+            $q = SQLYamlQuery::simple_update("test", ["id"], $keys, ["text", "verify"], $data);
+            $q->execute($this->db);
+        }
 
-        $q = SQLYamlQuery::simple_update("test", ["id"], $keys, ["text", "verify"], $data);
-
-        error_log(var_export($q->query, true));
-
-        $q->execute($this->db);
+        if(array_key_exists("members", $data)){
+            SQLYamlQuery::sync_data_by_link($this->db, $data["members"], "team", "account_id", $keys["id"], "test_id");
+        }
     }
 
     public function duplicate($path, $keys) {
         $q = SQLYamlQuery::simple_copy("test", ["id"], $keys, ["text", "verify"]);
         $q->execute($this->db);
+
+        $last_id = $this->db->lastInsertId();
+        $rows = [["id" => $keys["id"]]];
+
+        SQLYamlQuery::enrich_data_by_link($this->db, $rows, "members", "team", "account_id", "id", "test_id");
+        SQLYamlQuery::sync_data_by_link($this->db, $rows[0]["members"], "team", "account_id", $last_id, "test_id");
     }
 
     public function delete($path, $keys) {
         $q = SQLYamlQuery::simple_delete("test", ["id"], $keys);
         $q->execute($this->db);
+
+        SQLYamlQuery::sync_data_by_link($this->db, "", "team", "account_id", $keys["id"], "test_id");
     }
 
-/*    public function options($path, $filter=[], $limit=0) {
-
-        $q = SQLYamlQuery::simple_select("test", ["id"]);
-        $q->query['select']['columns'][]=["sql"=>"CONCAT(`firstname`,\" \",`lastname`) as `name`"];
-
-
-        apply_filters($q, ["id", "name"], $filter, ['name'=>"asc"], $limit, 0);
-
-        error_log(var_export($q->query, true));
-
-        error_log($q->sql());
-
-        $rows = $q->execute($this->db);
-
-        return ["rows" => $rows, "keys" => ["id"], "label" => "name"];
-    }
-*/
 }

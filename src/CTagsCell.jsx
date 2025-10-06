@@ -1,3 +1,13 @@
+/**
+ * Multiline plain text column.
+ *
+ * @arg this.props.column.options {Array} Array of pairs of strings `[tag, label]`
+ * @arg this.props.column.max_length {Integer} Maximum label length for display in symbols.
+ *
+ * @arg this.props.value {String} Tags string in format `tag1;tag2;tag3`
+ *
+ */
+
 class CTagsCell extends Component {
     render() {
         var self = this;

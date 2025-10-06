@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-01 22:47+0300\n"
+"POT-Creation-Date: 2025-10-06 22:00+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/CBoolCell.jsx:4 src/CBoolEditor.jsx:90 src/CTable.jsx:771
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:777
 msgid "Yes"
 msgstr ""
 
-#: src/CBoolCell.jsx:4 src/CBoolEditor.jsx:91 src/CTable.jsx:772
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:778
 msgid "No"
 msgstr ""
 
@@ -53,28 +53,28 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/CFilesCell.jsx:11
+#: src/CFilesCell.jsx:18
 #, javascript-format
 msgid "%d Byte"
 msgid_plural "%d Bytes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CFilesCell.jsx:13
+#: src/CFilesCell.jsx:20
 #, javascript-format
 msgid "%d KiB"
 msgid_plural "%d KiB"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CFilesCell.jsx:15
+#: src/CFilesCell.jsx:22
 #, javascript-format
 msgid "%d MiB"
 msgid_plural "%d MiB"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CFilesCell.jsx:17
+#: src/CFilesCell.jsx:24
 #, javascript-format
 msgid "%d GiB"
 msgid_plural "%d GiB"
@@ -156,25 +156,25 @@ msgstr ""
 msgid "Reset Zoom"
 msgstr ""
 
-#: src/CTable.jsx:198
+#: src/CTable.jsx:200
 msgid "Columns configuration loading failure."
 msgstr ""
 
-#: src/CTable.jsx:448
+#: src/CTable.jsx:454
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:457
+#: src/CTable.jsx:463
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:605
+#: src/CTable.jsx:611
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"

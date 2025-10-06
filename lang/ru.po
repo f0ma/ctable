@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ctable 3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-01 22:47+0300\n"
+"POT-Creation-Date: 2025-10-06 22:00+0300\n"
 "PO-Revision-Date: 2025-05-20 01:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -21,11 +21,11 @@ msgstr ""
 "X-Language: ru_RU\n"
 "X-Source-Language: C\n"
 
-#: src/CBoolCell.jsx:4 src/CBoolEditor.jsx:90 src/CTable.jsx:771
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:777
 msgid "Yes"
 msgstr "Да"
 
-#: src/CBoolCell.jsx:4 src/CBoolEditor.jsx:91 src/CTable.jsx:772
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:778
 msgid "No"
 msgstr "Нет"
 
@@ -56,7 +56,7 @@ msgstr "Сохранить все"
 msgid "Cancel"
 msgstr "Отменить"
 
-#: src/CFilesCell.jsx:11
+#: src/CFilesCell.jsx:18
 #, javascript-format
 msgid "%d Byte"
 msgid_plural "%d Bytes"
@@ -64,7 +64,7 @@ msgstr[0] "%d Байт"
 msgstr[1] "%d Байта"
 msgstr[2] "%d Байтов"
 
-#: src/CFilesCell.jsx:13
+#: src/CFilesCell.jsx:20
 #, javascript-format
 msgid "%d KiB"
 msgid_plural "%d KiB"
@@ -72,7 +72,7 @@ msgstr[0] "%d КБайт"
 msgstr[1] "%d КБайта"
 msgstr[2] "%d КБайтов"
 
-#: src/CFilesCell.jsx:15
+#: src/CFilesCell.jsx:22
 #, javascript-format
 msgid "%d MiB"
 msgid_plural "%d MiB"
@@ -80,7 +80,7 @@ msgstr[0] "%d МБайт"
 msgstr[1] "%d МБайта"
 msgstr[2] "%d МБайтов"
 
-#: src/CFilesCell.jsx:17
+#: src/CFilesCell.jsx:24
 #, javascript-format
 msgid "%d GiB"
 msgid_plural "%d GiB"
@@ -163,11 +163,11 @@ msgstr "Уменьшить"
 msgid "Reset Zoom"
 msgstr "Сбросить масштаб"
 
-#: src/CTable.jsx:198
+#: src/CTable.jsx:200
 msgid "Columns configuration loading failure."
 msgstr "Ошибка при загрузке информации о столбцах таблицы."
 
-#: src/CTable.jsx:448
+#: src/CTable.jsx:454
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
@@ -175,7 +175,7 @@ msgstr[0] "Создать копию %d записи?"
 msgstr[1] "Создать копию %d записей?"
 msgstr[2] "Создать копию %d записей?"
 
-#: src/CTable.jsx:457
+#: src/CTable.jsx:463
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
@@ -183,7 +183,7 @@ msgstr[0] "Удалить %d запись?"
 msgstr[1] "Удалить %d записи?"
 msgstr[2] "Удалить %d записей?"
 
-#: src/CTable.jsx:605
+#: src/CTable.jsx:611
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"

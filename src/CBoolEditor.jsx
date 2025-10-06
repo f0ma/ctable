@@ -27,7 +27,7 @@ class CBoolEditor extends Component {
     validateAndSend(){
         var self = this;
         var is_valid = true;
-        self.state.editor_value = (self.state.editor_value === "-1" || self.state.editor_value === -1) ? null : (self.state.editor_value === "1" || self.state.editor_value === 1) ? 1 : 0;
+        self.state.editor_value = ( self.state.editor_value === null || self.state.editor_value === "-1" || self.state.editor_value === -1) ? null : (self.state.editor_value === "1" || self.state.editor_value === 1) ? 1 : 0;
         if (self.state.editor_value !== null && self.state.editor_value !== 0 && self.state.editor_value !== 1){
             is_valid = false;
             if (self.state.editor_value === null && self.props.column.editor_allow_null){
@@ -93,9 +93,9 @@ class CBoolEditor extends Component {
 
         return   <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
           <div class={cls("select", self.state.editor_valid ? "" : "is-danger")}>
-            <select onChange={this.onInputChange} value={self.state.editor_value}>
-              {items.map((item) => {return <option value={item.value}>{item.label}</option>;})}
-              {self.props.column.editor_allow_null ? <option value="-1" selected>NULL</option> : ""}
+            <select onChange={this.onInputChange}>
+              {items.map((item) => {return <option value={item.value} selected={self.state.editor_value === item.value}>{item.label}</option>;})}
+              {self.props.column.editor_allow_null ? <option value="-1"  selected={self.state.editor_value === null}>NULL</option> : ""}
             </select>
           </div>
           {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }

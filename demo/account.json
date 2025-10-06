@@ -39,11 +39,21 @@
       "editor_allow_null": false
     },
     {
+      "name": "bills",
+      "label": "Bills",
+      "is_key": false,
+      "width": 8,
+      "enabled": true,
+      "cell_actor": "CMultiLinkCell",
+      "cell_link":"bill",
+      "cell_link_key":"id"
+    },
+    {
       "name": "reg_date",
       "label": "Reg date",
       "is_key": false,
       "width": 6,
-      "enabled": true,
+      "enabled": false,
       "cell_actor": "CDateCell",
       "editor_actor": "CDateEditor",
       "editor_hint": "Enter reg date",
@@ -98,10 +108,10 @@
         ["tag3", "Tag 3"],
         ["tag4", "Tag 4"],
         ["tag5", "Tag 5"],
-        ["tag6", "Tag 6"],
-        ["tag7", "Tag 7"],
-        ["tag8", "Tag 8"],
-        ["tag9", "Tag 9"],
+        ["tag6", "Tag 6 long long name"],
+        ["tag7", "Tag 7 long long name"],
+        ["tag8", "Tag 8 long long name"],
+        ["tag9", "Tag 9 long long name"],
         ["tag10", "Tag 10 long long name"]
       ]
     },
@@ -115,7 +125,7 @@
       "editor_actor": "CFilesEditor",
       "editor_default": null,
       "editor_allow_null": true,
-      "editor_min_upload_count": 1,
+      "editor_min_upload_count": 0,
       "editor_max_upload_count": 4,
       "editor_allowed_ext": [".pdf", ".docx", ".svg"],
       "editor_max_upload_size": 1000000,
@@ -140,10 +150,5 @@
     }
   ],
   "default_filtering": [
-    {
-      "column": "id",
-      "operator": "gt",
-      "value": "5"
-    }
   ]
 }

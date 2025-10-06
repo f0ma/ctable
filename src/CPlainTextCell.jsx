@@ -1,3 +1,10 @@
+/**
+ * Plain text column.
+ *
+ * @arg this.props.value {String} Value.
+ *
+ */
+
 class CPlainTextCell extends Component {
 
     render() {

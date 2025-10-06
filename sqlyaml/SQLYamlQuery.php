@@ -88,6 +88,59 @@ class SQLYamlQuery {
         return new SQLYamlQuery($d, $codec = $codec);
     }
 
+
+    static function enrich_data_by_link($db, &$rows, $new_column, $table, $column, $link_src, $link_tgt, $codec = YamlCodecSpyc::class){
+
+        $in_list = [];
+
+        foreach($rows as &$row){
+            $in_list[] = ['const'=>$row[$link_src]];
+            $row[$new_column] = "";
+        }
+
+        $query = <<<EOF
+        ---
+        select:
+          columns: []
+          from: []
+          where: []
+        EOF;
+        $d = $codec::from_yaml($query);
+        $d['select']['columns'] = [$column, $link_tgt];
+        $d['select']['from'] = [$table];
+        $d['select']['where'][]= ['in'=>[$link_tgt, $in_list]];
+
+        $q = new SQLYamlQuery($d, $codec = $codec);
+
+        $link_data = $q->execute($db, [], $accept = 'ok');
+
+        foreach($link_data as $ld){
+            foreach($rows as &$row){
+                if($row[$link_src] == $ld[$link_tgt])
+                {
+                    if($row[$new_column] == ""){
+                        $row[$new_column] = "".$ld[$column];
+                    } else {
+                        $row[$new_column].= ";".$ld[$column];
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    static function sync_data_by_link($db, $data, $table, $column, $value, $link_tgt){
+        $q1 = SQLYamlQuery::simple_delete($table, [$link_tgt], [$link_tgt => $value]);
+        error_log(var_export($q1->sql(), true));
+        $q1->execute($db, [], $accept = 'ok');
+        foreach(explode(';',$data) as $d){
+            $q2 = SQLYamlQuery::simple_insert($table, [$column, $link_tgt], [$column => $d, $link_tgt => $value]);
+            error_log(var_export($q2->sql(), true));
+            $q2->execute($db, [], $accept = 'ok');
+        }
+    }
+
     static function simple_insert($table, $columns_may, $columns, $codec = YamlCodecSpyc::class){
         $query = <<<EOF
         ---

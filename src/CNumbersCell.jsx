@@ -1,3 +1,12 @@
+/**
+ * Number cell
+ *
+ * @arg this.props.column.actor_type {String} Number format. Allowed values: `Integer`, `Float`, `Money`
+ *
+ * @arg this.props.value {Float} Value.
+ *
+ */
+
 class CNumbersCell extends Component {
 
     render() {

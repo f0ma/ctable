@@ -184,6 +184,8 @@ class CTable extends Component {
 
     var table = self.state.table_list.filter(x => x.name == name)[0];
 
+    this.hideAllEditors();
+
     let table_columns_p = self.props.server.CTableServer.columns(table.name);
     let table_subtables_p = self.props.server.CTableServer.subtables(table.name);
 
@@ -198,8 +200,6 @@ class CTable extends Component {
         this.showError({code:-5, message:_("Columns configuration loading failure.")});
         return;
       }
-
-
 
       self.resetColumns();
       self.resetSorting();
@@ -248,8 +248,8 @@ class CTable extends Component {
       this.state.last_row_clicked = null;
       this.state.return_keys = null;
 
-      var cell_link_columns = this.state.table_columns.filter(x => x.cell_actor == "CLinkCell");
-      var editor_link_columns = this.state.table_columns.filter(x => x.cell_actor == "CLinkEditor");
+      var cell_link_columns = this.state.table_columns.filter(x => (x.cell_actor == "CLinkCell" || x.cell_actor == "CMultiLinkCell"));
+      var editor_link_columns = this.state.table_columns.filter(x => (x.cell_actor == "CLinkEditor" || x.cell_actor == "CMutliLinkEditor"));
 
       var link_columns_names = [];
       var link_columns_tables = [];
@@ -272,7 +272,13 @@ class CTable extends Component {
       this.state.table_rows.forEach(x => {
         link_columns_names.forEach((y,i) => {
           if(link_columns_values[i].indexOf(x[y]) < 0) {
-            link_columns_values[i].push(x[y]);
+            if(typeof x[y] === "string"){
+              if(x[y] !== ""){
+                x[y].split(";").forEach(z => {link_columns_values[i].push(parseInt(z))});
+              }
+            } else if (x[y] !== null){
+              link_columns_values[i].push(x[y]);
+            }
           }
         });
       });

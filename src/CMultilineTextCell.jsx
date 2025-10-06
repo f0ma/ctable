@@ -1,3 +1,12 @@
+/**
+ * Multiline plain text column.
+ *
+ * @arg this.props.column.max_length {Integer} Maximum length for display in symbols.
+ *
+ * @arg this.props.value {String} Text.
+ *
+ */
+
 class CMultilineTextCell extends Component {
     render() {
         var self = this;

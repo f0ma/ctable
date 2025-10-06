@@ -60,6 +60,21 @@ class Bill {
     }
 
     public function options($path, $filter=[], $limit=100) {
-        return [ "1"=>"Jones", "2"=>"Joan", "3"=>"Gill"];
+
+        $q = SQLYamlQuery::simple_select("bill", ["id"]);
+        $q->query['select']['columns'][]=["sql"=>"CONCAT(`sum`,\"$\") as `proc`"];
+
+
+        apply_filters($q, ["id", "proc"], $filter, [], $limit, 0);
+
+        error_log(var_export($q->query, true));
+
+        error_log($q->sql());
+
+        $rows = $q->execute($this->db);
+
+        return ["rows" => $rows, "keys" => ["id"], "label" => "proc"];
     }
+
+
 }

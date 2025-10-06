@@ -1,3 +1,10 @@
+/**
+ * Files column with download option.
+ *
+ * @arg this.props.value {String} String in `id;size;name` format
+ *
+ */
+
 class CFilesCell extends Component {
 
     constructor() {

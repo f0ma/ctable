@@ -1,3 +1,13 @@
+/**
+ * Select column.
+ *
+ * @arg this.props.column.options {Array} Array of pairs of strings `[option, label]`
+ * @arg this.props.column.single_select {Boolean} Show only single value
+ *
+ * @arg this.props.value {String} Value in format `id1;id2;id3`
+ *
+ */
+
 class CSelectCell {
     render() {
         var self = this;

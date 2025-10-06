@@ -22,6 +22,10 @@ class Account {
         $rows = $q->execute($this->db, [], $accept = 'ok', $calc_rows = TRUE);
         $num = $q->found_rows();
 
+        SQLYamlQuery::enrich_data_by_link($this->db, $rows, "bills", "bill", "id", "id", "account_id");
+
+        //SQLYamlQuery::update_link_data($row, "bills", "bill", ["id" => "account_id"]);
+
         return ["rows" => $rows, "total" => $num];
     }
 

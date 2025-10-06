@@ -123,7 +123,7 @@ class CTagsEditor extends Component {
             var actived = self.state.editor_value.split(";");
             var tags = self.props.column.options.filter(x => actived.includes(x[0]));
             return (
-                <div class={cls("input", self.state.editor_valid ? "" : "is-danger")}>
+                <div class={cls("input", self.state.editor_valid ? "" : "is-danger")} style="height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;">
                 {tags.map(([tag, label]) => {
                     return  <div class="control">
                                 <div class="tags has-addons mr-2">

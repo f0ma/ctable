@@ -50,6 +50,20 @@
       "editor_actor": "CBoolEditor",
       "editor_default": false,
       "editor_allow_null": true
+    },
+    {
+      "name": "members",
+      "label": "Members",
+      "is_key": false,
+      "width": 8,
+      "enabled": true,
+      "cell_actor": "CMultiLinkCell",
+      "cell_link":"account",
+      "cell_link_key":"id",
+      "editor_actor": "CMultiLinkEditor",
+      "editor_link":"account",
+      "editor_link_key":"id",
+      "editor_default":""
     }
   ],
   "subtables": [ ],
