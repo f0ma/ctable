@@ -15,7 +15,19 @@
     <script type="module">
      import { jrpc } from "./rpc.php?format=js";
 
+
+     jrpc.CTableServer.is_login().then( x => {
+         console.log(x);
+         if(!x){
+             var w = jrpc.CTableServer.login("demo","demo").then(w => {
+             console.log(w);
+             });
+         }
+     });
+
      render(h(CTable, {server: jrpc}), document.getElementById("main"));
+
+
     </script>
   </body>
 </html>

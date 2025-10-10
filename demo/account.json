@@ -150,5 +150,6 @@
     }
   ],
   "default_filtering": [
-  ]
+  ],
+  "is_default": true
 }

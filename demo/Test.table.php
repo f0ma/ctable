@@ -2,9 +2,11 @@
 
 class Test {
     private $db;
+    private $user_data;
 
     function __construct(){
         $this->db = connect_to_database();
+        $this->user_data = get_user_data();
     }
 
     static function load_table_config(){

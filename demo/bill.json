@@ -87,5 +87,6 @@
   ],
   "subtables": [ ],
   "default_sorting": [ ],
-  "default_filtering": [ ]
+  "default_filtering": [ ],
+  "is_default": false
 }

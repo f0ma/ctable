@@ -2,9 +2,11 @@
 
 class Account {
     private $db;
+    private $user_data;
 
     function __construct(){
         $this->db = connect_to_database();
+        $this->user_data = get_user_data();
     }
 
     static function load_table_config(){
@@ -17,7 +19,7 @@ class Account {
 
         apply_filters($q, ["id", "firstname", "lastname", "reg_date", "status", "image", "tags", "files"], $filter, $order, $limit, $offset);
 
-        error_log(var_export($q->query, true));
+        //error_log(var_export($q->query, true));
 
         $rows = $q->execute($this->db, [], $accept = 'ok', $calc_rows = TRUE);
         $num = $q->found_rows();
@@ -35,12 +37,12 @@ class Account {
     }
 
     public function update($path, $keys, $data) {
-        error_log(var_export($data, true));
+        //error_log(var_export($data, true));
 
 
         $q = SQLYamlQuery::simple_update("account", ["id"], $keys, ["firstname", "lastname", "reg_date", "status", "image", "tags", "files"], $data);
 
-        error_log(var_export($q->query, true));
+        //error_log(var_export($q->query, true));
 
         $q->execute($this->db);
     }
@@ -63,9 +65,9 @@ class Account {
 
         apply_filters($q, ["id", "name"], $filter, [['name'=>"asc"]], $limit, 0);
 
-        error_log(var_export($q->query, true));
+        //error_log(var_export($q->query, true));
 
-        error_log($q->sql());
+        //error_log($q->sql());
 
         $rows = $q->execute($this->db);
 

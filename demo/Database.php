@@ -31,5 +31,38 @@ function connect_to_database() {
 }
 
 function client_config() {
-    return ["token"=>"server-key-update-in-production", "uploads_directory"=>"uploads"];
+    return ["jwt_token"=>"server-key-update-in-production", "uploads_directory"=>"uploads", "jwt_expires"=> 24*60*60, "jwt_renew" => 12*60*60];
+}
+
+function client_login($username, $password){
+    //error_log(password_hash($password, PASSWORD_DEFAULT));
+
+    $q = SQLYamlQuery::simple_select("user", ["id", "user", "club_name", "enable", "hash"]);
+    $q->query['select']['where'][]= ['eq'=>[ "user", ['const' => $username]]];
+    $q->query['select']['where'][]= ['eq'=>[ "enable", ['const' => 1]]];
+    $q->query['select']['limit'] = 1;
+    $rows = $q->execute(connect_to_database(), [], $accept = 'one');
+    $row = $rows[0];
+
+    if (password_verify($password, $row["hash"])){
+        unset($row["hash"]);
+        unset($row["enable"]);
+        return $row;
+    }
+
+    return NULL;
+}
+
+function client_renew($userinfo){
+    $q = SQLYamlQuery::simple_select("user", ["id", "user", "club_name"]);
+    $q->query['select']['where'][]= ['eq'=>[ "user", ['const' => $userinfo["user"]]]];
+    $q->query['select']['where'][]= ['eq'=>[ "enable", ['const' => 1]]];
+    $q->query['select']['limit'] = 1;
+    $rows = $q->execute(connect_to_database(), [], $accept = 'one');
+    $row = $rows[0];
+    return $row;
+}
+
+function client_logout($userinfo){
+    return NULL;
 }

@@ -79,7 +79,7 @@ function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0)
             }
         }
     }
-    error_log(var_export($order, true));
+    //error_log(var_export($order, true));
     if($order !== NULL){
         foreach($order as $sord){
             foreach($sord as $cl => $ord){
@@ -101,6 +101,46 @@ function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0)
     }
 
     //return $q;
+}
+
+
+function remove_user_data(){
+    setcookie("ctables-jwt", "", time()-3600);
+}
+
+function set_user_data($user_info){
+    if ($user_info === NULL) {
+        remove_user_data();
+        return;
+    }
+    $config = client_config();
+    $header = base64UrlEncode(json_encode(["alg" => "HS256","typ" => "JWT"]));
+    $user_info["eol"] = time() + $config["jwt_expires"];
+    $payload = base64UrlEncode(json_encode($user_info));
+    $signature = base64UrlEncode(hash_hmac("sha256", $header . "." . $payload, $config["jwt_token"], true));
+    $jwt = $header . "." . $payload . "." . $signature;
+    setcookie("ctables-jwt", $jwt, time()+$config["jwt_expires"]);
+    return $jwt;
+}
+
+
+function get_user_data(){
+    if(!isset($_COOKIE['ctables-jwt'])) return NULL;
+    $config = client_config();
+    if (preg_match("/^(?<header>.+)\.(?<payload>.+)\.(?<signature>.+)$/", $_COOKIE['ctables-jwt'], $matches) === 1) {
+        $signature = hash_hmac("sha256", $matches["header"] . "." . $matches["payload"], $config["jwt_token"], true);
+        if (base64UrlDecode($matches["signature"]) == $signature){
+            $user_info = json_decode(base64UrlDecode($matches["payload"]), true);
+            if($user_info["eol"] > time()+$config["jwt_renew"]){
+                $user_info = client_renew($user_info);
+                set_user_data($user_info);
+                return $user_info;
+            } elseif($user_info["eol"] > time()) {
+                return $user_info;
+            }
+        }
+    }
+    return NULL;
 }
 
 class CTableServer extends JsonRPCHandler {
@@ -207,7 +247,21 @@ class CTableServer extends JsonRPCHandler {
         $qhandler = new $this->table_classes[$target]();
 
         return $qhandler->download($path, $keys, $column, $index);
-
     }
+
+    public function login($username, $password){
+        $user_info = client_login($username, $password);
+        return set_user_data($user_info);
+    }
+
+    public function is_login(){
+        return get_user_data() !== NULL;
+    }
+
+    public function logout(){
+        remove_user_data();
+    }
+
+
 
 }

@@ -1,5 +1,18 @@
 <?php
 
+
+function base64UrlEncode(string $data): string
+{
+    $base64Url = strtr(base64_encode($data), '+/', '-_');
+
+    return rtrim($base64Url, '=');
+}
+
+function base64UrlDecode(string $base64Url): string
+{
+    return base64_decode(strtr($base64Url, '-_', '+/'));
+}
+
 interface YamlCodec {
     static function from_yaml($s);
     static function to_yaml($s);
@@ -54,7 +67,7 @@ class SQLYamlQuery {
         $d['update']['table'] = $table;
         foreach($columns_may as $k){
             if(array_key_exists($k, $columns)){
-                error_log(var_export("-->".$k, true));
+                //error_log(var_export("-->".$k, true));
 
                 $d['update']['columns'][]= $k;
                 $d['update']['values'][]= ['const' => $columns[$k]];
@@ -132,11 +145,11 @@ class SQLYamlQuery {
 
     static function sync_data_by_link($db, $data, $table, $column, $value, $link_tgt){
         $q1 = SQLYamlQuery::simple_delete($table, [$link_tgt], [$link_tgt => $value]);
-        error_log(var_export($q1->sql(), true));
+        //error_log(var_export($q1->sql(), true));
         $q1->execute($db, [], $accept = 'ok');
         foreach(explode(';',$data) as $d){
             $q2 = SQLYamlQuery::simple_insert($table, [$column, $link_tgt], [$column => $d, $link_tgt => $value]);
-            error_log(var_export($q2->sql(), true));
+            //error_log(var_export($q2->sql(), true));
             $q2->execute($db, [], $accept = 'ok');
         }
     }
