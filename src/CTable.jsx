@@ -92,6 +92,7 @@ class CTable extends Component {
         {name:"sort", icon: "sort", label:_("Sorting"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"columns", icon: "list_alt", label:_("Columns"), enabled: true, style:"", icon_only:true, panel:0},
 
+        {name:"select_mode", icon: "done", label:_("Simple select"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"select_all", icon: "select_all", label:_("Select all"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"clear_all", icon: "remove_selection", label:_("Clear all"), enabled: true, style:"", icon_only:true, panel:0},
 
@@ -117,6 +118,7 @@ class CTable extends Component {
 
       table_select_menu_active: false,
       editor_show: false,
+      select_mode: 'one',
       columns_panel_show: false,
       sorting_panel_show: false,
       filtering_panel_show: false,
@@ -350,6 +352,20 @@ class CTable extends Component {
 
     }
 
+    if(tg.dataset['name'] == "select_mode"){
+      if(this.state.select_mode == "one"){
+        this.state.select_mode = "all";
+        this.state.topline_buttons.filter(x => {return x.name == "select_mode"}).forEach(w => { w.icon = "done_all"; w.label = _("Sticky select")})
+      } else {
+        this.state.select_mode = "one";
+        this.state.topline_buttons.filter(x => {return x.name == "select_mode"}).forEach(w => { w.icon = "done"; w.label = _("Simple select")})
+      }
+      this.setState({}, () => this.enablePanelButtons());
+      return;
+    }
+
+
+
 
     if(tg.dataset['name'] == "select_all"){
       if(this.state.editor_show == true) return;
@@ -531,6 +547,11 @@ class CTable extends Component {
     //console.log(ns);
 
     var target_state = !this.state.table_row_status[Number(tg.dataset['rowindex'])].selected;
+
+    if(this.state.select_mode == "one"){
+      this.state.table_row_status.forEach(x => {x.selected = false});
+    }
+
     ns.forEach((n) => {this.state.table_row_status[n].selected = target_state});
     this.setState({}, () => this.enablePanelButtons());
   }

@@ -3189,6 +3189,14 @@ class CTable extends Component {
         icon_only: true,
         panel: 0
       }, {
+        name: "select_mode",
+        icon: "done",
+        label: _("Simple select"),
+        enabled: true,
+        style: "",
+        icon_only: true,
+        panel: 0
+      }, {
         name: "select_all",
         icon: "select_all",
         label: _("Select all"),
@@ -3242,6 +3250,7 @@ class CTable extends Component {
       return_keys: null,
       table_select_menu_active: false,
       editor_show: false,
+      select_mode: 'one',
       columns_panel_show: false,
       sorting_panel_show: false,
       filtering_panel_show: false,
@@ -3458,6 +3467,27 @@ class CTable extends Component {
       }
       if (this.state.fontSize != 100) this.state.topline_buttons.filter(x => x.name == "zoom_reset").forEach(x => x.enabled = true);else this.state.topline_buttons.filter(x => x.name == "zoom_reset").forEach(x => x.enabled = false);
       this.setState({});
+      return;
+    }
+    if (tg.dataset['name'] == "select_mode") {
+      if (this.state.select_mode == "one") {
+        this.state.select_mode = "all";
+        this.state.topline_buttons.filter(x => {
+          return x.name == "select_mode";
+        }).forEach(w => {
+          w.icon = "done_all";
+          w.label = _("Sticky select");
+        });
+      } else {
+        this.state.select_mode = "one";
+        this.state.topline_buttons.filter(x => {
+          return x.name == "select_mode";
+        }).forEach(w => {
+          w.icon = "done";
+          w.label = _("Simple select");
+        });
+      }
+      this.setState({}, () => this.enablePanelButtons());
       return;
     }
     if (tg.dataset['name'] == "select_all") {
@@ -3687,6 +3717,11 @@ class CTable extends Component {
     //console.log(ns);
 
     var target_state = !this.state.table_row_status[Number(tg.dataset['rowindex'])].selected;
+    if (this.state.select_mode == "one") {
+      this.state.table_row_status.forEach(x => {
+        x.selected = false;
+      });
+    }
     ns.forEach(n => {
       this.state.table_row_status[n].selected = target_state;
     });
