@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ctable 3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-06 22:00+0300\n"
+"POT-Creation-Date: 2025-10-11 14:33+0300\n"
 "PO-Revision-Date: 2025-05-20 01:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -21,11 +21,11 @@ msgstr ""
 "X-Language: ru_RU\n"
 "X-Source-Language: C\n"
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:777
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:798
 msgid "Yes"
 msgstr "Да"
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:778
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:799
 msgid "No"
 msgstr "Нет"
 
@@ -143,31 +143,39 @@ msgstr "Сортировка"
 msgid "Columns"
 msgstr "Столбцы"
 
-#: src/CTable.jsx:95
+#: src/CTable.jsx:95 src/CTable.jsx:361
+msgid "Simple select"
+msgstr "Простой выбор"
+
+#: src/CTable.jsx:96
 msgid "Select all"
 msgstr "Выбрать все"
 
-#: src/CTable.jsx:96
+#: src/CTable.jsx:97
 msgid "Clear all"
 msgstr "Очистить все"
 
-#: src/CTable.jsx:98
+#: src/CTable.jsx:99
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: src/CTable.jsx:99
+#: src/CTable.jsx:100
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: src/CTable.jsx:100
+#: src/CTable.jsx:101
 msgid "Reset Zoom"
 msgstr "Сбросить масштаб"
 
-#: src/CTable.jsx:200
+#: src/CTable.jsx:202
 msgid "Columns configuration loading failure."
 msgstr "Ошибка при загрузке информации о столбцах таблицы."
 
-#: src/CTable.jsx:454
+#: src/CTable.jsx:358
+msgid "Sticky select"
+msgstr "Выбор с накоплением"
+
+#: src/CTable.jsx:470
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
@@ -175,7 +183,7 @@ msgstr[0] "Создать копию %d записи?"
 msgstr[1] "Создать копию %d записей?"
 msgstr[2] "Создать копию %d записей?"
 
-#: src/CTable.jsx:463
+#: src/CTable.jsx:479
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
@@ -183,7 +191,7 @@ msgstr[0] "Удалить %d запись?"
 msgstr[1] "Удалить %d записи?"
 msgstr[2] "Удалить %d записей?"
 
-#: src/CTable.jsx:611
+#: src/CTable.jsx:632
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"

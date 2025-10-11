@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
                 $GLOBALS['JsonRPCSignalList'] = [];
                 $respMethods[]=$method_name;
                 $result = $handler->{$method_name}(...$data['params']);
-                usleep(300000);
+                //usleep(300000);
 
                 foreach($JsonRPCSignalList as $sig){
                     $respList[]=["jsonrpc" => "2.0", "method" => $sig[0], "params" => $sig[1]];
