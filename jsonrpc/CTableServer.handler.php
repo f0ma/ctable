@@ -131,11 +131,13 @@ function get_user_data(){
         $signature = hash_hmac("sha256", $matches["header"] . "." . $matches["payload"], $config["jwt_token"], true);
         if (base64UrlDecode($matches["signature"]) == $signature){
             $user_info = json_decode(base64UrlDecode($matches["payload"]), true);
-            if($user_info["eol"] > time()+$config["jwt_renew"]){
+            if((time() + $config["jwt_renew"]) > $user_info["eol"]){
                 $user_info = client_renew($user_info);
                 set_user_data($user_info);
                 return $user_info;
-            } elseif($user_info["eol"] > time()) {
+            } elseif(time() > $user_info["eol"]) {
+                return NULL;
+            } else {
                 return $user_info;
             }
         }
@@ -254,8 +256,8 @@ class CTableServer extends JsonRPCHandler {
         return set_user_data($user_info);
     }
 
-    public function is_login(){
-        return get_user_data() !== NULL;
+    public function user_data(){
+        return get_user_data();
     }
 
     public function logout(){
