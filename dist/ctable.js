@@ -1373,7 +1373,7 @@ class CLineEditor extends Component {
     });
   }
   validateAndSend() {
-    if (this.props.column.editor_value === null) {
+    if (this.state.editor_value === null) {
       if (this.props.column.editor_allow_null) {
         this.setState({
           editor_valid: true
