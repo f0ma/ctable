@@ -37,7 +37,13 @@ class CLineEditor extends Component {
     }
 
     validateAndSend() {
-        if(this.props.column.editor_validate) {
+        if(this.props.column.editor_value === null){
+            if(this.props.column.editor_allow_null){
+                this.setState({editor_valid: true}, () => {this.sendChanges()});
+            } else {
+                this.setState({editor_valid: false}, () => {this.sendChanges()});
+            }
+        } else if(this.props.column.editor_validate) {
             var re = new RegExp(this.props.column.editor_validate);
             if (re.test(this.state.editor_value)) {
                 this.setState({editor_valid: true}, () => {this.sendChanges()});

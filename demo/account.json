@@ -34,9 +34,9 @@
       "editor_actor": "CLineEditor",
       "editor_hint": "Enter lastname",
       "editor_placeholder": "",
-      "editor_default": "t2",
+      "editor_default": null,
       "editor_validate": "",
-      "editor_allow_null": false
+      "editor_allow_null": true
     },
     {
       "name": "bills",
