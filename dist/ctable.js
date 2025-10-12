@@ -2619,7 +2619,7 @@ class CColumnsPanel extends Component {
       class: "ctable-editor-panel",
       style: sty("width", "min(" + self.props.width + "em,100%)")
     }, h("div", {
-      class: "field has-text-right mb-0"
+      class: "field has-text-right mb-4"
     }, h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2639,7 +2639,7 @@ class CColumnsPanel extends Component {
     }, "close"), " ", _("Close")))), self.props.table.state.view_columns.map(x => {
       return h("div", null, h("label", {
         class: "checkbox",
-        style: "min-width:16em;"
+        style: "min-width:10em; width:10em; overflow: hidden;"
       }, h("input", {
         type: "checkbox",
         checked: x.enabled,
@@ -2750,7 +2750,7 @@ class CSortingPanel extends Component {
       class: "ctable-editor-panel",
       style: sty("width", "min(" + self.props.width + "em,100%)")
     }, h("div", {
-      class: "field has-text-right mb-0"
+      class: "field has-text-right mb-4"
     }, h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2768,7 +2768,9 @@ class CSortingPanel extends Component {
     }, h("span", {
       class: "material-symbols-outlined"
     }, "close"), " ", _("Close")))), self.props.table.state.view_sorting.map(x => {
-      return h("div", null, h("button", {
+      return h("div", {
+        style: "white-space: nowrap;"
+      }, h("button", {
         class: "button is-small",
         "data-column": x.name,
         onClick: self.onSortChange
@@ -2776,7 +2778,7 @@ class CSortingPanel extends Component {
         class: "material-symbols-outlined"
       }, x.sorting == "" ? "reorder" : "", x.sorting == "asc" ? "arrow_upward" : "", x.sorting == "desc" ? "arrow_downward" : "")), "\xA0", h("span", {
         class: "ml-2 mr-2",
-        style: "min-width:16em; display:inline-block;"
+        style: "min-width:10em; width:10em; display:inline-block; overflow: hidden;"
       }, this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,

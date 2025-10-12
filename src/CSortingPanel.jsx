@@ -68,7 +68,7 @@ class CSortingPanel extends Component {
 
         return  <section class="section ctable-editor-section" >
           <div class="ctable-editor-panel" style={sty("width","min("+self.props.width+ "em,100%)")} >
-            <div class="field has-text-right mb-0">
+            <div class="field has-text-right mb-4">
               <div class="has-text-centered m-2"  style="display:inline-block;">
                 <button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
               </div>
@@ -77,9 +77,9 @@ class CSortingPanel extends Component {
               </div>
             </div>
              {self.props.table.state.view_sorting.map(x => {
-              return <div>
+               return <div style="white-space: nowrap;">
                           <button class="button is-small" data-column={x.name} onClick={self.onSortChange}><span class="material-symbols-outlined">{x.sorting == "" ? "reorder" : ""}{x.sorting == "asc" ? "arrow_upward" : ""}{x.sorting == "desc" ? "arrow_downward" : ""}</span></button>&nbsp;
-                          <span class="ml-2 mr-2" style="min-width:16em; display:inline-block;">{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}</span>
+                          <span class="ml-2 mr-2" style="min-width:10em; width:10em; display:inline-block; overflow: hidden;">{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}</span>
                           &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnUp}><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
                           &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnDown}><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
                     </div>;
