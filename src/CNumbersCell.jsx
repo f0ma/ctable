@@ -10,6 +10,10 @@
 class CNumbersCell extends Component {
 
     render() {
+        if (this.props.value === null) {
+            return <span class="has-text-grey">NULL</span>;
+        }
+
         var accepted_types = ["Integer", "Float", "Money"];
 
         const moneyFormatter = new Intl.NumberFormat("ru-RU", {minimumFractionDigits: 2,
@@ -25,8 +29,6 @@ class CNumbersCell extends Component {
             else if(this.props.column.actor_type == "Money"){
                 return <>{moneyFormatter.format(this.props.value)}</>;
             }
-        } else if (this.props.value === null) {
-                return <span class="has-text-grey">NULL</span>;
-            }
+        }
     }
 }

@@ -71,7 +71,7 @@ class CHeaderTable extends Component {
 
 
                 return self.props.columns.filter(y => y.name == x.name).map(x =>
-                <th data-column={x.name} onClick={self.onHeaderClick}>{sorting == "asc" ? <span class="material-symbols-outlined-small">arrow_upward</span> : ""}{sorting == "desc" ? <span class="material-symbols-outlined-small">arrow_downward</span> : ""} {x.label} {filtering ? <span class="material-symbols-outlined-small">filter_alt</span> : ""}</th>
+                <th data-column={x.name} onClick={self.onHeaderClick}>{sorting == "asc" ? <span class="material-symbols-outlined-small">arrow_upward</span> : ""}{sorting == "desc" ? <span class="material-symbols-outlined-small">arrow_downward</span> : ""}{filtering ? <span class="material-symbols-outlined-small">filter_alt</span> : ""} {x.label}</th>
                 )[0];
             }
         })}

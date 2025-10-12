@@ -695,6 +695,11 @@ class CTagsEditor extends Component {
 
 class CNumbersCell extends Component {
   render() {
+    if (this.props.value === null) {
+      return h("span", {
+        class: "has-text-grey"
+      }, "NULL");
+    }
     var accepted_types = ["Integer", "Float", "Money"];
     const moneyFormatter = new Intl.NumberFormat("ru-RU", {
       minimumFractionDigits: 2,
@@ -709,10 +714,6 @@ class CNumbersCell extends Component {
       } else if (this.props.column.actor_type == "Money") {
         return h(Fragment, null, moneyFormatter.format(this.props.value));
       }
-    } else if (this.props.value === null) {
-      return h("span", {
-        class: "has-text-grey"
-      }, "NULL");
     }
   }
 }
@@ -1064,9 +1065,9 @@ class CHeaderTable extends Component {
           class: "material-symbols-outlined-small"
         }, "arrow_upward") : "", sorting == "desc" ? h("span", {
           class: "material-symbols-outlined-small"
-        }, "arrow_downward") : "", " ", x.label, " ", filtering ? h("span", {
+        }, "arrow_downward") : "", filtering ? h("span", {
           class: "material-symbols-outlined-small"
-        }, "filter_alt") : ""))[0];
+        }, "filter_alt") : "", " ", x.label))[0];
       }
     })))));
   }
@@ -4274,7 +4275,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-10-06 22:00+0300",
+    "pot-creation-date": "2025-10-11 14:33+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -4311,12 +4312,14 @@ var ctable_lang_ru = {
   "Filter": [null, "Фильтр"],
   "Sorting": [null, "Сортировка"],
   "Columns": [null, "Столбцы"],
+  "Simple select": [null, "Простой выбор"],
   "Select all": [null, "Выбрать все"],
   "Clear all": [null, "Очистить все"],
   "Zoom In": [null, "Увеличить"],
   "Zoom Out": [null, "Уменьшить"],
   "Reset Zoom": [null, "Сбросить масштаб"],
   "Columns configuration loading failure.": [null, "Ошибка при загрузке информации о столбцах таблицы."],
+  "Sticky select": [null, "Выбор с накоплением"],
   "Duplicate %d record?": ["Duplicate %d records?", "Создать копию %d записи?", "Создать копию %d записей?", "Создать копию %d записей?"],
   "Delete %d record?": ["Delete %d records?", "Удалить %d запись?", "Удалить %d записи?", "Удалить %d записей?"],
   "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"]
