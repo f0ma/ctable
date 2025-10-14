@@ -46,11 +46,12 @@
       "enabled": true,
       "cell_actor": "CNumbersCell",
       "editor_actor": "CLineEditor",
-      "actor_type" : "Money",
+      "actor_type" : "Float",
       "editor_hint": "Summ",
       "editor_placeholder": "0.0",
       "editor_default": "0.0",
-      "editor_validate": "^[0-9]+(\\.[0-9]+)?$",
+      "editor_validate": "^[0-9]+([.][0-9]+)?$",
+      "editor_replace_comma": true,
       "editor_allow_null": false
     },
     {

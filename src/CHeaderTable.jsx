@@ -25,6 +25,9 @@ class CHeaderTable extends Component {
         var th = unwind_th(x);
         var colname = th.dataset["column"];
 
+        var col = this.props.columns.filter(y => y.name == colname)[0];
+        if(col.sorting === false) return;
+
         var newcol = this.props.table.state.view_sorting;
         newcol.forEach(y => {if (y.name == colname){
             if (y.sorting == ""){

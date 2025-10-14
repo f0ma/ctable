@@ -9,6 +9,7 @@
       "is_key": true,
       "width": 3,
       "enabled": true,
+      "sorting": false,
       "cell_actor": "CPlainTextCell"
     },
     {
@@ -44,6 +45,7 @@
       "is_key": false,
       "width": 8,
       "enabled": true,
+      "sorting": false,
       "cell_actor": "CMultiLinkCell",
       "cell_link":"bill",
       "cell_link_key":"id"
@@ -96,6 +98,7 @@
       "is_key": false,
       "width": 6,
       "enabled": true,
+      "sorting": false,
       "cell_actor": "CTagsCell",
       "max_length": 10,
       "editor_minimum_tags": 1,
@@ -121,6 +124,7 @@
       "is_key": false,
       "width": 6,
       "enabled": true,
+      "sorting": false,
       "cell_actor": "CFilesCell",
       "editor_actor": "CFilesEditor",
       "editor_default": null,

@@ -2,6 +2,7 @@
  * Column panel class.
  *
  * @arg this.props.table {Object} Table object.
+ * @arg this.props.columns {Array} Link to CTable state table_columns
  * @arg this.props.width {int} Width in em.
  *
  */
@@ -18,6 +19,10 @@ class CSortingPanel extends Component {
 
     onSortChange(x){
       var colname = unwind_button_or_link(x).dataset['column'];
+
+      var col = this.props.columns.filter(y => y.name == colname)[0];
+      if(col.sorting === false) return;
+
       var newcol = this.props.table.state.view_sorting;
       newcol.forEach(y => {if (y.name == colname){
         if (y.sorting == ""){

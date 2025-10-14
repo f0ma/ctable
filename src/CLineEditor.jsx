@@ -6,6 +6,7 @@
  * @arg this.props.column.editor_default {*} Editor default value
  * @arg this.props.column.editor_placeholder {string} Editor placeholder
  * @arg this.props.column.editor_validate {string} Validate regex
+ * @arg this.props.column.editor_replace_comma {Boolean} Replace comma with dot
  *
  * @arg this.props.row {Object} Row to edit, null if add, first if batch.
  * @arg this.props.add {bool} Is adding.
@@ -60,7 +61,13 @@ class CLineEditor extends Component {
     }
 
     onInputChange(e){
-        this.setState({editor_value: e.target.value, editor_modified: true}, () => {this.validateAndSend()});
+        var v = e.target.value;
+
+        if(this.props.column.editor_replace_comma){
+            v = v.replace(',', '.');
+        }
+
+        this.setState({editor_value: v, editor_modified: true}, () => {this.validateAndSend()});
     }
 
     /**

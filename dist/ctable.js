@@ -1010,6 +1010,8 @@ class CHeaderTable extends Component {
   onHeaderClick(x) {
     var th = unwind_th(x);
     var colname = th.dataset["column"];
+    var col = this.props.columns.filter(y => y.name == colname)[0];
+    if (col.sorting === false) return;
     var newcol = this.props.table.state.view_sorting;
     newcol.forEach(y => {
       if (y.name == colname) {
@@ -1346,6 +1348,7 @@ class CSelectEditor extends Component {
  * @arg this.props.column.editor_default {*} Editor default value
  * @arg this.props.column.editor_placeholder {string} Editor placeholder
  * @arg this.props.column.editor_validate {string} Validate regex
+ * @arg this.props.column.editor_replace_comma {Boolean} Replace comma with dot
  *
  * @arg this.props.row {Object} Row to edit, null if add, first if batch.
  * @arg this.props.add {bool} Is adding.
@@ -1414,8 +1417,12 @@ class CLineEditor extends Component {
     this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, this.state.editor_valid);
   }
   onInputChange(e) {
+    var v = e.target.value;
+    if (this.props.column.editor_replace_comma) {
+      v = v.replace(',', '.');
+    }
     this.setState({
-      editor_value: e.target.value,
+      editor_value: v,
       editor_modified: true
     }, () => {
       this.validateAndSend();
@@ -2697,6 +2704,7 @@ class CColumnsPanel extends Component {
  * Column panel class.
  *
  * @arg this.props.table {Object} Table object.
+ * @arg this.props.columns {Array} Link to CTable state table_columns
  * @arg this.props.width {int} Width in em.
  *
  */
@@ -2710,6 +2718,8 @@ class CSortingPanel extends Component {
   }
   onSortChange(x) {
     var colname = unwind_button_or_link(x).dataset['column'];
+    var col = this.props.columns.filter(y => y.name == colname)[0];
+    if (col.sorting === false) return;
     var newcol = this.props.table.state.view_sorting;
     newcol.forEach(y => {
       if (y.name == colname) {
@@ -4275,6 +4285,7 @@ class CTable extends Component {
     }) : "", self.state.sorting_panel_show ? h(CSortingPanel, {
       width: self.state.width,
       table: self,
+      columns: self.state.table_columns,
       onResetSorting: self.onResetSorting,
       onCloseSorting: self.onCloseSorting,
       onSortingChange: self.onSortingChange
