@@ -834,7 +834,7 @@ class CTable extends Component {
             </td>
             <td>
               <div class="ctable-top-panel-text">
-                <div style="display:inline-block;">
+                <div style="display:inline-block;white-space: nowrap;">
                 {self.state.table_path_labels.map(x =>
                   <><span class="material-symbols-outlined-small">check_box</span>&nbsp;{x}&nbsp;</>
                 )}

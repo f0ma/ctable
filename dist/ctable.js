@@ -4114,7 +4114,7 @@ class CTable extends Component {
     }, "link"), " ", x.label)))))), h("td", null, h("div", {
       class: "ctable-top-panel-text"
     }, h("div", {
-      style: "display:inline-block;"
+      style: "display:inline-block;white-space: nowrap;"
     }, self.state.table_path_labels.map(x => h(Fragment, null, h("span", {
       class: "material-symbols-outlined-small"
     }, "check_box"), "\xA0", x, "\xA0")), h(Fragment, null, h("span", {
