@@ -166,7 +166,9 @@ class CTableServer extends JsonRPCHandler {
     public function tables() {
         $result = [];
         foreach($this->table_configs as $k => $v){
-            $result[]=["name"=>$v["name"], "label"=>$v["label"], "width" => $v["width"], "default_sorting" => $v["default_sorting"], "default_filtering" => $v["default_filtering"], "is_default" => $v["is_default"]];
+            unset($v['columns']);
+            unset($v['subtables']);
+            $result[]=$v;
         }
         return $result;
     }

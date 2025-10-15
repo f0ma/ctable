@@ -46,6 +46,24 @@ html, body {
     overscroll-behavior-x: none;
 }
 
+/* Prevent y scroll update */
+
+html,
+body {
+    overscroll-behavior-y: contain;
+}
+
+/* Fix control z-index */
+
+.select::after {
+    z-index: 1 !important;
+}
+
+.control.has-icons-left .icon {
+    z-index: 1 !important;
+}
+
+
 /* Global CTable rules */
 
 .ctable-head-table th {

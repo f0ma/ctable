@@ -2,6 +2,8 @@
   "name": "bill",
   "label": "Bill",
   "width": 60,
+  "show_in_menu": false,
+  "disabled_actions": ["edit", "duplicate"],
   "columns": [
     {
       "name": "id",

@@ -3724,6 +3724,7 @@ class CTable extends Component {
     var nv = this.state.last_row_clicked;
     this.state.last_row_clicked = Number(tg.dataset['rowindex']);
     if (e.getModifierState("Shift")) {
+      document.getSelection().removeAllRanges();
       if (nv !== null) {
         if (nv > Number(tg.dataset['rowindex'])) {
           while (nv >= Number(tg.dataset['rowindex'])) {
@@ -3782,6 +3783,15 @@ class CTable extends Component {
         x.enabled = false;
       });
     }
+    self.state.current_table.disabled_actions.forEach(x => {
+      if (x == "batch-edit" && sel_count > 1) this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
+      if (x == "batch-duplicate" && sel_count > 1) this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
+      if (x == "batch-delete" && sel_count > 1) this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = false);
+      if (x == "add") this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = false);
+      if (x == "edit") this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
+      if (x == "duplicate") this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
+      if (x == "delete") this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = false);
+    });
     this.setState({});
   }
   onTableSelectDropdownClick() {
@@ -4098,7 +4108,7 @@ class CTable extends Component {
       role: "menu"
     }, h("div", {
       class: "dropdown-content"
-    }, self.state.table_list.map(x => h("a", {
+    }, self.state.table_list.filter(x => x.show_in_menu !== false).map(x => h("a", {
       class: cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : ""),
       "data-label": x.name,
       onClick: this.onTableSelectClick

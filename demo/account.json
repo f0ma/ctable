@@ -2,6 +2,8 @@
   "name": "account",
   "label": "Accounts",
   "width": 60,
+  "show_in_menu": true,
+  "disabled_actions": [],
   "columns": [
     {
       "name": "id",
