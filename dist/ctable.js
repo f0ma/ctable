@@ -1610,7 +1610,10 @@ class CFilesEditor extends Component {
       this.props.showError(error_msg);
     } else {
       this.props.onUploadFile(this.props.row, this.props.column.name, idx, e.target.files).then(x => {
-        var value_array = this.state.editor_value.split(';');
+        var value_array = [];
+        if (this.state.editor_value) {
+          value_array = this.state.editor_value.split(';');
+        }
         var new_download_available = this.state.download_available;
         if (idx < 0) {
           value_array.push(x);
@@ -1745,7 +1748,7 @@ class CFilesEditor extends Component {
         class: "material-symbols-outlined"
       }, "upload")), h("span", {
         class: "file-name",
-        style: "border-radius: 0; width:20em; max-width:20em;"
+        style: "border-radius: 0; max-width:9em;"
       }, x.name))), self.state.download_available[i] ? h("button", {
         class: "button",
         style: "border-radius: 0;",
@@ -1777,7 +1780,7 @@ class CFilesEditor extends Component {
       class: "material-symbols-outlined"
     }, "upload")), h("span", {
       class: "file-name",
-      style: "width:20em; max-width:20em;"
+      style: "max-width:9em;"
     }, _("Upload..."))))) : "");
   }
 }
@@ -2467,7 +2470,11 @@ class CEditorFrame extends Component {
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,
       add: self.props.add,
-      batch: self.props.batch
+      batch: self.props.batch,
+      onDownloadFile: self.props.table.onDownloadFile,
+      onUploadFile: self.props.table.onUploadFile,
+      askUser: self.props.table.askUser,
+      showError: self.props.table.showError
     }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CBoolEditor" ? h(CBoolEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,

@@ -97,7 +97,10 @@ class CFilesEditor extends Component {
         } else {
 
             this.props.onUploadFile(this.props.row, this.props.column.name, idx, e.target.files).then(x => {
-                var value_array = this.state.editor_value.split(';');
+                var value_array = [];
+                if(this.state.editor_value){
+                    value_array = this.state.editor_value.split(';');
+                }
                 var new_download_available = this.state.download_available;
                 if (idx < 0){
                     value_array.push(x);
@@ -198,7 +201,7 @@ class CFilesEditor extends Component {
                          <span class="file-cta">
                            <span class="material-symbols-outlined">upload</span>
                          </span>
-                         <span class="file-name" style="border-radius: 0; width:20em; max-width:20em;">{x.name}</span>
+                         <span class="file-name" style="border-radius: 0; max-width:9em;">{x.name}</span>
                        </label>
                      </div>
                      {self.state.download_available[i] ?
@@ -220,7 +223,7 @@ class CFilesEditor extends Component {
                       <span class="file-cta">
                         <span class="material-symbols-outlined">upload</span>
                       </span>
-                      <span class="file-name" style="width:20em; max-width:20em;">{_("Upload...")}</span>
+                      <span class="file-name" style="max-width:9em;">{_("Upload...")}</span>
                     </label>
                   </div>
                </div> : "" }
