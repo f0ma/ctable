@@ -125,6 +125,7 @@ class CTable extends Component {
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
+      editor_save_status: 'save',
       panel0_menu_active: false,
       panel1_menu_active: false,
       ask_dialog_active: false,
@@ -650,7 +651,7 @@ class CTable extends Component {
   }
 
   hideAllEditors(){
-    this.setState({sorting_panel_show: false, columns_panel_show: false, editor_show: false});
+    this.setState({sorting_panel_show: false, filtering_panel_show: false, columns_panel_show: false, editor_show: false});
   }
 
   /**
@@ -681,7 +682,18 @@ class CTable extends Component {
   onEditorChanges(colname, is_modified, value, valid){
       this.state.editor_changes[colname] = {is_modified: is_modified, value: value, valid: valid};
 
-      this.base.querySelectorAll(".ctable-editor-control div").forEach(x => x.dispatchEvent(new CustomEvent("cteditorchanged", { detail: {initiator:colname, changes:this.state.editor_changes} })));
+      this.state.editor_save_status = 'save';
+
+      if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0){
+        this.state.editor_save_status = 'invalid';
+      }
+
+      if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true).length == 0){
+        this.state.editor_save_status = 'empty';
+      }
+
+
+      this.base.querySelectorAll(".ctable-editor-control div, .ctable-editor-section").forEach(x => x.dispatchEvent(new CustomEvent("cteditorchanged", { detail: {initiator:colname, changes:this.state.editor_changes, save_status:this.state.editor_save_status}})));
   }
 
   onCloseColumns(){

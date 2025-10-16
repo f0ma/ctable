@@ -1099,7 +1099,7 @@ class CPageTable extends Component {
       class: "section  pt-0 pl-0 pr-0 pb-0"
     }, h("div", {
       class: "ctable-scroll-main-table pl-3 pr-3",
-      style: sty("max-width", self.props.width + 2 + "em", self.props.editorShow ? "max-height" : "", self.props.editorShow ? "16em" : ""),
+      style: sty("max-width", self.props.width + 2 + "em", self.props.editorShow ? "max-height" : "", self.props.editorShow ? "60vh" : ""),
       onScroll: self.props.onTableXScroll
     }, h("table", {
       class: "ctable-main-table",
@@ -2517,6 +2517,7 @@ class CEditorFrame extends Component {
  *
  * @arg this.props.width {int} Width in em.
  * @arg this.props.affectedRows {Object[]} Rows affected by editor, empty if add.
+ * @arg this.props.saveStatus {String} Options: `save`, `empty`, `invalid`
  * @arg this.props.noSaveClick {function} Save button callback.
  * @arg this.props.noCancelClick {function} Cancel button callback.
  * @arg this.props.onEditorChanges {function} Editor changes callback.
@@ -2524,13 +2525,44 @@ class CEditorFrame extends Component {
  */
 
 class CEditorPanel extends Component {
+  constructor() {
+    super();
+    this.onSomeEditorChanged = this.onSomeEditorChanged.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      save_status: "save"
+    });
+  }
+  onSomeEditorChanged(e) {
+    this.setState({
+      save_status: e.detail.save_status
+    });
+  }
   render() {
     var self = this;
+    var saveLabel = _("Save");
+    var saveEnable = true;
+    if (self.props.affectedRows.length == 0) {
+      saveLabel = _("Add");
+    }
+    if (self.props.affectedRows.length > 1) {
+      saveLabel = _("Save all");
+    }
+    if (this.state.save_status == "empty") {
+      saveLabel = _("Nothing to save");
+      saveEnable = false;
+    }
+    if (this.state.save_status == "invalid") {
+      saveLabel = _("Invalid values");
+      saveEnable = false;
+    }
     return h("section", {
-      class: "section ctable-editor-section"
+      class: "section ctable-editor-section",
+      oncteditorchanged: self.onSomeEditorChanged
     }, h("div", {
-      class: "ctable-editor-panel",
-      style: sty("width", "min(" + self.props.width + "em,100%)")
+      class: "ctable-editor-panel box",
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
     }, h("div", {
       class: "field has-text-right mb-0"
     }, h("div", {
@@ -2538,10 +2570,11 @@ class CEditorPanel extends Component {
       style: "display:inline-block;"
     }, h("button", {
       class: "button is-small is-primary is-soft",
+      disabled: !saveEnable,
       onClick: self.props.noSaveClick
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "save"), " ", self.props.affectedRows.length == 0 ? _("Add") : "", self.props.affectedRows.length == 1 ? _("Save") : "", self.props.affectedRows.length > 1 ? _("Save all") : "")), h("div", {
+    }, "save"), " ", saveLabel)), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
@@ -2565,10 +2598,11 @@ class CEditorPanel extends Component {
       style: "display:inline-block;"
     }, h("button", {
       class: "button is-small is-primary is-soft",
+      disabled: !saveEnable,
       onClick: self.props.noSaveClick
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "save"), " ", self.props.affectedRows.length == 0 ? _("Add") : "", self.props.affectedRows.length == 1 ? _("Save") : "", self.props.affectedRows.length > 1 ? _("Save all") : "")), h("div", {
+    }, "save"), " ", saveLabel)), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
@@ -2637,8 +2671,8 @@ class CColumnsPanel extends Component {
     return h("section", {
       class: "section ctable-editor-section"
     }, h("div", {
-      class: "ctable-editor-panel",
-      style: sty("width", "min(" + self.props.width + "em,100%)")
+      class: "ctable-editor-panel box",
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
     }, h("div", {
       class: "field has-text-right mb-4"
     }, h("div", {
@@ -2771,8 +2805,8 @@ class CSortingPanel extends Component {
     return h("section", {
       class: "section ctable-editor-section"
     }, h("div", {
-      class: "ctable-editor-panel",
-      style: sty("width", "min(" + self.props.width + "em,100%)")
+      class: "ctable-editor-panel box",
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
     }, h("div", {
       class: "field has-text-right mb-4"
     }, h("div", {
@@ -2940,8 +2974,8 @@ class CFilterPanel extends Component {
     return h("section", {
       class: "section ctable-editor-section"
     }, h("div", {
-      class: "ctable-editor-panel",
-      style: sty("width", "min(" + self.props.width + "em,100%)")
+      class: "ctable-editor-panel box",
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
     }, h("div", {
       class: "field has-text-right mb-0"
     }, h("div", {
@@ -3284,6 +3318,7 @@ class CTable extends Component {
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
+      editor_save_status: 'save',
       panel0_menu_active: false,
       panel1_menu_active: false,
       ask_dialog_active: false,
@@ -3879,6 +3914,7 @@ class CTable extends Component {
   hideAllEditors() {
     this.setState({
       sorting_panel_show: false,
+      filtering_panel_show: false,
       columns_panel_show: false,
       editor_show: false
     });
@@ -3918,10 +3954,18 @@ class CTable extends Component {
       value: value,
       valid: valid
     };
-    this.base.querySelectorAll(".ctable-editor-control div").forEach(x => x.dispatchEvent(new CustomEvent("cteditorchanged", {
+    this.state.editor_save_status = 'save';
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0) {
+      this.state.editor_save_status = 'invalid';
+    }
+    if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].is_modified == true).length == 0) {
+      this.state.editor_save_status = 'empty';
+    }
+    this.base.querySelectorAll(".ctable-editor-control div, .ctable-editor-section").forEach(x => x.dispatchEvent(new CustomEvent("cteditorchanged", {
       detail: {
         initiator: colname,
-        changes: this.state.editor_changes
+        changes: this.state.editor_changes,
+        save_status: this.state.editor_save_status
       }
     })));
   }
@@ -4312,7 +4356,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-10-11 14:33+0300",
+    "pot-creation-date": "2025-10-15 23:50+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -4328,9 +4372,11 @@ var ctable_lang_ru = {
   "No": [null, "Нет"],
   "Reset": [null, "Сбросить"],
   "Close": [null, "Закрыть"],
-  "Add": [null, "Добавить"],
   "Save": [null, "Сохранить"],
+  "Add": [null, "Добавить"],
   "Save all": [null, "Сохранить все"],
+  "Nothing to save": [null, "Нет изменений"],
+  "Invalid values": [null, "Недопустимые значения"],
   "Cancel": [null, "Отменить"],
   "%d Byte": ["%d Bytes", "%d Байт", "%d Байта", "%d Байтов"],
   "%d KiB": ["%d KiB", "%d КБайт", "%d КБайта", "%d КБайтов"],

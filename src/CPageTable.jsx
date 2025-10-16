@@ -23,7 +23,7 @@ class CPageTable extends Component {
       var self = this;
 
       return <section class="section  pt-0 pl-0 pr-0 pb-0">
-        <div class="ctable-scroll-main-table pl-3 pr-3" style={sty("max-width", (self.props.width + 2)+"em", self.props.editorShow ? "max-height" : "", self.props.editorShow ? "16em" : "")}  onScroll={self.props.onTableXScroll}>
+        <div class="ctable-scroll-main-table pl-3 pr-3" style={sty("max-width", (self.props.width + 2)+"em", self.props.editorShow ? "max-height" : "", self.props.editorShow ? "60vh" : "")}  onScroll={self.props.onTableXScroll}>
           <table class="ctable-main-table" style={sty("width", self.props.width+"em", "font-size", self.props.fontSize+"%")}>
             <colgroup>
               {self.props.view_columns.map(x =>{

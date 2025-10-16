@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-11 14:33+0300\n"
+"POT-Creation-Date: 2025-10-15 23:50+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,38 +18,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:798
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:821
 msgid "Yes"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:799
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:822
 msgid "No"
 msgstr ""
 
 #: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73 src/CFilterPanel.jsx:116
-#: src/CFilterPanel.jsx:163 src/CSortingPanel.jsx:73 src/CSortingPanel.jsx:90
+#: src/CFilterPanel.jsx:163 src/CSortingPanel.jsx:78 src/CSortingPanel.jsx:95
 msgid "Reset"
 msgstr ""
 
 #: src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76 src/CFilterPanel.jsx:119
-#: src/CFilterPanel.jsx:166 src/CSortingPanel.jsx:76 src/CSortingPanel.jsx:93
+#: src/CFilterPanel.jsx:166 src/CSortingPanel.jsx:81 src/CSortingPanel.jsx:98
 msgid "Close"
 msgstr ""
 
-#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39 src/CFilterPanel.jsx:159
-#: src/CTable.jsx:84
-msgid "Add"
-msgstr ""
-
-#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39
+#: src/CEditorPanel.jsx:37
 msgid "Save"
 msgstr ""
 
-#: src/CEditorPanel.jsx:26 src/CEditorPanel.jsx:39
+#: src/CEditorPanel.jsx:41 src/CFilterPanel.jsx:159 src/CTable.jsx:84
+msgid "Add"
+msgstr ""
+
+#: src/CEditorPanel.jsx:44
 msgid "Save all"
 msgstr ""
 
-#: src/CEditorPanel.jsx:29 src/CEditorPanel.jsx:42
+#: src/CEditorPanel.jsx:47
+msgid "Nothing to save"
+msgstr ""
+
+#: src/CEditorPanel.jsx:51
+msgid "Invalid values"
+msgstr ""
+
+#: src/CEditorPanel.jsx:63 src/CEditorPanel.jsx:76
 msgid "Cancel"
 msgstr ""
 
@@ -136,7 +143,7 @@ msgstr ""
 msgid "Columns"
 msgstr ""
 
-#: src/CTable.jsx:95 src/CTable.jsx:361
+#: src/CTable.jsx:95 src/CTable.jsx:362
 msgid "Simple select"
 msgstr ""
 
@@ -160,29 +167,29 @@ msgstr ""
 msgid "Reset Zoom"
 msgstr ""
 
-#: src/CTable.jsx:202
+#: src/CTable.jsx:203
 msgid "Columns configuration loading failure."
 msgstr ""
 
-#: src/CTable.jsx:358
+#: src/CTable.jsx:359
 msgid "Sticky select"
 msgstr ""
 
-#: src/CTable.jsx:470
+#: src/CTable.jsx:471
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:479
+#: src/CTable.jsx:480
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:632
+#: src/CTable.jsx:644
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"
