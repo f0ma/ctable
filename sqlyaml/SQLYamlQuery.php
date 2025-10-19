@@ -542,6 +542,8 @@ class SQLYamlQuery {
     }
 
     function s_in($path, $node){
+        if(count($node[1]) == 0)
+            return " FALSE ";
         return $this->visit(array_merge($path, ["in"]), $node[0])." IN (".$this->visit(array_merge($path, ["in"]), $node[1]).")";
     }
 
