@@ -291,8 +291,9 @@ class CTable extends Component {
       var full_path = this.full_table_path();
 
       var table_option_p = link_columns_names.map((x,i) => {
-        full_path[full_path.length-1].table = link_columns_tables[i];
-        return this.props.server.CTableServer.options(full_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w =>{
+        var q_path = deep_copy(full_path);
+        q_path[q_path.length-1].table = link_columns_tables[i];
+        return this.props.server.CTableServer.options(q_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w =>{
           this.state.table_options[link_columns_tables[i]] = {};
           w.rows.forEach(q => {this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];});
         });
