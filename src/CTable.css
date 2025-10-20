@@ -88,6 +88,7 @@ body {
     border: 1px solid;
     border-color:var(--bulma-body-color);
     padding:0.2em;
+    overflow:clip;
 }
 
 .ctable-main-table td div {

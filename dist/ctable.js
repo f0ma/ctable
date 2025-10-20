@@ -449,7 +449,7 @@ class CMultilineTextEditor extends Component {
  * Multiline plain text column.
  *
  * @arg this.props.column.options {Array} Array of pairs of strings `[tag, label]`
- * @arg this.props.column.max_length {Integer} Maximum label length for display in symbols.
+ * @arg this.props.column.show_as_tag {Bool} Disable Tag css element.
  *
  * @arg this.props.value {String} Tags string in format `tag1;tag2;tag3`
  *
@@ -474,16 +474,10 @@ class CTagsCell extends Component {
         if (item_label_list.length > 0) {
           item_label = item_label_list[0][1];
         }
-        if (self.props.column.max_length === undefined || item_label.length <= self.props.column.max_length) {
-          return h("span", {
-            class: "tag"
-          }, item_label);
-        } else {
-          return h("span", {
-            class: "tag",
-            title: item_label
-          }, item_label.slice(0, self.props.column.max_length) + "...");
-        }
+        return h("span", {
+          class: cls(this.props.column.show_as_tag === false ? "" : "tag"),
+          title: item_label + " (" + item + ")"
+        }, item_label);
       });
     }
   }
@@ -1807,12 +1801,12 @@ class CMultiLinkCell extends Component {
       if (x in this.props.options[table]) {
         view = h("span", {
           class: "tag",
-          title: "ID: " + x
+          title: String(this.props.options[table][x]) + " (" + x + ")"
         }, String(this.props.options[table][x]));
       } else {
         view = h("span", {
           class: "tag has-text-grey"
-        }, "ID: " + x);
+        }, "(" + x + ")");
       }
       return view;
     });
@@ -2020,7 +2014,7 @@ class CMultiLinkEditor extends Component {
       return parseInt(x);
     });
     var selectedkv = selectedids.map(x => {
-      return [x, self.state.options_history && x in self.state.options_history ? String(self.state.options_history[x]) : "ID: " + x];
+      return [x, self.state.options_history && x in self.state.options_history ? String(self.state.options_history[x]) : "(" + x + ")"];
     });
 
     //onBlur={this.dropdownMenuLeave}
@@ -2042,7 +2036,7 @@ class CMultiLinkEditor extends Component {
         class: "tags has-addons mr-2"
       }, h("button", {
         class: "tag",
-        title: "ID: " + id
+        title: label + " (" + id + ")"
       }, label), h("button", {
         class: "tag is-delete",
         "data-value": id,
@@ -2083,6 +2077,7 @@ class CMultiLinkEditor extends Component {
  * Single links column.
  *
  * @arg this.props.column.cell_link {String} Table name for linking.
+ * @arg this.props.column.show_as_tag {Bool} Disable Tag css element.
  *
  * @arg this.props.value {Integer} Links id.
  *
@@ -2094,13 +2089,13 @@ class CLinkCell extends Component {
     var view = "";
     if (this.props.value in this.props.options[table]) {
       view = h("span", {
-        class: "tag",
-        title: "ID: " + this.props.value
+        class: cls(this.props.column.show_as_tag === false ? "" : "tag"),
+        title: String(this.props.options[table][this.props.value]) + " (" + this.props.value + ")"
       }, String(this.props.options[table][this.props.value]));
     } else {
       view = h("span", {
-        class: "has-text-grey"
-      }, "ID: " + this.props.value);
+        class: ("has-text-grey", cls(this.props.column.show_as_tag === false ? "" : "tag"))
+      }, "(" + this.props.value + ")");
     }
     return h(Fragment, null, this.props.value === null ? h("span", {
       class: "has-text-grey"

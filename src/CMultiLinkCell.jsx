@@ -23,9 +23,9 @@ class CMultiLinkCell extends Component {
             var view = "";
 
             if (x in this.props.options[table]){
-                view = <span class="tag" title={"ID: "+x}>{String(this.props.options[table][x])}</span>;
+                view = <span class="tag" title={String(this.props.options[table][x])+" ("+x+")"}>{String(this.props.options[table][x])}</span>;
             } else {
-                view = <span class="tag has-text-grey">{"ID: "+x}</span>;
+                view = <span class="tag has-text-grey">{"("+x+")"}</span>;
             }
 
             return view;

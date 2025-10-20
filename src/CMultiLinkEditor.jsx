@@ -163,7 +163,7 @@ class CMultiLinkEditor extends Component {
         var selectedids = self.state.editor_value.split(";").filter(x => {return x != "";}).map(x => {return parseInt(x)});
 
         var selectedkv = selectedids.map(x => {
-           return  [x, self.state.options_history && (x in self.state.options_history) ? String(self.state.options_history[x]) : ("ID: "+x)];
+           return  [x, self.state.options_history && (x in self.state.options_history) ? String(self.state.options_history[x]) : ("("+x+")")];
         });
 
 
@@ -175,7 +175,7 @@ class CMultiLinkEditor extends Component {
                       {selectedkv.map(([id, label]) => {
                           return  <div class="control">
                             <div class="tags has-addons mr-2">
-                              <button class="tag" title={"ID: "+id}>{label}</button><button class="tag is-delete" data-value={id} onClick={self.onRemoveLink}></button>
+                              <button class="tag" title={label+" ("+id+")"}>{label}</button><button class="tag is-delete" data-value={id} onClick={self.onRemoveLink}></button>
                             </div>
                           </div>;
                       })}
