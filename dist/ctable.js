@@ -449,7 +449,7 @@ class CMultilineTextEditor extends Component {
  * Multiline plain text column.
  *
  * @arg this.props.column.options {Array} Array of pairs of strings `[tag, label]`
- * @arg this.props.column.show_as_tag {Bool} Disable Tag css element.
+ * @arg this.props.column.cell_show_as_tag {Bool} Disable Tag css element.
  *
  * @arg this.props.value {String} Tags string in format `tag1;tag2;tag3`
  *
@@ -475,7 +475,7 @@ class CTagsCell extends Component {
           item_label = item_label_list[0][1];
         }
         return h("span", {
-          class: cls(this.props.column.show_as_tag === false ? "" : "tag"),
+          class: cls(this.props.column.cell_show_as_tag === false ? "" : "tag"),
           title: item_label + " (" + item + ")"
         }, item_label);
       });
@@ -1782,6 +1782,7 @@ class CFilesEditor extends Component {
  * Multiple links column.
  *
  * @arg this.props.column.cell_link {String} Table name for linking.
+ * @arg this.props.column.cell_show_as_tag {Bool} Disable Tag css element.
  *
  * @arg this.props.value {String} Links string in format `id1;id2;id3`
  *
@@ -1800,12 +1801,12 @@ class CMultiLinkCell extends Component {
       var view = "";
       if (x in this.props.options[table]) {
         view = h("span", {
-          class: "tag",
+          class: cls(this.props.column.cell_show_as_tag === false ? "" : "tag"),
           title: String(this.props.options[table][x]) + " (" + x + ")"
         }, String(this.props.options[table][x]));
       } else {
         view = h("span", {
-          class: "tag has-text-grey"
+          class: cls("has-text-grey", this.props.column.cell_show_as_tag === false ? "" : "tag")
         }, "(" + x + ")");
       }
       return view;
@@ -2077,7 +2078,7 @@ class CMultiLinkEditor extends Component {
  * Single links column.
  *
  * @arg this.props.column.cell_link {String} Table name for linking.
- * @arg this.props.column.show_as_tag {Bool} Disable Tag css element.
+ * @arg this.props.column.cell_show_as_tag {Bool} Disable Tag css element.
  *
  * @arg this.props.value {Integer} Links id.
  *
@@ -2089,12 +2090,12 @@ class CLinkCell extends Component {
     var view = "";
     if (this.props.value in this.props.options[table]) {
       view = h("span", {
-        class: cls(this.props.column.show_as_tag === false ? "" : "tag"),
+        class: cls(this.props.column.cell_show_as_tag === false ? "" : "tag"),
         title: String(this.props.options[table][this.props.value]) + " (" + this.props.value + ")"
       }, String(this.props.options[table][this.props.value]));
     } else {
       view = h("span", {
-        class: ("has-text-grey", cls(this.props.column.show_as_tag === false ? "" : "tag"))
+        class: ("has-text-grey", cls(this.props.column.cell_show_as_tag === false ? "" : "tag"))
       }, "(" + this.props.value + ")");
     }
     return h(Fragment, null, this.props.value === null ? h("span", {

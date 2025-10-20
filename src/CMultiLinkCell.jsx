@@ -2,6 +2,7 @@
  * Multiple links column.
  *
  * @arg this.props.column.cell_link {String} Table name for linking.
+ * @arg this.props.column.cell_show_as_tag {Bool} Disable Tag css element.
  *
  * @arg this.props.value {String} Links string in format `id1;id2;id3`
  *
@@ -23,9 +24,9 @@ class CMultiLinkCell extends Component {
             var view = "";
 
             if (x in this.props.options[table]){
-                view = <span class="tag" title={String(this.props.options[table][x])+" ("+x+")"}>{String(this.props.options[table][x])}</span>;
+                view = <span class={cls(this.props.column.cell_show_as_tag === false ? "" : "tag")} title={String(this.props.options[table][x])+" ("+x+")"}>{String(this.props.options[table][x])}</span>;
             } else {
-                view = <span class="tag has-text-grey">{"("+x+")"}</span>;
+                view = <span class={cls("has-text-grey", this.props.column.cell_show_as_tag === false ? "" : "tag")}>{"("+x+")"}</span>;
             }
 
             return view;
