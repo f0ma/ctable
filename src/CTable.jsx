@@ -923,7 +923,7 @@ class CTable extends Component {
           </div>
           <div class="ctable-button-row-right has-text-right">
             <div class={cls("dropdown", "is-right", self.state.panel1_menu_active ? "is-active" : "")}>
-              <div class="dropdown-trigger">
+              <div class="dropdown-trigger mb-1">
                 <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu-panel1" onClick={this.onPanel1DropdownClick}>
                   <span class="icon"><span class="material-symbols-outlined">more_vert</span></span>
                   <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>

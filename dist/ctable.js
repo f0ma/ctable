@@ -4279,7 +4279,7 @@ class CTable extends Component {
     }, h("div", {
       class: cls("dropdown", "is-right", self.state.panel1_menu_active ? "is-active" : "")
     }, h("div", {
-      class: "dropdown-trigger"
+      class: "dropdown-trigger mb-1"
     }, h("button", {
       class: "button is-small",
       "aria-haspopup": "true",
