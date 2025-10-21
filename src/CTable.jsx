@@ -41,6 +41,10 @@ class CTable extends Component {
 
     this.onPanel0DropdownClick = this.onPanel0DropdownClick.bind(this);
     this.onPanel1DropdownClick = this.onPanel1DropdownClick.bind(this);
+    this.onAuthDropdownClick = this.onAuthDropdownClick.bind(this);
+
+    this.onCloseAuth = this.onCloseAuth.bind(this);
+    this.onAuthShow = this.onAuthShow.bind(this);
 
     this.askUser = this.askUser.bind(this);
     this.userResolveYes = this.userResolveYes.bind(this);
@@ -117,11 +121,13 @@ class CTable extends Component {
       return_keys: null,
 
       table_select_menu_active: false,
+      auth_menu_active: false,
       editor_show: false,
       select_mode: 'one',
       columns_panel_show: false,
       sorting_panel_show: false,
       filtering_panel_show: false,
+      auth_menu_show: false,
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
@@ -616,6 +622,21 @@ class CTable extends Component {
   }
 
 
+  onAuthDropdownClick(){
+    this.setState({auth_menu_active: !this.state.auth_menu_active});
+  }
+
+  onCloseAuth(){
+    this.setState({auth_menu_show: false});
+    this.reloadData();
+  }
+
+  onAuthShow(){
+    this.hideAllEditors();
+    this.setState({auth_menu_show: true, auth_menu_active: false});
+  }
+
+
   onSaveClick(){
     if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0){
       return; //Has invalid fields
@@ -652,7 +673,7 @@ class CTable extends Component {
   }
 
   hideAllEditors(){
-    this.setState({sorting_panel_show: false, filtering_panel_show: false, columns_panel_show: false, editor_show: false});
+    this.setState({sorting_panel_show: false, filtering_panel_show: false, columns_panel_show: false, editor_show: false, auth_menu_show: false});
   }
 
   /**
@@ -867,18 +888,18 @@ class CTable extends Component {
               </div>
             </td>
             <td class="has-text-right">
-              <div class="dropdown is-right">
+              <div class={cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")}>
                 <div class="dropdown-trigger">
-                  <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu">
+                  <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onAuthDropdownClick}>
                     <span class="icon"><span class="material-symbols-outlined">person</span></span>
                     <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                   </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content has-text-left">
-                    <a class="dropdown-item"><span class="material-symbols-outlined-small">login</span> Войти в систему</a>
+                    <a class="dropdown-item is-soft" onClick={this.onAuthShow}><span class="material-symbols-outlined-small">login</span> Войти в систему</a>
                     <hr class="dropdown-divider" />
-                    <a class="dropdown-item"><span class="material-symbols-outlined-small">logout</span> Выйти из системы</a>
+                    <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small">logout</span> Выйти из системы</a>
                   </div>
                 </div>
               </div>
@@ -943,12 +964,12 @@ class CTable extends Component {
       <CHeaderTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} view_filtering={self.state.view_filtering} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
     </div>
   </section>
-  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show }/>
+  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.auth_menu_show}/>
   {self.state.editor_show ? <CEditorPanel width={self.state.width} table={self} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
   {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
   {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} columns={self.state.table_columns} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
   {self.state.filtering_panel_show ? <CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}
-
+  {self.state.auth_menu_show ? <CAuthPanel width={self.state.width} onCloseAuth={self.onCloseAuth}/>:""}
   </div>;
 
   }

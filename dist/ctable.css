@@ -221,7 +221,7 @@ tr.ctable-selected-row{
     color: var(--bulma-primary-soft-invert);
 }
 
-.ctable-editor-section{
+.   {
     padding-top: 0em;
     padding-left: 0.5em;
     padding-right: 0.5em;
@@ -252,4 +252,3 @@ tr.ctable-selected-row{
 .ctable-main-table button{
     font-size: unset;
 }
-

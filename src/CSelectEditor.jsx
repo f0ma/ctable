@@ -101,6 +101,8 @@ class CSelectEditor extends Component {
 
         var self = this;
 
+        console.log(self.state)
+
         return   <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
           <div class={cls("select", self.state.editor_valid ? "" : "is-danger")}>
             <select onChange={this.onInputChange} value={self.state.editor_value}>
