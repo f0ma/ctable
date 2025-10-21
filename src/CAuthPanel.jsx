@@ -1,9 +1,5 @@
 class CAuthPanel extends Component {
 
-  constructor() {
-    super();
-  }
-
   render() {
 
     var self = this;

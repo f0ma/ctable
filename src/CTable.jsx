@@ -57,6 +57,8 @@ class CTable extends Component {
     this.onSortingChange = this.onSortingChange.bind(this);
     this.onCloseSorting = this.onCloseSorting.bind(this);
 
+    this.onCloseSearch = this.onCloseSearch.bind(this);
+
     this.onResetFilter = this.onResetFilter.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onCloseFilter = this.onCloseFilter.bind(this);
@@ -93,6 +95,7 @@ class CTable extends Component {
         {name:"reload", icon: "refresh", label:_("Reload"), enabled: true, style:"", icon_only:true, panel:0},
 
         {name:"filter", icon: "filter_alt", label:_("Filter"), enabled: true, style:"", icon_only:true, panel:0},
+        {name:"search", icon: "search", label:_("Search"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"sort", icon: "sort", label:_("Sorting"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"columns", icon: "list_alt", label:_("Columns"), enabled: true, style:"", icon_only:true, panel:0},
 
@@ -126,8 +129,9 @@ class CTable extends Component {
       select_mode: 'one',
       columns_panel_show: false,
       sorting_panel_show: false,
+      search_panel_show: false,
       filtering_panel_show: false,
-      auth_menu_show: false,
+      auth_panel_show: false,
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
@@ -453,6 +457,16 @@ class CTable extends Component {
       return;
     }
 
+    if(tg.dataset['name'] == "search"){
+      if(this.state.search_panel_show){
+        this.setState({search_panel_show: false});
+      } else {
+        this.hideAllEditors();
+        this.setState({search_panel_show: true});
+      }
+      return;
+    }
+
     if(tg.dataset['name'] == "reload"){
       this.reloadData();
       return;
@@ -627,13 +641,13 @@ class CTable extends Component {
   }
 
   onCloseAuth(){
-    this.setState({auth_menu_show: false});
+    this.setState({auth_panel_show: false});
     this.reloadData();
   }
 
   onAuthShow(){
     this.hideAllEditors();
-    this.setState({auth_menu_show: true, auth_menu_active: false});
+    this.setState({auth_panel_show: true, auth_menu_active: false});
   }
 
 
@@ -673,7 +687,7 @@ class CTable extends Component {
   }
 
   hideAllEditors(){
-    this.setState({sorting_panel_show: false, filtering_panel_show: false, columns_panel_show: false, editor_show: false, auth_menu_show: false});
+    this.setState({sorting_panel_show: false, columns_panel_show: false, editor_show: false, auth_panel_show: false, filtering_panel_show: false, search_panel_show: false});
   }
 
   /**
@@ -756,6 +770,11 @@ class CTable extends Component {
 
   onCloseFilter(){
     this.setState({filtering_panel_show: false});
+    this.reloadData();
+  }
+
+  onCloseSearch(){
+    this.setState({search_panel_show: false});
     this.reloadData();
   }
 
@@ -964,12 +983,13 @@ class CTable extends Component {
       <CHeaderTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} view_filtering={self.state.view_filtering} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
     </div>
   </section>
-  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.auth_menu_show}/>
+  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.auth_panel_show || self.state.search_panel_show}/>
   {self.state.editor_show ? <CEditorPanel width={self.state.width} table={self} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
   {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
   {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} columns={self.state.table_columns} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
   {self.state.filtering_panel_show ? <CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}
-  {self.state.auth_menu_show ? <CAuthPanel width={self.state.width} onCloseAuth={self.onCloseAuth}/>:""}
+  {self.state.search_panel_show ? <CSearchPanel width={self.state.width} table={self} onCloseSearch={self.onCloseSearch} />:""}
+  {self.state.auth_panel_show ? <CAuthPanel width={self.state.width} onCloseAuth={self.onCloseAuth}/>:""}
   </div>;
 
   }
