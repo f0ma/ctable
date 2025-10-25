@@ -2560,6 +2560,9 @@ class CEditorPanel extends Component {
       saveLabel = _("Invalid values");
       saveEnable = false;
     }
+    var current_action = "edit";
+    if (self.props.affectedRows.length == 0) current_action = "add";
+    if (self.props.affectedRows.length > 1) current_action = "batch-edit";
     return h("section", {
       class: "section ctable-editor-section",
       oncteditorchanged: self.onSomeEditorChanged
@@ -2585,7 +2588,7 @@ class CEditorPanel extends Component {
       onClick: self.props.noCancelClick
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "cancel"), " ", _("Cancel")))), self.props.columns.filter(x => x.editor_actor).map(x => {
+    }, "cancel"), " ", _("Cancel")))), self.props.columns.filter(x => x.editor_actor).filter(x => x.editor_hide_on === undefined || !x.editor_hide_on.includes(current_action)).map(x => {
       return h(CEditorFrame, {
         column: x,
         onEditorChanges: self.props.onEditorChanges,

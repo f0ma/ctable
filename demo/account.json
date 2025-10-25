@@ -79,6 +79,7 @@
       "editor_placeholder": "",
       "editor_default": "1",
       "editor_allow_null": true,
+      "editor_hide_on": ["edit","batch-edit"],
       "options": [
         {
           "value": "0",

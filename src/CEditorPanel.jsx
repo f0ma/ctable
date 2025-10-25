@@ -52,6 +52,11 @@ class CEditorPanel extends Component {
           saveEnable = false;
         }
 
+        var current_action = "edit";
+        if(self.props.affectedRows.length == 0)
+          current_action = "add";
+        if(self.props.affectedRows.length > 1)
+          current_action = "batch-edit";
 
         return  <section class="section ctable-editor-section" oncteditorchanged={self.onSomeEditorChanged}>
           <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "30vh")} >
@@ -64,7 +69,7 @@ class CEditorPanel extends Component {
               </div>
             </div>
 
-            {self.props.columns.filter(x => x.editor_actor).map(x => {
+            {self.props.columns.filter(x => x.editor_actor).filter(x => (x.editor_hide_on === undefined || (!x.editor_hide_on.includes(current_action)))).map(x => {
                   return <CEditorFrame column={x} onEditorChanges={self.props.onEditorChanges} table={self.props.table} row={self.props.affectedRows.length == 0 ? null : self.props.affectedRows[0]} add={self.props.affectedRows.length == 0} batch={self.props.affectedRows.length > 1}/>;
             })}
 

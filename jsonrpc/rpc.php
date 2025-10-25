@@ -235,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
 
         }
 
-    error_log(var_export($respList, true));
+    //error_log(var_export($respList, true));
 
     if($respMethods[0] != "download"){
         header('Content-Type: application/json; charset=utf-8');
@@ -308,10 +308,15 @@ var calls_without_fetch = Object.values(jrpc.call_queue).filter(x => x[1] === nu
 if(calls_without_fetch.length > 0){
     var fp = fetch(jrpc.url,
     { method: "POST",
+    signal: AbortSignal.timeout(5000),
     headers: { "Content-type": "application/json"},
     body:  JSON.stringify(calls_without_fetch.map(x => jrpc.call_queue[x][0])) })
-    .then(response => response.json())
+    .catch(err => {return calls_without_fetch.map(x => { return {jsonrpc:"2.0", id:x, error:{code:-1, message:"Network error: "+err.message, file:"", line:""}}}); })
+    .then(response => {
+        if(response.ok !== true) return response;
+            return response.json()})
     .then(function(response){
+    if(response === undefined) return;
     if (!Array.isArray(response)){
         response = [response];
     }
