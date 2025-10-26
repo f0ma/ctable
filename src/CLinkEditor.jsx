@@ -148,9 +148,9 @@ class CLinkEditor extends Component {
 
         //onBlur={this.dropdownMenuLeave}
 
-        return   <div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")}>
-                   <div class="dropdown-trigger">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick}>
+        return   <div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")} style="width:100%;">
+                   <div class="dropdown-trigger" style="width:100%;">
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} style="width:100%;justify-content:left;">
                       <span>{ self.state.options_history && (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) + ' ('+self.state.editor_value+')' : self.state.editor_value }</span>
                       <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                     </button>

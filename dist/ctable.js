@@ -2017,15 +2017,17 @@ class CMultiLinkEditor extends Component {
     //onBlur={this.dropdownMenuLeave}
 
     return h("div", {
-      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")
+      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : ""),
+      style: "width:100%;"
     }, h("div", {
-      class: "dropdown-trigger"
+      class: "dropdown-trigger",
+      style: "width:100%;"
     }, h("div", {
       class: cls("input", self.state.editor_valid ? "" : "is-danger"),
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu",
       onClick: this.onSelectDropdownClick,
-      style: "height: auto;flex-flow: wrap; row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
+      style: "width:100%; height: auto;flex-flow: wrap; row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
     }, selectedkv.map(([id, label]) => {
       return h("div", {
         class: "control"
@@ -2272,14 +2274,17 @@ class CLinkEditor extends Component {
     //onBlur={this.dropdownMenuLeave}
 
     return h("div", {
-      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")
+      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : ""),
+      style: "width:100%;"
     }, h("div", {
-      class: "dropdown-trigger"
+      class: "dropdown-trigger",
+      style: "width:100%;"
     }, h("button", {
       class: "button",
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu",
-      onClick: this.onSelectDropdownClick
+      onClick: this.onSelectDropdownClick,
+      style: "width:100%;justify-content:left;"
     }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
       class: "icon is-small"
     }, h("span", {
@@ -3310,6 +3315,7 @@ class CTable extends Component {
       table_rows: [],
       table_row_status: [],
       table_options: {},
+      table_options_labels: {},
       return_keys: null,
       table_select_menu_active: false,
       editor_show: false,
@@ -3488,6 +3494,7 @@ class CTable extends Component {
         q_path[q_path.length - 1].table = link_columns_tables[i];
         return this.props.server.CTableServer.options(q_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w => {
           this.state.table_options[link_columns_tables[i]] = {};
+          this.state.table_options_labels[link_columns_tables[i]] = w.label;
           w.rows.forEach(q => {
             this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];
           });
@@ -3510,7 +3517,7 @@ class CTable extends Component {
     var full_path = this.full_table_path();
     full_path[full_path.length - 1].table = column.editor_link;
     if (query != "") {
-      return this.props.server.CTableServer.options(full_path, [["like_lr", "name", query]]);
+      return this.props.server.CTableServer.options(full_path, [["like_lr", this.state.table_options_labels[column.editor_link], query]]);
     }
     return this.props.server.CTableServer.options(full_path);
   }

@@ -113,6 +113,7 @@ class CTable extends Component {
       table_rows:[ ],
       table_row_status:[ ],
       table_options: { },
+      table_options_labels: { },
 
       return_keys: null,
 
@@ -295,7 +296,10 @@ class CTable extends Component {
         q_path[q_path.length-1].table = link_columns_tables[i];
         return this.props.server.CTableServer.options(q_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w =>{
           this.state.table_options[link_columns_tables[i]] = {};
-          w.rows.forEach(q => {this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];});
+          this.state.table_options_labels[link_columns_tables[i]] = w.label;
+          w.rows.forEach(q => {
+            this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];
+          });
         });
       });
 
@@ -314,7 +318,7 @@ class CTable extends Component {
     full_path[full_path.length-1].table = column.editor_link;
 
     if (query != ""){
-      return this.props.server.CTableServer.options(full_path, [["like_lr", "name", query]]);
+      return this.props.server.CTableServer.options(full_path, [["like_lr", this.state.table_options_labels[column.editor_link], query]]);
     }
 
     return this.props.server.CTableServer.options(full_path);

@@ -169,9 +169,9 @@ class CMultiLinkEditor extends Component {
 
         //onBlur={this.dropdownMenuLeave}
 
-        return   <div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")}>
-                   <div class="dropdown-trigger">
-                   <div class={cls("input", self.state.editor_valid ? "" : "is-danger")}  aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick}  style="height: auto;flex-flow: wrap; row-gap: 0.4em; min-height: 2.5em; min-width: 5em;">
+        return   <div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")} style="width:100%;">
+                   <div class="dropdown-trigger" style="width:100%;">
+                   <div class={cls("input", self.state.editor_valid ? "" : "is-danger")}  aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick}  style="width:100%; height: auto;flex-flow: wrap; row-gap: 0.4em; min-height: 2.5em; min-width: 5em;">
                       {selectedkv.map(([id, label]) => {
                           return  <div class="control">
                             <div class="tags has-addons mr-2">
