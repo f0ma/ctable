@@ -147,6 +147,7 @@ class SQLYamlQuery {
         $q1 = SQLYamlQuery::simple_delete($table, [$link_tgt], [$link_tgt => $value]);
         //error_log(var_export($q1->sql(), true));
         $q1->execute($db, [], $accept = 'ok');
+        if($data == "") return;
         foreach(explode(';',$data) as $d){
             $q2 = SQLYamlQuery::simple_insert($table, [$column, $link_tgt], [$column => $d, $link_tgt => $value]);
             //error_log(var_export($q2->sql(), true));

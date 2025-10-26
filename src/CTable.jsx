@@ -630,21 +630,41 @@ class CTable extends Component {
     modified_data.forEach(x => {data_to_send[x] = this.state.editor_changes[x].value});
 
 
-    if(this.state.editor_operation == 'add'){
-      this.setState({progress: true});
-      this.props.server.CTableServer.insert(this.full_table_path(), data_to_send).then(()=> {this.setState({editor_show: false}); this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false});});
+    if(this.state.editor_operation == 'add' && this.state.progress == false){
+      this.setState({progress: true}, () => {
+        this.props.server.CTableServer.insert(this.full_table_path(), data_to_send).then(() => {
+          this.setState({editor_show: false}); this.reloadData();
+        }).catch((e) => {
+          this.showError(e);
+          this.setState({progress: false});
+        });
+      });
     }
 
-    if(this.state.editor_operation == 'edit'){
+    if(this.state.editor_operation == 'edit' && this.state.progress == false){
       var nrecords = this.state.editor_affected_rows.length;
       if(nrecords == 0) return; // no rows affected
       if(nrecords == 1) {
-        this.setState({editor_show: false, progress: true});
-        this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(()=> {this.setState({editor_show: false});  this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false});});
+        this.setState({editor_show: false, progress: true}, () => {
+          this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(()=> {
+            this.setState({editor_show: false});
+            this.reloadData();
+          }).catch((e) => {
+            this.showError(e);
+            this.setState({progress: false});
+          });
+        });
+
       } else {
         this.askUser(N_("Update %d record?","Update %d records?", nrecords)).then(()=>{
-          this.setState({editor_show: false, progress: true});
-          this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(()=> {this.setState({editor_show: false});  this.reloadData();}).catch((e) => {this.showError(e); this.setState({progress: false});});
+          this.setState({editor_show: false, progress: true}, () => {
+            this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(()=> {
+              this.setState({editor_show: false});  this.reloadData();
+            }).catch((e) => {
+              this.showError(e);
+              this.setState({progress: false});
+            });
+          });
         }, ()=>{});
       }
     }

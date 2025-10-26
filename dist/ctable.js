@@ -848,8 +848,7 @@ class CDateEditor extends Component {
   componentDidMount() {
     var date_value = this.props.add || this.props.batch ? this.formatGostAsISODate(this.props.column.editor_default) : this.props.row[this.props.column.name];
     this.setState({
-      editor_value: date_value,
-      display_value: this.formatISODateForDisplay(date_value),
+      editor_value: this.formatISODateForDisplay(date_value),
       editor_modified: false,
       editor_valid: false
     }, () => {
@@ -863,7 +862,7 @@ class CDateEditor extends Component {
   validateAndSend() {
     var is_valid = true;
     var re = new RegExp("^[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]$");
-    if (re.test(this.state.display_value) && this.isValidDate(this.state.editor_value)) {
+    if (re.test(this.state.editor_value) && this.isValidDate(this.formatGostAsISODate(this.state.editor_value))) {
       is_valid = true;
     } else {
       is_valid = false;
@@ -874,7 +873,7 @@ class CDateEditor extends Component {
     this.setState({
       editor_valid: is_valid
     }, () => {
-      this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.state.editor_value, this.state.editor_valid);
+      this.props.onEditorChanges(this.props.column.name, this.state.editor_modified, this.formatGostAsISODate(this.state.editor_value), this.state.editor_valid);
     });
   }
   formatISODateForDisplay(iso_date) {
@@ -890,8 +889,7 @@ class CDateEditor extends Component {
   }
   onInputChange(e) {
     this.setState({
-      editor_value: this.formatGostAsISODate(e.target.value),
-      display_value: e.target.value,
+      editor_value: e.target.value,
       editor_modified: true
     }, () => {
       this.validateAndSend();
@@ -907,8 +905,7 @@ class CDateEditor extends Component {
 
   onResetClicked() {
     this.setState({
-      editor_value: this.formatGostAsISODate(this.props.column.editor_default),
-      display_value: this.props.column.editor_default,
+      editor_value: this.props.column.editor_default,
       editor_modified: false
     }, () => {
       this.validateAndSend();
@@ -925,7 +922,6 @@ class CDateEditor extends Component {
   onNullClicked() {
     this.setState({
       editor_value: null,
-      display_value: null,
       editor_modified: true
     }, () => {
       this.validateAndSend();
@@ -940,10 +936,9 @@ class CDateEditor extends Component {
    */
 
   onUndoClicked() {
-    var d = this.props.add ? this.formatGostAsISODate(this.props.column.editor_default) : this.props.row[this.props.column.name];
+    var d = this.props.add ? this.props.column.editor_default : this.formatISODateForDisplay(this.props.row[this.props.column.name]);
     this.setState({
       editor_value: d,
-      display_value: this.formatISODateForDisplay(d),
       editor_modified: false
     }, () => {
       this.validateAndSend();
@@ -973,8 +968,8 @@ class CDateEditor extends Component {
       class: cls("input", self.state.editor_valid ? "" : "is-danger"),
       type: "text",
       placeholder: self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder,
-      value: self.state.editor_value === null ? "" : self.state.display_value,
-      onChange: self.onInputChange
+      value: self.state.editor_value,
+      onInput: self.onInputChange
     }), self.state.editor_value === null ? h("span", {
       class: "icon is-small is-left"
     }, h("span", {
@@ -1056,6 +1051,7 @@ class CHeaderTable extends Component {
         var filtering = this.props.view_filtering.filter(y => y.column == x.name).length > 0;
         return self.props.columns.filter(y => y.name == x.name).map(x => h("th", {
           "data-column": x.name,
+          title: x.label,
           onClick: self.onHeaderClick
         }, sorting == "asc" ? h("span", {
           class: "material-symbols-outlined-small"
@@ -3862,31 +3858,11 @@ class CTable extends Component {
     modified_data.forEach(x => {
       data_to_send[x] = this.state.editor_changes[x].value;
     });
-    if (this.state.editor_operation == 'add') {
+    if (this.state.editor_operation == 'add' && this.state.progress == false) {
       this.setState({
         progress: true
-      });
-      this.props.server.CTableServer.insert(this.full_table_path(), data_to_send).then(() => {
-        this.setState({
-          editor_show: false
-        });
-        this.reloadData();
-      }).catch(e => {
-        this.showError(e);
-        this.setState({
-          progress: false
-        });
-      });
-    }
-    if (this.state.editor_operation == 'edit') {
-      var nrecords = this.state.editor_affected_rows.length;
-      if (nrecords == 0) return; // no rows affected
-      if (nrecords == 1) {
-        this.setState({
-          editor_show: false,
-          progress: true
-        });
-        this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(() => {
+      }, () => {
+        this.props.server.CTableServer.insert(this.full_table_path(), data_to_send).then(() => {
           this.setState({
             editor_show: false
           });
@@ -3897,12 +3873,16 @@ class CTable extends Component {
             progress: false
           });
         });
-      } else {
-        this.askUser(N_("Update %d record?", "Update %d records?", nrecords)).then(() => {
-          this.setState({
-            editor_show: false,
-            progress: true
-          });
+      });
+    }
+    if (this.state.editor_operation == 'edit' && this.state.progress == false) {
+      var nrecords = this.state.editor_affected_rows.length;
+      if (nrecords == 0) return; // no rows affected
+      if (nrecords == 1) {
+        this.setState({
+          editor_show: false,
+          progress: true
+        }, () => {
           this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(() => {
             this.setState({
               editor_show: false
@@ -3912,6 +3892,25 @@ class CTable extends Component {
             this.showError(e);
             this.setState({
               progress: false
+            });
+          });
+        });
+      } else {
+        this.askUser(N_("Update %d record?", "Update %d records?", nrecords)).then(() => {
+          this.setState({
+            editor_show: false,
+            progress: true
+          }, () => {
+            this.props.server.CTableServer.update(this.full_table_path(), this.getAffectedKeys(), data_to_send).then(() => {
+              this.setState({
+                editor_show: false
+              });
+              this.reloadData();
+            }).catch(e => {
+              this.showError(e);
+              this.setState({
+                progress: false
+              });
             });
           });
         }, () => {});
