@@ -484,6 +484,9 @@ class SQLYamlQuery {
     function s_and($path, $node){
         $cmps = $this->visit($path, $node, $implode_list = false);
 
+        if(is_string($cmps))
+            return $cmps;
+
         if (count($cmps) == 1){
             return $cmps[0];
         }
@@ -502,6 +505,9 @@ class SQLYamlQuery {
 
     function s_or($path, $node){
         $cmps = $this->visit($path, $node, $implode_list = false);
+
+        if(is_string($cmps))
+            return $cmps;
 
         if (count($cmps) == 1){
             return $cmps[0];
