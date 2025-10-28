@@ -2,7 +2,7 @@
   "name": "bill",
   "label": "Bill",
   "width": 60,
-  "show_in_menu": false,
+  "show_in_menu": true,
   "disabled_actions": ["edit", "duplicate"],
   "columns": [
     {
@@ -48,7 +48,9 @@
       "enabled": true,
       "cell_actor": "CNumbersCell",
       "editor_actor": "CLineEditor",
-      "actor_type" : "Float",
+      "actor_type" : "Money",
+      "dec_places": 2 ,
+      "locale": "ru-RU" ,
       "editor_hint": "Summ",
       "editor_placeholder": "0.0",
       "editor_default": "0.0",
@@ -91,5 +93,6 @@
   "subtables": [ ],
   "default_sorting": [ ],
   "default_filtering": [ ],
-  "is_default": false
+  "is_default": false,
+  "auth": true
 }

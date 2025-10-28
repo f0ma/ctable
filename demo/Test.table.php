@@ -17,9 +17,9 @@ class Test {
 
         $q = SQLYamlQuery::simple_select("test", ["id", "text", "verify"]);
 
-        #apply_filters($q, ["id", "text", "verify"], $filter, $order, $limit, $offset);
+        apply_filters($q, ["id", "text", "verify"], $filter, $order, $limit, $offset);
 
-        error_log(var_export($q->query, true));
+        //error_log(var_export($q->query, true));
 
         $rows = $q->execute($this->db, [], $accept = 'ok', $calc_rows = TRUE);
         $num = $q->found_rows();

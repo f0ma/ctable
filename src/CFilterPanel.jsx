@@ -108,7 +108,6 @@ class CFilterPanel extends Component {
 
         var self = this;
 
-
         return  <section class="section ctable-editor-section" >
           <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "30vh")} >
             <div class="field has-text-right mb-0">
@@ -166,7 +165,7 @@ class CFilterPanel extends Component {
                 <button class="button is-small is-soft" onClick={self.props.onCloseFilter}><span class="material-symbols-outlined">close</span> {_("Close")}</button>
               </div>
             </div>
-        </div>
+          </div>
         </section>;
     }
 }
