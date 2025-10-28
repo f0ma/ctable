@@ -97,7 +97,7 @@ class CTable extends Component {
         {name:"reload", icon: "refresh", label:_("Reload"), enabled: true, style:"", icon_only:true, panel:0},
 
         {name:"filter", icon: "filter_alt", label:_("Filter"), enabled: true, style:"", icon_only:true, panel:0},
-        {name:"search", icon: "search", label:_("Search"), enabled: true, style:"", icon_only:true, panel:0},
+        {name:"search", icon: "search", label:_("Search"), enabled: false, style:"", icon_only:true, panel:0},
         {name:"sort", icon: "sort", label:_("Sorting"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"columns", icon: "list_alt", label:_("Columns"), enabled: true, style:"", icon_only:true, panel:0},
 

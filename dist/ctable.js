@@ -1310,7 +1310,6 @@ class CSelectEditor extends Component {
   }
   render() {
     var self = this;
-    console.log(self.state);
     return h("div", {
       class: cls("control", self.state.editor_value === null ? "has-icons-left" : ""),
       oncteditortonull: self.onNullClicked,
@@ -2450,7 +2449,7 @@ class CEditorFrame extends Component {
       class: "input",
       type: "text",
       disabled: true
-    })) : "", console.log(self.props), (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CSelectEditor" ? h(CSelectEditor, {
+    })) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CSelectEditor" ? h(CSelectEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,
@@ -3008,7 +3007,7 @@ class CFilterPanel extends Component {
     }, h("span", {
       class: "material-symbols-outlined"
     }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
-      return h("div", null, console.log(x), h("div", {
+      return h("div", null, h("div", {
         class: "select"
       }, h("select", {
         value: x.column,
@@ -3165,123 +3164,6 @@ class CAuthPanel extends Component {
     }, "cancel"), h("span", null, _("Close"))))));
   }
 }
-class CSearchPanel extends Component {
-  constructor() {
-    super();
-    this.onColumnChange = this.onColumnChange.bind(this);
-    this.onOperatorChange = this.onOperatorChange.bind(this);
-    this.onValueChange = this.onValueChange.bind(this);
-    this.onDeleteClick = this.onDeleteClick.bind(this);
-    this.onAddClick = this.onAddClick.bind(this);
-  }
-  onColumnChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].column = x.target.value;
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onOperatorChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].operator = x.target.value;
-    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
-      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
-      }
-    } else {
-      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
-      }
-    }
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onValueChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].value = x.target.value;
-    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
-      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
-      }
-    } else {
-      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
-      }
-    }
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onDeleteClick(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering.splice(i, 1);
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onAddClick(x) {
-    this.props.table.state.view_filtering.push({
-      column: this.props.table.state.table_columns[0].name,
-      operator: "neq",
-      value: ""
-    });
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  render() {
-    var self = this;
-    return h("section", {
-      class: "section ctable-editor-section"
-    }, h("div", {
-      class: "ctable-editor-panel",
-      style: sty("width", "min(" + self.props.width + "em,100%)")
-    }, h("div", {
-      class: "field has-text-right mb-0"
-    }, h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: "button is-small is-soft",
-      onClick: self.props.onCloseSearch
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
-      return h("div", null, console.log(x), h(CSearchFrame, {
-        column: x.column,
-        table: self.props.table
-      }));
-    }), h("button", {
-      class: "button is-primary is-soft mt-4",
-      onClick: self.onAddClick
-    }, " ", _("Add"), " "), h("div", {
-      class: "field has-text-right mt-5"
-    }, h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: "button is-small is-soft",
-      onClick: self.props.onCloseSearch
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "close"), " ", _("Close"))))));
-  }
-}
-class CSearchFrame extends Component {
-  render() {
-    var self = this;
-    return h("div", null, h("div", {
-      class: "select"
-    }, h("select", {
-      value: self.props.column
-    }, self.props.table.state.table_columns.map(y => {
-      return h("option", {
-        value: y.name
-      }, y.label);
-    }))), h("button", {
-      class: "button is-danger is-soft"
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "delete")), console.log(self));
-  }
-}
-// data-filterindex={i} onClick={self.onDeleteClick}
 /**
  * @typedef {Object} CTable#EditorChange
  * @property {bool} is_modified
@@ -3453,7 +3335,7 @@ class CTable extends Component {
         name: "search",
         icon: "search",
         label: _("Search"),
-        enabled: true,
+        enabled: false,
         style: "",
         icon_only: true,
         panel: 0
@@ -3847,7 +3729,6 @@ class CTable extends Component {
     }
     if (tg.dataset['name'] == "enter") {
       var self = this;
-      console.log(self);
       var gk = this.getAffectedKeys()[0];
       var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
       var key_const = [];
@@ -4402,7 +4283,6 @@ class CTable extends Component {
   }
   render() {
     var self = this;
-    {/*if (self.state.authentication) {*/}
     return h("div", null, h("div", {
       class: cls("modal", self.state.ask_dialog_active ? "is-active" : "")
     }, h("div", {
@@ -4672,28 +4552,18 @@ class CTable extends Component {
       onResetFilter: self.onResetFilter,
       onCloseFilter: self.onCloseFilter,
       onChangeFilter: self.onFilterChange
-    }) : "", self.state.search_panel_show ? h(CSearchPanel, {
-      width: self.state.width,
-      table: self,
-      columns: self.state.table_columns,
-      onCloseSearch: self.onCloseSearch
     }) : "", self.state.auth_panel_show ? h(CAuthPanel, {
       onAuthLogin: self.onAuthLogin,
       onAuthClick: self.onAuthClick,
       onCloseAuth: self.onCloseAuth
     }) : "");
-    {/* } else {
-       return<div class="auth-layer">
-             <CAuthPanel width={self.state.width} onAuthLogin={self.onAuthLogin} onAuthClick={self.onAuthClick} onCloseAuth={self.onCloseAuth}/>
-           </div>
-     }*/}
   }
 }
 var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-10-15 23:50+0300",
+    "pot-creation-date": "2025-10-28 22:49+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -4705,10 +4575,13 @@ var ctable_lang_ru = {
     "x-language": "ru_RU",
     "x-source-language": "C"
   },
+  "Login": [null, "Имя пользователя"],
+  "Password": [null, "Пароль"],
+  "Sign in": [null, "Войти"],
+  "Close": [null, "Закрыть"],
   "Yes": [null, "Да"],
   "No": [null, "Нет"],
   "Reset": [null, "Сбросить"],
-  "Close": [null, "Закрыть"],
   "Save": [null, "Сохранить"],
   "Add": [null, "Добавить"],
   "Save all": [null, "Сохранить все"],
@@ -4730,6 +4603,7 @@ var ctable_lang_ru = {
   "Delete": [null, "Удалить"],
   "Reload": [null, "Перезагрузить"],
   "Filter": [null, "Фильтр"],
+  "Search": [null, ""],
   "Sorting": [null, "Сортировка"],
   "Columns": [null, "Столбцы"],
   "Simple select": [null, "Простой выбор"],
@@ -4742,7 +4616,8 @@ var ctable_lang_ru = {
   "Sticky select": [null, "Выбор с накоплением"],
   "Duplicate %d record?": ["Duplicate %d records?", "Создать копию %d записи?", "Создать копию %d записей?", "Создать копию %d записей?"],
   "Delete %d record?": ["Delete %d records?", "Удалить %d запись?", "Удалить %d записи?", "Удалить %d записей?"],
-  "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"]
+  "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"],
+  "Log out": [null, "Выйти"]
 };
 
 //# sourceMappingURL=ctable.js.map
