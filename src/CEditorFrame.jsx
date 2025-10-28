@@ -103,7 +103,7 @@ class CEditorFrame extends Component {
         <div class="field ctable-editor-control">
 
         {self.props.batch ? (self.state.editor_enabled ? "" : <div class="control"><input class="input" type="text" disabled></input></div>) : "" }
-
+        {console.log(self.props)}
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CSelectEditor" ? <CSelectEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CLineEditor" ? <CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
         {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CDateEditor" ? <CDateEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }

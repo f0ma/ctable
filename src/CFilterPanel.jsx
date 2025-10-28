@@ -107,7 +107,6 @@ class CFilterPanel extends Component {
     render() {
 
         var self = this;
-        console.log(self.state)
 
         return  <section class="section ctable-editor-section" >
           <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "30vh")} >
@@ -125,6 +124,7 @@ class CFilterPanel extends Component {
 
              {self.props.table.state.view_filtering.map((x,i) => {
               return <div>
+                {console.log(x)}
                       <div class="select">
                         <select  value={x.column} data-filterindex={i} onChange={self.onColumnChange}>
                           {self.props.table.state.table_columns.map(y => {

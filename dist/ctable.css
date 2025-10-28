@@ -252,3 +252,24 @@ tr.ctable-selected-row{
 .ctable-main-table button{
     font-size: unset;
 }
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bulma-scheme-main, #fff);
+  color: var(--bulma-text, #222);
+  border: 1px solid var(--bulma-border-weak, rgba(0,0,0,.08));
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.18);
+  padding: 20px 22px;
+}
+
+.auth-layer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;          
+  z-index: 999;
+}

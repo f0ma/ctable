@@ -1,8 +1,74 @@
 class CSearchPanel extends Component {
 
+    constructor() {
+      super();
+
+      this.onColumnChange = this.onColumnChange.bind(this);
+      this.onOperatorChange = this.onOperatorChange.bind(this);
+      this.onValueChange = this.onValueChange.bind(this);
+      this.onDeleteClick =  this.onDeleteClick.bind(this);
+      this.onAddClick =  this.onAddClick.bind(this);
+
+    }
+
+    onColumnChange(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering[i].column = x.target.value;
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    onOperatorChange(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering[i].operator = x.target.value;
+
+      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+        }
+      } else {
+        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        }
+      }
+
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+    onValueChange(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering[i].value = x.target.value;
+
+      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+        }
+      } else {
+        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        }
+      }
+
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+  onDeleteClick(x){
+      var i = Number(x.target.dataset['filterindex']);
+      this.props.table.state.view_filtering.splice(i, 1);
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
+  onAddClick(x){
+      this.props.table.state.view_filtering.push({column: this.props.table.state.table_columns[0].name, operator:"neq", value:""});
+      this.props.table.setState({});
+      this.props.table.onFilterChange();
+    }
+
   render() {
     var self = this
-
     return  <section class="section ctable-editor-section" >
           <div class="ctable-editor-panel" style={sty("width","min("+self.props.width+ "em,100%)")} >
             <div class="field has-text-right mb-0">
@@ -18,9 +84,11 @@ class CSearchPanel extends Component {
             {
               // onChange={this.onInputChange} self.props.table.state.table_columns}
             }
-
              {self.props.table.state.view_filtering.map((x,i) => {
               return <div>
+                {console.log(x)}
+                <CSearchFrame column={x.column} table={self.props.table}/>
+                {/*
                       <div class="select">
                         <select  value={x.column} data-filterindex={i} onChange={self.onColumnChange}>
                           {self.props.table.state.table_columns.map(y => {
@@ -28,6 +96,7 @@ class CSearchPanel extends Component {
                           }) }
                         </select>
                       </div>
+                      
                       <div class="select">
                         <select  value={x.operator}  data-filterindex={i} onChange={self.onOperatorChange}>
                           <option value="eq">=</option>
@@ -48,8 +117,9 @@ class CSearchPanel extends Component {
                       <div style="display: inline-block;">
                         <input class="input" type="text" value={x.value} data-filterindex={i}  onChange={self.onValueChange}/>
                       </div>
-                      <button class="button is-danger is-soft" data-filterindex={i} onClick={self.onDeleteClick}><span class="material-symbols-outlined">delete</span></button>
-                    </div>;
+                      
+                      <button class="button is-danger is-soft" data-filterindex={i} onClick={self.onDeleteClick}><span class="material-symbols-outlined">delete</span></button>*/}
+                    </div>
             })}
 
             <button class="button is-primary is-soft mt-4" onClick={self.onAddClick}> {_("Add")} </button>

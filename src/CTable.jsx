@@ -38,6 +38,8 @@ class CTable extends Component {
     this.reloadData = this.reloadData.bind(this);
     this.getAffectedKeys = this.getAffectedKeys.bind(this);
     this.showError = this.showError.bind(this);
+    this.onAuthLogin = this.onAuthLogin.bind(this);
+    this.onAuthLogout = this.onAuthLogout.bind(this);
 
     this.onPanel0DropdownClick = this.onPanel0DropdownClick.bind(this);
     this.onPanel1DropdownClick = this.onPanel1DropdownClick.bind(this);
@@ -87,10 +89,10 @@ class CTable extends Component {
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
 
-        {name:"add", icon: "add", label:_("Add"), enabled: true, style:"is-primary", icon_only:true, panel:1},
-        {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:true, panel:1},
-        {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:true, panel:1},
-        {name:"delete", icon: "delete", label:_("Delete"), enabled: false, style:"is-danger", icon_only:true, panel:1},
+        {name:"add", icon: "add", label:_("Add"), enabled: true, style:"is-primary", icon_only:true, panel:1, private:true},
+        {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:true, panel:1, private:true},
+        {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:true, panel:1, private:true},
+        {name:"delete", icon: "delete", label:_("Delete"), enabled: false, style:"is-danger", icon_only:true, panel:1, private:true},
 
         {name:"reload", icon: "refresh", label:_("Reload"), enabled: true, style:"", icon_only:true, panel:0},
 
@@ -125,6 +127,7 @@ class CTable extends Component {
 
       table_select_menu_active: false,
       auth_menu_active: false,
+
       editor_show: false,
       select_mode: 'one',
       columns_panel_show: false,
@@ -142,16 +145,20 @@ class CTable extends Component {
       ask_dialog_text:"text",
       ask_dialog_promise_resolve: null,
       ask_dialog_promise_reject: null,
+
+      authentication: false,
+      authentication_user: null,
+      authentication_club_name: null
     });
 
   }
 
   componentDidMount() {
       var self = this;
+      self.onAuthLogin();
       self.props.server.version().then(x => console.log(x));
       let tables_p = self.props.server.CTableServer.tables();
       let links_p = self.props.server.CTableServer.links();
-
       //self.props.server.slots.tableChanged.push(this.reloadData); Slots support
 
       Promise.all([tables_p, links_p]).then(x => {
@@ -162,7 +169,7 @@ class CTable extends Component {
         if (default_table.length == 0){
           default_table = [self.state.table_list[0]];
         }
-
+        
         self.loadTable(default_table[0].name, null);
         self.setState({});
       });
@@ -330,6 +337,32 @@ class CTable extends Component {
     return this.props.server.CTableServer.options(full_path);
   }
 
+  onAuthLogin(l, p, auth){
+    var self = this
+    {/*var login = (l == null ? "demo" : l)
+    var password = (p == null ? "demo" : p)*/}
+    if (!self.state.authentication){
+    self.props.server.CTableServer.user_data().then( x => {
+         if(x === null && auth === true){
+             var w = self.props.server.CTableServer.login(l, p).then(w => {
+             self.props.server.CTableServer.user_data().then( p => {
+                 console.log(p);
+                 this.setState({authentication:true, auth_panel_show:false})
+             });
+             });
+         } else if (x === null) {
+          console.log(x);
+         } else {
+          this.setState({authentication:true, authentication_user:x['user'], authentication_club_name:x['club_name'], auth_panel_show:false})
+         }
+     })}
+  }
+
+  onAuthLogout(){
+    this.props.server.CTableServer.logout()
+    this.setState({authentication: false, auth_menu_active: false, authentication_user:null, authentication_club_name:null})
+  }
+
   topButtonClick(e) {
     var tg = unwind_button_or_link(e);
 
@@ -397,7 +430,7 @@ class CTable extends Component {
 
     if(tg.dataset['name'] == "enter"){
       var self = this;
-
+      console.log(self);
       var gk = this.getAffectedKeys()[0];
       var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
 
@@ -645,6 +678,10 @@ class CTable extends Component {
     this.reloadData();
   }
 
+  onAuthClick(){
+    
+  }
+
   onAuthShow(){
     this.hideAllEditors();
     this.setState({auth_panel_show: true, auth_menu_active: false});
@@ -850,7 +887,7 @@ class CTable extends Component {
   render() {
 
   var self = this;
-
+  {/*if (self.state.authentication) {*/}
   return <div>
   <div class={cls("modal", self.state.ask_dialog_active ? "is-active" : "")}>
     <div class="modal-background" onClick={this.userResolveNo}></div>
@@ -885,7 +922,7 @@ class CTable extends Component {
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    {self.state.table_list.filter(x => x.show_in_menu !== false).map(x =>
+                    {self.state.table_list.filter(x => x.show_in_menu !== false && (self.state.authentication ? true : x.auth == false)).map(x =>
                         <a class={cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : "")} data-label={x.name} onClick={this.onTableSelectClick}><span class="material-symbols-outlined-small">lists</span> {x.label}</a>
                     )}
                     <hr class="dropdown-divider" />
@@ -910,15 +947,15 @@ class CTable extends Component {
               <div class={cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")}>
                 <div class="dropdown-trigger">
                   <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onAuthDropdownClick}>
-                    <span class="icon"><span class="material-symbols-outlined">person</span></span>
+                    <span class="icon"><span class="material-symbols-outlined">{self.state.authentication ? "person1" : "person"}</span></span>
                     <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                   </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content has-text-left">
-                    <a class="dropdown-item is-soft" onClick={this.onAuthShow}><span class="material-symbols-outlined-small">login</span> Войти в систему</a>
+                    {self.state.authentication ? <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small">person</span>{self.state.authentication_user}</a> : <a class="dropdown-item is-soft" onClick={this.onAuthShow}><span class="material-symbols-outlined-small">login</span> {_("Sign in")}</a>}
                     <hr class="dropdown-divider" />
-                    <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small">logout</span> Выйти из системы</a>
+                    {self.state.authentication ? <a class="dropdown-item is-soft" onClick={self.onAuthLogout}><span class="material-symbols-outlined-small">logout</span> {_("Log out")}</a> : ""}
                   </div>
                 </div>
               </div>
@@ -955,7 +992,7 @@ class CTable extends Component {
         </div>
         <div class="ctable-button-row">
           <div class="ctable-button-row-left">
-            {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
+            {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1 && (x.private ? self.state.authentication : true)).map(x =>
               <div class="has-text-centered m-1"  style="display:inline-block;">
               <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onClick={this.topButtonClick} title={x.label} data-table={x.table}><span class="material-symbols-outlined">{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>
               </div>
@@ -983,16 +1020,20 @@ class CTable extends Component {
       <CHeaderTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} view_sorting={self.state.view_sorting} view_filtering={self.state.view_filtering} onHeaderXScroll={self.headerXScroll} progress={self.state.progress} />
     </div>
   </section>
-  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.auth_panel_show || self.state.search_panel_show}/>
+  <CPageTable width={self.state.width} fontSize={self.state.fontSize} table={self} columns={self.state.table_columns} view_columns={self.state.view_columns} row_status={self.state.table_row_status} rows={self.state.table_rows} onRowClick={self.onRowClick}  onTableXScroll={self.tableXScroll} editorShow={self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.search_panel_show}/>
   {self.state.editor_show ? <CEditorPanel width={self.state.width} table={self} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
   {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
   {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} columns={self.state.table_columns} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
   {self.state.filtering_panel_show ? <CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}
-  {self.state.search_panel_show ? <CSearchPanel width={self.state.width} table={self} onCloseSearch={self.onCloseSearch} />:""}
-  {self.state.auth_panel_show ? <CAuthPanel width={self.state.width} onCloseAuth={self.onCloseAuth}/>:""}
+  {self.state.auth_panel_show ? <CAuthPanel onAuthLogin={self.onAuthLogin} onAuthClick={self.onAuthClick} onCloseAuth={self.onCloseAuth}/> : ""}
   </div>;
 
-  }
+ {/* } else {
+    return<div class="auth-layer">
+          <CAuthPanel width={self.state.width} onAuthLogin={self.onAuthLogin} onAuthClick={self.onAuthClick} onCloseAuth={self.onCloseAuth}/>
+        </div>
+  }*/}
+}
 
 
 }

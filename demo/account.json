@@ -157,5 +157,6 @@
   ],
   "default_filtering": [
   ],
-  "is_default": true
+  "is_default": true,
+  "auth": false
 }

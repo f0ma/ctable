@@ -683,6 +683,10 @@ class CTagsEditor extends Component {
  *
  * @arg this.props.column.actor_type {String} Number format. Allowed values: `Integer`, `Float`, `Money`
  *
+ * @arg this.props.colum.dec_places {Integer} Digits after the decimal point.
+ * 
+ * @arg this.props.column.locale {String} Display format (BCP-47)
+ * 
  * @arg this.props.value {Float} Value.
  *
  */
@@ -694,17 +698,18 @@ class CNumbersCell extends Component {
         class: "has-text-grey"
       }, "NULL");
     }
+    var deciminal_places = this.props.column.dec_places === undefined ? 2 : this.props.column.dec_places;
     var accepted_types = ["Integer", "Float", "Money"];
-    const moneyFormatter = new Intl.NumberFormat("ru-RU", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    const moneyFormatter = new Intl.NumberFormat(this.props.column.locale === undefined ? "ru-RU" : this.props.column.locale, {
+      minimumFractionDigits: deciminal_places,
+      maximumFractionDigits: deciminal_places,
       style: 'decimal'
     });
     if (accepted_types.includes(this.props.column.actor_type)) {
       if (this.props.column.actor_type == "Integer") {
         return h(Fragment, null, Number(this.props.value).toFixed(0));
       } else if (this.props.column.actor_type == "Float") {
-        return h(Fragment, null, Number(this.props.value).toFixed(2));
+        return h(Fragment, null, Number(this.props.value).toFixed(deciminal_places));
       } else if (this.props.column.actor_type == "Money") {
         return h(Fragment, null, moneyFormatter.format(this.props.value));
       }
@@ -1309,6 +1314,7 @@ class CSelectEditor extends Component {
   }
   render() {
     var self = this;
+    console.log(self.state);
     return h("div", {
       class: cls("control", self.state.editor_value === null ? "has-icons-left" : ""),
       oncteditortonull: self.onNullClicked,
@@ -2443,7 +2449,7 @@ class CEditorFrame extends Component {
       class: "input",
       type: "text",
       disabled: true
-    })) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CSelectEditor" ? h(CSelectEditor, {
+    })) : "", console.log(self.props), (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CSelectEditor" ? h(CSelectEditor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,
@@ -2998,7 +3004,7 @@ class CFilterPanel extends Component {
     }, h("span", {
       class: "material-symbols-outlined"
     }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
-      return h("div", null, h("div", {
+      return h("div", null, console.log(x), h("div", {
         class: "select"
       }, h("select", {
         value: x.column,
@@ -3079,6 +3085,199 @@ class CFilterPanel extends Component {
     }, "close"), " ", _("Close"))))));
   }
 }
+class CAuthPanel extends Component {
+  constructor() {
+    super();
+    this.onInputLogin = this.onInputLogin.bind(this);
+    this.onInputPassword = this.onInputPassword.bind(this);
+    this.onAuthentication = this.onAuthentication.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      login: null,
+      password: null
+    });
+  }
+  onAuthentication() {
+    var self = this;
+    if (self.state.login && self.state.password) {
+      self.props.onAuthLogin(self.state.login, self.state.password, true);
+    }
+  }
+  onInputLogin(e) {
+    this.setState({
+      login: e.target.value
+    });
+  }
+  onInputPassword(e) {
+    this.setState({
+      password: e.target.value
+    });
+  }
+  render() {
+    var self = this;
+    return h("div", {
+      class: "auth-layer"
+    }, h("div", {
+      class: "auth-box"
+    }, h("div", {
+      class: "field has-text-right mb-4"
+    }, h("p", {
+      class: "control has-icons-left has-icons-right"
+    }, h("input", {
+      class: "input",
+      type: "text",
+      placeholder: _("Login"),
+      onInput: self.onInputLogin
+    }), h("span", {
+      class: "icon is-small is-left"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "Face")))), h("div", {
+      class: "field"
+    }, h("p", {
+      class: "control has-icons-left"
+    }, h("input", {
+      class: "input",
+      type: "password",
+      placeholder: _("Password"),
+      onInput: self.onInputPassword
+    }), h("span", {
+      class: "icon is-small is-left"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "Key")))), h("div", {
+      class: "buttons is-centered"
+    }, h("button", {
+      class: "button is-primary is-soft",
+      onClick: self.onAuthentication
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "person"), h("span", null, _("Sign in"))), h("button", {
+      class: "button is-warning is-soft",
+      onClick: self.props.onCloseAuth
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "cancel"), h("span", null, _("Close"))))));
+  }
+}
+class CSearchPanel extends Component {
+  constructor() {
+    super();
+    this.onColumnChange = this.onColumnChange.bind(this);
+    this.onOperatorChange = this.onOperatorChange.bind(this);
+    this.onValueChange = this.onValueChange.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.onAddClick = this.onAddClick.bind(this);
+  }
+  onColumnChange(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering[i].column = x.target.value;
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onOperatorChange(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering[i].operator = x.target.value;
+    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
+      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+      }
+    } else {
+      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+      }
+    }
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onValueChange(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering[i].value = x.target.value;
+    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
+      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+      }
+    } else {
+      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+      }
+    }
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onDeleteClick(x) {
+    var i = Number(x.target.dataset['filterindex']);
+    this.props.table.state.view_filtering.splice(i, 1);
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  onAddClick(x) {
+    this.props.table.state.view_filtering.push({
+      column: this.props.table.state.table_columns[0].name,
+      operator: "neq",
+      value: ""
+    });
+    this.props.table.setState({});
+    this.props.table.onFilterChange();
+  }
+  render() {
+    var self = this;
+    return h("section", {
+      class: "section ctable-editor-section"
+    }, h("div", {
+      class: "ctable-editor-panel",
+      style: sty("width", "min(" + self.props.width + "em,100%)")
+    }, h("div", {
+      class: "field has-text-right mb-0"
+    }, h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseSearch
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
+      return h("div", null, console.log(x), h(CSearchFrame, {
+        column: x.column,
+        table: self.props.table
+      }));
+    }), h("button", {
+      class: "button is-primary is-soft mt-4",
+      onClick: self.onAddClick
+    }, " ", _("Add"), " "), h("div", {
+      class: "field has-text-right mt-5"
+    }, h("div", {
+      class: "has-text-centered m-2",
+      style: "display:inline-block;"
+    }, h("button", {
+      class: "button is-small is-soft",
+      onClick: self.props.onCloseSearch
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "close"), " ", _("Close"))))));
+  }
+}
+class CSearchFrame extends Component {
+  render() {
+    var self = this;
+    return h("div", null, h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.column
+    }, self.props.table.state.table_columns.map(y => {
+      return h("option", {
+        value: y.name
+      }, y.label);
+    }))), h("button", {
+      class: "button is-danger is-soft"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "delete")), console.log(self));
+  }
+}
+// data-filterindex={i} onClick={self.onDeleteClick}
 /**
  * @typedef {Object} CTable#EditorChange
  * @property {bool} is_modified
@@ -3116,8 +3315,13 @@ class CTable extends Component {
     this.reloadData = this.reloadData.bind(this);
     this.getAffectedKeys = this.getAffectedKeys.bind(this);
     this.showError = this.showError.bind(this);
+    this.onAuthLogin = this.onAuthLogin.bind(this);
+    this.onAuthLogout = this.onAuthLogout.bind(this);
     this.onPanel0DropdownClick = this.onPanel0DropdownClick.bind(this);
     this.onPanel1DropdownClick = this.onPanel1DropdownClick.bind(this);
+    this.onAuthDropdownClick = this.onAuthDropdownClick.bind(this);
+    this.onCloseAuth = this.onCloseAuth.bind(this);
+    this.onAuthShow = this.onAuthShow.bind(this);
     this.askUser = this.askUser.bind(this);
     this.userResolveYes = this.userResolveYes.bind(this);
     this.userResolveNo = this.userResolveNo.bind(this);
@@ -3126,6 +3330,7 @@ class CTable extends Component {
     this.onResetSorting = this.onResetSorting.bind(this);
     this.onSortingChange = this.onSortingChange.bind(this);
     this.onCloseSorting = this.onCloseSorting.bind(this);
+    this.onCloseSearch = this.onCloseSearch.bind(this);
     this.onResetFilter = this.onResetFilter.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onCloseFilter = this.onCloseFilter.bind(this);
@@ -3195,7 +3400,8 @@ class CTable extends Component {
         enabled: true,
         style: "is-primary",
         icon_only: true,
-        panel: 1
+        panel: 1,
+        private: true
       }, {
         name: "edit",
         icon: "edit",
@@ -3203,7 +3409,8 @@ class CTable extends Component {
         enabled: false,
         style: "is-warning",
         icon_only: true,
-        panel: 1
+        panel: 1,
+        private: true
       }, {
         name: "duplicate",
         icon: "content_copy",
@@ -3211,7 +3418,8 @@ class CTable extends Component {
         enabled: false,
         style: "is-warning",
         icon_only: true,
-        panel: 1
+        panel: 1,
+        private: true
       }, {
         name: "delete",
         icon: "delete",
@@ -3219,7 +3427,8 @@ class CTable extends Component {
         enabled: false,
         style: "is-danger",
         icon_only: true,
-        panel: 1
+        panel: 1,
+        private: true
       }, {
         name: "reload",
         icon: "refresh",
@@ -3232,6 +3441,14 @@ class CTable extends Component {
         name: "filter",
         icon: "filter_alt",
         label: _("Filter"),
+        enabled: true,
+        style: "",
+        icon_only: true,
+        panel: 0
+      }, {
+        name: "search",
+        icon: "search",
+        label: _("Search"),
         enabled: true,
         style: "",
         icon_only: true,
@@ -3313,11 +3530,14 @@ class CTable extends Component {
       table_options: {},
       return_keys: null,
       table_select_menu_active: false,
+      auth_menu_active: false,
       editor_show: false,
       select_mode: 'one',
       columns_panel_show: false,
       sorting_panel_show: false,
+      search_panel_show: false,
       filtering_panel_show: false,
+      auth_panel_show: false,
       editor_affected_rows: [],
       editor_changes: {},
       editor_operation: '',
@@ -3327,15 +3547,18 @@ class CTable extends Component {
       ask_dialog_active: false,
       ask_dialog_text: "text",
       ask_dialog_promise_resolve: null,
-      ask_dialog_promise_reject: null
+      ask_dialog_promise_reject: null,
+      authentication: false,
+      authentication_user: null,
+      authentication_club_name: null
     });
   }
   componentDidMount() {
     var self = this;
+    self.onAuthLogin();
     self.props.server.version().then(x => console.log(x));
     let tables_p = self.props.server.CTableServer.tables();
     let links_p = self.props.server.CTableServer.links();
-
     //self.props.server.slots.tableChanged.push(this.reloadData); Slots support
 
     Promise.all([tables_p, links_p]).then(x => {
@@ -3515,6 +3738,44 @@ class CTable extends Component {
     }
     return this.props.server.CTableServer.options(full_path);
   }
+  onAuthLogin(l, p, auth) {
+    var self = this;
+    {/*var login = (l == null ? "demo" : l)
+     var password = (p == null ? "demo" : p)*/}
+    if (!self.state.authentication) {
+      self.props.server.CTableServer.user_data().then(x => {
+        if (x === null && auth === true) {
+          var w = self.props.server.CTableServer.login(l, p).then(w => {
+            self.props.server.CTableServer.user_data().then(p => {
+              console.log(p);
+              this.setState({
+                authentication: true,
+                auth_panel_show: false
+              });
+            });
+          });
+        } else if (x === null) {
+          console.log(x);
+        } else {
+          this.setState({
+            authentication: true,
+            authentication_user: x['user'],
+            authentication_club_name: x['club_name'],
+            auth_panel_show: false
+          });
+        }
+      });
+    }
+  }
+  onAuthLogout() {
+    this.props.server.CTableServer.logout();
+    this.setState({
+      authentication: false,
+      auth_menu_active: false,
+      authentication_user: null,
+      authentication_club_name: null
+    });
+  }
   topButtonClick(e) {
     var tg = unwind_button_or_link(e);
     if (tg.dataset['name'] == "zoom_in" || tg.dataset['name'] == "zoom_out" || tg.dataset['name'] == "zoom_reset") {
@@ -3580,6 +3841,7 @@ class CTable extends Component {
     }
     if (tg.dataset['name'] == "enter") {
       var self = this;
+      console.log(self);
       var gk = this.getAffectedKeys()[0];
       var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
       var key_const = [];
@@ -3654,6 +3916,19 @@ class CTable extends Component {
         this.hideAllEditors();
         this.setState({
           filtering_panel_show: true
+        });
+      }
+      return;
+    }
+    if (tg.dataset['name'] == "search") {
+      if (this.state.search_panel_show) {
+        this.setState({
+          search_panel_show: false
+        });
+      } else {
+        this.hideAllEditors();
+        this.setState({
+          search_panel_show: true
         });
       }
       return;
@@ -3847,6 +4122,25 @@ class CTable extends Component {
     });
     this.loadTable(tbl.name, null);
   }
+  onAuthDropdownClick() {
+    this.setState({
+      auth_menu_active: !this.state.auth_menu_active
+    });
+  }
+  onCloseAuth() {
+    this.setState({
+      auth_panel_show: false
+    });
+    this.reloadData();
+  }
+  onAuthClick() {}
+  onAuthShow() {
+    this.hideAllEditors();
+    this.setState({
+      auth_panel_show: true,
+      auth_menu_active: false
+    });
+  }
   onSaveClick() {
     if (Object.keys(this.state.editor_changes).filter(x => this.state.editor_changes[x].valid == false).length > 0) {
       return; //Has invalid fields
@@ -3918,9 +4212,11 @@ class CTable extends Component {
   hideAllEditors() {
     this.setState({
       sorting_panel_show: false,
-      filtering_panel_show: false,
       columns_panel_show: false,
-      editor_show: false
+      editor_show: false,
+      auth_panel_show: false,
+      filtering_panel_show: false,
+      search_panel_show: false
     });
   }
 
@@ -4010,6 +4306,12 @@ class CTable extends Component {
     });
     this.reloadData();
   }
+  onCloseSearch() {
+    this.setState({
+      search_panel_show: false
+    });
+    this.reloadData();
+  }
   onApplySorting() {
     this.reloadData();
   }
@@ -4091,6 +4393,7 @@ class CTable extends Component {
   }
   render() {
     var self = this;
+    {/*if (self.state.authentication) {*/}
     return h("div", null, h("div", {
       class: cls("modal", self.state.ask_dialog_active ? "is-active" : "")
     }, h("div", {
@@ -4156,7 +4459,7 @@ class CTable extends Component {
       role: "menu"
     }, h("div", {
       class: "dropdown-content"
-    }, self.state.table_list.filter(x => x.show_in_menu !== false).map(x => h("a", {
+    }, self.state.table_list.filter(x => x.show_in_menu !== false && (self.state.authentication ? true : x.auth == false)).map(x => h("a", {
       class: cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : ""),
       "data-label": x.name,
       onClick: this.onTableSelectClick
@@ -4180,18 +4483,19 @@ class CTable extends Component {
     }, "lists"), "\xA0", self.state.current_table.label, "\xA0")))), h("td", {
       class: "has-text-right"
     }, h("div", {
-      class: "dropdown is-right"
+      class: cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")
     }, h("div", {
       class: "dropdown-trigger"
     }, h("button", {
       class: "button is-small",
       "aria-haspopup": "true",
-      "aria-controls": "dropdown-menu"
+      "aria-controls": "dropdown-menu",
+      onClick: this.onAuthDropdownClick
     }, h("span", {
       class: "icon"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "person")), h("span", {
+    }, self.state.authentication ? "person1" : "person")), h("span", {
       class: "icon is-small"
     }, h("span", {
       class: "material-symbols-outlined"
@@ -4201,17 +4505,23 @@ class CTable extends Component {
       role: "menu"
     }, h("div", {
       class: "dropdown-content has-text-left"
-    }, h("a", {
-      class: "dropdown-item"
+    }, self.state.authentication ? h("a", {
+      class: "dropdown-item is-soft"
     }, h("span", {
       class: "material-symbols-outlined-small"
-    }, "login"), " \u0412\u043E\u0439\u0442\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0443"), h("hr", {
+    }, "person"), self.state.authentication_user) : h("a", {
+      class: "dropdown-item is-soft",
+      onClick: this.onAuthShow
+    }, h("span", {
+      class: "material-symbols-outlined-small"
+    }, "login"), " ", _("Sign in")), h("hr", {
       class: "dropdown-divider"
-    }), h("a", {
-      class: "dropdown-item"
+    }), self.state.authentication ? h("a", {
+      class: "dropdown-item is-soft",
+      onClick: self.onAuthLogout
     }, h("span", {
       class: "material-symbols-outlined-small"
-    }, "logout"), " \u0412\u044B\u0439\u0442\u0438 \u0438\u0437 \u0441\u0438\u0441\u0442\u0435\u043C\u044B")))))))), h("div", {
+    }, "logout"), " ", _("Log out")) : ""))))))), h("div", {
       class: "ctable-command-panel"
     }, h("div", {
       class: "ctable-button-row"
@@ -4263,7 +4573,7 @@ class CTable extends Component {
       class: "ctable-button-row"
     }, h("div", {
       class: "ctable-button-row-left"
-    }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).map(x => h("div", {
+    }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1 && (x.private ? self.state.authentication : true)).map(x => h("div", {
       class: "has-text-centered m-1",
       style: "display:inline-block;"
     }, h("button", {
@@ -4325,7 +4635,7 @@ class CTable extends Component {
       rows: self.state.table_rows,
       onRowClick: self.onRowClick,
       onTableXScroll: self.tableXScroll,
-      editorShow: self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show
+      editorShow: self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.search_panel_show
     }), self.state.editor_show ? h(CEditorPanel, {
       width: self.state.width,
       table: self,
@@ -4353,7 +4663,21 @@ class CTable extends Component {
       onResetFilter: self.onResetFilter,
       onCloseFilter: self.onCloseFilter,
       onChangeFilter: self.onFilterChange
+    }) : "", self.state.search_panel_show ? h(CSearchPanel, {
+      width: self.state.width,
+      table: self,
+      columns: self.state.table_columns,
+      onCloseSearch: self.onCloseSearch
+    }) : "", self.state.auth_panel_show ? h(CAuthPanel, {
+      onAuthLogin: self.onAuthLogin,
+      onAuthClick: self.onAuthClick,
+      onCloseAuth: self.onCloseAuth
     }) : "");
+    {/* } else {
+       return<div class="auth-layer">
+             <CAuthPanel width={self.state.width} onAuthLogin={self.onAuthLogin} onAuthClick={self.onAuthClick} onCloseAuth={self.onCloseAuth}/>
+           </div>
+     }*/}
   }
 }
 var ctable_lang_ru = {
