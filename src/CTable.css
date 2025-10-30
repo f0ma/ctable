@@ -144,6 +144,7 @@ body {
 }
 
 .ctable-button-row{
+    min-height: 2.5em;
     vertical-align: top;
     margin-left:0.5em;
     margin-right:0.5em;

@@ -159,5 +159,5 @@
   "default_filtering": [
   ],
   "is_default": true,
-  "auth": false
+  "auth_policy":"guest_read"
 }

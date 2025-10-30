@@ -72,5 +72,5 @@
   "default_sorting": [ ],
   "default_filtering": [ ],
   "is_default": false,
-  "auth": true
+  "auth_policy":"strict"
 }

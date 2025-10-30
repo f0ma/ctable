@@ -59,7 +59,7 @@ class CEditorPanel extends Component {
           current_action = "batch-edit";
 
         return  <section class="section ctable-editor-section" oncteditorchanged={self.onSomeEditorChanged}>
-          <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "30vh")} >
+          <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "40vh")} >
             <div class="field has-text-right mb-0">
               <div class="has-text-centered m-2"  style="display:inline-block;">
                 <button class="button is-small is-primary is-soft" disabled={!saveEnable} onClick={self.props.noSaveClick}><span class="material-symbols-outlined">save</span> {saveLabel}</button>

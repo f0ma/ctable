@@ -2574,7 +2574,7 @@ class CEditorPanel extends Component {
       oncteditorchanged: self.onSomeEditorChanged
     }, h("div", {
       class: "ctable-editor-panel box",
-      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "40vh")
     }, h("div", {
       class: "field has-text-right mb-0"
     }, h("div", {
@@ -2684,7 +2684,7 @@ class CColumnsPanel extends Component {
       class: "section ctable-editor-section"
     }, h("div", {
       class: "ctable-editor-panel box",
-      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "40vh")
     }, h("div", {
       class: "field has-text-right mb-4"
     }, h("div", {
@@ -2818,7 +2818,7 @@ class CSortingPanel extends Component {
       class: "section ctable-editor-section"
     }, h("div", {
       class: "ctable-editor-panel box",
-      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "40vh")
     }, h("div", {
       class: "field has-text-right mb-4"
     }, h("div", {
@@ -2987,7 +2987,7 @@ class CFilterPanel extends Component {
       class: "section ctable-editor-section"
     }, h("div", {
       class: "ctable-editor-panel box",
-      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "30vh")
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "40vh")
     }, h("div", {
       class: "field has-text-right mb-0"
     }, h("div", {
@@ -3101,7 +3101,8 @@ class CAuthPanel extends Component {
       password: null
     });
   }
-  onAuthentication() {
+  onAuthentication(e) {
+    e.preventDefault();
     var self = this;
     if (self.state.login && self.state.password) {
       self.props.onAuthLogin(self.state.login, self.state.password, true);
@@ -3119,10 +3120,14 @@ class CAuthPanel extends Component {
   }
   render() {
     var self = this;
-    return h("div", {
-      class: "auth-layer"
+    return h("section", {
+      class: "section ctable-editor-section"
     }, h("div", {
-      class: "auth-box"
+      class: "ctable-editor-panel box",
+      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "40vh")
+    }, h("form", {
+      action: "#",
+      onSubmit: self.onAuthentication
     }, h("div", {
       class: "field has-text-right mb-4"
     }, h("p", {
@@ -3153,7 +3158,7 @@ class CAuthPanel extends Component {
       class: "buttons is-centered"
     }, h("button", {
       class: "button is-primary is-soft",
-      onClick: self.onAuthentication
+      submit: true
     }, h("span", {
       class: "material-symbols-outlined"
     }, "person"), h("span", null, _("Sign in"))), h("button", {
@@ -3161,7 +3166,7 @@ class CAuthPanel extends Component {
       onClick: self.props.onCloseAuth
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "cancel"), h("span", null, _("Close"))))));
+    }, "cancel"), h("span", null, _("Close")))))));
   }
 }
 /**
@@ -3194,6 +3199,7 @@ class CTable extends Component {
     this.tableXScroll = this.tableXScroll.bind(this);
     this.onRowClick = this.onRowClick.bind(this);
     this.onTableSelectDropdownClick = this.onTableSelectDropdownClick.bind(this);
+    this.onTableSelectDropdownBlur = this.onTableSelectDropdownBlur.bind(this);
     this.onTableSelectClick = this.onTableSelectClick.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
     this.onCancelClick = this.onCancelClick.bind(this);
@@ -3204,8 +3210,11 @@ class CTable extends Component {
     this.onAuthLogin = this.onAuthLogin.bind(this);
     this.onAuthLogout = this.onAuthLogout.bind(this);
     this.onPanel0DropdownClick = this.onPanel0DropdownClick.bind(this);
+    this.onPanel0DropdownBlur = this.onPanel0DropdownBlur.bind(this);
     this.onPanel1DropdownClick = this.onPanel1DropdownClick.bind(this);
+    this.onPanel1DropdownBlur = this.onPanel1DropdownBlur.bind(this);
     this.onAuthDropdownClick = this.onAuthDropdownClick.bind(this);
+    this.onAuthDropdownBlur = this.onAuthDropdownBlur.bind(this);
     this.onCloseAuth = this.onCloseAuth.bind(this);
     this.onAuthShow = this.onAuthShow.bind(this);
     this.askUser = this.askUser.bind(this);
@@ -3286,8 +3295,7 @@ class CTable extends Component {
         enabled: true,
         style: "is-primary",
         icon_only: true,
-        panel: 1,
-        private: true
+        panel: 1
       }, {
         name: "edit",
         icon: "edit",
@@ -3295,8 +3303,7 @@ class CTable extends Component {
         enabled: false,
         style: "is-warning",
         icon_only: true,
-        panel: 1,
-        private: true
+        panel: 1
       }, {
         name: "duplicate",
         icon: "content_copy",
@@ -3304,8 +3311,7 @@ class CTable extends Component {
         enabled: false,
         style: "is-warning",
         icon_only: true,
-        panel: 1,
-        private: true
+        panel: 1
       }, {
         name: "delete",
         icon: "delete",
@@ -3313,8 +3319,7 @@ class CTable extends Component {
         enabled: false,
         style: "is-danger",
         icon_only: true,
-        panel: 1,
-        private: true
+        panel: 1
       }, {
         name: "reload",
         icon: "refresh",
@@ -3435,29 +3440,31 @@ class CTable extends Component {
       ask_dialog_text: "text",
       ask_dialog_promise_resolve: null,
       ask_dialog_promise_reject: null,
-      authentication: false,
-      authentication_user: null,
-      authentication_club_name: null
+      user_data: null
     });
   }
   componentDidMount() {
     var self = this;
-    self.onAuthLogin();
     self.props.server.version().then(x => console.log(x));
     let tables_p = self.props.server.CTableServer.tables();
     let links_p = self.props.server.CTableServer.links();
+    let user_data_p = self.props.server.CTableServer.user_data();
     //self.props.server.slots.tableChanged.push(this.reloadData); Slots support
 
-    Promise.all([tables_p, links_p]).then(x => {
+    Promise.all([tables_p, links_p, user_data_p]).then(x => {
       self.state.table_list = x[0];
       self.state.links = x[1];
-      var default_table = self.state.table_list.filter(x => x.is_default);
-      if (default_table.length == 0) {
-        default_table = [self.state.table_list[0]];
-      }
-      self.loadTable(default_table[0].name, null);
-      self.setState({});
+      self.state.user_data = x[2];
+      self.loadDefaultTable();
     });
+  }
+  loadDefaultTable() {
+    var default_table = this.state.table_list.filter(x => x.is_default);
+    if (default_table.length == 0) {
+      default_table = [this.state.table_list[0]];
+    }
+    this.loadTable(default_table[0].name, null);
+    this.setState({});
   }
   resetColumns() {
     var self = this;
@@ -3492,6 +3499,13 @@ class CTable extends Component {
     var self = this;
     var table = self.state.table_list.filter(x => x.name == name)[0];
     this.hideAllEditors();
+    if (table.auth_policy == "strict" && !self.state.user_data) {
+      this.setState({
+        progress: false,
+        auth_panel_show: true
+      });
+      return;
+    }
     let table_columns_p = self.props.server.CTableServer.columns(table.name);
     let table_subtables_p = self.props.server.CTableServer.subtables(table.name);
     Promise.all([table_columns_p, table_subtables_p]).then(mx => {
@@ -3626,42 +3640,73 @@ class CTable extends Component {
     }
     return this.props.server.CTableServer.options(full_path);
   }
-  onAuthLogin(l, p, auth) {
+  onAuthLogin(login, password) {
     var self = this;
-    {/*var login = (l == null ? "demo" : l)
-     var password = (p == null ? "demo" : p)*/}
-    if (!self.state.authentication) {
-      self.props.server.CTableServer.user_data().then(x => {
-        if (x === null && auth === true) {
-          var w = self.props.server.CTableServer.login(l, p).then(w => {
-            self.props.server.CTableServer.user_data().then(p => {
-              console.log(p);
-              this.setState({
-                authentication: true,
-                auth_panel_show: false
-              });
-            });
-          });
-        } else if (x === null) {
-          console.log(x);
-        } else {
-          this.setState({
-            authentication: true,
-            authentication_user: x['user'],
-            authentication_club_name: x['club_name'],
-            auth_panel_show: false
-          });
-        }
+    this.setState({
+      progress: true
+    });
+    var w = self.props.server.CTableServer.login(login, password).then(w => {
+      self.props.server.CTableServer.user_data().then(p => {
+        self.setState({
+          progress: false,
+          auth_panel_show: false,
+          user_data: p
+        }, x => {
+          self.loadDefaultTable();
+        });
       });
-    }
+    }).catch(e => {
+      self.showError({
+        code: -3,
+        message: _("Authentication error.")
+      });
+      self.setState({
+        progress: false
+      });
+    });
+
+    //    {/*var login = (l == null ? "demo" : l)
+    //    var password = (p == null ? "demo" : p)*/}
+    //    if (!self.state.authentication){
+    //    self.props.server.CTableServer.user_data().then( x => {
+    //         if(x === null && auth === true){
+    //             var w = self.props.server.CTableServer.login(l, p).then(w => {
+    //             self.props.server.CTableServer.user_data().then( p => {
+    //                 console.log(p);
+    //                 this.setState({authentication:true, auth_panel_show:false})
+    //             });
+    //             });
+    //         } else if (x === null) {
+    //          console.log(x);
+    //         } else {
+    //          this.setState({authentication:true, authentication_user:x['user'], authentication_club_name:x['club_name'], auth_panel_show:false})
+    //         }
+    //     })}
+  }
+  onAuthDropdownBlur() {
+    this.setState({
+      auth_menu_active: false
+    });
   }
   onAuthLogout() {
-    this.props.server.CTableServer.logout();
+    var self = this;
     this.setState({
-      authentication: false,
-      auth_menu_active: false,
-      authentication_user: null,
-      authentication_club_name: null
+      progress: true
+    });
+    this.props.server.CTableServer.logout().then(x => {
+      this.setState({
+        auth_menu_active: false,
+        user_data: null,
+        progress: false,
+        table_rows: []
+      }, x => {
+        self.loadDefaultTable();
+      });
+    }).catch(e => {
+      self.showError(e);
+      self.setState({
+        progress: false
+      });
     });
   }
   topButtonClick(e) {
@@ -3727,47 +3772,6 @@ class CTable extends Component {
       this.setState({}, () => this.enablePanelButtons());
       return;
     }
-    if (tg.dataset['name'] == "enter") {
-      var self = this;
-      var gk = this.getAffectedKeys()[0];
-      var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
-      var key_const = [];
-      Object.keys(gk).forEach(k => {
-        key_const.push(["eq", k, gk[k]]);
-      });
-      this.props.server.CTableServer.options(this.full_table_path(), key_const).then(r => {
-        var uid_str = [];
-        r["keys"].forEach(k => {
-          uid_str.push(r["rows"][0][k]);
-        });
-        this.state.table_path_labels.push(r["rows"][0][r["label"]] + " (" + uid_str.join(",") + ")");
-        self.setState({});
-      }).catch(e => {
-        this.showError(e);
-      });
-      this.state.table_path.push({
-        table: this.state.current_table.name,
-        keys: gk,
-        label: this.state.current_table.label,
-        mapping: subtab.mapping,
-        view_settings: deep_copy({
-          view_columns: this.state.view_columns,
-          view_filtering: this.state.view_filtering,
-          view_sorting: this.state.view_sorting
-        }),
-        table_row_status: deep_copy(this.state.table_row_status)
-      });
-      this.hideAllEditors();
-      this.loadTable(tg.dataset['table'], null);
-      return;
-    }
-    if (tg.dataset['name'] == "back") {
-      this.state.table_path_labels.pop();
-      var path_part = this.state.table_path.pop();
-      this.hideAllEditors();
-      this.loadTable(path_part.table, path_part);
-      return;
-    }
     if (tg.dataset['name'] == "columns") {
       if (this.state.columns_panel_show) {
         this.setState({
@@ -3822,6 +3826,53 @@ class CTable extends Component {
     }
     if (tg.dataset['name'] == "reload") {
       this.reloadData();
+      return;
+    }
+    if (tg.dataset['name'] == "enter") {
+      var self = this;
+      var gk = this.getAffectedKeys()[0];
+      var subtab = this.state.table_subtables.filter(x => x.name == tg.dataset['table'])[0];
+      var key_const = [];
+      Object.keys(gk).forEach(k => {
+        key_const.push(["eq", k, gk[k]]);
+      });
+      this.props.server.CTableServer.options(this.full_table_path(), key_const).then(r => {
+        var uid_str = [];
+        r["keys"].forEach(k => {
+          uid_str.push(r["rows"][0][k]);
+        });
+        this.state.table_path_labels.push(r["rows"][0][r["label"]] + " (" + uid_str.join(",") + ")");
+        self.setState({});
+      }).catch(e => {
+        this.showError(e);
+      });
+      this.state.table_path.push({
+        table: this.state.current_table.name,
+        keys: gk,
+        label: this.state.current_table.label,
+        mapping: subtab.mapping,
+        view_settings: deep_copy({
+          view_columns: this.state.view_columns,
+          view_filtering: this.state.view_filtering,
+          view_sorting: this.state.view_sorting
+        }),
+        table_row_status: deep_copy(this.state.table_row_status)
+      });
+      this.hideAllEditors();
+      this.loadTable(tg.dataset['table'], null);
+      return;
+    }
+    if (tg.dataset['name'] == "back") {
+      this.state.table_path_labels.pop();
+      var path_part = this.state.table_path.pop();
+      this.hideAllEditors();
+      this.loadTable(path_part.table, path_part);
+      return;
+    }
+    if (this.state.current_table.auth_policy != "guest_all" && !this.state.user_data) {
+      this.setState({
+        auth_panel_show: true
+      });
       return;
     }
     if (tg.dataset['name'] == "add") {
@@ -3959,10 +4010,12 @@ class CTable extends Component {
   enablePanelButtons() {
     var sel_count = this.state.table_row_status.filter(x => x.selected == true).length;
     if (sel_count == 0) {
+      this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = true);
       this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = false);
     } else {
+      this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = true);
       this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = true);
       this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = true);
       this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = true);
@@ -3984,6 +4037,12 @@ class CTable extends Component {
         x.enabled = false;
       });
     }
+    if ((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !self.state.user_data) {
+      this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = false);
+      this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
+      this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
+      this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = false);
+    }
     self.state.current_table.disabled_actions.forEach(x => {
       if (x == "batch-edit" && sel_count > 1) this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
       if (x == "batch-duplicate" && sel_count > 1) this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
@@ -3998,6 +4057,11 @@ class CTable extends Component {
   onTableSelectDropdownClick() {
     this.setState({
       table_select_menu_active: !this.state.table_select_menu_active
+    });
+  }
+  onTableSelectDropdownBlur() {
+    this.setState({
+      table_select_menu_active: false
     });
   }
   onTableSelectClick(x) {
@@ -4018,9 +4082,7 @@ class CTable extends Component {
     this.setState({
       auth_panel_show: false
     });
-    this.reloadData();
   }
-  onAuthClick() {}
   onAuthShow() {
     this.hideAllEditors();
     this.setState({
@@ -4119,7 +4181,7 @@ class CTable extends Component {
    */
 
   showError(e) {
-    alert(String(e.code) + ": " + e.message);
+    alert(_("Error:") + " " + e.message + " (" + String(e.code) + ")");
   }
   onCancelClick() {
     this.setState({
@@ -4210,9 +4272,19 @@ class CTable extends Component {
       panel0_menu_active: !this.state.panel0_menu_active
     });
   }
+  onPanel0DropdownBlur() {
+    this.setState({
+      panel0_menu_active: false
+    });
+  }
   onPanel1DropdownClick() {
     this.setState({
       panel1_menu_active: !this.state.panel1_menu_active
+    });
+  }
+  onPanel1DropdownBlur() {
+    this.setState({
+      panel1_menu_active: false
     });
   }
 
@@ -4333,7 +4405,8 @@ class CTable extends Component {
       class: "button is-small",
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu",
-      onClick: this.onTableSelectDropdownClick
+      onClick: this.onTableSelectDropdownClick,
+      onBlur: this.onTableSelectDropdownBlur
     }, h("span", {
       class: "icon"
     }, h("span", {
@@ -4348,10 +4421,10 @@ class CTable extends Component {
       role: "menu"
     }, h("div", {
       class: "dropdown-content"
-    }, self.state.table_list.filter(x => x.show_in_menu !== false && (self.state.authentication ? true : x.auth == false)).map(x => h("a", {
+    }, self.state.table_list.filter(x => x.show_in_menu !== false).map(x => h("a", {
       class: cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : ""),
       "data-label": x.name,
-      onClick: this.onTableSelectClick
+      onMouseDown: this.onTableSelectClick
     }, h("span", {
       class: "material-symbols-outlined-small"
     }, "lists"), " ", x.label)), h("hr", {
@@ -4379,12 +4452,13 @@ class CTable extends Component {
       class: "button is-small",
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu",
-      onClick: this.onAuthDropdownClick
+      onClick: this.onAuthDropdownClick,
+      onBlur: this.onAuthDropdownBlur
     }, h("span", {
       class: "icon"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, self.state.authentication ? "person1" : "person")), h("span", {
+    }, self.state.user_data ? "account_box" : "person")), h("span", {
       class: "icon is-small"
     }, h("span", {
       class: "material-symbols-outlined"
@@ -4394,20 +4468,20 @@ class CTable extends Component {
       role: "menu"
     }, h("div", {
       class: "dropdown-content has-text-left"
-    }, self.state.authentication ? h("a", {
+    }, self.state.user_data ? h("a", {
       class: "dropdown-item is-soft"
     }, h("span", {
       class: "material-symbols-outlined-small"
-    }, "person"), self.state.authentication_user) : h("a", {
+    }, "person"), " ", self.state.user_data.user, h("br", null), self.state.user_data.label) : h("a", {
       class: "dropdown-item is-soft",
-      onClick: this.onAuthShow
+      onMouseDown: this.onAuthShow
     }, h("span", {
       class: "material-symbols-outlined-small"
     }, "login"), " ", _("Sign in")), h("hr", {
       class: "dropdown-divider"
-    }), self.state.authentication ? h("a", {
+    }), self.state.user_data ? h("a", {
       class: "dropdown-item is-soft",
-      onClick: self.onAuthLogout
+      onMouseDown: self.onAuthLogout
     }, h("span", {
       class: "material-symbols-outlined-small"
     }, "logout"), " ", _("Log out")) : ""))))))), h("div", {
@@ -4436,7 +4510,8 @@ class CTable extends Component {
       class: "button is-small",
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu-panel0",
-      onClick: this.onPanel0DropdownClick
+      onClick: this.onPanel0DropdownClick,
+      onBlur: this.onPanel0DropdownBlur
     }, h("span", {
       class: "icon"
     }, h("span", {
@@ -4454,7 +4529,7 @@ class CTable extends Component {
     }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 0).map(x => h("a", {
       class: cls("dropdown-item", x.style),
       "data-name": x.name,
-      onClick: this.topButtonClick,
+      onMouseDown: this.topButtonClick,
       "data-table": x.table
     }, h("span", {
       class: "material-symbols-outlined-small"
@@ -4462,13 +4537,13 @@ class CTable extends Component {
       class: "ctable-button-row"
     }, h("div", {
       class: "ctable-button-row-left"
-    }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1 && (x.private ? self.state.authentication : true)).map(x => h("div", {
+    }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).map(x => h("div", {
       class: "has-text-centered m-1",
       style: "display:inline-block;"
     }, h("button", {
       class: cls("button", "is-small", "is-soft", x.style),
       "data-name": x.name,
-      onClick: this.topButtonClick,
+      onMouseDown: this.topButtonClick,
       title: x.label,
       "data-table": x.table
     }, h("span", {
@@ -4480,10 +4555,11 @@ class CTable extends Component {
     }, h("div", {
       class: "dropdown-trigger mb-1"
     }, h("button", {
-      class: "button is-small",
+      class: cls("button", "is-small", self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).length == 0 ? "is-hidden" : ""),
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu-panel1",
-      onClick: this.onPanel1DropdownClick
+      onClick: this.onPanel1DropdownClick,
+      onBlur: this.onPanel1DropdownBlur
     }, h("span", {
       class: "icon"
     }, h("span", {
@@ -4501,7 +4577,7 @@ class CTable extends Component {
     }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).map(x => h("a", {
       class: cls("dropdown-item", "is-soft", x.style),
       "data-name": x.name,
-      onClick: this.topButtonClick
+      onMouseDown: this.topButtonClick
     }, h("span", {
       class: "material-symbols-outlined-small"
     }, x.icon), " ", x.label)))))))), h(CHeaderTable, {
@@ -4524,7 +4600,7 @@ class CTable extends Component {
       rows: self.state.table_rows,
       onRowClick: self.onRowClick,
       onTableXScroll: self.tableXScroll,
-      editorShow: self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.search_panel_show
+      editorShow: self.state.editor_show || self.state.sorting_panel_show || self.state.columns_panel_show || self.state.filtering_panel_show || self.state.search_panel_show || self.state.auth_panel_show
     }), self.state.editor_show ? h(CEditorPanel, {
       width: self.state.width,
       table: self,
@@ -4553,8 +4629,8 @@ class CTable extends Component {
       onCloseFilter: self.onCloseFilter,
       onChangeFilter: self.onFilterChange
     }) : "", self.state.auth_panel_show ? h(CAuthPanel, {
+      width: self.state.width,
       onAuthLogin: self.onAuthLogin,
-      onAuthClick: self.onAuthClick,
       onCloseAuth: self.onCloseAuth
     }) : "");
   }

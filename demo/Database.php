@@ -37,7 +37,7 @@ function client_config() {
 function client_login($username, $password){
     //error_log(password_hash($password, PASSWORD_DEFAULT));
 
-    $q = SQLYamlQuery::simple_select("user", ["id", "user", "club_name", "enable", "hash"]);
+    $q = SQLYamlQuery::simple_select("user", ["id", "user", "label", "enable", "hash"]);
     $q->query['select']['where'][]= ['eq'=>[ "user", ['const' => $username]]];
     $q->query['select']['where'][]= ['eq'=>[ "enable", ['const' => 1]]];
     $q->query['select']['limit'] = 1;
@@ -54,7 +54,7 @@ function client_login($username, $password){
 }
 
 function client_renew($userinfo){
-    $q = SQLYamlQuery::simple_select("user", ["id", "user", "club_name"]);
+    $q = SQLYamlQuery::simple_select("user", ["id", "user", "label"]);
     $q->query['select']['where'][]= ['eq'=>[ "user", ['const' => $userinfo["user"]]]];
     $q->query['select']['where'][]= ['eq'=>[ "enable", ['const' => 1]]];
     $q->query['select']['limit'] = 1;

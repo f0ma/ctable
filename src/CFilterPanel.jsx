@@ -109,7 +109,7 @@ class CFilterPanel extends Component {
         var self = this;
 
         return  <section class="section ctable-editor-section" >
-          <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "30vh")} >
+          <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "40vh")} >
             <div class="field has-text-right mb-0">
               <div class="has-text-centered m-2"  style="display:inline-block;">
                 <button class="button is-small is-warning is-soft" onClick={self.props.onResetFilter}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
