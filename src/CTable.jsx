@@ -515,6 +515,8 @@ class CTable extends Component {
     }
 
     if(tg.dataset['name'] == "back"){
+      if(this.state.table_path.length == 0) return; // No table to back. Why button is active?
+
       this.state.table_path_labels.pop();
       var path_part = this.state.table_path.pop();
       this.hideAllEditors();
