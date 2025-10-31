@@ -94,7 +94,7 @@ class CTable extends Component {
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
 
-        {name:"add", icon: "add", label:_("Add"), enabled: true, style:"is-primary", icon_only:true, panel:1},
+        {name:"add", icon: "add", label:_("Add"), enabled: false, style:"is-primary", icon_only:true, panel:1},
         {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:true, panel:1},
         {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:true, panel:1},
         {name:"delete", icon: "delete", label:_("Delete"), enabled: false, style:"is-danger", icon_only:true, panel:1},
@@ -150,9 +150,7 @@ class CTable extends Component {
       ask_dialog_active: false,
       ask_dialog_text:"text",
       ask_dialog_promise_resolve: null,
-      ask_dialog_promise_reject: null,
-
-      user_data: null
+      ask_dialog_promise_reject: null
     });
 
   }
@@ -169,7 +167,6 @@ class CTable extends Component {
       Promise.all([tables_p, links_p, user_data_p]).then(x => {
         self.state.table_list = x[0];
         self.state.links = x[1];
-        self.state.user_data = x[2];
         self.loadDefaultTable();
 
       });
@@ -215,7 +212,7 @@ class CTable extends Component {
 
     this.hideAllEditors();
 
-    if(table.auth_policy == "strict" && !self.state.user_data){
+    if(table.auth_policy == "strict" && !getCTablesJWT()){
       this.setState({progress: false, auth_panel_show:true});
       return;
     }
@@ -359,31 +356,12 @@ class CTable extends Component {
     this.setState({progress: true});
     var w = self.props.server.CTableServer.login(login, password).then(w => {
       self.props.server.CTableServer.user_data().then( p => {
-        self.setState({progress: false, auth_panel_show:false, user_data:p}, x=>{self.loadDefaultTable()});
+        self.setState({progress: false, auth_panel_show:false}, x=>{self.loadDefaultTable()});
       });
     }).catch(e =>{
       self.showError({code:-3, message:_("Authentication error.")});
       self.setState({progress: false});
     });
-
-
-//    {/*var login = (l == null ? "demo" : l)
-//    var password = (p == null ? "demo" : p)*/}
-//    if (!self.state.authentication){
-//    self.props.server.CTableServer.user_data().then( x => {
-//         if(x === null && auth === true){
-//             var w = self.props.server.CTableServer.login(l, p).then(w => {
-//             self.props.server.CTableServer.user_data().then( p => {
-//                 console.log(p);
-//                 this.setState({authentication:true, auth_panel_show:false})
-//             });
-//             });
-//         } else if (x === null) {
-//          console.log(x);
-//         } else {
-//          this.setState({authentication:true, authentication_user:x['user'], authentication_club_name:x['club_name'], auth_panel_show:false})
-//         }
-//     })}
   }
 
   onAuthDropdownBlur(){
@@ -394,7 +372,7 @@ class CTable extends Component {
     var self = this;
     this.setState({progress: true});
     this.props.server.CTableServer.logout().then(x => {
-      this.setState({auth_menu_active: false, user_data: null, progress: false, table_rows:[]}, x=>{self.loadDefaultTable()});
+      this.setState({auth_menu_active: false, progress: false, table_rows:[]}, x=>{self.loadDefaultTable()});
     }).catch(e =>{
       self.showError(e);
       self.setState({progress: false});
@@ -540,7 +518,7 @@ class CTable extends Component {
       return;
     }
 
-    if(this.state.current_table.auth_policy != "guest_all" && !this.state.user_data){
+    if(this.state.current_table.auth_policy != "guest_all" && !getCTablesJWT()){
       this.setState({auth_panel_show:true});
       return;
     }
@@ -554,8 +532,18 @@ class CTable extends Component {
     if(tg.dataset['name'] == "edit"){
       var nrecords = this.getAffectedKeys().length;
       if(nrecords == 0) return; // no rows affected
+
+      var last_row_idx = this.state.table_rows.map((x,i) => this.state.table_row_status[i].selected ? i : null).filter(i => i !== null) .slice(-1)[0];
+
       this.hideAllEditors();
-      this.setState({editor_show: true, editor_affected_rows: this.state.table_rows.filter((x,i) => this.state.table_row_status[i].selected), editor_changes: {}, editor_operation: 'edit'});
+      this.setState({editor_show: true, editor_affected_rows: this.state.table_rows.filter((x,i) => this.state.table_row_status[i].selected), editor_changes: {}, editor_operation: 'edit'}, x=>{
+        var header_brect = document.querySelector(".ctable-scroll-head-table").getBoundingClientRect();
+        var neaded_top = header_brect.top + header_brect.height;
+        var row_top = document.querySelector("tr[data-rowindex='"+last_row_idx+"']").getBoundingClientRect().top;
+        var tcont = document.querySelector(".ctable-scroll-main-table");
+
+        tcont.scrollTo(0,  tcont.scrollTop + row_top - neaded_top);
+      });
       return;
     }
 
@@ -687,7 +675,7 @@ class CTable extends Component {
           });
     }
 
-    if((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !self.state.user_data){
+    if((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !getCTablesJWT()){
       this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
@@ -1022,15 +1010,15 @@ class CTable extends Component {
               <div class={cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")}>
                 <div class="dropdown-trigger">
                   <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onAuthDropdownClick} onBlur={this.onAuthDropdownBlur}>
-                    <span class="icon"><span class="material-symbols-outlined">{self.state.user_data ? "account_box" : "person"}</span></span>
+                    <span class="icon"><span class="material-symbols-outlined">{getCTablesJWT() ? "account_box" : "person"}</span></span>
                     <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                   </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content has-text-left">
-                    {self.state.user_data ? <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small">person</span> {self.state.user_data.user}<br/>{self.state.user_data.label}</a> : <a class="dropdown-item is-soft" onMouseDown={this.onAuthShow}><span class="material-symbols-outlined-small">login</span> {_("Sign in")}</a>}
+                    {getCTablesJWT() ? <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small">person</span> {getCTablesJWT().user}<br/>{getCTablesJWT().label}</a> : <a class="dropdown-item is-soft" onMouseDown={this.onAuthShow}><span class="material-symbols-outlined-small">login</span> {_("Sign in")}</a>}
                     <hr class="dropdown-divider" />
-                    {self.state.user_data ? <a class="dropdown-item is-soft" onMouseDown={self.onAuthLogout}><span class="material-symbols-outlined-small">logout</span> {_("Log out")}</a> : ""}
+                    {getCTablesJWT() ? <a class="dropdown-item is-soft" onMouseDown={self.onAuthLogout}><span class="material-symbols-outlined-small">logout</span> {_("Log out")}</a> : ""}
                   </div>
                 </div>
               </div>

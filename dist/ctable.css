@@ -144,7 +144,7 @@ body {
 }
 
 .ctable-button-row{
-    min-height: 2.5em;
+    min-height: 2.6em;
     vertical-align: top;
     margin-left:0.5em;
     margin-right:0.5em;
@@ -153,10 +153,12 @@ body {
 .ctable-button-row-left{
     display:inline-block;
     overflow: hidden;
-    max-height: 2.1em;
+    max-height: 2.2em;
     max-width:calc(100% - 4em);
     width:calc(100% - 4em);
 }
+
+@media (prefers-color-scheme: dark) {
 
 a.dropdown-item.is-primary.is-soft {
     background-color: rgb(0, 102, 87);
@@ -171,6 +173,27 @@ a.dropdown-item.is-warning.is-soft {
 a.dropdown-item.is-danger.is-soft {
     background-color: rgb(102, 0, 20);
     color: rgb(255, 204, 214);
+}
+
+}
+
+@media (prefers-color-scheme: light) {
+
+    a.dropdown-item.is-primary.is-soft {
+        background-color: rgb(204, 255, 247);
+        color: rgb(0, 102, 87);
+    }
+
+    a.dropdown-item.is-warning.is-soft {
+        background-color: rgb(255, 240, 204);
+        color: rgb(102, 71, 0);
+    }
+
+    a.dropdown-item.is-danger.is-soft {
+        background-color: rgb(255, 204, 214);
+        color: rgb(102, 0, 20);
+    }
+
 }
 
 .ctable-button-row-right{
@@ -189,7 +212,7 @@ a.dropdown-item.is-danger.is-soft {
 
 .ctable-main-table {
     margin:auto;
-    margin-top:calc(8.1rem + 1.5em);
+    margin-top:calc(8.1rem + 1.8em);
 }
 
 .ctable-top-panel {

@@ -30,6 +30,26 @@ function N_(s1, s2, n) {
   ;
 }
 
+// Get cookie from
+// https://stackoverflow.com/a/15724300/4265407
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+function getCTablesJWT() {
+  token = getCookie("ctables-jwt");
+  if (!token) return null;
+  var udata = Uint8Array.fromBase64(token.split('.')[1], {
+    alphabet: 'base64url',
+    omitPadding: true
+  });
+  var sdata = new TextDecoder().decode(udata);
+  return JSON.parse(sdata);
+}
+
 // This functions adopted from Just Clone library
 // https://github.com/angus-c/just
 // Copyright by Contributors:
@@ -3292,7 +3312,7 @@ class CTable extends Component {
         name: "add",
         icon: "add",
         label: _("Add"),
-        enabled: true,
+        enabled: false,
         style: "is-primary",
         icon_only: true,
         panel: 1
@@ -3439,8 +3459,7 @@ class CTable extends Component {
       ask_dialog_active: false,
       ask_dialog_text: "text",
       ask_dialog_promise_resolve: null,
-      ask_dialog_promise_reject: null,
-      user_data: null
+      ask_dialog_promise_reject: null
     });
   }
   componentDidMount() {
@@ -3454,7 +3473,6 @@ class CTable extends Component {
     Promise.all([tables_p, links_p, user_data_p]).then(x => {
       self.state.table_list = x[0];
       self.state.links = x[1];
-      self.state.user_data = x[2];
       self.loadDefaultTable();
     });
   }
@@ -3499,7 +3517,7 @@ class CTable extends Component {
     var self = this;
     var table = self.state.table_list.filter(x => x.name == name)[0];
     this.hideAllEditors();
-    if (table.auth_policy == "strict" && !self.state.user_data) {
+    if (table.auth_policy == "strict" && !getCTablesJWT()) {
       this.setState({
         progress: false,
         auth_panel_show: true
@@ -3649,8 +3667,7 @@ class CTable extends Component {
       self.props.server.CTableServer.user_data().then(p => {
         self.setState({
           progress: false,
-          auth_panel_show: false,
-          user_data: p
+          auth_panel_show: false
         }, x => {
           self.loadDefaultTable();
         });
@@ -3664,24 +3681,6 @@ class CTable extends Component {
         progress: false
       });
     });
-
-    //    {/*var login = (l == null ? "demo" : l)
-    //    var password = (p == null ? "demo" : p)*/}
-    //    if (!self.state.authentication){
-    //    self.props.server.CTableServer.user_data().then( x => {
-    //         if(x === null && auth === true){
-    //             var w = self.props.server.CTableServer.login(l, p).then(w => {
-    //             self.props.server.CTableServer.user_data().then( p => {
-    //                 console.log(p);
-    //                 this.setState({authentication:true, auth_panel_show:false})
-    //             });
-    //             });
-    //         } else if (x === null) {
-    //          console.log(x);
-    //         } else {
-    //          this.setState({authentication:true, authentication_user:x['user'], authentication_club_name:x['club_name'], auth_panel_show:false})
-    //         }
-    //     })}
   }
   onAuthDropdownBlur() {
     this.setState({
@@ -3696,7 +3695,6 @@ class CTable extends Component {
     this.props.server.CTableServer.logout().then(x => {
       this.setState({
         auth_menu_active: false,
-        user_data: null,
         progress: false,
         table_rows: []
       }, x => {
@@ -3869,7 +3867,7 @@ class CTable extends Component {
       this.loadTable(path_part.table, path_part);
       return;
     }
-    if (this.state.current_table.auth_policy != "guest_all" && !this.state.user_data) {
+    if (this.state.current_table.auth_policy != "guest_all" && !getCTablesJWT()) {
       this.setState({
         auth_panel_show: true
       });
@@ -3888,12 +3886,20 @@ class CTable extends Component {
     if (tg.dataset['name'] == "edit") {
       var nrecords = this.getAffectedKeys().length;
       if (nrecords == 0) return; // no rows affected
+
+      var last_row_idx = this.state.table_rows.map((x, i) => this.state.table_row_status[i].selected ? i : null).filter(i => i !== null).slice(-1)[0];
       this.hideAllEditors();
       this.setState({
         editor_show: true,
         editor_affected_rows: this.state.table_rows.filter((x, i) => this.state.table_row_status[i].selected),
         editor_changes: {},
         editor_operation: 'edit'
+      }, x => {
+        var header_brect = document.querySelector(".ctable-scroll-head-table").getBoundingClientRect();
+        var neaded_top = header_brect.top + header_brect.height;
+        var row_top = document.querySelector("tr[data-rowindex='" + last_row_idx + "']").getBoundingClientRect().top;
+        var tcont = document.querySelector(".ctable-scroll-main-table");
+        tcont.scrollTo(0, tcont.scrollTop + row_top - neaded_top);
       });
       return;
     }
@@ -4037,7 +4043,7 @@ class CTable extends Component {
         x.enabled = false;
       });
     }
-    if ((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !self.state.user_data) {
+    if ((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !getCTablesJWT()) {
       this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
@@ -4458,7 +4464,7 @@ class CTable extends Component {
       class: "icon"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, self.state.user_data ? "account_box" : "person")), h("span", {
+    }, getCTablesJWT() ? "account_box" : "person")), h("span", {
       class: "icon is-small"
     }, h("span", {
       class: "material-symbols-outlined"
@@ -4468,18 +4474,18 @@ class CTable extends Component {
       role: "menu"
     }, h("div", {
       class: "dropdown-content has-text-left"
-    }, self.state.user_data ? h("a", {
+    }, getCTablesJWT() ? h("a", {
       class: "dropdown-item is-soft"
     }, h("span", {
       class: "material-symbols-outlined-small"
-    }, "person"), " ", self.state.user_data.user, h("br", null), self.state.user_data.label) : h("a", {
+    }, "person"), " ", getCTablesJWT().user, h("br", null), getCTablesJWT().label) : h("a", {
       class: "dropdown-item is-soft",
       onMouseDown: this.onAuthShow
     }, h("span", {
       class: "material-symbols-outlined-small"
     }, "login"), " ", _("Sign in")), h("hr", {
       class: "dropdown-divider"
-    }), self.state.user_data ? h("a", {
+    }), getCTablesJWT() ? h("a", {
       class: "dropdown-item is-soft",
       onMouseDown: self.onAuthLogout
     }, h("span", {

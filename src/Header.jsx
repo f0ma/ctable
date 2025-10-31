@@ -38,6 +38,24 @@ function N_(s1,s2,n){
 }
 
 
+// Get cookie from
+// https://stackoverflow.com/a/15724300/4265407
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+function getCTablesJWT() {
+    token = getCookie("ctables-jwt");
+    if(!token) return null;
+    var udata = Uint8Array.fromBase64(token.split('.')[1], {alphabet: 'base64url', omitPadding: true });
+    var sdata = new TextDecoder().decode(udata);
+    return JSON.parse(sdata);
+}
+
 
 // This functions adopted from Just Clone library
 // https://github.com/angus-c/just
