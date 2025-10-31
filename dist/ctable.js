@@ -3584,6 +3584,7 @@ class CTable extends Component {
           selected: issel
         });
       });
+      if (this.state.table_rows.length == 1) this.state.table_row_status[0]['selected'] = true;
       this.state.progress = false;
       this.state.last_row_clicked = null;
       this.state.return_keys = null;

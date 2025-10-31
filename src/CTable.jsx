@@ -274,7 +274,11 @@ class CTable extends Component {
         var issel = false;
         keys.forEach(w =>{ if(!issel) {issel = Object.keys(w).map(q => w[q] == x[q]).every(u => u)} });
         this.state.table_row_status.push({selected: issel});
-      })
+      });
+
+      if(this.state.table_rows.length == 1)
+        this.state.table_row_status[0]['selected'] = true;
+
       this.state.progress = false;
       this.state.last_row_clicked = null;
       this.state.return_keys = null;
