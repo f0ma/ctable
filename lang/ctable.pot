@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-28 22:49+0300\n"
+"POT-Creation-Date: 2025-11-01 12:30+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,29 +18,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/CAuthPanel.jsx:40
+#: src/CAuthPanel.jsx:42
 msgid "Login"
 msgstr ""
 
-#: src/CAuthPanel.jsx:46
+#: src/CAuthPanel.jsx:48
 msgid "Password"
 msgstr ""
 
-#: src/CAuthPanel.jsx:52 src/CTable.jsx:979
+#: src/CAuthPanel.jsx:54 src/CTable.jsx:1025
 msgid "Sign in"
 msgstr ""
 
-#: src/CAuthPanel.jsx:55 src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76
+#: src/CAuthPanel.jsx:57 src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76
 #: src/CFilterPanel.jsx:118 src/CFilterPanel.jsx:165 src/CSearchPanel.jsx:81
 #: src/CSearchPanel.jsx:134 src/CSortingPanel.jsx:81 src/CSortingPanel.jsx:98
 msgid "Close"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:922
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:968
 msgid "Yes"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:923
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:969
 msgid "No"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgid "Save"
 msgstr ""
 
 #: src/CEditorPanel.jsx:41 src/CFilterPanel.jsx:158 src/CSearchPanel.jsx:125
-#: src/CTable.jsx:92
+#: src/CTable.jsx:97
 msgid "Add"
 msgstr ""
 
@@ -120,101 +120,109 @@ msgstr ""
 msgid "Upload..."
 msgstr ""
 
-#: src/CTable.jsx:84
+#: src/CTable.jsx:89
 msgid "Go back"
 msgstr ""
 
-#: src/CTable.jsx:86 src/CTable.jsx:87 src/CTable.jsx:88 src/CTable.jsx:89
-#: src/CTable.jsx:90
+#: src/CTable.jsx:91 src/CTable.jsx:92 src/CTable.jsx:93 src/CTable.jsx:94
+#: src/CTable.jsx:95
 msgid "Enter"
 msgstr ""
 
-#: src/CTable.jsx:93
+#: src/CTable.jsx:98
 msgid "Edit"
 msgstr ""
 
-#: src/CTable.jsx:94
+#: src/CTable.jsx:99
 msgid "Duplicate"
 msgstr ""
 
-#: src/CTable.jsx:95
+#: src/CTable.jsx:100
 msgid "Delete"
 msgstr ""
 
-#: src/CTable.jsx:97
+#: src/CTable.jsx:102
 msgid "Reload"
 msgstr ""
 
-#: src/CTable.jsx:99
+#: src/CTable.jsx:104
 msgid "Filter"
 msgstr ""
 
-#: src/CTable.jsx:100
+#: src/CTable.jsx:105
 msgid "Search"
 msgstr ""
 
-#: src/CTable.jsx:101
+#: src/CTable.jsx:106
 msgid "Sorting"
 msgstr ""
 
-#: src/CTable.jsx:102
+#: src/CTable.jsx:107
 msgid "Columns"
 msgstr ""
 
-#: src/CTable.jsx:104 src/CTable.jsx:410
+#: src/CTable.jsx:109 src/CTable.jsx:427
 msgid "Simple select"
 msgstr ""
 
-#: src/CTable.jsx:105
+#: src/CTable.jsx:110
 msgid "Select all"
 msgstr ""
 
-#: src/CTable.jsx:106
+#: src/CTable.jsx:111
 msgid "Clear all"
 msgstr ""
 
-#: src/CTable.jsx:108
+#: src/CTable.jsx:113
 msgid "Zoom In"
 msgstr ""
 
-#: src/CTable.jsx:109
+#: src/CTable.jsx:114
 msgid "Zoom Out"
 msgstr ""
 
-#: src/CTable.jsx:110
+#: src/CTable.jsx:115
 msgid "Reset Zoom"
 msgstr ""
 
-#: src/CTable.jsx:221
+#: src/CTable.jsx:231
 msgid "Columns configuration loading failure."
 msgstr ""
 
-#: src/CTable.jsx:407
+#: src/CTable.jsx:366
+msgid "Authentication error."
+msgstr ""
+
+#: src/CTable.jsx:424
 msgid "Sticky select"
 msgstr ""
 
-#: src/CTable.jsx:528
+#: src/CTable.jsx:559
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:537
+#: src/CTable.jsx:568
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:734
+#: src/CTable.jsx:772
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:981
+#: src/CTable.jsx:800
+msgid "Error:"
+msgstr ""
+
+#: src/CTable.jsx:1027
 msgid "Log out"
 msgstr ""
 

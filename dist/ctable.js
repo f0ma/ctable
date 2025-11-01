@@ -4649,7 +4649,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-10-28 22:49+0300",
+    "pot-creation-date": "2025-11-01 12:30+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -4682,7 +4682,7 @@ var ctable_lang_ru = {
   "File \"%s\" extention has not allowed": [null, "Файл \"%s\" имеет расширение не разрешенное для загрузки"],
   "Remove uploaded file?": [null, "Удалить загруженный файл?"],
   "Upload...": [null, "Загрузить..."],
-  "Go back": [null, "Выйти"],
+  "Go back": [null, "Назад"],
   "Enter": [null, "Войти"],
   "Edit": [null, "Правка"],
   "Duplicate": [null, "Создать копию"],
@@ -4699,10 +4699,12 @@ var ctable_lang_ru = {
   "Zoom Out": [null, "Уменьшить"],
   "Reset Zoom": [null, "Сбросить масштаб"],
   "Columns configuration loading failure.": [null, "Ошибка при загрузке информации о столбцах таблицы."],
+  "Authentication error.": [null, ""],
   "Sticky select": [null, "Выбор с накоплением"],
   "Duplicate %d record?": ["Duplicate %d records?", "Создать копию %d записи?", "Создать копию %d записей?", "Создать копию %d записей?"],
   "Delete %d record?": ["Delete %d records?", "Удалить %d запись?", "Удалить %d записи?", "Удалить %d записей?"],
   "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"],
+  "Error:": [null, ""],
   "Log out": [null, "Выйти"]
 };
 
