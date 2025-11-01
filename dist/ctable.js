@@ -4586,6 +4586,7 @@ class CTable extends Component {
     }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).map(x => h("a", {
       class: cls("dropdown-item", "is-soft", x.style),
       "data-name": x.name,
+      "data-table": x.table,
       onMouseDown: this.topButtonClick
     }, h("span", {
       class: "material-symbols-outlined-small"

@@ -1078,7 +1078,7 @@ class CTable extends Component {
               <div class="dropdown-menu" id="dropdown-menu-panel1" role="menu">
                 <div class="dropdown-content has-text-left">
                   {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
-                    <a class={cls("dropdown-item", "is-soft", x.style)} data-name={x.name} onMouseDown={this.topButtonClick}><span class="material-symbols-outlined-small">{x.icon}</span> {x.label}</a>
+                    <a class={cls("dropdown-item", "is-soft", x.style)} data-name={x.name} data-table={x.table} onMouseDown={this.topButtonClick}><span class="material-symbols-outlined-small">{x.icon}</span> {x.label}</a>
                   )}
                 </div>
               </div>

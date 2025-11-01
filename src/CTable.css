@@ -227,6 +227,7 @@ a.dropdown-item.is-danger.is-soft {
     max-height:1.8em;
     overflow:clip;
     text-align:center;
+    max-width: 60vw;
 }
 
 .ctable-entry-action-panel {
