@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Advanced CRUD tables",
   "config": {
-    "js": "src/Header.jsx src/CBoolCell.jsx src/CBoolEditor.jsx src/CMultilineTextCell.jsx src/CMultilineTextEditor.jsx src/CTagsCell.jsx src/CTagsEditor.jsx src/CNumbersCell.jsx src/CPlainTextCell.jsx src/CSelectCell.jsx src/CDateCell.jsx src/CFilesCell.jsx src/CDateEditor.jsx src/CHeaderTable.jsx src/CPageTable.jsx src/CSelectEditor.jsx src/CLineEditor.jsx src/CFilesEditor.jsx src/CMultiLinkCell.jsx src/CMultiLinkEditor.jsx src/CLinkCell.jsx src/CLinkEditor.jsx src/CEditorFrame.jsx src/CEditorPanel.jsx src/CColumnsPanel.jsx src/CSortingPanel.jsx src/CFilterPanel.jsx src/CAuthPanel.jsx src/CTable.jsx lang/ru_lang.js",
+    "js": "src/Header.jsx src/CBoolCell.jsx src/CBoolEditor.jsx src/CMultilineTextCell.jsx src/CMultilineTextEditor.jsx src/CTagsCell.jsx src/CTagsEditor.jsx src/CNumbersCell.jsx src/CPlainTextCell.jsx src/CSelectCell.jsx src/CDateCell.jsx src/CFilesCell.jsx src/CDateEditor.jsx src/CHeaderTable.jsx src/CPageTable.jsx src/CSelectEditor.jsx src/CLineEditor.jsx src/CFilesEditor.jsx src/CMultiLinkCell.jsx src/CMultiLinkEditor.jsx src/CLinkCell.jsx src/CLinkEditor.jsx src/CEditorFrame.jsx src/CEditorPanel.jsx src/CColumnsPanel.jsx src/CSortingPanel.jsx src/CFilterPanel.jsx src/CAuthPanel.jsx src/CSearchPanel.jsx src/CSearchFrame.jsx src/CTextSearcher.jsx src/CTable.jsx lang/ru_lang.js",
     "css": "src/CTable.css"
   },
   "scripts": {
