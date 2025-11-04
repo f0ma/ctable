@@ -7,20 +7,14 @@ class CTextSearcher extends Comment {
         var line = e.target.value
 
         if(this.props.column.editor_replace_comma){
-            v = v.replace(',', '.');
+            line = line.replace(',', '.');
         }
 
-        this.setState({editor_value: v});
+        this.props.onValueChange(line, Number(e.target.dataset['filterindex']));
     }
 
     render() {
         var self = this;
-        /*
-        return <div class={cls("control", self.state.search_value === null ? "has-icons-left" : "")}>
-        <input class={cls("input", self.state.editor_valid ? "" : "is-danger")} type="text" placeholder={self.state.search_value === null ? "NULL" : self.props.column.editor_placeholder} onInput={self.onInputChange}/>
-        {self.state.search_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
-        </div>;
-        */
         return  <div>
                     <div class="select">
                         <select value={self.props.column.name} data-filterindex={self.props.index} onChange={self.props.onColumnChange}>
@@ -40,7 +34,7 @@ class CTextSearcher extends Comment {
                         </select>
                     </div>
                     <div style="display: inline-block;">
-                        <input class="input" type="text" value={self.props.value} data-filterindex={self.props.index} onChange={self.props.onValueChange}/>
+                        <input class="input" type="text" value={self.props.value} data-filterindex={self.props.index} onChange={self.onInputChange}/>
                     </div>
                     <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick}><span class="material-symbols-outlined">delete</span></button>
                 </div>;

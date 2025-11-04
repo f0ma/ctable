@@ -40,7 +40,7 @@ function getCookie(name) {
   return null;
 }
 function getCTablesJWT() {
-  var token = getCookie("ctables-jwt");
+  token = getCookie("ctables-jwt");
   if (!token) return null;
   var udata = Uint8Array.fromBase64(token.split('.')[1], {
     alphabet: 'base64url',
@@ -3027,7 +3027,7 @@ class CFilterPanel extends Component {
     }, h("span", {
       class: "material-symbols-outlined"
     }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
-      return h("div", null, console.log(i), h("div", {
+      return h("div", null, h("div", {
         class: "select"
       }, h("select", {
         value: x.column,
@@ -3219,16 +3219,15 @@ class CSearchPanel extends Component {
     this.props.table.setState({});
     this.props.table.onFilterChange();
   }
-  onValueChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].value = x.target.value;
-    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
-      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+  onValueChange(value, index) {
+    this.props.table.state.view_filtering[index].value = value;
+    if (this.props.table.state.view_filtering[index].operator == 'in' || this.props.table.state.view_filtering[index].operator == 'not_in') {
+      if (!Array.isArray(this.props.table.state.view_filtering[index].value)) {
+        this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(",").map(x => x.trim());
       }
     } else {
-      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+      if (Array.isArray(this.props.table.state.view_filtering[index].value)) {
+        this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.join(",");
       }
     }
     this.props.table.setState({});
@@ -3251,7 +3250,6 @@ class CSearchPanel extends Component {
   }
   render() {
     var self = this;
-    console.log(self);
     return h("section", {
       class: "section ctable-editor-section"
     }, h("div", {
@@ -3270,7 +3268,7 @@ class CSearchPanel extends Component {
     }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
       return h("div", null, h(CSearchFrame, {
         index: i,
-        column: self.props.table.state.table_columns[i],
+        column: self.props.table.state.table_columns.filter(y => y.name == x.column)[0],
         operator: x.operator,
         value: x.value,
         table: self.props.table,
@@ -3298,59 +3296,10 @@ class CSearchPanel extends Component {
 class CSearchFrame extends Component {
   constructor() {
     super();
-    this.onEnabledChanged = this.onEnabledChanged.bind(this);
-    this.onEditorChanges = this.onEditorChanges.bind(this);
-    this.onResetClicked = this.onResetClicked.bind(this);
-    this.onNullClicked = this.onNullClicked.bind(this);
-    this.onUndoClicked = this.onUndoClicked.bind(this);
-  }
-  componentDidMount() {
-    this.setState({
-      editor_enabled: this.props.add ? true : false,
-      editor_value: null,
-      editor_valid: null
-    });
-  }
-  onEnabledChanged(e) {
-    this.setState({
-      editor_enabled: e.target.checked
-    }, () => {
-      this.props.onEditorChanges(this.props.column.name, false, this.state.editor_value, this.state.editor_valid);
-    });
-  }
-  onEditorChanges(colname, is_modified, value, valid) {
-    this.setState({
-      editor_value: value,
-      editor_valid: valid
-    });
-    if (this.state.editor_enabled) {
-      this.props.onEditorChanges(colname, true, value, valid);
-    } else {
-      if (is_modified) {
-        this.setState({
-          editor_enabled: true
-        });
-        this.props.onEditorChanges(colname, true, value, valid);
-      } else {
-        this.props.onEditorChanges(colname, false, value, valid);
-      }
-    }
-  }
-  onResetClicked() {
-    this.base.querySelector(".ctable-editor-control div").dispatchEvent(new CustomEvent("cteditorreset"));
-  }
-  onNullClicked() {
-    this.base.querySelector(".ctable-editor-control div").dispatchEvent(new CustomEvent("cteditortonull"));
-  }
-  onUndoClicked() {
-    this.base.querySelector(".ctable-editor-control div").dispatchEvent(new CustomEvent("cteditorundo"));
   }
   render() {
     var self = this;
-    return h("div", null, self.props.column.cell_actor == "CTagsCell" ? h(CTagsSearcher, {
-      column: self.props.column,
-      operator: self.props.operator
-    }) : "", self.props.column.cell_actor == "CPlainTextCell" ? h(CTextSearcher, {
+    return h("div", null, self.props.column.cell_actor == "CPlainTextCell" ? h(CTextSearcher, {
       index: self.props.index,
       column: self.props.column,
       table: self.props.table,
@@ -3360,111 +3309,17 @@ class CSearchFrame extends Component {
       onColumnChange: self.props.onColumnChange,
       onOperatorChange: self.props.onOperatorChange,
       onValueChange: self.props.onValueChange
-    }) : "", self.props.column.editor_hint ? h("p", {
-      class: "help"
-    }, self.props.column.editor_hint) : h("p", {
-      class: "help mt-4"
-    }, self.props.column.editor_hint));
-  }
-}
-class CTagsSearcher extends Component {
-  constructor() {
-    super();
-  }
-  onRemoveTag(e) {
-    var tag = unwind_button_or_link(e).dataset['tag'];
-    var nv = this.state.search_value;
-    if (this.state.search_value == null || this.state.search_value == "") {
-      return;
-    } else {
-      var actived = this.state.search_value.split(";");
-      actived = actived.filter(x => x != tag);
-      actived.sort();
-      nv = actived.join(";");
-    }
-    this.setState({
-      search_value: nv
-    });
-  }
-  onAddTaG(e) {
-    var tag = unwind_button_or_link(e).dataset['tag'];
-    var nv = "";
-    if (this.state.search_value === null || this.state.search_value == "") {
-      nv = tag;
-    } else {
-      var actived = this.state.search_value.split(";");
-      actived.push(tag);
-      actived.sort();
-      nv = actived.join(";");
-    }
-    this.setState({
-      search_value: nv
-    });
-  }
-  renderTags() {
-    var self = this;
-    if (self.state.search_value === undefined) return;
-    if (self.state.search_value === "") {
-      return h("div", {
-        class: "input"
-      });
-    } else if (self.state.search_value === null) {
-      return h("div", {
-        class: "input"
-      }, h("span", {
-        class: "has-text-grey"
-      }, "NULL"), h("span", {
-        class: "icon is-small is-left"
-      }, h("span", {
-        class: "material-symbols-outlined"
-      }, "hide_source")));
-    } else {
-      var actived = self.state.search_value.split(";");
-      var tags = self.props.column.options.filter(x => actived.includes(x[0]));
-      return h("div", {
-        class: "input",
-        style: "height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
-      }, tags.map(([tag, label]) => {
-        return h("div", {
-          class: "control"
-        }, h("div", {
-          class: "tags has-addons mr-2"
-        }, h("button", {
-          class: "tag"
-        }, label), h("button", {
-          class: "tag is-delete",
-          "data-tag": tag,
-          onClick: self.onRemoveTag
-        })));
-      }));
-    }
-  }
-  renderToolbar() {
-    var self = this;
-    var buttons = self.props.column.options;
-    if (self.state.search_value === undefined) return;
-    if (self.state.search_value !== null) {
-      var actived = self.state.search_value.split(";");
-      buttons = buttons.filter(x => !actived.includes(x[0]));
-    }
-    return h("div", {
-      class: "field"
-    }, h("div", {
-      class: "control"
-    }, h("div", {
-      class: "buttons are-small is-flex is-flex-wrap-wrap"
-    }, buttons.map(([val, label]) => h("button", {
-      type: "button",
-      class: "button is-small",
-      "data-tag": val,
-      onClick: self.onAddTag,
-      title: label.slice(0, self.props.column.max_length) + (label.length > 32 ? "..." : "")
-    }, label)))));
-  }
-  render() {
-    return h("div", {
-      class: cls("control field is-grouped is-grouped-multiline", self.state.search_value === null ? "has-icons-left" : "")
-    }, self.renderTags(), self.renderToolbar());
+    }) : "", self.props.column.cell_actor == "CNumbersCell" ? h(CNumbersSearcher, {
+      index: self.props.index,
+      column: self.props.column,
+      table: self.props.table,
+      operator: self.props.operator,
+      value: self.props.value,
+      onDeleteClick: self.props.onDeleteClick,
+      onColumnChange: self.props.onColumnChange,
+      onOperatorChange: self.props.onOperatorChange,
+      onValueChange: self.props.onValueChange
+    }) : "");
   }
 }
 class CTextSearcher extends Comment {
@@ -3474,20 +3329,12 @@ class CTextSearcher extends Comment {
   onInputChange(e) {
     var line = e.target.value;
     if (this.props.column.editor_replace_comma) {
-      v = v.replace(',', '.');
+      line = line.replace(',', '.');
     }
-    this.setState({
-      editor_value: v
-    });
+    this.props.onValueChange(line, Number(e.target.dataset['filterindex']));
   }
   render() {
     var self = this;
-    /*
-    return <div class={cls("control", self.state.search_value === null ? "has-icons-left" : "")}>
-    <input class={cls("input", self.state.editor_valid ? "" : "is-danger")} type="text" placeholder={self.state.search_value === null ? "NULL" : self.props.column.editor_placeholder} onInput={self.onInputChange}/>
-    {self.state.search_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
-    </div>;
-    */
     return h("div", null, h("div", {
       class: "select"
     }, h("select", {
@@ -3523,7 +3370,90 @@ class CTextSearcher extends Comment {
       type: "text",
       value: self.props.value,
       "data-filterindex": self.props.index,
-      onChange: self.props.onValueChange
+      onChange: self.onInputChange
+    })), h("button", {
+      class: "button is-danger is-soft",
+      "data-filterindex": self.props.index,
+      onClick: self.props.onDeleteClick
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "delete")));
+  }
+}
+class CNumbersSearcher extends Component {
+  constructor() {
+    super();
+    this.onInputChange = this.onInputChange.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      search_valid: true,
+      search_value: this.props.value ?? ""
+    });
+  }
+  onInputChange(e) {
+    var self = this;
+    var row = e.target.value;
+    row = row.replace(",", ".");
+    var value = Number(row);
+    if (!Number.isFinite(value)) {
+      this.setState({
+        search_valid: false,
+        search_value: row
+      });
+    } else {
+      this.setState({
+        search_valid: true,
+        search_value: value
+      }, () => self.props.onValueChange(this.state.search_value, Number(e.target.dataset['filterindex'])));
+    }
+  }
+  render() {
+    var self = this;
+    return h("div", null, h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.column.name,
+      "data-filterindex": self.props.index,
+      onChange: self.props.onColumnChange
+    }, self.props.table.state.table_columns.map(y => {
+      return h("option", {
+        value: y.name
+      }, y.label);
+    }))), h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.operator ? self.props.operator : "like_lr",
+      "data-filterindex": self.props.index,
+      onChange: self.props.onOperatorChange
+    }, h("option", {
+      value: "eq"
+    }, "="), h("option", {
+      value: "neq"
+    }, "!="), h("option", {
+      value: "ge"
+    }, ">="), h("option", {
+      value: "gt"
+    }, ">"), h("option", {
+      value: "le"
+    }, "<="), h("option", {
+      value: "lt"
+    }, "<"), h("option", {
+      value: "in"
+    }, "IN"), h("option", {
+      value: "not_in"
+    }, "NOT IN"), self.props.column.editor_allow_null ? h("option", {
+      value: "is_null"
+    }, "Is NULL") : "", self.props.column.editor_allow_null ? h("option", {
+      value: "is_not_null"
+    }, "Is not NULL") : "")), h("div", {
+      style: "display: inline-block;"
+    }, h("input", {
+      class: cls("input", self.state.search_valid ? "" : "is-danger"),
+      type: "text",
+      value: self.state.search_value,
+      "data-filterindex": self.props.index,
+      onChange: self.onInputChange
     })), h("button", {
       class: "button is-danger is-soft",
       "data-filterindex": self.props.index,

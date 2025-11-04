@@ -36,17 +36,16 @@ class CSearchPanel extends Component {
       this.props.table.onFilterChange();
     }
 
-    onValueChange(x){
-      var i = Number(x.target.dataset['filterindex']);
-      this.props.table.state.view_filtering[i].value = x.target.value;
+    onValueChange(value, index){
+      this.props.table.state.view_filtering[index].value = value;
 
-      if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
-        if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
-          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+      if(this.props.table.state.view_filtering[index].operator == 'in' || this.props.table.state.view_filtering[index].operator == 'not_in'){
+        if(!Array.isArray(this.props.table.state.view_filtering[index].value)){
+          this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(",").map(x => x.trim());
         }
       } else {
-        if(Array.isArray(this.props.table.state.view_filtering[i].value)){
-          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
+        if(Array.isArray(this.props.table.state.view_filtering[index].value)){
+          this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.join(",");
         }
       }
 
@@ -69,7 +68,6 @@ class CSearchPanel extends Component {
 
   render() {
     var self = this
-    console.log(self)
     return  <section class="section ctable-editor-section" >
           <div class="ctable-editor-panel" style={sty("width","min("+self.props.width+ "em,100%)")} >
             <div class="field has-text-right mb-0">
@@ -79,7 +77,7 @@ class CSearchPanel extends Component {
             </div>
              {self.props.table.state.view_filtering.map((x,i) => {
               return <div>
-                <CSearchFrame index={i} column={self.props.table.state.table_columns[i]} operator={x.operator} value={x.value} table={self.props.table} onDeleteClick={self.onDeleteClick} onColumnChange={self.onColumnChange} onOperatorChange={self.onOperatorChange} onValueChange={self.onValueChange}/>
+                <CSearchFrame index={i} column={self.props.table.state.table_columns.filter(y => y.name == x.column)[0]} operator={x.operator} value={x.value} table={self.props.table} onDeleteClick={self.onDeleteClick} onColumnChange={self.onColumnChange} onOperatorChange={self.onOperatorChange} onValueChange={self.onValueChange}/>
                     </div>
             })}
 
