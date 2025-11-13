@@ -3295,7 +3295,7 @@ class CSearchFrame extends Component {
   }
   render() {
     var self = this;
-    return h("div", null, self.props.column.cell_actor == "CPlainTextCell" ? h(CTextSearcher, {
+    return h("div", null, self.props.column.cell_actor == "CPlainTextCell" || self.props.column.cell_actor == "CMultilineTextCell" ? h(CTextSearcher, {
       index: self.props.index,
       column: self.props.column,
       table: self.props.table,
@@ -3730,7 +3730,7 @@ class CLinkSearcher extends Component {
     this.loadRemoteOptions("");
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.column.name != this.props.column.name) {
+    if (prevProps.column.name != this.props.column.name || prevProps.column.cell_link != this.props.column.cell_link) {
       this.initializeFromProps(this.props);
       this.loadRemoteOptions("");
       return;
@@ -3802,7 +3802,16 @@ class CLinkSearcher extends Component {
     var selected = this.getSelectedValues();
     if (!selected.includes(id)) {
       selected.push(id);
-      selected.sort((a, b) => Number(a) - Number(b));
+      selected.sort((a, b) => {
+        var an = Number(a);
+        var bn = Number(b);
+        if (Number.isFinite(an) && Number.isFinite(bn)) {
+          return an - bn;
+        }
+        if (a > b) return 1;
+        if (a < b) return -1;
+        return 0;
+      });
     }
     this.commitValue(selected.join(";"), true);
   }
@@ -3886,7 +3895,8 @@ class CLinkSearcher extends Component {
     }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
       class: "dropdown-item",
       "data-value": x,
-      onClick: self.onAddLink
+      onClick: self.onAddLink,
+      key: x
     }, self.state.options_current[x], " (", x, ")")) : ""))));
   }
   render() {
