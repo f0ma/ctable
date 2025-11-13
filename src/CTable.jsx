@@ -94,10 +94,10 @@ class CTable extends Component {
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
 
-        {name:"add", icon: "add", label:_("Add"), enabled: false, style:"is-primary", icon_only:true, panel:1},
-        {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:true, panel:1},
-        {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:true, panel:1},
-        {name:"delete", icon: "delete", label:_("Delete"), enabled: false, style:"is-danger", icon_only:true, panel:1},
+        {name:"add", icon: "add", label:_("Add"), enabled: false, style:"is-primary", icon_only:false, panel:1},
+        {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:false, panel:1},
+        {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:false, panel:1},
+        {name:"delete", icon: "delete", label:_("Delete"), enabled: false, style:"is-danger", icon_only:false, panel:1},
 
         {name:"reload", icon: "refresh", label:_("Reload"), enabled: true, style:"", icon_only:true, panel:0},
 
@@ -1034,33 +1034,22 @@ class CTable extends Component {
       </div>
       <div  class="ctable-command-panel">
         <div class="ctable-button-row">
-          <div class="ctable-button-row-left">
-            {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 0).map(x =>
-              <div class="has-text-centered m-1"  style="display:inline-block;">
-                <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onClick={this.topButtonClick} title={x.label}><span class="material-symbols-outlined">{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>
-              </div>
-            )}
-          </div>
-          <div class="ctable-button-row-right has-text-right">
-            <div class={cls("dropdown", "is-right", self.state.panel0_menu_active ? "is-active" : "")}>
-              <div class="dropdown-trigger">
-                <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu-panel0" onClick={this.onPanel0DropdownClick} onBlur={this.onPanel0DropdownBlur}>
-                  <span class="icon"><span class="material-symbols-outlined">build</span></span>
-                  <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
-                </button>
-              </div>
-              <div class="dropdown-menu" id="dropdown-menu-panel0" role="menu">
-                <div class="dropdown-content has-text-left">
-                  {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 0).map(x =>
-                    <a class={cls("dropdown-item",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} data-table={x.table}><span class="material-symbols-outlined-small">{x.icon}</span> {x.label}</a>
-                  )}
-                </div>
+          <div class={cls("dropdown", "is-left", self.state.panel0_menu_active ? "is-active" : "")}>
+            <div class="dropdown-trigger">
+              <button class="button is-small m-1" aria-haspopup="true" aria-controls="dropdown-menu-panel0" onClick={this.onPanel0DropdownClick} onBlur={this.onPanel0DropdownBlur}>
+                <span class="icon"><span class="material-symbols-outlined">build</span></span>
+                <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu-panel0" role="menu">
+              <div class="dropdown-content has-text-left">
+                {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 0).map(x =>
+                  <a class={cls("dropdown-item",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} data-table={x.table}><span class="material-symbols-outlined-small">{x.icon}</span> {x.label}</a>
+                )}
               </div>
             </div>
           </div>
-        </div>
-        <div class="ctable-button-row">
-          <div class="ctable-button-row-left">
+          <div class="ctable-button-row-left-low">
             {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
               <div class="has-text-centered m-1"  style="display:inline-block;">
               <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} title={x.label} data-table={x.table}><span class="material-symbols-outlined">{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>

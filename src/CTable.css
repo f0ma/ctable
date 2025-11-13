@@ -158,6 +158,14 @@ body {
     width:calc(100% - 4em);
 }
 
+.ctable-button-row-left-low{
+    display:inline-block;
+    overflow: hidden;
+    max-height: 2.2em;
+    max-width:calc(100% - 8em);
+    width:calc(100% - 8em);
+}
+
 @media (prefers-color-scheme: dark) {
 
 a.dropdown-item.is-primary.is-soft {
@@ -212,7 +220,7 @@ a.dropdown-item.is-danger.is-soft {
 
 .ctable-main-table {
     margin:auto;
-    margin-top:calc(8.1rem + 1.8em);
+    margin-top:calc(5.2rem + 2em);
 }
 
 .ctable-top-panel {

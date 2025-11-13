@@ -16,14 +16,16 @@ function makeID() {
 
 //Quick multilanguage support
 
+var ctable_lang = "ru-RU"; // navigator.language
+
 function _(s) {
-  if (navigator.language == "ru-RU") {
+  if (ctable_lang == "ru-RU") {
     if (s in ctable_lang_ru && ctable_lang_ru[s][1] !== "") return ctable_lang_ru[s][1];else return s;
   } else return s;
 }
 function N_(s1, s2, n) {
   plural = n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-  if (navigator.language == "ru-RU") {
+  if (ctable_lang == "ru-RU") {
     if (s1 in ctable_lang_ru && ctable_lang_ru[s1][plural + 1] !== "") return ctable_lang_ru[s1][plural + 1].replace("%d", n);else return (n == 1 ? s1 : s2).replace("%d", n);
     ;
   } else return (n == 1 ? s1 : s2).replace("%d", n);
@@ -3314,7 +3316,7 @@ class CTable extends Component {
         label: _("Add"),
         enabled: false,
         style: "is-primary",
-        icon_only: true,
+        icon_only: false,
         panel: 1
       }, {
         name: "edit",
@@ -3322,7 +3324,7 @@ class CTable extends Component {
         label: _("Edit"),
         enabled: false,
         style: "is-warning",
-        icon_only: true,
+        icon_only: false,
         panel: 1
       }, {
         name: "duplicate",
@@ -3330,7 +3332,7 @@ class CTable extends Component {
         label: _("Duplicate"),
         enabled: false,
         style: "is-warning",
-        icon_only: true,
+        icon_only: false,
         panel: 1
       }, {
         name: "delete",
@@ -3338,7 +3340,7 @@ class CTable extends Component {
         label: _("Delete"),
         enabled: false,
         style: "is-danger",
-        icon_only: true,
+        icon_only: false,
         panel: 1
       }, {
         name: "reload",
@@ -4498,25 +4500,11 @@ class CTable extends Component {
     }, h("div", {
       class: "ctable-button-row"
     }, h("div", {
-      class: "ctable-button-row-left"
-    }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 0).map(x => h("div", {
-      class: "has-text-centered m-1",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: cls("button", "is-small", "is-soft", x.style),
-      "data-name": x.name,
-      onClick: this.topButtonClick,
-      title: x.label
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, x.icon), x.icon_only ? "" : " " + x.label)))), h("div", {
-      class: "ctable-button-row-right has-text-right"
-    }, h("div", {
-      class: cls("dropdown", "is-right", self.state.panel0_menu_active ? "is-active" : "")
+      class: cls("dropdown", "is-left", self.state.panel0_menu_active ? "is-active" : "")
     }, h("div", {
       class: "dropdown-trigger"
     }, h("button", {
-      class: "button is-small",
+      class: "button is-small m-1",
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu-panel0",
       onClick: this.onPanel0DropdownClick,
@@ -4542,10 +4530,8 @@ class CTable extends Component {
       "data-table": x.table
     }, h("span", {
       class: "material-symbols-outlined-small"
-    }, x.icon), " ", x.label))))))), h("div", {
-      class: "ctable-button-row"
-    }, h("div", {
-      class: "ctable-button-row-left"
+    }, x.icon), " ", x.label))))), h("div", {
+      class: "ctable-button-row-left-low"
     }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).map(x => h("div", {
       class: "has-text-centered m-1",
       style: "display:inline-block;"
