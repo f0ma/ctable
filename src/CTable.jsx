@@ -643,6 +643,10 @@ class CTable extends Component {
     }
 
     ns.forEach((n) => {this.state.table_row_status[n].selected = target_state});
+
+    if(this.state.table_rows.length == 1)
+      this.state.table_row_status[0]['selected'] = true;
+
     this.setState({}, () => this.enablePanelButtons());
   }
 
