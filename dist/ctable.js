@@ -1166,32 +1166,28 @@ class CPageTable extends Component {
         }, h(CNumbersCell, {
           column: c,
           value: r[c.name],
-          row: r,
-          onDownloadFile: self.props.table.onDownloadFile
+          row: r
         }));
         if (c.cell_actor == "CTagsCell") return h("td", {
           onClick: self.props.onRowClick
         }, h(CTagsCell, {
           column: c,
           value: r[c.name],
-          row: r,
-          onDownloadFile: self.props.table.onDownloadFile
+          row: r
         }));
         if (c.cell_actor == "CBoolCell") return h("td", {
           onClick: self.props.onRowClick
         }, h(CBoolCell, {
           column: c,
           value: r[c.name],
-          row: r,
-          onDownloadFile: self.props.table.onDownloadFile
+          row: r
         }));
         if (c.cell_actor == "CMultilineTextCell") return h("td", {
           onClick: self.props.onRowClick
         }, h(CMultilineTextCell, {
           column: c,
           value: r[c.name],
-          row: r,
-          onDownloadFile: self.props.table.onDownloadFile
+          row: r
         }));
         if (c.cell_actor == "CLinkCell") return h("td", {
           onClick: self.props.onRowClick
@@ -2118,7 +2114,7 @@ class CLinkCell extends Component {
       }, String(this.props.options[table][this.props.value]));
     } else {
       view = h("span", {
-        class: ("has-text-grey", cls(this.props.column.cell_show_as_tag === false ? "" : "tag"))
+        class: cls("has-text-grey", this.props.column.cell_show_as_tag === false ? "" : "tag")
       }, "(" + this.props.value + ")");
     }
     return h(Fragment, null, this.props.value === null ? h("span", {
@@ -3209,7 +3205,7 @@ class CSearchPanel extends Component {
     this.props.table.state.view_filtering[i].operator = x.target.value;
     if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
       if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(";").map(x => x.trim());
       }
     } else {
       if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
@@ -3223,7 +3219,7 @@ class CSearchPanel extends Component {
     this.props.table.state.view_filtering[index].value = value;
     if (this.props.table.state.view_filtering[index].operator == 'in' || this.props.table.state.view_filtering[index].operator == 'not_in') {
       if (!Array.isArray(this.props.table.state.view_filtering[index].value)) {
-        this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(",").map(x => x.trim());
+        this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(";").map(x => x.trim());
       }
     } else {
       if (Array.isArray(this.props.table.state.view_filtering[index].value)) {
@@ -3319,12 +3315,34 @@ class CSearchFrame extends Component {
       onColumnChange: self.props.onColumnChange,
       onOperatorChange: self.props.onOperatorChange,
       onValueChange: self.props.onValueChange
+    }) : "", self.props.column.cell_actor == "CTagsCell" || self.props.column.cell_actor == "CSelectCell" || self.props.column.cell_actor == "CBoolCell" ? h(CTagsSearcher, {
+      index: self.props.index,
+      column: self.props.column,
+      table: self.props.table,
+      operator: self.props.operator,
+      value: self.props.value,
+      onDeleteClick: self.props.onDeleteClick,
+      onColumnChange: self.props.onColumnChange,
+      onOperatorChange: self.props.onOperatorChange,
+      onValueChange: self.props.onValueChange
+    }) : "", self.props.column.cell_actor == "CLinkCell" || self.props.column.cell_actor == "CMultiLinkCell" ? h(CLinkSearcher, {
+      index: self.props.index,
+      column: self.props.column,
+      table: self.props.table,
+      operator: self.props.operator,
+      value: self.props.value,
+      options: self.props.table.state.table_options,
+      onDeleteClick: self.props.onDeleteClick,
+      onColumnChange: self.props.onColumnChange,
+      onOperatorChange: self.props.onOperatorChange,
+      onValueChange: self.props.onValueChange
     }) : "");
   }
 }
 class CTextSearcher extends Comment {
   constructor() {
     super();
+    this.onInputChange = this.onInputChange.bind(this);
   }
   onInputChange(e) {
     var line = e.target.value;
@@ -3455,6 +3473,453 @@ class CNumbersSearcher extends Component {
       "data-filterindex": self.props.index,
       onChange: self.onInputChange
     })), h("button", {
+      class: "button is-danger is-soft",
+      "data-filterindex": self.props.index,
+      onClick: self.props.onDeleteClick
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "delete")));
+  }
+}
+class CTagsSearcher extends Component {
+  constructor() {
+    super();
+    this.onRemoveTag = this.onRemoveTag.bind(this);
+    this.onAddTag = this.onAddTag.bind(this);
+    this.renderTags = this.renderTags.bind(this);
+    this.renderToolbar = this.renderToolbar.bind(this);
+  }
+  componentDidMount() {
+    this.setState({
+      search_value: this.props.value ?? ""
+    });
+  }
+  onRemoveTag(e) {
+    var tag = unwind_button_or_link(e).dataset['tag'];
+    var nv = this.state.search_value;
+    if (this.state.search_value == null || this.state.search_value == "") {
+      return;
+    } else {
+      var actived = this.state.search_value.split(";");
+      actived = actived.filter(x => x != tag);
+      actived.sort();
+      nv = actived.join(";");
+    }
+    this.setState({
+      search_value: nv
+    }, () => this.props.onValueChange(this.state.search_value, Number(e.target.dataset['filterindex'])));
+  }
+  onAddTag(e) {
+    var tag = unwind_button_or_link(e).dataset['tag'];
+    var nv = "";
+    if (this.state.search_value === null || this.state.search_value == "") {
+      nv = tag;
+    } else {
+      var actived = this.state.search_value.split(";");
+      actived.push(tag);
+      actived.sort();
+      nv = actived.join(";");
+    }
+    console.log(e.target.dataset);
+    this.setState({
+      search_value: nv
+    }, () => this.props.onValueChange(nv, Number(e.target.dataset['filterindex'])));
+  }
+  renderTags() {
+    var self = this;
+    console.log(self);
+    if (self.state.search_value === undefined) return;
+    if (self.state.search_value == null || self.state.search_value == "") {
+      return h("div", {
+        class: "input"
+      });
+    } else if (self.props.column.cell_actor == "CTagsCell") {
+      var actived = self.state.search_value.split(";");
+      var tags = self.props.column.options.filter(x => actived.includes(x[0]));
+      return h("div", {
+        class: "input",
+        style: "height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
+      }, tags.map(([tag, label]) => {
+        return h("div", {
+          class: "control"
+        }, h("div", {
+          class: "tags has-addons mr-2"
+        }, h("button", {
+          class: "tag"
+        }, label), h("button", {
+          class: "tag is-delete",
+          "data-filterindex": self.props.index,
+          "data-tag": tag,
+          onClick: self.onRemoveTag
+        })));
+      }));
+    } else if (self.props.column.cell_actor == "CBoolCell") {
+      var actived = self.state.search_value.split(";");
+      var tags = [{
+        value: "1",
+        label: _("Yes")
+      }, {
+        value: "0",
+        label: _("No")
+      }].filter(x => actived.includes(x.value));
+      console.log(tags);
+      console.log(actived);
+      return h("div", {
+        class: "input",
+        style: "height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
+      }, tags.map(x => {
+        return h("div", {
+          class: "control"
+        }, h("div", {
+          class: "tags has-addons mr-2"
+        }, h("button", {
+          class: "tag"
+        }, x.label), h("button", {
+          class: "tag is-delete",
+          "data-filterindex": self.props.index,
+          "data-tag": x.value,
+          onClick: self.onRemoveTag
+        })));
+      }));
+    } else if (self.props.column.cell_actor == "CSelectCell") {
+      var actived = self.state.search_value.split(";");
+      var tags = self.props.column.options.filter(x => actived.includes(x.value));
+      return h("div", {
+        class: "input",
+        style: "height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
+      }, tags.map(x => {
+        return h("div", {
+          class: "control"
+        }, h("div", {
+          class: "tags has-addons mr-2"
+        }, h("button", {
+          class: "tag"
+        }, x.label), h("button", {
+          class: "tag is-delete",
+          "data-filterindex": self.props.index,
+          "data-tag": x.value,
+          onClick: self.onRemoveTag
+        })));
+      }));
+    }
+  }
+  renderToolbar() {
+    var self = this;
+    var buttons = self.props.column.options;
+    console.log(self);
+    if (self.state.search_value === undefined) return;
+    if (self.props.column.cell_actor == "CTagsCell") {
+      var actived = self.state.search_value.split(";");
+      var tags = self.props.column.options.filter(x => !actived.includes(x[0]));
+      return h("div", {
+        class: "field"
+      }, h("div", {
+        class: "control"
+      }, h("div", {
+        class: "buttons are-small is-flex is-flex-wrap-wrap"
+      }, tags.map(([val, label]) => h("button", {
+        type: "button",
+        class: "button is-small",
+        "data-filterindex": self.props.index,
+        "data-tag": val,
+        onClick: self.onAddTag,
+        title: label.slice(0, self.props.column.max_length) + (label.length > 32 ? "..." : "")
+      }, label)))));
+    } else if (self.props.column.cell_actor == "CBoolCell") {
+      var actived = self.state.search_value.split(";");
+      var tags = [{
+        value: 1,
+        label: _("Yes")
+      }, {
+        value: 0,
+        label: _("No")
+      }].filter(x => !actived.includes(x.value));
+      return h("div", {
+        class: "field"
+      }, h("div", {
+        class: "control"
+      }, h("div", {
+        class: "buttons are-small is-flex is-flex-wrap-wrap"
+      }, tags.map(x => h("button", {
+        type: "button",
+        class: "button is-small",
+        "data-filterindex": self.props.index,
+        "data-tag": x.value,
+        onClick: self.onAddTag,
+        title: x.label.slice(0, self.props.column.max_length) + (x.label.length > 32 ? "..." : "")
+      }, x.label)))));
+    } else if (self.props.column.cell_actor == "CSelectCell") {
+      console.log(self.state);
+      var actived = self.state.search_value.split(";");
+      var tags = self.props.column.options.filter(x => !actived.includes(x.value));
+      return h("div", {
+        class: "field"
+      }, h("div", {
+        class: "control"
+      }, h("div", {
+        class: "buttons are-small is-flex is-flex-wrap-wrap"
+      }, tags.map(x => h("button", {
+        type: "button",
+        class: "button is-small",
+        "data-filterindex": self.props.index,
+        "data-tag": x.value,
+        onClick: self.onAddTag,
+        title: x.label.slice(0, self.props.column.max_length) + (x.label.length > 32 ? "..." : "")
+      }, x.label)))));
+    }
+  }
+  render() {
+    var self = this;
+    return h("div", null, h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.column.name,
+      "data-filterindex": self.props.index,
+      onChange: self.props.onColumnChange
+    }, self.props.table.state.table_columns.map(y => {
+      return h("option", {
+        value: y.name
+      }, y.label);
+    }))), h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.operator ?? "neq",
+      "data-filterindex": self.props.index,
+      onChange: self.props.onOperatorChange
+    }, h("option", {
+      value: "eq"
+    }, "="), h("option", {
+      value: "neq"
+    }, "!="), h("option", {
+      value: "in"
+    }, "IN"), h("option", {
+      value: "not_in"
+    }, "NOT IN"), self.props.column.editor_allow_null ? h("option", {
+      value: "is_null"
+    }, "Is NULL") : "", self.props.column.editor_allow_null ? h("option", {
+      value: "is_not_null"
+    }, "Is not NULL") : "")), self.props.operator === "is_null" || self.props.operator === "is_not_null" ? "" : h("div", {
+      class: cls("control field is-grouped is-grouped-multiline", self.state.editor_value === null ? "has-icons-left" : "")
+    }, self.renderTags(), self.renderToolbar()), h("button", {
+      class: "button is-danger is-soft",
+      "data-filterindex": self.props.index,
+      onClick: self.props.onDeleteClick
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "delete")));
+  }
+}
+class CLinkSearcher extends Component {
+  constructor() {
+    super();
+    this.onSelectDropdownClick = this.onSelectDropdownClick.bind(this);
+    this.onOptionsInputChange = this.onOptionsInputChange.bind(this);
+    this.onAddLink = this.onAddLink.bind(this);
+    this.onRemoveLink = this.onRemoveLink.bind(this);
+    this.state = {
+      search_value: "",
+      select_dropdown_active: false,
+      options_history: {},
+      options_current: {},
+      options_input: "",
+      input_id: makeID()
+    };
+  }
+  componentDidMount() {
+    this.initializeFromProps(this.props);
+    this.loadRemoteOptions("");
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.column.name != this.props.column.name) {
+      this.initializeFromProps(this.props);
+      this.loadRemoteOptions("");
+      return;
+    }
+    if (this.normalizeValue(prevProps.value) != this.normalizeValue(this.props.value)) {
+      this.setState({
+        search_value: this.normalizeValue(this.props.value)
+      });
+    }
+  }
+  initializeFromProps(props) {
+    var base_options = this.getLocalOptions(props);
+    this.setState({
+      search_value: this.normalizeValue(props.value),
+      select_dropdown_active: false,
+      options_history: base_options,
+      options_current: base_options,
+      options_input: ""
+    });
+  }
+  getLocalOptions(props) {
+    if (props && props.options && props.column && props.column.cell_link && props.options[props.column.cell_link]) {
+      return clone(props.options[props.column.cell_link]);
+    }
+    return {};
+  }
+  normalizeValue(value) {
+    if (value === null || value === undefined) return "";
+    if (Array.isArray(value)) return value.join(";");
+    return String(value);
+  }
+  loadRemoteOptions(query) {
+    var self = this;
+    var column_name = this.props.column.name;
+    this.props.table.getOptionsForField(column_name, query).then(w => {
+      if (column_name != self.props.column.name) return;
+      var opt = {};
+      w.rows.forEach(q => {
+        opt[q[w.keys[0]]] = q[w.label];
+      });
+      self.setState(state => ({
+        options_current: opt,
+        options_history: {
+          ...opt,
+          ...state.options_history
+        }
+      }));
+    }).catch(() => {});
+  }
+  getSelectedValues() {
+    if (!this.state.search_value) return [];
+    return this.state.search_value.split(";").filter(x => x !== "");
+  }
+  commitValue(value, close_dropdown) {
+    var self = this;
+    this.setState({
+      search_value: value,
+      select_dropdown_active: close_dropdown ? false : this.state.select_dropdown_active
+    }, () => self.props.onValueChange(value, Number(self.props.index)));
+  }
+  onRemoveLink(e) {
+    var id = unwind_button_or_link(e).dataset['value'];
+    var selected = this.getSelectedValues().filter(x => x != id);
+    e.stopPropagation();
+    this.commitValue(selected.join(";"), false);
+  }
+  onAddLink(e) {
+    var id = unwind_button_or_link(e).dataset['value'];
+    var selected = this.getSelectedValues();
+    if (!selected.includes(id)) {
+      selected.push(id);
+      selected.sort((a, b) => Number(a) - Number(b));
+    }
+    this.commitValue(selected.join(";"), true);
+  }
+  onSelectDropdownClick() {
+    var self = this;
+    this.setState({
+      select_dropdown_active: !this.state.select_dropdown_active
+    }, () => {
+      if (self.state.select_dropdown_active) {
+        document.getElementById(self.state.input_id).focus();
+      }
+    });
+  }
+  onOptionsInputChange(e) {
+    var self = this;
+    this.setState({
+      options_input: e.target.value
+    }, () => {
+      self.loadRemoteOptions(self.state.options_input);
+    });
+  }
+  renderValueSelector() {
+    var self = this;
+    if (self.props.operator == "is_null" || self.props.operator == "is_not_null") {
+      return "";
+    }
+    var selected = this.getSelectedValues();
+    var selectedkv = selected.map(id => {
+      var label = self.state.options_history && id in self.state.options_history ? String(self.state.options_history[id]) : "(" + id + ")";
+      return [id, label];
+    });
+    return h("div", {
+      class: "control field is-grouped is-grouped-multiline"
+    }, h("div", {
+      class: cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : ""),
+      style: "width:100%;"
+    }, h("div", {
+      class: "dropdown-trigger",
+      style: "width:100%;"
+    }, h("div", {
+      class: "input",
+      "aria-haspopup": "true",
+      "aria-controls": "dropdown-menu",
+      onClick: self.onSelectDropdownClick,
+      style: "width:100%; height: auto;flex-flow: wrap; row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
+    }, selectedkv.map(([id, label]) => {
+      return h("div", {
+        class: "control",
+        key: id
+      }, h("div", {
+        class: "tags has-addons mr-2"
+      }, h("button", {
+        class: "tag",
+        title: label + " (" + id + ")"
+      }, label), h("button", {
+        class: "tag is-delete",
+        "data-filterindex": self.props.index,
+        "data-value": id,
+        onClick: self.onRemoveLink
+      })));
+    }), h("span", {
+      class: "icon is-small"
+    }, h("span", {
+      class: "material-symbols-outlined"
+    }, "arrow_drop_down")))), h("div", {
+      class: "dropdown-menu",
+      role: "menu"
+    }, h("div", {
+      class: "dropdown-content"
+    }, h("p", {
+      class: "dropdown-item"
+    }, h("input", {
+      class: "input",
+      type: "input",
+      value: self.state.options_input,
+      onInput: self.onOptionsInputChange,
+      id: self.state.input_id
+    }))), h("div", {
+      class: "dropdown-content",
+      style: "overflow: auto; max-height: 12em;"
+    }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
+      class: "dropdown-item",
+      "data-value": x,
+      onClick: self.onAddLink
+    }, self.state.options_current[x], " (", x, ")")) : ""))));
+  }
+  render() {
+    var self = this;
+    return h("div", null, h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.column.name,
+      "data-filterindex": self.props.index,
+      onChange: self.props.onColumnChange
+    }, self.props.table.state.table_columns.map(y => {
+      return h("option", {
+        value: y.name
+      }, y.label);
+    }))), h("div", {
+      class: "select"
+    }, h("select", {
+      value: self.props.operator ? self.props.operator : "eq",
+      "data-filterindex": self.props.index,
+      onChange: self.props.onOperatorChange
+    }, h("option", {
+      value: "eq"
+    }, "="), h("option", {
+      value: "neq"
+    }, "!="), h("option", {
+      value: "in"
+    }, "IN"), h("option", {
+      value: "not_in"
+    }, "NOT IN"), self.props.column.editor_allow_null ? h("option", {
+      value: "is_null"
+    }, "Is NULL") : "", self.props.column.editor_allow_null ? h("option", {
+      value: "is_not_null"
+    }, "Is not NULL") : "")), self.renderValueSelector(), h("button", {
       class: "button is-danger is-soft",
       "data-filterindex": self.props.index,
       onClick: self.props.onDeleteClick

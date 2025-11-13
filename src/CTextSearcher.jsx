@@ -1,6 +1,8 @@
 class CTextSearcher extends Comment {
     constructor() {
         super();
+
+        this.onInputChange = this.onInputChange.bind(this);
     }
 
     onInputChange(e){

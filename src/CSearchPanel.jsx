@@ -24,7 +24,7 @@ class CSearchPanel extends Component {
 
       if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
         if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
-          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
+          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(";").map(x => x.trim());
         }
       } else {
         if(Array.isArray(this.props.table.state.view_filtering[i].value)){
@@ -41,7 +41,7 @@ class CSearchPanel extends Component {
 
       if(this.props.table.state.view_filtering[index].operator == 'in' || this.props.table.state.view_filtering[index].operator == 'not_in'){
         if(!Array.isArray(this.props.table.state.view_filtering[index].value)){
-          this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(",").map(x => x.trim());
+          this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(";").map(x => x.trim());
         }
       } else {
         if(Array.isArray(this.props.table.state.view_filtering[index].value)){
