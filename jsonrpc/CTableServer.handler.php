@@ -105,7 +105,7 @@ function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0)
 
 
 function remove_user_data(){
-    setcookie("ctables-jwt", "", time()-3600);
+    setcookie("ctables-jwt", "", time()-3600, $config["jwt_path"]);
 }
 
 function set_user_data($user_info){
@@ -119,7 +119,7 @@ function set_user_data($user_info){
     $payload = base64UrlEncode(json_encode($user_info));
     $signature = base64UrlEncode(hash_hmac("sha256", $header . "." . $payload, $config["jwt_token"], true));
     $jwt = $header . "." . $payload . "." . $signature;
-    setcookie("ctables-jwt", $jwt, time()+$config["jwt_expires"]);
+    setcookie("ctables-jwt", $jwt, time()+$config["jwt_expires"], $config["jwt_path"]);
     return $jwt;
 }
 
