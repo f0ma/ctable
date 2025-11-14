@@ -376,6 +376,7 @@ class CTable extends Component {
     var self = this;
     this.setState({progress: true});
     this.props.server.CTableServer.logout().then(x => {
+      document.cookie = "ctables-jwt=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
       this.setState({auth_menu_active: false, progress: false, table_rows:[]}, x=>{self.loadDefaultTable()});
     }).catch(e =>{
       self.showError(e);

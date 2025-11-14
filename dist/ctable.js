@@ -3692,6 +3692,7 @@ class CTable extends Component {
       progress: true
     });
     this.props.server.CTableServer.logout().then(x => {
+      document.cookie = "ctables-jwt=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
       this.setState({
         auth_menu_active: false,
         progress: false,
