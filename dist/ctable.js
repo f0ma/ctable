@@ -44,11 +44,7 @@ function getCookie(name) {
 function getCTablesJWT() {
   token = getCookie("ctables-jwt");
   if (!token) return null;
-  var udata = Uint8Array.fromBase64(token.split('.')[1], {
-    alphabet: 'base64url',
-    omitPadding: true
-  });
-  var sdata = new TextDecoder().decode(udata);
+  var sdata = atob(token.split('.')[1]);
   return JSON.parse(sdata);
 }
 
