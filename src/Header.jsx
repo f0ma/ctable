@@ -143,6 +143,13 @@ function unwind_th(e){
     return tg;
 }
 
+function unwind_data(e, data){
+    var tg = e.target;
+    if (data in tg.dataset)
+        return tg.dataset[data];
+    return unwind_data({target:tg.parentElement}, data);
+}
+
 function deep_copy(x) {
     return JSON.parse(JSON.stringify(x));
 }

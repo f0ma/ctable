@@ -62,7 +62,7 @@
       "cell_actor": "CMultiLinkCell",
       "cell_link":"account",
       "cell_link_key":"id",
-      "editor_actor": "CMultiLinkEditor",
+      "editor_actor": "CTiledMultiLinkEditor",
       "editor_link":"account",
       "editor_link_key":"id",
       "editor_default":""
