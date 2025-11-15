@@ -3701,6 +3701,9 @@ class CTable extends Component {
     this.state.view_filtering = deep_copy(this.state.current_table.default_filtering);
   }
   loadTable(name, path_part) {
+    this.setState({
+      progress: true
+    });
     var self = this;
     var table = self.state.table_list.filter(x => x.name == name)[0];
     this.hideAllEditors();

@@ -206,6 +206,8 @@ class CTable extends Component {
   }
 
   loadTable(name, path_part){
+    this.setState({progress: true});
+
     var self = this;
 
     var table = self.state.table_list.filter(x => x.name == name)[0];
