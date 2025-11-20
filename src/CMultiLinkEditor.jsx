@@ -158,12 +158,9 @@ class CMultiLinkEditor extends Component {
 
         var self = this;
 
-        if (self.state.editor_value === undefined) return;
-
-
         var selectedids = [];
 
-        if (self.state.editor_value !== null) {
+        if (self.state.editor_value !== undefined && self.state.editor_value !== null) {
             selectedids = self.state.editor_value.split(";").filter(x => {return x != "";}).map(x => {return parseInt(x)});
         }
 
