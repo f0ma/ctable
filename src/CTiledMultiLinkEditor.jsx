@@ -129,7 +129,11 @@ class CTiledMultiLinkEditor extends Component {
 
         if (self.state.editor_value === undefined) return;
 
-        var selectedids = self.state.editor_value.split(";").filter(x => {return x != "";}).map(x => {return parseInt(x)});
+        var selectedids = [];
+
+        if (self.state.editor_value !== null) {
+            selectedids = self.state.editor_value.split(";").filter(x => {return x != "";}).map(x => {return parseInt(x)});
+        }
 
         var selectedkv = selectedids.map(x => {
            return  [x, self.state.options_history && (x in self.state.options_history) ? String(self.state.options_history[x]) : ("("+x+")")];
