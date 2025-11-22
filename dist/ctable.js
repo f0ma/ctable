@@ -1969,7 +1969,7 @@ class CTiledMultiLinkEditor extends Component {
     if (e.target.tagName == "LABEL") return;
     var id = parseInt(unwind_data(e, 'value'));
     var selectedids = [];
-    if (self.state.editor_value !== undefined && self.state.editor_value !== null) {
+    if (this.state.editor_value !== undefined && this.state.editor_value !== null) {
       selectedids = this.state.editor_value.split(";").filter(x => {
         return x != "";
       }).map(x => {
@@ -2180,7 +2180,7 @@ class CMultiLinkEditor extends Component {
   onRemoveLink(e) {
     var id = parseInt(unwind_button_or_link(e).dataset['value']);
     var selectedids = [];
-    if (self.state.editor_value !== undefined && self.state.editor_value !== null) {
+    if (this.state.editor_value !== undefined && this.state.editor_value !== null) {
       selectedids = this.state.editor_value.split(";").filter(x => {
         return x != "";
       }).map(x => {
@@ -2199,7 +2199,7 @@ class CMultiLinkEditor extends Component {
   onAddLink(e) {
     var id = parseInt(unwind_button_or_link(e).dataset['value']);
     var selectedids = [];
-    if (self.state.editor_value !== undefined && self.state.editor_value !== null) {
+    if (this.state.editor_value !== undefined && this.state.editor_value !== null) {
       selectedids = this.state.editor_value.split(";").filter(x => {
         return x != "";
       }).map(x => {
