@@ -177,6 +177,10 @@ class CTable extends Component {
     if (default_table.length == 0){
       default_table = [this.state.table_list[0]];
     }
+
+    this.state.table_path_labels = [];
+    this.state.table_path = [];
+
     this.loadTable(default_table[0].name, null);
     this.setState({});
   }
