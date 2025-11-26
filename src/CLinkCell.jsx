@@ -19,7 +19,7 @@ class CLinkCell extends Component {
         if (this.props.value in this.props.options[table]){
             view = <span class={cls(this.props.column.cell_show_as_tag === false ? "" : "tag")} title={String(this.props.options[table][this.props.value]) + " (" + this.props.value + ")"}>{String(this.props.options[table][this.props.value])}</span>;
         } else {
-            view = <span class={"has-text-grey", cls(this.props.column.cell_show_as_tag === false ? "" : "tag")}>{"("+this.props.value+")"}</span>;
+            view = <span class={cls("has-text-grey", this.props.column.cell_show_as_tag === false ? "" : "tag")}>{"("+this.props.value+")"}</span>;
         }
 
         return <>{this.props.value === null ? <span class="has-text-grey">NULL</span> : view}</>;
