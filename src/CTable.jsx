@@ -101,7 +101,6 @@ class CTable extends Component {
 
         {name:"reload", icon: "refresh", label:_("Reload"), enabled: true, style:"", icon_only:true, panel:0},
 
-        {name:"filter", icon: "filter_alt", label:_("Filter"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"search", icon: "search", label:_("Search"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"sort", icon: "sort", label:_("Sorting"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"columns", icon: "list_alt", label:_("Columns"), enabled: true, style:"", icon_only:true, panel:0},
@@ -1093,7 +1092,6 @@ class CTable extends Component {
   {self.state.editor_show ? <CEditorPanel width={self.state.width} table={self} columns={self.state.table_columns} affectedRows={self.state.editor_affected_rows} noSaveClick={self.onSaveClick} noCancelClick={self.onCancelClick} onEditorChanges={self.onEditorChanges} /> : ""}
   {self.state.columns_panel_show ? <CColumnsPanel width={self.state.width} table={self} onColumnChange={self.onColumnChange} onResetColumns={self.onResetColumns}  onCloseColumns={self.onCloseColumns}/>: ""}
   {self.state.sorting_panel_show ? <CSortingPanel width={self.state.width} table={self} columns={self.state.table_columns} onResetSorting={self.onResetSorting}  onCloseSorting={self.onCloseSorting} onSortingChange={self.onSortingChange} />: ""}
-  {self.state.filtering_panel_show ? <CFilterPanel width={self.state.width} table={self} onResetFilter={self.onResetFilter}  onCloseFilter={self.onCloseFilter} onChangeFilter={self.onFilterChange} />: ""}
   {self.state.auth_panel_show ? <CAuthPanel width={self.state.width} onAuthLogin={self.onAuthLogin} onCloseAuth={self.onCloseAuth}/> : ""}
   {self.state.search_panel_show ? <CSearchPanel width={self.state.width} table={self} onCloseSearch={self.onCloseSearch} onSearcheChange={self.onFilterChange}/> : ""}
   </div>;

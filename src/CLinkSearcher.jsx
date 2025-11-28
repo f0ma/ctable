@@ -172,15 +172,15 @@ class CLinkSearcher extends Component {
     render() {
         var self = this;
         return <div>
-            <div class="select">
-                <select value={self.props.column.name} data-filterindex={self.props.index} onChange={self.props.onColumnChange}>
-                    {self.props.table.state.table_columns.map(y => {
+            <div class="select ml-2 mb-2">
+                <select value={self.props.column.name} data-filterindex={self.props.index} onChange={self.props.onColumnChange} title={_("Column to search")}>
+                    {self.props.table.state.table_columns.filter(w =>  w.search_actor !== null).map(y => {
                         return <option value={y.name}>{y.label}</option>;
                     })}
                 </select>
             </div>
-            <div class="select">
-                <select value={self.props.operator ? self.props.operator : "eq"} data-filterindex={self.props.index} onChange={self.props.onOperatorChange}>
+            <div class="select ml-2 mb-2">
+                <select value={self.props.operator ? self.props.operator : "eq"} data-filterindex={self.props.index} onChange={self.props.onOperatorChange} title={_("Search kind")}>
                     <option value="eq">=</option>
                     <option value="neq">!=</option>
                     <option value="in">IN</option>
@@ -190,7 +190,9 @@ class CLinkSearcher extends Component {
                 </select>
             </div>
             {self.renderValueSelector()}
-            <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick}><span class="material-symbols-outlined">delete</span></button>
+            <div class="ml-2 mb-2" style="display: inline-block;">
+                <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick} title={_("Delete criteria")}><span class="material-symbols-outlined">delete</span></button>
+            </div>
         </div>;
     }
 }

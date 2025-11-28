@@ -40,13 +40,13 @@ class CTagsSearcher extends Component {
           actived.sort();
           nv = actived.join(";");
       }
-      console.log(e.target.dataset)
+      //console.log(e.target.dataset)
       this.setState({search_value: nv}, () => this.props.onValueChange(nv, Number(e.target.dataset['filterindex'])));
   }
 
   renderTags(){
     var self = this;
-    console.log(self)
+    //console.log(self)
     if (self.state.search_value === undefined) return;
     if (self.state.search_value == null || self.state.search_value == ""){
       return <div class="input"></div>;
@@ -67,8 +67,8 @@ class CTagsSearcher extends Component {
     } else if (self.props.column.cell_actor == "CBoolCell") {
       var actived = self.state.search_value.split(";");
       var tags = [{value: "1", label: _("Yes")},{value: "0", label: _("No")}].filter(x => actived.includes(x.value));
-      console.log(tags);
-      console.log(actived);
+      //console.log(tags);
+      //console.log(actived);
       return (
           <div class="input" style="height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;">
               {tags.map(x => {
@@ -101,7 +101,7 @@ class CTagsSearcher extends Component {
   renderToolbar(){
     var self = this;
     var buttons = self.props.column.options
-    console.log(self)
+    //console.log(self)
 
     if (self.state.search_value === undefined) return;
     if (self.props.column.cell_actor == "CTagsCell"){
@@ -139,7 +139,7 @@ class CTagsSearcher extends Component {
           </div>
         );
     } else if (self.props.column.cell_actor == "CSelectCell") {
-        console.log(self.state)
+        //console.log(self.state)
         var actived = self.state.search_value.split(";");
         var tags = self.props.column.options.filter(x => !actived.includes(x.value));
         return (
@@ -163,15 +163,15 @@ class CTagsSearcher extends Component {
   render(){
       var self = this;
       return  <div>
-                  <div class="select">
-                      <select value={self.props.column.name} data-filterindex={self.props.index} onChange={self.props.onColumnChange}>
-                          {self.props.table.state.table_columns.map(y => {
+                  <div class="select ml-2 mb-2">
+                      <select value={self.props.column.name} data-filterindex={self.props.index} onChange={self.props.onColumnChange} title={_("Column to search")}>
+                          {self.props.table.state.table_columns.filter(w =>  w.search_actor !== null).map(y => {
                               return <option value={y.name}>{y.label}</option>;
                           }) }
                       </select>
                   </div>
-                  <div class="select">
-                      <select  value={self.props.operator ?? "neq"}  data-filterindex={self.props.index} onChange={self.props.onOperatorChange}>
+                  <div class="select ml-2 mb-2">
+                      <select  value={self.props.operator ?? "neq"}  data-filterindex={self.props.index} onChange={self.props.onOperatorChange} title={_("Search kind")}>
                           <option value="eq">=</option>
                           <option value="neq">!=</option>
                           <option value="in">IN</option>
@@ -185,7 +185,9 @@ class CTagsSearcher extends Component {
                       {self.renderTags()}
                       {self.renderToolbar()}
                   </div>)}
-                  <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick}><span class="material-symbols-outlined">delete</span></button>
+                  <div class="ml-2 mb-2" style="display: inline-block;">
+                      <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick} title={_("Delete criteria")}><span class="material-symbols-outlined">delete</span></button>
+                  </div>
               </div>
   }
 }

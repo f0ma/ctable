@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: CLinkEditor.jsx</title>
+    <title>JSDoc: Source: CTiledMultiLinkEditor.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: CLinkEditor.jsx</h1>
+    <h1 class="page-title">Source: CTiledMultiLinkEditor.jsx</h1>
 
     
 
@@ -41,7 +41,7 @@
  */
 
 
-class CLinkEditor extends Component {
+class CTiledMultiLinkEditor extends Component {
 
     constructor() {
         super();
@@ -51,10 +51,7 @@ class CLinkEditor extends Component {
         this.onNullClicked = this.onNullClicked.bind(this);
         this.onOtherEditorChanged = this.onOtherEditorChanged.bind(this);
         this.onUndoClicked = this.onUndoClicked.bind(this);
-
-        this.onSelectDropdownClick = this.onSelectDropdownClick.bind(this);
-        this.onSelectItem = this.onSelectItem.bind(this);
-        this.onOptionsInputChange = this.onOptionsInputChange.bind(this);
+        this.onToggleLink = this.onToggleLink.bind(this);
 
     }
 
@@ -65,12 +62,9 @@ class CLinkEditor extends Component {
         this.setState({
             editor_value: (this.props.add || this.props.batch) ? this.props.column.editor_default : this.props.row[this.props.column.name],
                       editor_modified: false,
-                      editor_valid: false,
-                      select_dropdown_active: false,
+                      editor_valid: true,
                       options_history: clone(this.props.options[this.props.column.cell_link]),
-                      options_current: clone(this.props.options[this.props.column.cell_link]),
-                      options_input: "",
-                      input_id: makeID()
+                      options_current: clone(this.props.options[this.props.column.cell_link])
         }, () => {this.validateAndSend()});
 
 
@@ -143,30 +137,23 @@ class CLinkEditor extends Component {
         if(e.detail.initiator == this.props.column.name) return;
     }
 
-    onSelectDropdownClick(){
-        this.setState({select_dropdown_active: !this.state.select_dropdown_active}, () => {
-            document.getElementById(this.state.input_id).focus();
-        });
 
-    }
+    onToggleLink(e){
+        if(e.target.tagName == "LABEL") return;
+        var id = parseInt(unwind_data(e, 'value'));
 
-    onSelectItem(e){
-        var el = unwind_button_or_link(e);
-        this.setState({editor_value: parseInt(el.dataset['value']), select_dropdown_active: false},
-                      () => {this.validateAndSend()});
+        var selectedids = [];
 
-    }
+        if (this.state.editor_value !== undefined &amp;&amp; this.state.editor_value !== null) {
+            selectedids = this.state.editor_value.split(";").filter(x => {return x != "";}).map(x => {return parseInt(x)});
+        }
 
-    onOptionsInputChange(e){
-        var self = this;
-
-        this.setState({options_input: e.target.value}, () => {
-            self.props.getOptionsForField(this.props.column.name, self.state.options_input).then(w => {
-                var opt = {};
-                w.rows.forEach(q => { opt[q[w.keys[0]]] = q[w.label]; });
-                self.setState({options_current: opt, options_history: {...opt, ...self.state.options_history}});
-            });
-        });
+        if(selectedids.includes(id)){
+            selectedids = selectedids.filter(x => x != id);
+        } else {
+            selectedids.push(id);
+        }
+        this.setState({editor_value: selectedids.join(";"), editor_modified: true}, () => {this.validateAndSend()});
     }
 
 
@@ -174,33 +161,32 @@ class CLinkEditor extends Component {
 
         var self = this;
 
-        //onBlur={this.dropdownMenuLeave}
+        var selectedids = [];
 
-        return   &lt;div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")} style="width:100%;">
-                   &lt;div class="dropdown-trigger" style="width:100%;">
-                    &lt;button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} style="width:100%;justify-content:left;">
-                      &lt;span>{ self.state.options_history &amp;&amp; (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) + ' ('+self.state.editor_value+')' : self.state.editor_value }&lt;/span>
-                      &lt;span class="icon is-small">&lt;span class="material-symbols-outlined">arrow_drop_down&lt;/span>&lt;/span>
-                    &lt;/button>
-                   &lt;/div>
-                   &lt;div class="dropdown-menu" role="menu">
-                       &lt;div class="dropdown-content">
-                           &lt;p class="dropdown-item">
-                               &lt;input class="input" type="input" value={self.state.options_input} onInput={self.onOptionsInputChange} id={this.state.input_id}/>
-                           &lt;/p>
-                       &lt;/div>
-                       &lt;div class="dropdown-content" style="overflow: auto; max-height: 12em;">
-                           {self.state.options_current ? Object.keys(self.state.options_current).map(x => &lt;a class="dropdown-item" data-value={x} onClick={self.onSelectItem}>{self.state.options_current[x]} ({x})&lt;/a>) : ""}
-                       &lt;/div>
-                   &lt;/div>
-               &lt;/div>;
+        if (self.state.editor_value !== undefined &amp;&amp; self.state.editor_value !== null) {
+            selectedids = self.state.editor_value.split(";").filter(x => {return x != "";}).map(x => {return parseInt(x)});
+        }
+
+        var selectedkv = selectedids.map(x => {
+           return  [x, self.state.options_history &amp;&amp; (x in self.state.options_history) ? String(self.state.options_history[x]) : ("("+x+")")];
+        });
+
+
+
+
+        return  &lt;div class={cls("input", self.state.editor_valid ? "" : "is-danger")} style="width:100%;display:flex;flex-wrap:wrap;height:unset;">
+                    {self.state.options_current ? Object.keys(self.state.options_current).map(x => {
+                        return &lt;div class={cls("button mr-2 mb-2", selectedids.includes(parseInt(x)) ? "is-info is-soft" : "")} data-value={x} onClick={self.onToggleLink}>&lt;label class="checkbox">&lt;input type="checkbox" checked={selectedids.includes(parseInt(x))}/> {self.state.options_current[x]} ({x})&lt;/label>&lt;/div>;
+
+                    }) : ""}
+                &lt;/div>;
     }
 }
 
 
-// {aw_options.map(function(item){
-// item_count += 1;
-// return &lt;a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}&lt;/a>;})}
+
+
+
 
 </code></pre>
         </article>

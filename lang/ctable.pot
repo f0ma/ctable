@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-01 12:30+0300\n"
+"POT-Creation-Date: 2025-11-29 00:46+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,35 +26,43 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/CAuthPanel.jsx:54 src/CTable.jsx:1025
+#: src/CAuthPanel.jsx:54 src/CTable.jsx:1036
 msgid "Sign in"
 msgstr ""
 
 #: src/CAuthPanel.jsx:57 src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76
-#: src/CFilterPanel.jsx:118 src/CFilterPanel.jsx:165 src/CSearchPanel.jsx:81
-#: src/CSearchPanel.jsx:134 src/CSortingPanel.jsx:81 src/CSortingPanel.jsx:98
+#: src/CSearchPanel.jsx:75 src/CSearchPanel.jsx:88 src/CSortingPanel.jsx:81
+#: src/CSortingPanel.jsx:98
 msgid "Close"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:968
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:979
+#: src/CTagsSearcher.jsx:69 src/CTagsSearcher.jsx:126
 msgid "Yes"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:969
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:980
+#: src/CTagsSearcher.jsx:69 src/CTagsSearcher.jsx:126
 msgid "No"
 msgstr ""
 
-#: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73 src/CFilterPanel.jsx:115
-#: src/CFilterPanel.jsx:162 src/CSortingPanel.jsx:78 src/CSortingPanel.jsx:95
-msgid "Reset"
+#: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73
+msgid "Reset columns"
+msgstr ""
+
+#: src/CColumnsPanel.jsx:66
+msgid "Move column left"
+msgstr ""
+
+#: src/CColumnsPanel.jsx:67
+msgid "Move column right"
 msgstr ""
 
 #: src/CEditorPanel.jsx:37
 msgid "Save"
 msgstr ""
 
-#: src/CEditorPanel.jsx:41 src/CFilterPanel.jsx:158 src/CSearchPanel.jsx:125
-#: src/CTable.jsx:97
+#: src/CEditorPanel.jsx:41 src/CTable.jsx:97
 msgid "Add"
 msgstr ""
 
@@ -120,6 +128,45 @@ msgstr ""
 msgid "Upload..."
 msgstr ""
 
+#: src/CLinkSearcher.jsx:176 src/CNumbersSearcher.jsx:31
+#: src/CTagsSearcher.jsx:167 src/CTextSearcher.jsx:22
+msgid "Column to search"
+msgstr ""
+
+#: src/CLinkSearcher.jsx:183 src/CNumbersSearcher.jsx:38
+#: src/CTagsSearcher.jsx:174 src/CTextSearcher.jsx:29
+msgid "Search kind"
+msgstr ""
+
+#: src/CLinkSearcher.jsx:194 src/CNumbersSearcher.jsx:55
+#: src/CTagsSearcher.jsx:189 src/CTextSearcher.jsx:43
+msgid "Delete criteria"
+msgstr ""
+
+#: src/CNumbersSearcher.jsx:52 src/CTextSearcher.jsx:40
+msgid "Search value"
+msgstr ""
+
+#: src/CSearchPanel.jsx:84
+msgid "Add criteria"
+msgstr ""
+
+#: src/CSortingPanel.jsx:78 src/CSortingPanel.jsx:95
+msgid "Reset sorting"
+msgstr ""
+
+#: src/CSortingPanel.jsx:86
+msgid "Set ordering mode"
+msgstr ""
+
+#: src/CSortingPanel.jsx:88
+msgid "Move ordering up"
+msgstr ""
+
+#: src/CSortingPanel.jsx:89
+msgid "Move ordering down"
+msgstr ""
+
 #: src/CTable.jsx:89
 msgid "Go back"
 msgstr ""
@@ -145,10 +192,6 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: src/CTable.jsx:104
-msgid "Filter"
-msgstr ""
-
 #: src/CTable.jsx:105
 msgid "Search"
 msgstr ""
@@ -161,7 +204,7 @@ msgstr ""
 msgid "Columns"
 msgstr ""
 
-#: src/CTable.jsx:109 src/CTable.jsx:427
+#: src/CTable.jsx:109 src/CTable.jsx:434
 msgid "Simple select"
 msgstr ""
 
@@ -185,44 +228,44 @@ msgstr ""
 msgid "Reset Zoom"
 msgstr ""
 
-#: src/CTable.jsx:231
+#: src/CTable.jsx:237
 msgid "Columns configuration loading failure."
 msgstr ""
 
-#: src/CTable.jsx:366
+#: src/CTable.jsx:372
 msgid "Authentication error."
 msgstr ""
 
-#: src/CTable.jsx:424
+#: src/CTable.jsx:431
 msgid "Sticky select"
 msgstr ""
 
-#: src/CTable.jsx:559
+#: src/CTable.jsx:566
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:568
+#: src/CTable.jsx:575
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:772
+#: src/CTable.jsx:783
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:800
+#: src/CTable.jsx:811
 msgid "Error:"
 msgstr ""
 
-#: src/CTable.jsx:1027
+#: src/CTable.jsx:1038
 msgid "Log out"
 msgstr ""
 

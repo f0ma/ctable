@@ -386,6 +386,8 @@ class SQLYamlQuery {
             $r.=" OFFSET ".$this->visit(array_merge($path, ["offset"]), $node['offset']);
         }
 
+        error_log($r);
+
         return $r;
     }
 
@@ -559,11 +561,11 @@ class SQLYamlQuery {
     }
 
     function s_is_null($path, $node){
-        return $this->visit(array_merge($path, ["is_null"]), $node[0]." IS NULL ");
+        return $this->visit(array_merge($path, ["is_null"]), $node[0])." IS NULL ";
     }
 
     function s_is_not_null($path, $node){
-        return $this->visit(array_merge($path, ["is_not_null"]), $node[0]." IS NOT NULL ");
+        return $this->visit(array_merge($path, ["is_not_null"]), $node[0])." IS NOT NULL ";
     }
 
     function s_like($path, $node){

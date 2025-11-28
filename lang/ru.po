@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ctable 3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-01 12:30+0300\n"
+"POT-Creation-Date: 2025-11-29 00:46+0300\n"
 "PO-Revision-Date: 2025-05-20 01:28+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,35 +29,44 @@ msgstr "Имя пользователя"
 msgid "Password"
 msgstr "Пароль"
 
-#: src/CAuthPanel.jsx:54 src/CTable.jsx:1025
+#: src/CAuthPanel.jsx:54 src/CTable.jsx:1036
 msgid "Sign in"
 msgstr "Войти"
 
 #: src/CAuthPanel.jsx:57 src/CColumnsPanel.jsx:60 src/CColumnsPanel.jsx:76
-#: src/CFilterPanel.jsx:118 src/CFilterPanel.jsx:165 src/CSearchPanel.jsx:81
-#: src/CSearchPanel.jsx:134 src/CSortingPanel.jsx:81 src/CSortingPanel.jsx:98
+#: src/CSearchPanel.jsx:75 src/CSearchPanel.jsx:88 src/CSortingPanel.jsx:81
+#: src/CSortingPanel.jsx:98
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:968
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:979
+#: src/CTagsSearcher.jsx:69 src/CTagsSearcher.jsx:126
 msgid "Yes"
 msgstr "Да"
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:969
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:980
+#: src/CTagsSearcher.jsx:69 src/CTagsSearcher.jsx:126
 msgid "No"
 msgstr "Нет"
 
-#: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73 src/CFilterPanel.jsx:115
-#: src/CFilterPanel.jsx:162 src/CSortingPanel.jsx:78 src/CSortingPanel.jsx:95
-msgid "Reset"
-msgstr "Сбросить"
+#: src/CColumnsPanel.jsx:57 src/CColumnsPanel.jsx:73
+#, fuzzy
+msgid "Reset columns"
+msgstr "Сбросить масштаб"
+
+#: src/CColumnsPanel.jsx:66
+msgid "Move column left"
+msgstr "Переместить столбец влево"
+
+#: src/CColumnsPanel.jsx:67
+msgid "Move column right"
+msgstr "Переместить столбец вправо"
 
 #: src/CEditorPanel.jsx:37
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/CEditorPanel.jsx:41 src/CFilterPanel.jsx:158 src/CSearchPanel.jsx:125
-#: src/CTable.jsx:97
+#: src/CEditorPanel.jsx:41 src/CTable.jsx:97
 msgid "Add"
 msgstr "Добавить"
 
@@ -127,6 +136,46 @@ msgstr "Удалить загруженный файл?"
 msgid "Upload..."
 msgstr "Загрузить..."
 
+#: src/CLinkSearcher.jsx:176 src/CNumbersSearcher.jsx:31
+#: src/CTagsSearcher.jsx:167 src/CTextSearcher.jsx:22
+msgid "Column to search"
+msgstr "Столбец для поиска"
+
+#: src/CLinkSearcher.jsx:183 src/CNumbersSearcher.jsx:38
+#: src/CTagsSearcher.jsx:174 src/CTextSearcher.jsx:29
+msgid "Search kind"
+msgstr "Тип поиска"
+
+#: src/CLinkSearcher.jsx:194 src/CNumbersSearcher.jsx:55
+#: src/CTagsSearcher.jsx:189 src/CTextSearcher.jsx:43
+msgid "Delete criteria"
+msgstr "Удалить условие поиска"
+
+#: src/CNumbersSearcher.jsx:52 src/CTextSearcher.jsx:40
+msgid "Search value"
+msgstr "Значение для поиска"
+
+#: src/CSearchPanel.jsx:84
+msgid "Add criteria"
+msgstr "Добавить условие поиска"
+
+#: src/CSortingPanel.jsx:78 src/CSortingPanel.jsx:95
+#, fuzzy
+msgid "Reset sorting"
+msgstr "Сбросить масштаб"
+
+#: src/CSortingPanel.jsx:86
+msgid "Set ordering mode"
+msgstr "Установить сортировку по столбцу"
+
+#: src/CSortingPanel.jsx:88
+msgid "Move ordering up"
+msgstr "Переместить сортировку по столбцу вверх"
+
+#: src/CSortingPanel.jsx:89
+msgid "Move ordering down"
+msgstr "Переместить сортировку по столбцу вниз"
+
 #: src/CTable.jsx:89
 msgid "Go back"
 msgstr "Назад"
@@ -152,13 +201,9 @@ msgstr "Удалить"
 msgid "Reload"
 msgstr "Перезагрузить"
 
-#: src/CTable.jsx:104
-msgid "Filter"
-msgstr "Фильтр"
-
 #: src/CTable.jsx:105
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: src/CTable.jsx:106
 msgid "Sorting"
@@ -168,7 +213,7 @@ msgstr "Сортировка"
 msgid "Columns"
 msgstr "Столбцы"
 
-#: src/CTable.jsx:109 src/CTable.jsx:427
+#: src/CTable.jsx:109 src/CTable.jsx:434
 msgid "Simple select"
 msgstr "Простой выбор"
 
@@ -192,19 +237,19 @@ msgstr "Уменьшить"
 msgid "Reset Zoom"
 msgstr "Сбросить масштаб"
 
-#: src/CTable.jsx:231
+#: src/CTable.jsx:237
 msgid "Columns configuration loading failure."
 msgstr "Ошибка при загрузке информации о столбцах таблицы."
 
-#: src/CTable.jsx:366
+#: src/CTable.jsx:372
 msgid "Authentication error."
-msgstr ""
+msgstr "Ошибка входа."
 
-#: src/CTable.jsx:424
+#: src/CTable.jsx:431
 msgid "Sticky select"
 msgstr "Выбор с накоплением"
 
-#: src/CTable.jsx:559
+#: src/CTable.jsx:566
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
@@ -212,7 +257,7 @@ msgstr[0] "Создать копию %d записи?"
 msgstr[1] "Создать копию %d записей?"
 msgstr[2] "Создать копию %d записей?"
 
-#: src/CTable.jsx:568
+#: src/CTable.jsx:575
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
@@ -220,7 +265,7 @@ msgstr[0] "Удалить %d запись?"
 msgstr[1] "Удалить %d записи?"
 msgstr[2] "Удалить %d записей?"
 
-#: src/CTable.jsx:772
+#: src/CTable.jsx:783
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"
@@ -228,11 +273,11 @@ msgstr[0] "Обновить %d запись?"
 msgstr[1] "Обновить %d записи?"
 msgstr[2] "Обновить %d записей?"
 
-#: src/CTable.jsx:800
+#: src/CTable.jsx:811
 msgid "Error:"
-msgstr ""
+msgstr "Ошибка:"
 
-#: src/CTable.jsx:1027
+#: src/CTable.jsx:1038
 msgid "Log out"
 msgstr "Выйти"
 
@@ -240,3 +285,9 @@ msgstr "Выйти"
 #, fuzzy
 msgid "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 msgstr "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+#~ msgid "Reset"
+#~ msgstr "Сбросить"
+
+#~ msgid "Filter"
+#~ msgstr "Фильтр"

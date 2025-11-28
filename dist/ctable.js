@@ -752,7 +752,11 @@ class CPlainTextCell extends Component {
   render() {
     return h(Fragment, null, this.props.value === null ? h("span", {
       class: "has-text-grey"
-    }, "NULL") : String(this.props.value));
+    }, "NULL") : this.props.column.allow_html === true ? h("div", {
+      dangerouslySetInnerHTML: {
+        __html: this.props.value
+      }
+    }) : String(this.props.value));
   }
 }
 /**
@@ -1089,7 +1093,7 @@ class CHeaderTable extends Component {
           class: "material-symbols-outlined-small"
         }, "arrow_downward") : "", filtering ? h("span", {
           class: "material-symbols-outlined-small"
-        }, "filter_alt") : "", " ", x.label))[0];
+        }, "search") : "", " ", x.label))[0];
       }
     })))));
   }
@@ -2911,7 +2915,7 @@ class CColumnsPanel extends Component {
       onClick: self.props.onResetColumns
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))), h("div", {
+    }, "refresh"), " ", _("Reset columns"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
@@ -2931,13 +2935,15 @@ class CColumnsPanel extends Component {
       }), "\xA0", this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,
-        onClick: self.onColumnUp
+        onClick: self.onColumnUp,
+        title: _("Move column left")
       }, h("span", {
         class: "material-symbols-outlined"
       }, "keyboard_arrow_up")), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,
-        onClick: self.onColumnDown
+        onClick: self.onColumnDown,
+        title: _("Move column right")
       }, h("span", {
         class: "material-symbols-outlined"
       }, "keyboard_arrow_down")));
@@ -2951,7 +2957,7 @@ class CColumnsPanel extends Component {
       onClick: self.props.onResetColumns
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))), h("div", {
+    }, "refresh"), " ", _("Reset columns"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
@@ -3045,7 +3051,7 @@ class CSortingPanel extends Component {
       onClick: self.props.onResetSorting
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))), h("div", {
+    }, "refresh"), " ", _("Reset sorting"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
@@ -3059,7 +3065,8 @@ class CSortingPanel extends Component {
       }, h("button", {
         class: "button is-small",
         "data-column": x.name,
-        onClick: self.onSortChange
+        onClick: self.onSortChange,
+        title: _("Set ordering mode")
       }, h("span", {
         class: "material-symbols-outlined"
       }, x.sorting == "" ? "reorder" : "", x.sorting == "asc" ? "arrow_upward" : "", x.sorting == "desc" ? "arrow_downward" : "")), "\xA0", h("span", {
@@ -3068,13 +3075,15 @@ class CSortingPanel extends Component {
       }, this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,
-        onClick: self.onColumnUp
+        onClick: self.onColumnUp,
+        title: _("Move ordering up")
       }, h("span", {
         class: "material-symbols-outlined"
       }, "keyboard_arrow_up")), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,
-        onClick: self.onColumnDown
+        onClick: self.onColumnDown,
+        title: _("Move ordering down")
       }, h("span", {
         class: "material-symbols-outlined"
       }, "keyboard_arrow_down")));
@@ -3088,217 +3097,12 @@ class CSortingPanel extends Component {
       onClick: self.props.onResetSorting
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))), h("div", {
+    }, "refresh"), " ", _("Reset sorting"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
     }, h("button", {
       class: "button is-small is-soft",
       onClick: self.props.onCloseSorting
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "close"), " ", _("Close"))))));
-  }
-}
-/**
- * Column panel class.
- *
- * @arg this.props.table {Object} Table object.
- * @arg this.props.width {int} Width in em.
- *
- */
-
-class CFilterPanel extends Component {
-  constructor() {
-    super();
-    this.onColumnChange = this.onColumnChange.bind(this);
-    this.onOperatorChange = this.onOperatorChange.bind(this);
-    this.onValueChange = this.onValueChange.bind(this);
-    this.onDeleteClick = this.onDeleteClick.bind(this);
-    this.onAddClick = this.onAddClick.bind(this);
-  }
-
-  //    onColumnEnableChanged(x){
-  //      var colname = x.target.dataset['column'];
-  //      var newcol = this.props.table.state.view_columns;
-  //      newcol.forEach(y => {if (y.name == colname) y.enabled = x.target.checked;});
-  //      this.props.table.setState({view_columns: newcol});
-  //    }
-  //
-  //    onColumnUp(x){
-  //      var colname = unwind_button_or_link(x).dataset['column'];
-  //      var colindex = -1;
-  //      var newcol = this.props.table.state.view_columns;
-  //      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
-  //      if(colindex > 0){
-  //        [newcol[colindex-1], newcol[colindex]] = [newcol[colindex], newcol[colindex-1]];
-  //        this.props.table.setState({view_columns: newcol});
-  //      }
-  //    }
-  //
-  //    onColumnDown(x){
-  //      var colname = unwind_button_or_link(x).dataset['column'];
-  //      var colindex = -1;
-  //      var newcol = this.props.table.state.view_columns;
-  //      newcol.forEach((y,i) => {if (y.name == colname) colindex = i;});
-  //      if(colindex < newcol.length-1){
-  //        [newcol[colindex+1], newcol[colindex]] = [newcol[colindex], newcol[colindex+1]];
-  //        this.props.table.setState({view_columns: newcol});
-  //      }
-  //    }
-
-  onColumnChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].column = x.target.value;
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onOperatorChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].operator = x.target.value;
-    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
-      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
-      }
-    } else {
-      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
-      }
-    }
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onValueChange(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering[i].value = x.target.value;
-    if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
-      if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(",").map(x => x.trim());
-      }
-    } else {
-      if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.join(",");
-      }
-    }
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onDeleteClick(x) {
-    var i = Number(x.target.dataset['filterindex']);
-    this.props.table.state.view_filtering.splice(i, 1);
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  onAddClick(x) {
-    this.props.table.state.view_filtering.push({
-      column: this.props.table.state.table_columns[0].name,
-      operator: "neq",
-      value: ""
-    });
-    this.props.table.setState({});
-    this.props.table.onFilterChange();
-  }
-  render() {
-    var self = this;
-    return h("section", {
-      class: "section ctable-editor-section"
-    }, h("div", {
-      class: "ctable-editor-panel box",
-      style: sty("width", "min(" + self.props.width + "em,100%)", "min-height", "40vh")
-    }, h("div", {
-      class: "field has-text-right mb-0"
-    }, h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: "button is-small is-warning is-soft",
-      onClick: self.props.onResetFilter
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))), h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: "button is-small is-soft",
-      onClick: self.props.onCloseFilter
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
-      return h("div", null, h("div", {
-        class: "select"
-      }, h("select", {
-        value: x.column,
-        "data-filterindex": i,
-        onChange: self.onColumnChange
-      }, self.props.table.state.table_columns.map(y => {
-        return h("option", {
-          value: y.name
-        }, y.label);
-      }))), h("div", {
-        class: "select"
-      }, h("select", {
-        value: x.operator,
-        "data-filterindex": i,
-        onChange: self.onOperatorChange
-      }, h("option", {
-        value: "eq"
-      }, "="), h("option", {
-        value: "neq"
-      }, "!="), h("option", {
-        value: "ge"
-      }, ">="), h("option", {
-        value: "gt"
-      }, ">"), h("option", {
-        value: "le"
-      }, "<="), h("option", {
-        value: "lt"
-      }, "<"), h("option", {
-        value: "in"
-      }, "IN"), h("option", {
-        value: "not_in"
-      }, "NOT IN"), h("option", {
-        value: "is_null"
-      }, "Is NULL"), h("option", {
-        value: "is_not_null"
-      }, "Is not NULL"), h("option", {
-        value: "like_lr"
-      }, "\u2026A\u2026"), h("option", {
-        value: "like_l"
-      }, "\u2026A"), h("option", {
-        value: "like_r"
-      }, "A\u2026"))), h("div", {
-        style: "display: inline-block;"
-      }, h("input", {
-        class: "input",
-        type: "text",
-        value: x.value,
-        "data-filterindex": i,
-        onChange: self.onValueChange
-      })), h("button", {
-        class: "button is-danger is-soft",
-        "data-filterindex": i,
-        onClick: self.onDeleteClick
-      }, h("span", {
-        class: "material-symbols-outlined"
-      }, "delete")));
-    }), h("button", {
-      class: "button is-primary is-soft mt-4",
-      onClick: self.onAddClick
-    }, " ", _("Add"), " "), h("div", {
-      class: "field has-text-right mt-5"
-    }, h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: "button is-small is-warning is-soft",
-      onClick: self.props.onResetFilter
-    }, h("span", {
-      class: "material-symbols-outlined"
-    }, "refresh"), " ", _("Reset"))), h("div", {
-      class: "has-text-centered m-2",
-      style: "display:inline-block;"
-    }, h("button", {
-      class: "button is-small is-soft",
-      onClick: self.props.onCloseFilter
     }, h("span", {
       class: "material-symbols-outlined"
     }, "close"), " ", _("Close"))))));
@@ -3476,7 +3280,7 @@ class CSearchPanel extends Component {
     }), h("button", {
       class: "button is-primary is-soft mt-4",
       onClick: self.onAddClick
-    }, " ", _("Add"), " "), h("div", {
+    }, _("Add criteria")), h("div", {
       class: "field has-text-right mt-5"
     }, h("div", {
       class: "has-text-centered m-2",
@@ -3495,37 +3299,12 @@ class CSearchFrame extends Component {
   }
   render() {
     var self = this;
-    return h("div", null, self.props.column.cell_actor == "CPlainTextCell" || self.props.column.cell_actor == "CMultilineTextCell" ? h(CTextSearcher, {
-      index: self.props.index,
-      column: self.props.column,
-      table: self.props.table,
-      operator: self.props.operator,
-      value: self.props.value,
-      onDeleteClick: self.props.onDeleteClick,
-      onColumnChange: self.props.onColumnChange,
-      onOperatorChange: self.props.onOperatorChange,
-      onValueChange: self.props.onValueChange
-    }) : "", self.props.column.cell_actor == "CNumbersCell" ? h(CNumbersSearcher, {
-      index: self.props.index,
-      column: self.props.column,
-      table: self.props.table,
-      operator: self.props.operator,
-      value: self.props.value,
-      onDeleteClick: self.props.onDeleteClick,
-      onColumnChange: self.props.onColumnChange,
-      onOperatorChange: self.props.onOperatorChange,
-      onValueChange: self.props.onValueChange
-    }) : "", self.props.column.cell_actor == "CTagsCell" || self.props.column.cell_actor == "CSelectCell" || self.props.column.cell_actor == "CBoolCell" ? h(CTagsSearcher, {
-      index: self.props.index,
-      column: self.props.column,
-      table: self.props.table,
-      operator: self.props.operator,
-      value: self.props.value,
-      onDeleteClick: self.props.onDeleteClick,
-      onColumnChange: self.props.onColumnChange,
-      onOperatorChange: self.props.onOperatorChange,
-      onValueChange: self.props.onValueChange
-    }) : "", self.props.column.cell_actor == "CLinkCell" || self.props.column.cell_actor == "CMultiLinkCell" ? h(CLinkSearcher, {
+    var classname = CTextSearcher;
+    if (self.props.column.cell_actor == "CPlainTextCell" || self.props.column.cell_actor == "CMultilineTextCell") classname = CTextSearcher;
+    if (self.props.column.cell_actor == "CLinkCell" || self.props.column.cell_actor == "CMultiLinkCell") classname = CLinkSearcher;
+    if (self.props.column.cell_actor == "CTagsCell" || self.props.column.cell_actor == "CSelectCell" || self.props.column.cell_actor == "CBoolCell") classname = CTagsSearcher;
+    if (self.props.column.cell_actor == "CNumbersCell") classname = CNumbersSearcher;
+    return h("div", null, h(classname, {
       index: self.props.index,
       column: self.props.column,
       table: self.props.table,
@@ -3536,7 +3315,7 @@ class CSearchFrame extends Component {
       onColumnChange: self.props.onColumnChange,
       onOperatorChange: self.props.onOperatorChange,
       onValueChange: self.props.onValueChange
-    }) : "");
+    }));
   }
 }
 class CTextSearcher extends Comment {
@@ -3554,21 +3333,23 @@ class CTextSearcher extends Comment {
   render() {
     var self = this;
     return h("div", null, h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.column.name,
       "data-filterindex": self.props.index,
-      onChange: self.props.onColumnChange
-    }, self.props.table.state.table_columns.map(y => {
+      onChange: self.props.onColumnChange,
+      title: _("Column to search")
+    }, self.props.table.state.table_columns.filter(w => w.search_actor !== null).map(y => {
       return h("option", {
         value: y.name
       }, y.label);
     }))), h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.operator ? self.props.operator : "like_lr",
       "data-filterindex": self.props.index,
-      onChange: self.props.onOperatorChange
+      onChange: self.props.onOperatorChange,
+      title: _("Search kind")
     }, h("option", {
       value: "like_lr"
     }, "\u2026A\u2026"), h("option", {
@@ -3577,25 +3358,33 @@ class CTextSearcher extends Comment {
       value: "like_r"
     }, "A\u2026"), h("option", {
       value: "eq"
-    }, "="), self.props.column.editor_allow_null ? h("option", {
+    }, "="), h("option", {
+      value: "neq"
+    }, "!="), self.props.column.editor_allow_null ? h("option", {
       value: "is_null"
     }, "Is NULL") : "", self.props.column.editor_allow_null ? h("option", {
       value: "is_not_null"
     }, "Is not NULL") : "")), h("div", {
+      class: "ml-2 mb-2",
       style: "display: inline-block;"
     }, h("input", {
       class: "input",
       type: "text",
       value: self.props.value,
       "data-filterindex": self.props.index,
-      onChange: self.onInputChange
-    })), h("button", {
+      onChange: self.onInputChange,
+      title: _("Search value")
+    })), h("div", {
+      class: "ml-2 mb-2",
+      style: "display: inline-block;"
+    }, h("button", {
       class: "button is-danger is-soft",
       "data-filterindex": self.props.index,
-      onClick: self.props.onDeleteClick
+      onClick: self.props.onDeleteClick,
+      title: _("Delete criteria")
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "delete")));
+    }, "delete"))));
   }
 }
 class CNumbersSearcher extends Component {
@@ -3629,21 +3418,23 @@ class CNumbersSearcher extends Component {
   render() {
     var self = this;
     return h("div", null, h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.column.name,
       "data-filterindex": self.props.index,
-      onChange: self.props.onColumnChange
-    }, self.props.table.state.table_columns.map(y => {
+      onChange: self.props.onColumnChange,
+      title: _("Column to search")
+    }, self.props.table.state.table_columns.filter(w => w.search_actor !== null).map(y => {
       return h("option", {
         value: y.name
       }, y.label);
     }))), h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.operator ? self.props.operator : "like_lr",
       "data-filterindex": self.props.index,
-      onChange: self.props.onOperatorChange
+      onChange: self.props.onOperatorChange,
+      title: _("Search kind")
     }, h("option", {
       value: "eq"
     }, "="), h("option", {
@@ -3665,20 +3456,26 @@ class CNumbersSearcher extends Component {
     }, "Is NULL") : "", self.props.column.editor_allow_null ? h("option", {
       value: "is_not_null"
     }, "Is not NULL") : "")), h("div", {
+      class: "ml-2 mb-2",
       style: "display: inline-block;"
     }, h("input", {
       class: cls("input", self.state.search_valid ? "" : "is-danger"),
       type: "text",
       value: self.state.search_value,
       "data-filterindex": self.props.index,
-      onChange: self.onInputChange
-    })), h("button", {
+      onChange: self.onInputChange,
+      title: _("Search value")
+    })), h("div", {
+      class: "ml-2 mb-2",
+      style: "display: inline-block;"
+    }, h("button", {
       class: "button is-danger is-soft",
       "data-filterindex": self.props.index,
-      onClick: self.props.onDeleteClick
+      onClick: self.props.onDeleteClick,
+      title: _("Delete criteria")
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "delete")));
+    }, "delete"))));
   }
 }
 class CTagsSearcher extends Component {
@@ -3720,14 +3517,14 @@ class CTagsSearcher extends Component {
       actived.sort();
       nv = actived.join(";");
     }
-    console.log(e.target.dataset);
+    //console.log(e.target.dataset)
     this.setState({
       search_value: nv
     }, () => this.props.onValueChange(nv, Number(e.target.dataset['filterindex'])));
   }
   renderTags() {
     var self = this;
-    console.log(self);
+    //console.log(self)
     if (self.state.search_value === undefined) return;
     if (self.state.search_value == null || self.state.search_value == "") {
       return h("div", {
@@ -3762,8 +3559,8 @@ class CTagsSearcher extends Component {
         value: "0",
         label: _("No")
       }].filter(x => actived.includes(x.value));
-      console.log(tags);
-      console.log(actived);
+      //console.log(tags);
+      //console.log(actived);
       return h("div", {
         class: "input",
         style: "height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;"
@@ -3806,7 +3603,8 @@ class CTagsSearcher extends Component {
   renderToolbar() {
     var self = this;
     var buttons = self.props.column.options;
-    console.log(self);
+    //console.log(self)
+
     if (self.state.search_value === undefined) return;
     if (self.props.column.cell_actor == "CTagsCell") {
       var actived = self.state.search_value.split(";");
@@ -3849,7 +3647,7 @@ class CTagsSearcher extends Component {
         title: x.label.slice(0, self.props.column.max_length) + (x.label.length > 32 ? "..." : "")
       }, x.label)))));
     } else if (self.props.column.cell_actor == "CSelectCell") {
-      console.log(self.state);
+      //console.log(self.state)
       var actived = self.state.search_value.split(";");
       var tags = self.props.column.options.filter(x => !actived.includes(x.value));
       return h("div", {
@@ -3871,21 +3669,23 @@ class CTagsSearcher extends Component {
   render() {
     var self = this;
     return h("div", null, h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.column.name,
       "data-filterindex": self.props.index,
-      onChange: self.props.onColumnChange
-    }, self.props.table.state.table_columns.map(y => {
+      onChange: self.props.onColumnChange,
+      title: _("Column to search")
+    }, self.props.table.state.table_columns.filter(w => w.search_actor !== null).map(y => {
       return h("option", {
         value: y.name
       }, y.label);
     }))), h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.operator ?? "neq",
       "data-filterindex": self.props.index,
-      onChange: self.props.onOperatorChange
+      onChange: self.props.onOperatorChange,
+      title: _("Search kind")
     }, h("option", {
       value: "eq"
     }, "="), h("option", {
@@ -3900,13 +3700,17 @@ class CTagsSearcher extends Component {
       value: "is_not_null"
     }, "Is not NULL") : "")), self.props.operator === "is_null" || self.props.operator === "is_not_null" ? "" : h("div", {
       class: cls("control field is-grouped is-grouped-multiline", self.state.editor_value === null ? "has-icons-left" : "")
-    }, self.renderTags(), self.renderToolbar()), h("button", {
+    }, self.renderTags(), self.renderToolbar()), h("div", {
+      class: "ml-2 mb-2",
+      style: "display: inline-block;"
+    }, h("button", {
       class: "button is-danger is-soft",
       "data-filterindex": self.props.index,
-      onClick: self.props.onDeleteClick
+      onClick: self.props.onDeleteClick,
+      title: _("Delete criteria")
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "delete")));
+    }, "delete"))));
   }
 }
 class CLinkSearcher extends Component {
@@ -4102,21 +3906,23 @@ class CLinkSearcher extends Component {
   render() {
     var self = this;
     return h("div", null, h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.column.name,
       "data-filterindex": self.props.index,
-      onChange: self.props.onColumnChange
-    }, self.props.table.state.table_columns.map(y => {
+      onChange: self.props.onColumnChange,
+      title: _("Column to search")
+    }, self.props.table.state.table_columns.filter(w => w.search_actor !== null).map(y => {
       return h("option", {
         value: y.name
       }, y.label);
     }))), h("div", {
-      class: "select"
+      class: "select ml-2 mb-2"
     }, h("select", {
       value: self.props.operator ? self.props.operator : "eq",
       "data-filterindex": self.props.index,
-      onChange: self.props.onOperatorChange
+      onChange: self.props.onOperatorChange,
+      title: _("Search kind")
     }, h("option", {
       value: "eq"
     }, "="), h("option", {
@@ -4129,13 +3935,17 @@ class CLinkSearcher extends Component {
       value: "is_null"
     }, "Is NULL") : "", self.props.column.editor_allow_null ? h("option", {
       value: "is_not_null"
-    }, "Is not NULL") : "")), self.renderValueSelector(), h("button", {
+    }, "Is not NULL") : "")), self.renderValueSelector(), h("div", {
+      class: "ml-2 mb-2",
+      style: "display: inline-block;"
+    }, h("button", {
       class: "button is-danger is-soft",
       "data-filterindex": self.props.index,
-      onClick: self.props.onDeleteClick
+      onClick: self.props.onDeleteClick,
+      title: _("Delete criteria")
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "delete")));
+    }, "delete"))));
   }
 }
 /**
@@ -4293,14 +4103,6 @@ class CTable extends Component {
         name: "reload",
         icon: "refresh",
         label: _("Reload"),
-        enabled: true,
-        style: "",
-        icon_only: true,
-        panel: 0
-      }, {
-        name: "filter",
-        icon: "filter_alt",
-        label: _("Filter"),
         enabled: true,
         style: "",
         icon_only: true,
@@ -5572,12 +5374,6 @@ class CTable extends Component {
       onResetSorting: self.onResetSorting,
       onCloseSorting: self.onCloseSorting,
       onSortingChange: self.onSortingChange
-    }) : "", self.state.filtering_panel_show ? h(CFilterPanel, {
-      width: self.state.width,
-      table: self,
-      onResetFilter: self.onResetFilter,
-      onCloseFilter: self.onCloseFilter,
-      onChangeFilter: self.onFilterChange
     }) : "", self.state.auth_panel_show ? h(CAuthPanel, {
       width: self.state.width,
       onAuthLogin: self.onAuthLogin,
@@ -5594,7 +5390,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-11-01 12:30+0300",
+    "pot-creation-date": "2025-11-29 00:46+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -5612,7 +5408,8 @@ var ctable_lang_ru = {
   "Close": [null, "Закрыть"],
   "Yes": [null, "Да"],
   "No": [null, "Нет"],
-  "Reset": [null, "Сбросить"],
+  "Move column left": [null, "Переместить столбец влево"],
+  "Move column right": [null, "Переместить столбец вправо"],
   "Save": [null, "Сохранить"],
   "Add": [null, "Добавить"],
   "Save all": [null, "Сохранить все"],
@@ -5627,14 +5424,21 @@ var ctable_lang_ru = {
   "File \"%s\" extention has not allowed": [null, "Файл \"%s\" имеет расширение не разрешенное для загрузки"],
   "Remove uploaded file?": [null, "Удалить загруженный файл?"],
   "Upload...": [null, "Загрузить..."],
+  "Column to search": [null, "Столбец для поиска"],
+  "Search kind": [null, "Тип поиска"],
+  "Delete criteria": [null, "Удалить условие поиска"],
+  "Search value": [null, "Значение для поиска"],
+  "Add criteria": [null, "Добавить условие поиска"],
+  "Set ordering mode": [null, "Установить сортировку по столбцу"],
+  "Move ordering up": [null, "Переместить сортировку по столбцу вверх"],
+  "Move ordering down": [null, "Переместить сортировку по столбцу вниз"],
   "Go back": [null, "Назад"],
   "Enter": [null, "Войти"],
   "Edit": [null, "Правка"],
   "Duplicate": [null, "Создать копию"],
   "Delete": [null, "Удалить"],
   "Reload": [null, "Перезагрузить"],
-  "Filter": [null, "Фильтр"],
-  "Search": [null, ""],
+  "Search": [null, "Поиск"],
   "Sorting": [null, "Сортировка"],
   "Columns": [null, "Столбцы"],
   "Simple select": [null, "Простой выбор"],
@@ -5644,12 +5448,12 @@ var ctable_lang_ru = {
   "Zoom Out": [null, "Уменьшить"],
   "Reset Zoom": [null, "Сбросить масштаб"],
   "Columns configuration loading failure.": [null, "Ошибка при загрузке информации о столбцах таблицы."],
-  "Authentication error.": [null, ""],
+  "Authentication error.": [null, "Ошибка входа."],
   "Sticky select": [null, "Выбор с накоплением"],
   "Duplicate %d record?": ["Duplicate %d records?", "Создать копию %d записи?", "Создать копию %d записей?", "Создать копию %d записей?"],
   "Delete %d record?": ["Delete %d records?", "Удалить %d запись?", "Удалить %d записи?", "Удалить %d записей?"],
   "Update %d record?": ["Update %d records?", "Обновить %d запись?", "Обновить %d записи?", "Обновить %d записей?"],
-  "Error:": [null, ""],
+  "Error:": [null, "Ошибка:"],
   "Log out": [null, "Выйти"]
 };
 

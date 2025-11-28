@@ -21,6 +21,7 @@
       "width": 8,
       "enabled": true,
       "cell_actor": "CPlainTextCell",
+      "allow_html": true,
       "editor_actor": "CLineEditor",
       "editor_hint": "Enter firstname",
       "editor_validate": "^[a-zA-Z]+$",
@@ -50,7 +51,8 @@
       "sorting": false,
       "cell_actor": "CMultiLinkCell",
       "cell_link":"bill",
-      "cell_link_key":"id"
+      "cell_link_key":"id",
+      "search_actor": null
     },
     {
       "name": "reg_date",

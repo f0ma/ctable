@@ -54,7 +54,7 @@ class CColumnsPanel extends Component {
           <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "40vh")} >
             <div class="field has-text-right mb-4">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset columns")}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
                 <button class="button is-small is-soft" onClick={self.props.onCloseColumns}><span class="material-symbols-outlined">close</span> {_("Close")}</button>
@@ -63,14 +63,14 @@ class CColumnsPanel extends Component {
              {self.props.table.state.view_columns.map(x => {
               return <div>
                           <label class="checkbox" style="min-width:10em; width:10em; overflow: hidden;"><input type="checkbox" checked={x.enabled} data-column={x.name} onChange={self.onColumnEnableChanged}/>&nbsp;{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}</label>
-                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnUp}><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
-                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnDown}><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
+                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnUp} title={_("Move column left")} ><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
+                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnDown} title={_("Move column right")}><span class="material-symbols-outlined">keyboard_arrow_down</span></button>
                     </div>;
             })}
 
             <div class="field has-text-right mt-5">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.onResetColumns}><span class="material-symbols-outlined">refresh</span> {_("Reset columns")}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
                 <button class="button is-small is-soft" onClick={self.props.onCloseColumns}><span class="material-symbols-outlined">close</span> {_("Close")}</button>

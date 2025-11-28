@@ -103,7 +103,7 @@ class CSortingPanel extends Component {
           &lt;div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "40vh")} >
             &lt;div class="field has-text-right mb-4">
               &lt;div class="has-text-centered m-2"  style="display:inline-block;">
-                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset")}&lt;/button>
+                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset sorting")}&lt;/button>
               &lt;/div>
               &lt;div class="has-text-centered m-2"  style="display:inline-block;">
                 &lt;button class="button is-small is-soft" onClick={self.props.onCloseSorting}>&lt;span class="material-symbols-outlined">close&lt;/span> {_("Close")}&lt;/button>
@@ -111,16 +111,16 @@ class CSortingPanel extends Component {
             &lt;/div>
              {self.props.table.state.view_sorting.map(x => {
                return &lt;div style="white-space: nowrap;">
-                          &lt;button class="button is-small" data-column={x.name} onClick={self.onSortChange}>&lt;span class="material-symbols-outlined">{x.sorting == "" ? "reorder" : ""}{x.sorting == "asc" ? "arrow_upward" : ""}{x.sorting == "desc" ? "arrow_downward" : ""}&lt;/span>&lt;/button>&amp;nbsp;
+                          &lt;button class="button is-small" data-column={x.name} onClick={self.onSortChange} title={_("Set ordering mode")}>&lt;span class="material-symbols-outlined">{x.sorting == "" ? "reorder" : ""}{x.sorting == "asc" ? "arrow_upward" : ""}{x.sorting == "desc" ? "arrow_downward" : ""}&lt;/span>&lt;/button>&amp;nbsp;
                           &lt;span class="ml-2 mr-2" style="min-width:10em; width:10em; display:inline-block; overflow: hidden;">{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}&lt;/span>
-                          &amp;nbsp;&lt;button class="button is-small" data-column={x.name} onClick={self.onColumnUp}>&lt;span class="material-symbols-outlined">keyboard_arrow_up&lt;/span>&lt;/button>
-                          &amp;nbsp;&lt;button class="button is-small" data-column={x.name} onClick={self.onColumnDown}>&lt;span class="material-symbols-outlined">keyboard_arrow_down&lt;/span>&lt;/button>
+                          &amp;nbsp;&lt;button class="button is-small" data-column={x.name} onClick={self.onColumnUp} title={_("Move ordering up")}>&lt;span class="material-symbols-outlined">keyboard_arrow_up&lt;/span>&lt;/button>
+                          &amp;nbsp;&lt;button class="button is-small" data-column={x.name} onClick={self.onColumnDown} title={_("Move ordering down")}>&lt;span class="material-symbols-outlined">keyboard_arrow_down&lt;/span>&lt;/button>
                     &lt;/div>;
             })}
 
             &lt;div class="field has-text-right mt-5">
               &lt;div class="has-text-centered m-2"  style="display:inline-block;">
-                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset")}&lt;/button>
+                &lt;button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}>&lt;span class="material-symbols-outlined">refresh&lt;/span> {_("Reset sorting")}&lt;/button>
               &lt;/div>
               &lt;div class="has-text-centered m-2"  style="display:inline-block;">
                 &lt;button class="button is-small is-soft" onClick={self.props.onCloseSorting}>&lt;span class="material-symbols-outlined">close&lt;/span> {_("Close")}&lt;/button>
@@ -143,13 +143,13 @@ class CSortingPanel extends Component {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CBoolCell.html">CBoolCell</a></li><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CDateCell.html">CDateCell</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilesCell.html">CFilesCell</a></li><li><a href="CFilesEditor.html">CFilesEditor</a></li><li><a href="CFilterPanel.html">CFilterPanel</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CLinkCell.html">CLinkCell</a></li><li><a href="CLinkEditor.html">CLinkEditor</a></li><li><a href="CMultiLinkCell.html">CMultiLinkCell</a></li><li><a href="CMultiLinkEditor.html">CMultiLinkEditor</a></li><li><a href="CMultilineTextCell.html">CMultilineTextCell</a></li><li><a href="CNumbersCell.html">CNumbersCell</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CPlainTextCell.html">CPlainTextCell</a></li><li><a href="CSelectCell.html">CSelectCell</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTagsCell.html">CTagsCell</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CBoolCell.html">CBoolCell</a></li><li><a href="CColumnsPanel.html">CColumnsPanel</a></li><li><a href="CDateCell.html">CDateCell</a></li><li><a href="CEditorFrame.html">CEditorFrame</a></li><li><a href="CEditorPanel.html">CEditorPanel</a></li><li><a href="CFilesCell.html">CFilesCell</a></li><li><a href="CFilesEditor.html">CFilesEditor</a></li><li><a href="CHeaderTable.html">CHeaderTable</a></li><li><a href="CLineEditor.html">CLineEditor</a></li><li><a href="CLinkCell.html">CLinkCell</a></li><li><a href="CLinkEditor.html">CLinkEditor</a></li><li><a href="CMultiLinkCell.html">CMultiLinkCell</a></li><li><a href="CMultiLinkEditor.html">CMultiLinkEditor</a></li><li><a href="CMultilineTextCell.html">CMultilineTextCell</a></li><li><a href="CNumbersCell.html">CNumbersCell</a></li><li><a href="CPageTable.html">CPageTable</a></li><li><a href="CPlainTextCell.html">CPlainTextCell</a></li><li><a href="CSelectCell.html">CSelectCell</a></li><li><a href="CSelectEditor.html">CSelectEditor</a></li><li><a href="CSortingPanel.html">CSortingPanel</a></li><li><a href="CTable.html">CTable</a></li><li><a href="CTagsCell.html">CTagsCell</a></li><li><a href="CTiledMultiLinkEditor.html">CTiledMultiLinkEditor</a></li></ul><h3>Events</h3><ul><li><a href="CEditorFrame.html#event:cteditorreset">cteditorreset</a></li><li><a href="CEditorFrame.html#event:cteditortonull">cteditortonull</a></li><li><a href="CEditorFrame.html#event:cteditorundo">cteditorundo</a></li><li><a href="CTable.html#event:cteditorchanged">cteditorchanged</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Nov 04 2025 14:55:15 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Nov 29 2025 00:48:41 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>

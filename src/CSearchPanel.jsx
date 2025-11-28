@@ -81,7 +81,7 @@ class CSearchPanel extends Component {
                     </div>
             })}
 
-            <button class="button is-primary is-soft mt-4" onClick={self.onAddClick}> {_("Add")} </button>
+            <button class="button is-primary is-soft mt-4" onClick={self.onAddClick}>{_("Add criteria")}</button>
 
             <div class="field has-text-right mt-5">
               <div class="has-text-centered m-2"  style="display:inline-block;">

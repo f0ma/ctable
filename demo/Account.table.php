@@ -28,6 +28,10 @@ class Account {
 
         //SQLYamlQuery::update_link_data($row, "bills", "bill", ["id" => "account_id"]);
 
+        foreach($rows as &$r){
+            $r["firstname"] = '<b>'.$r["firstname"].'<b>';
+        }
+
         return ["rows" => $rows, "total" => $num];
     }
 
