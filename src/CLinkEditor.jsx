@@ -152,7 +152,7 @@ class CLinkEditor extends Component {
                    <div class="dropdown-trigger" style="width:100%;">
                     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} style="width:100%;justify-content:left;">
                       <span>{ self.state.options_history && (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) + ' ('+self.state.editor_value+')' : self.state.editor_value }</span>
-                      <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
+                      <span class="icon is-small" style="position: absolute; right: 1em;"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                     </button>
                    </div>
                    <div class="dropdown-menu" role="menu">

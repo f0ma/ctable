@@ -2259,10 +2259,11 @@ class CMultiLinkEditor extends Component {
         onClick: self.onRemoveLink
       })));
     }), h("span", {
-      class: "icon is-small"
+      class: "icon is-small",
+      style: "cursor: pointer;"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "arrow_drop_down")))), h("div", {
+    }, "add_box")))), h("div", {
       class: "dropdown-menu",
       role: "menu"
     }, h("div", {
@@ -2503,7 +2504,8 @@ class CLinkEditor extends Component {
       onClick: this.onSelectDropdownClick,
       style: "width:100%;justify-content:left;"
     }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
-      class: "icon is-small"
+      class: "icon is-small",
+      style: "position: absolute; right: 1em;"
     }, h("span", {
       class: "material-symbols-outlined"
     }, "arrow_drop_down")))), h("div", {

@@ -187,7 +187,7 @@ class CMultiLinkEditor extends Component {
                             </div>
                           </div>;
                       })}
-                      <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
+                      <span class="icon is-small" style="cursor: pointer;"><span class="material-symbols-outlined">add_box</span></span>
                    </div>
                    </div>
                    <div class="dropdown-menu" role="menu">
