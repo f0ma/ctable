@@ -150,7 +150,7 @@ class CLinkEditor extends Component {
 
         return   <div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")} style="width:100%;">
                    <div class="dropdown-trigger" style="width:100%;">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} style="width:100%;justify-content:left;">
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} style="width:100%;justify-content:left;min-height: 2.5em;">
                       <span>{ self.state.options_history && (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) + ' ('+self.state.editor_value+')' : self.state.editor_value }</span>
                       <span class="icon is-small" style="position: absolute; right: 1em;"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                     </button>

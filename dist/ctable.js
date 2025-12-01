@@ -2502,7 +2502,7 @@ class CLinkEditor extends Component {
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu",
       onClick: this.onSelectDropdownClick,
-      style: "width:100%;justify-content:left;"
+      style: "width:100%;justify-content:left;min-height: 2.5em;"
     }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
       class: "icon is-small",
       style: "position: absolute; right: 1em;"
