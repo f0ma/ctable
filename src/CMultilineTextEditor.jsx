@@ -126,3 +126,5 @@ class CMultilineTextEditor extends Component {
         ;
     }
 }
+
+ctable_register_class("CMultilineTextEditor", CMultilineTextEditor);

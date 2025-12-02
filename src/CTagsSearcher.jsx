@@ -192,3 +192,4 @@ class CTagsSearcher extends Component {
   }
 }
 
+ctable_register_class("CTagsSearcher", CTagsSearcher);

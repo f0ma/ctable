@@ -112,3 +112,5 @@ class CSelectEditor extends Component {
         </div>;
     }
 }
+
+ctable_register_class("CSelectEditor", CSelectEditor);

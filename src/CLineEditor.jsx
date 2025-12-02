@@ -124,3 +124,5 @@ class CLineEditor extends Component {
         </div>;
     }
 }
+
+ctable_register_class("CLineEditor", CLineEditor);

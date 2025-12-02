@@ -45,3 +45,5 @@ class CTextSearcher extends Comment {
                 </div>;
     }
 }
+
+ctable_register_class("CTextSearcher", CTextSearcher);

@@ -103,16 +103,13 @@ class CEditorFrame extends Component {
         <div class="field ctable-editor-control">
 
         {self.props.batch ? (self.state.editor_enabled ? "" : <div class="control"><input class="input" type="text" disabled></input></div>) : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CSelectEditor" ? <CSelectEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CLineEditor" ? <CLineEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CDateEditor" ? <CDateEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CFilesEditor" ? <CFilesEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch} onDownloadFile={self.props.table.onDownloadFile} onUploadFile={self.props.table.onUploadFile} askUser={self.props.table.askUser} showError={self.props.table.showError} /> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CBoolEditor" ? <CBoolEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CMultilineTextEditor" ? <CMultilineTextEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CTagsEditor" ? <CTagsEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch}/> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CLinkEditor" ? <CLinkEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch} options={self.props.table.state.table_options} getOptionsForField={self.props.table.getOptionsForField} /> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CMultiLinkEditor" ? <CMultiLinkEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch} options={self.props.table.state.table_options} getOptionsForField={self.props.table.getOptionsForField} /> : "" }
-        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) && self.props.column.editor_actor == "CTiledMultiLinkEditor" ? <CTiledMultiLinkEditor column={self.props.column} onEditorChanges={self.onEditorChanges} row={self.props.row} add={self.props.add} batch={self.props.batch} options={self.props.table.state.table_options} getOptionsForField={self.props.table.getOptionsForField} /> : "" }
+
+        {((self.props.batch == true && self.state.editor_enabled) || (self.props.batch == false)) ? ctable_construct_by_name(self.props.column.editor_actor, {
+            column:self.props.column, onEditorChanges:self.onEditorChanges, row:self.props.row, add:self.props.add, batch:self.props.batch,
+            onDownloadFile:self.props.table.onDownloadFile, onUploadFile:self.props.table.onUploadFile, askUser:self.props.table.askUser, showError:self.props.table.showError,
+            options:self.props.table.state.table_options, getOptionsForField:self.props.table.getOptionsForField
+        }) : ""}
+
 
         {self.props.column.editor_hint ? <p class="help">{self.props.column.editor_hint}</p> : <p class="help mt-4">{self.props.column.editor_hint}</p>}
         </div>

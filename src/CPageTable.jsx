@@ -40,26 +40,10 @@ class CPageTable extends Component {
                   {self.props.view_columns.map(x => {
                     if (x.enabled){
                       var c = self.props.columns.filter(c => c.name == x.name)[0];
-                      if(c.cell_actor == "CPlainTextCell")
-                          return <td onClick={self.props.onRowClick}><CPlainTextCell column={c} value={r[c.name]} row={r} /></td>;
-                      if(c.cell_actor == "CSelectCell")
-                          return <td onClick={self.props.onRowClick}><CSelectCell column={c} value={r[c.name]} row={r} /></td>;
-                      if(c.cell_actor == "CDateCell")
-                        return <td onClick={self.props.onRowClick}><CDateCell column={c} value={r[c.name]} row={r} /></td>;
-                      if(c.cell_actor == "CFilesCell")
-                        return <td onClick={self.props.onRowClick}><CFilesCell column={c} value={r[c.name]} row={r} onDownloadFile={self.props.table.onDownloadFile} /></td>;
-                      if(c.cell_actor == "CNumbersCell")
-                        return <td onClick={self.props.onRowClick}><CNumbersCell column={c} value={r[c.name]} row={r}/></td>;
-                      if(c.cell_actor == "CTagsCell")
-                        return <td onClick={self.props.onRowClick}><CTagsCell column={c} value={r[c.name]} row={r}/></td>;
-                      if(c.cell_actor == "CBoolCell")
-                        return <td onClick={self.props.onRowClick}><CBoolCell column={c} value={r[c.name]} row={r}/></td>;
-                      if(c.cell_actor == "CMultilineTextCell")
-                        return <td onClick={self.props.onRowClick}><CMultilineTextCell column={c} value={r[c.name]} row={r}/></td>;
-                      if(c.cell_actor == "CLinkCell")
-                        return <td onClick={self.props.onRowClick}><CLinkCell column={c} value={r[c.name]} row={r} options={self.props.table.state.table_options} /></td>;
-                      if(c.cell_actor == "CMultiLinkCell")
-                        return <td onClick={self.props.onRowClick}><CMultiLinkCell column={c} value={r[c.name]} row={r} options={self.props.table.state.table_options} /></td>;
+
+                      return <td onClick={self.props.onRowClick}>{ctable_construct_by_name(c.cell_actor, {column:c, value:r[c.name], row:r,
+                                                                  onDownloadFile:self.props.table.onDownloadFile, options:self.props.table.state.table_options})}</td>
+
                       }
                     })
                   }

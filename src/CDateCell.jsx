@@ -13,3 +13,5 @@ class CDateCell extends Component {
         return <>{this.props.value === null ? <span class="has-text-grey">NULL</span> : `${form(date.getDate())}.${form(date.getMonth()+1)}.${form(date.getFullYear())}`}</>
     }
 }
+
+ctable_register_class("CDateCell", CDateCell);

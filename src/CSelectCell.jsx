@@ -8,7 +8,7 @@
  *
  */
 
-class CSelectCell {
+class CSelectCell extends Component {
     render() {
         var self = this;
         if (self.props.value === null) {
@@ -26,3 +26,5 @@ class CSelectCell {
         }
     }
 }
+
+ctable_register_class("CSelectCell", CSelectCell);

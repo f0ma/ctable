@@ -33,3 +33,5 @@ class CMultiLinkCell extends Component {
         });
     }
 }
+
+ctable_register_class("CMultiLinkCell", CMultiLinkCell);

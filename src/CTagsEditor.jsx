@@ -173,3 +173,5 @@ class CTagsEditor extends Component {
         </div>;
     }
 }
+
+ctable_register_class("CTagsEditor", CTagsEditor);

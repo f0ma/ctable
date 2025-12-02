@@ -27,3 +27,5 @@ class CTagsCell extends Component {
         }
     }
 }
+
+ctable_register_class("CTagsCell", CTagsCell);

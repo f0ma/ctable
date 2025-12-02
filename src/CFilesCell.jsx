@@ -51,3 +51,5 @@ class CFilesCell extends Component {
         })}</>;
     }
 }
+
+ctable_register_class("CFilesCell", CFilesCell);

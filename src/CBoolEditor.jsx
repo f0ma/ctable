@@ -102,3 +102,5 @@ class CBoolEditor extends Component {
         </div>;
     }
 }
+
+ctable_register_class("CBoolEditor", CBoolEditor);

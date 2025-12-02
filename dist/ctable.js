@@ -32,6 +32,19 @@ function N_(s1, s2, n) {
   ;
 }
 
+// Class fabric
+
+var ctable_classes = {};
+function ctable_register_class(cname, cl) {
+  ctable_classes[cname] = cl;
+}
+function ctable_class_by_name(cname) {
+  return ctable_classes[cname];
+}
+function ctable_construct_by_name(cname, options) {
+  return h(ctable_classes[cname], options);
+}
+
 // Get cookie from
 // https://stackoverflow.com/a/15724300/4265407
 
@@ -154,6 +167,7 @@ class CBoolCell extends Component {
     }, "NULL") : this.props.value ? _("Yes") : _("No"));
   }
 }
+ctable_register_class("CBoolCell", CBoolCell);
 class CBoolEditor extends Component {
   constructor() {
     super();
@@ -290,6 +304,7 @@ class CBoolEditor extends Component {
     }, "hide_source")) : "");
   }
 }
+ctable_register_class("CBoolEditor", CBoolEditor);
 /**
  * Multiline plain text column.
  *
@@ -309,6 +324,7 @@ class CMultilineTextCell extends Component {
     }, self.props.value.slice(0, self.props.column.max_length) + (self.props.value.length > self.props.column.max_length ? "..." : "")));
   }
 }
+ctable_register_class("CMultilineTextCell", CMultilineTextCell);
 class CMultilineTextEditor extends Component {
   constructor() {
     super();
@@ -470,6 +486,7 @@ class CMultilineTextEditor extends Component {
     }, "hide_source")) : "", self.renderToolbar());
   }
 }
+ctable_register_class("CMultilineTextEditor", CMultilineTextEditor);
 /**
  * Multiline plain text column.
  *
@@ -507,6 +524,7 @@ class CTagsCell extends Component {
     }
   }
 }
+ctable_register_class("CTagsCell", CTagsCell);
 class CTagsEditor extends Component {
   constructor() {
     super();
@@ -703,6 +721,7 @@ class CTagsEditor extends Component {
     }, self.renderTags(), self.renderToolbar());
   }
 }
+ctable_register_class("CTagsEditor", CTagsEditor);
 /**
  * Number cell
  *
@@ -741,6 +760,7 @@ class CNumbersCell extends Component {
     }
   }
 }
+ctable_register_class("CNumbersCell", CNumbersCell);
 /**
  * Plain text column.
  *
@@ -759,6 +779,7 @@ class CPlainTextCell extends Component {
     }) : String(this.props.value));
   }
 }
+ctable_register_class("CPlainTextCell", CPlainTextCell);
 /**
  * Select column.
  *
@@ -769,7 +790,7 @@ class CPlainTextCell extends Component {
  *
  */
 
-class CSelectCell {
+class CSelectCell extends Component {
   render() {
     var self = this;
     if (self.props.value === null) {
@@ -797,6 +818,7 @@ class CSelectCell {
     }
   }
 }
+ctable_register_class("CSelectCell", CSelectCell);
 /**
  * Date column.
  *
@@ -813,6 +835,7 @@ class CDateCell extends Component {
     }, "NULL") : `${form(date.getDate())}.${form(date.getMonth() + 1)}.${form(date.getFullYear())}`);
   }
 }
+ctable_register_class("CDateCell", CDateCell);
 /**
  * Files column with download option.
  *
@@ -869,6 +892,7 @@ class CFilesCell extends Component {
     }));
   }
 }
+ctable_register_class("CFilesCell", CFilesCell);
 class CDateEditor extends Component {
   constructor() {
     super();
@@ -1011,6 +1035,7 @@ class CDateEditor extends Component {
     }, "hide_source")) : "");
   }
 }
+ctable_register_class("CDateEditor", CDateEditor);
 /**
  * Table head class.
  *
@@ -1141,77 +1166,13 @@ class CPageTable extends Component {
     }, self.props.view_columns.map(x => {
       if (x.enabled) {
         var c = self.props.columns.filter(c => c.name == x.name)[0];
-        if (c.cell_actor == "CPlainTextCell") return h("td", {
+        return h("td", {
           onClick: self.props.onRowClick
-        }, h(CPlainTextCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CSelectCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CSelectCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CDateCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CDateCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CFilesCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CFilesCell, {
+        }, ctable_construct_by_name(c.cell_actor, {
           column: c,
           value: r[c.name],
           row: r,
-          onDownloadFile: self.props.table.onDownloadFile
-        }));
-        if (c.cell_actor == "CNumbersCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CNumbersCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CTagsCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CTagsCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CBoolCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CBoolCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CMultilineTextCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CMultilineTextCell, {
-          column: c,
-          value: r[c.name],
-          row: r
-        }));
-        if (c.cell_actor == "CLinkCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CLinkCell, {
-          column: c,
-          value: r[c.name],
-          row: r,
-          options: self.props.table.state.table_options
-        }));
-        if (c.cell_actor == "CMultiLinkCell") return h("td", {
-          onClick: self.props.onRowClick
-        }, h(CMultiLinkCell, {
-          column: c,
-          value: r[c.name],
-          row: r,
+          onDownloadFile: self.props.table.onDownloadFile,
           options: self.props.table.state.table_options
         }));
       }
@@ -1360,6 +1321,7 @@ class CSelectEditor extends Component {
     }, "hide_source")) : "");
   }
 }
+ctable_register_class("CSelectEditor", CSelectEditor);
 /**
  * Line editor class.
  *
@@ -1528,6 +1490,7 @@ class CLineEditor extends Component {
     }, "hide_source")) : "");
   }
 }
+ctable_register_class("CLineEditor", CLineEditor);
 /**
  * File upload editor class.
  *
@@ -1804,6 +1767,7 @@ class CFilesEditor extends Component {
     }, _("Upload..."))))) : "");
   }
 }
+ctable_register_class("CFilesEditor", CFilesEditor);
 /**
  * Multiple links column.
  *
@@ -1839,6 +1803,7 @@ class CMultiLinkCell extends Component {
     });
   }
 }
+ctable_register_class("CMultiLinkCell", CMultiLinkCell);
 /**
  * Link editor class.
  *
@@ -2018,6 +1983,7 @@ class CTiledMultiLinkEditor extends Component {
     }) : "");
   }
 }
+ctable_register_class("CTiledMultiLinkEditor", CTiledMultiLinkEditor);
 /**
  * Link editor class.
  *
@@ -2286,10 +2252,7 @@ class CMultiLinkEditor extends Component {
     }, self.state.options_current[x], " (", x, ")")) : "")));
   }
 }
-
-// {aw_options.map(function(item){
-// item_count += 1;
-// return <a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}</a>;})}
+ctable_register_class("CMultiLinkEditor", CMultiLinkEditor);
 /**
  * Single links column.
  *
@@ -2319,6 +2282,7 @@ class CLinkCell extends Component {
     }, "NULL") : view);
   }
 }
+ctable_register_class("CLinkCell", CLinkCell);
 /**
  * Link editor class.
  *
@@ -2531,10 +2495,7 @@ class CLinkEditor extends Component {
     }, self.state.options_current[x], " (", x, ")")) : "")));
   }
 }
-
-// {aw_options.map(function(item){
-// item_count += 1;
-// return <a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}</a>;})}
+ctable_register_class("CLinkEditor", CLinkEditor);
 /**
  * @event CEditorFrame#cteditorreset
  */
@@ -2663,25 +2624,7 @@ class CEditorFrame extends Component {
       class: "input",
       type: "text",
       disabled: true
-    })) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CSelectEditor" ? h(CSelectEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CLineEditor" ? h(CLineEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CDateEditor" ? h(CDateEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CFilesEditor" ? h(CFilesEditor, {
+    })) : "", self.props.batch == true && self.state.editor_enabled || self.props.batch == false ? ctable_construct_by_name(self.props.column.editor_actor, {
       column: self.props.column,
       onEditorChanges: self.onEditorChanges,
       row: self.props.row,
@@ -2690,47 +2633,7 @@ class CEditorFrame extends Component {
       onDownloadFile: self.props.table.onDownloadFile,
       onUploadFile: self.props.table.onUploadFile,
       askUser: self.props.table.askUser,
-      showError: self.props.table.showError
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CBoolEditor" ? h(CBoolEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CMultilineTextEditor" ? h(CMultilineTextEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CTagsEditor" ? h(CTagsEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CLinkEditor" ? h(CLinkEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch,
-      options: self.props.table.state.table_options,
-      getOptionsForField: self.props.table.getOptionsForField
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CMultiLinkEditor" ? h(CMultiLinkEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch,
-      options: self.props.table.state.table_options,
-      getOptionsForField: self.props.table.getOptionsForField
-    }) : "", (self.props.batch == true && self.state.editor_enabled || self.props.batch == false) && self.props.column.editor_actor == "CTiledMultiLinkEditor" ? h(CTiledMultiLinkEditor, {
-      column: self.props.column,
-      onEditorChanges: self.onEditorChanges,
-      row: self.props.row,
-      add: self.props.add,
-      batch: self.props.batch,
+      showError: self.props.table.showError,
       options: self.props.table.state.table_options,
       getOptionsForField: self.props.table.getOptionsForField
     }) : "", self.props.column.editor_hint ? h("p", {
@@ -3301,12 +3204,12 @@ class CSearchFrame extends Component {
   }
   render() {
     var self = this;
-    var classname = CTextSearcher;
-    if (self.props.column.cell_actor == "CPlainTextCell" || self.props.column.cell_actor == "CMultilineTextCell") classname = CTextSearcher;
-    if (self.props.column.cell_actor == "CLinkCell" || self.props.column.cell_actor == "CMultiLinkCell") classname = CLinkSearcher;
-    if (self.props.column.cell_actor == "CTagsCell" || self.props.column.cell_actor == "CSelectCell" || self.props.column.cell_actor == "CBoolCell") classname = CTagsSearcher;
-    if (self.props.column.cell_actor == "CNumbersCell") classname = CNumbersSearcher;
-    return h("div", null, h(classname, {
+    var classname = "CTextSearcher";
+    if (self.props.column.cell_actor == "CPlainTextCell" || self.props.column.cell_actor == "CMultilineTextCell") classname = "CTextSearcher";
+    if (self.props.column.cell_actor == "CLinkCell" || self.props.column.cell_actor == "CMultiLinkCell") classname = "CLinkSearcher";
+    if (self.props.column.cell_actor == "CTagsCell" || self.props.column.cell_actor == "CSelectCell" || self.props.column.cell_actor == "CBoolCell") classname = "CTagsSearcher";
+    if (self.props.column.cell_actor == "CNumbersCell") classname = "CNumbersSearcher";
+    return h("div", null, ctable_construct_by_name(classname, {
       index: self.props.index,
       column: self.props.column,
       table: self.props.table,
@@ -3389,6 +3292,7 @@ class CTextSearcher extends Comment {
     }, "delete"))));
   }
 }
+ctable_register_class("CTextSearcher", CTextSearcher);
 class CNumbersSearcher extends Component {
   constructor() {
     super();
@@ -3480,6 +3384,7 @@ class CNumbersSearcher extends Component {
     }, "delete"))));
   }
 }
+ctable_register_class("CNumbersSearcher", CNumbersSearcher);
 class CTagsSearcher extends Component {
   constructor() {
     super();
@@ -3715,6 +3620,7 @@ class CTagsSearcher extends Component {
     }, "delete"))));
   }
 }
+ctable_register_class("CTagsSearcher", CTagsSearcher);
 class CLinkSearcher extends Component {
   constructor() {
     super();
@@ -3950,6 +3856,7 @@ class CLinkSearcher extends Component {
     }, "delete"))));
   }
 }
+ctable_register_class("CLinkSearcher", CLinkSearcher);
 /**
  * @typedef {Object} CTable#EditorChange
  * @property {bool} is_modified

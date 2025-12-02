@@ -11,3 +11,5 @@ class CBoolCell extends Component{
         return <span class="tag">{this.props.value === null ? <span class="has-text-grey">NULL</span> : (this.props.value ? _("Yes") : _("No")) }</span>;
     }
 }
+
+ctable_register_class("CBoolCell", CBoolCell);

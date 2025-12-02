@@ -114,3 +114,5 @@ class CDateEditor extends Component {
         </div>;
     }
 }
+
+ctable_register_class("CDateEditor", CDateEditor);

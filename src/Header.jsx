@@ -39,6 +39,22 @@ function N_(s1,s2,n){
 
 }
 
+// Class fabric
+
+var ctable_classes = {};
+
+function ctable_register_class(cname, cl){
+    ctable_classes[cname] = cl;
+}
+
+function ctable_class_by_name(cname){
+    return ctable_classes[cname];
+}
+
+function ctable_construct_by_name(cname, options){
+    return h(ctable_classes[cname], options);
+}
+
 
 // Get cookie from
 // https://stackoverflow.com/a/15724300/4265407

@@ -20,3 +20,5 @@ class CMultilineTextCell extends Component {
         </>
     }
 }
+
+ctable_register_class("CMultilineTextCell", CMultilineTextCell);

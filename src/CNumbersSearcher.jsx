@@ -57,3 +57,5 @@ class CNumbersSearcher extends Component {
                 </div>;
     }
 }
+
+ctable_register_class("CNumbersSearcher", CNumbersSearcher);

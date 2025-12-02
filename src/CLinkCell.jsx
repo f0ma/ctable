@@ -25,3 +25,5 @@ class CLinkCell extends Component {
         return <>{this.props.value === null ? <span class="has-text-grey">NULL</span> : view}</>;
     }
 }
+
+ctable_register_class("CLinkCell", CLinkCell);

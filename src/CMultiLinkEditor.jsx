@@ -204,8 +204,4 @@ class CMultiLinkEditor extends Component {
     }
 }
 
-
-// {aw_options.map(function(item){
-// item_count += 1;
-// return <a href="" class={item_count == self.state.top_index ? "dropdown-item is-active" :  "dropdown-item"} id={item_count == self.state.top_index ? self.state.selected_id : null} onClick={self.menuItemClicked} data-value={item[0]}>{item[1]}</a>;})}
-
+ctable_register_class("CMultiLinkEditor", CMultiLinkEditor);

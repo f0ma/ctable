@@ -37,3 +37,5 @@ class CNumbersCell extends Component {
         }
     }
 }
+
+ctable_register_class("CNumbersCell", CNumbersCell);

@@ -155,8 +155,4 @@ class CTiledMultiLinkEditor extends Component {
     }
 }
 
-
-
-
-
-
+ctable_register_class("CTiledMultiLinkEditor", CTiledMultiLinkEditor);

@@ -196,3 +196,5 @@ class CLinkSearcher extends Component {
         </div>;
     }
 }
+
+ctable_register_class("CLinkSearcher", CLinkSearcher);

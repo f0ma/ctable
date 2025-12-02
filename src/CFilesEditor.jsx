@@ -232,3 +232,5 @@ class CFilesEditor extends Component {
 
     }
 }
+
+ctable_register_class("CFilesEditor", CFilesEditor);
