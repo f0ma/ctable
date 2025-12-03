@@ -198,9 +198,9 @@ class SQLYamlQuery {
         }
 
         if($filters != []){
-            $rows = array_filter($rows, function($row) use ($new_column) {
+            $rows = array_values(array_filter($rows, function($row) use ($new_column) {
                 return $row[$new_column] !== NULL;
-            });
+            }));
         }
 
     }
