@@ -162,7 +162,7 @@ class SQLYamlQuery {
 
         foreach($rows as &$row){
             $in_list[] = ['const'=>$row[$link_src]];
-            $row[$new_column] = NULL;
+            $row[$new_column] = "";
         }
 
         $query = <<<EOF
@@ -179,7 +179,7 @@ class SQLYamlQuery {
 
         $q = new SQLYamlQuery($d, $codec = $codec);
 
-        SQLYamlQuery::apply_filters($q, [$column], $filter=$filters);
+        //SQLYamlQuery::apply_filters($q, [$column], $filter=$filters);
 
         $link_data = $q->execute($db, [], $accept = 'ok');
 
@@ -187,7 +187,7 @@ class SQLYamlQuery {
             foreach($rows as &$row){
                 if($row[$link_src] == $ld[$link_tgt])
                 {
-                    if($row[$new_column] == NULL){
+                    if($row[$new_column] == ""){
                         $row[$new_column] = "".$ld[$column];
                     } else {
                         $row[$new_column].= ";".$ld[$column];
@@ -198,8 +198,16 @@ class SQLYamlQuery {
         }
 
         if($filters != []){
-            $rows = array_values(array_filter($rows, function($row) use ($new_column) {
-                return $row[$new_column] !== NULL;
+            $rows = array_values(array_filter($rows, function($row) use ($new_column, $filters) {
+                if($filters[0][0] == 'in')
+                    return in_array((string) $filters[0][2], explode(";",$row[$new_column]));
+                if($filters[0][0] == 'not_in')
+                    return !in_array((string) $filters[0][2], explode(";",$row[$new_column]));
+                if($filters[0][0] == 'eq')
+                    return $filters[0][2] == $row[$new_column];
+                if($filters[0][0] == 'neq')
+                    return $filters[0][2] != $row[$new_column];
+                return true;
             }));
         }
 
