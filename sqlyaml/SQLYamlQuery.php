@@ -143,13 +143,16 @@ class SQLYamlQuery {
         if($filters != []){
             $rows = array_values(array_filter($rows, function($row) use ($new_column, $filters) {
                 if($filters[0][0] == 'in'){
-                      foreach($filters[0][2] as $ff){
-                          if(in_array($ff, explode(";",$row[$new_column]))) return true;
-                      }
-                    }
-                if($filters[0][0] == 'not_in'){
+                    $ma_split = explode(";",$row[$new_column]);
                     foreach($filters[0][2] as $ff){
-                        if(in_array($ff, explode(";",$row[$new_column]))) return false;
+                          if(in_array($ff, $ma_split)) return true;
+                    }
+                    return false;
+                }
+                if($filters[0][0] == 'not_in'){
+                    $ma_split = explode(";",$row[$new_column]);
+                    foreach($filters[0][2] as $ff){
+                        if(in_array($ff, $ma_split)) return false;
                     }
                 }
                 if($filters[0][0] == 'eq')
