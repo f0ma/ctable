@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 00:46+0300\n"
+"POT-Creation-Date: 2025-12-03 21:44+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/CAuthPanel.jsx:54 src/CTable.jsx:1036
+#: src/CAuthPanel.jsx:54 src/CTable.jsx:1035
 msgid "Sign in"
 msgstr ""
 
@@ -36,12 +36,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:979
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:90 src/CTable.jsx:978
 #: src/CTagsSearcher.jsx:69 src/CTagsSearcher.jsx:126
 msgid "Yes"
 msgstr ""
 
-#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:980
+#: src/CBoolCell.jsx:11 src/CBoolEditor.jsx:91 src/CTable.jsx:979
 #: src/CTagsSearcher.jsx:69 src/CTagsSearcher.jsx:126
 msgid "No"
 msgstr ""
@@ -192,80 +192,80 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: src/CTable.jsx:105
+#: src/CTable.jsx:104
 msgid "Search"
 msgstr ""
 
-#: src/CTable.jsx:106
+#: src/CTable.jsx:105
 msgid "Sorting"
 msgstr ""
 
-#: src/CTable.jsx:107
+#: src/CTable.jsx:106
 msgid "Columns"
 msgstr ""
 
-#: src/CTable.jsx:109 src/CTable.jsx:434
+#: src/CTable.jsx:108 src/CTable.jsx:433
 msgid "Simple select"
 msgstr ""
 
-#: src/CTable.jsx:110
+#: src/CTable.jsx:109
 msgid "Select all"
 msgstr ""
 
-#: src/CTable.jsx:111
+#: src/CTable.jsx:110
 msgid "Clear all"
 msgstr ""
 
-#: src/CTable.jsx:113
+#: src/CTable.jsx:112
 msgid "Zoom In"
 msgstr ""
 
-#: src/CTable.jsx:114
+#: src/CTable.jsx:113
 msgid "Zoom Out"
 msgstr ""
 
-#: src/CTable.jsx:115
+#: src/CTable.jsx:114
 msgid "Reset Zoom"
 msgstr ""
 
-#: src/CTable.jsx:237
+#: src/CTable.jsx:236
 msgid "Columns configuration loading failure."
 msgstr ""
 
-#: src/CTable.jsx:372
+#: src/CTable.jsx:371
 msgid "Authentication error."
 msgstr ""
 
-#: src/CTable.jsx:431
+#: src/CTable.jsx:430
 msgid "Sticky select"
 msgstr ""
 
-#: src/CTable.jsx:566
+#: src/CTable.jsx:565
 #, javascript-format
 msgid "Duplicate %d record?"
 msgid_plural "Duplicate %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:575
+#: src/CTable.jsx:574
 #, javascript-format
 msgid "Delete %d record?"
 msgid_plural "Delete %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:783
+#: src/CTable.jsx:782
 #, javascript-format
 msgid "Update %d record?"
 msgid_plural "Update %d records?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/CTable.jsx:811
+#: src/CTable.jsx:810
 msgid "Error:"
 msgstr ""
 
-#: src/CTable.jsx:1038
+#: src/CTable.jsx:1037
 msgid "Log out"
 msgstr ""
 

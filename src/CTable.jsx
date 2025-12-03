@@ -191,7 +191,7 @@ class CTable extends Component {
 
   resetSorting(){
     var self = this;
-    self.state.view_sorting = self.state.table_columns.map(x => {
+    self.state.view_sorting = self.state.table_columns.filter(q => q.sorting !== false).map(x => {
 
       var sorting = self.state.current_table.default_sorting.filter(y => x.name in y);
 
