@@ -102,7 +102,61 @@ class SQLYamlQuery {
     }
 
 
-    static function enrich_data_by_link($db, &$rows, $new_column, $table, $column, $link_src, $link_tgt, $codec = YamlCodecSpyc::class){
+    static function apply_filters($q, $columns, $filter=[], $order=[], $limit=0, $offset=0){
+        $query_kind = $q->top_level_query();
+        if ($query_kind != "select") throw new Exception("Filters uses with select only");
+
+        $allowed_filters = ["eq","neq","ge","gt","le","lt","like","is_null","is_not_null","like_l","like_r","like_lr","in","not_in"];
+        if($filter !== NULL){
+            foreach($filter as $f){
+                if(!in_array($f[0], $allowed_filters)) throw new Exception("Unexpected filter ".$f[0]);
+                if(!in_array($f[1], $columns)) throw new Exception("Unexpected column ".$f[1]);
+                if(in_array($f[0], ["eq","neq","ge","gt","le","lt","like"])){
+                    $q->query['select']['where'][]=[$f[0]=>[$f[1],["const"=>$f[2]]]];
+                }
+                if(in_array($f[0], ["like_l"])){
+                    $q->query['select']['where'][]=['like'=>[$f[1],["const"=>"%".$f[2]]]];
+                }
+                if(in_array($f[0], ["like_r"])){
+                    $q->query['select']['where'][]=['like'=>[$f[1],["const"=>$f[2]."%"]]];
+                }
+                if(in_array($f[0], ["like_lr"])){
+                    $q->query['select']['where'][]=['like'=>[$f[1],["const"=>"%".$f[2]."%"]]];
+                }
+                if(in_array($f[0], ["is_null","is_not_null"])){
+                    $q->query['select']['where'][]=[$f[0]=>[$f[1]]];
+                }
+                if(in_array($f[0], ["in","not_in"])){
+                    $li = [];
+                    foreach($f[2] as $x){
+                        $li[]=["const"=>$x];
+                    }
+                    $q->query['select']['where'][]=[$f[0]=>[$f[1],$li]];
+                }
+            }
+        }
+        if($order !== NULL){
+            foreach($order as $sord){
+                foreach($sord as $cl => $ord){
+                    if(!in_array($cl, $columns)) throw new Exception("Unexpected column ".$cl);
+                    if(!in_array($ord, ["asc","desc"])) throw new Exception("Unexpected order ".$ord);
+                    $q->query['select']['order_by'][]=[$cl=>$ord];
+                }
+            }
+        }
+        if($limit !== NULL){
+            if ($limit != 0){
+                $q->query['select']['limit']=$limit;
+            }
+        }
+        if($offset !== NULL){
+            if ($offset != 0){
+                $q->query['select']['offset']=$offset;
+            }
+        }
+    }
+
+    static function enrich_data_by_link($db, &$rows, $new_column, $table, $column, $link_src, $link_tgt, $filters = [], $codec = YamlCodecSpyc::class){
 
         $in_list = [];
 
@@ -124,6 +178,8 @@ class SQLYamlQuery {
         $d['select']['where'][]= ['in'=>[$link_tgt, $in_list]];
 
         $q = new SQLYamlQuery($d, $codec = $codec);
+
+        SQLYamlQuery::apply_filters($q, [$column], $filter=$filters);
 
         $link_data = $q->execute($db, [], $accept = 'ok');
 
