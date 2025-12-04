@@ -4698,6 +4698,9 @@ class CTable extends Component {
     }
     var self = this;
     this.state.topline_buttons.filter(x => x.name == "back").forEach(x => x.enabled = self.state.table_path.length > 0);
+    this.state.topline_buttons.filter(x => x.name == "enter").forEach(x => {
+      x.enabled = false;
+    });
     if (sel_count == 1 && this.state.table_subtables.length > 0) {
       this.state.table_subtables.forEach(function (t, i) {
         self.state.topline_buttons.filter(x => x.name == "enter").forEach((x, j) => {
@@ -4707,10 +4710,6 @@ class CTable extends Component {
             x.table = t.name;
           }
         });
-      });
-    } else {
-      self.state.topline_buttons.filter(x => x.name == "enter").forEach(x => {
-        x.enabled = false;
       });
     }
     if ((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !getCTablesJWT()) {
@@ -5299,7 +5298,7 @@ var ctable_lang_ru = {
   "": {
     "project-id-version": "ctable 3",
     "report-msgid-bugs-to": "",
-    "pot-creation-date": "2025-11-29 00:46+0300",
+    "pot-creation-date": "2025-12-03 21:44+0300",
     "po-revision-date": "2025-05-20 01:28+0300",
     "last-translator": "Automatically generated",
     "language-team": "none",
@@ -5317,6 +5316,7 @@ var ctable_lang_ru = {
   "Close": [null, "Закрыть"],
   "Yes": [null, "Да"],
   "No": [null, "Нет"],
+  "Reset columns": [null, "Сбросить столбцы"],
   "Move column left": [null, "Переместить столбец влево"],
   "Move column right": [null, "Переместить столбец вправо"],
   "Save": [null, "Сохранить"],
@@ -5338,6 +5338,7 @@ var ctable_lang_ru = {
   "Delete criteria": [null, "Удалить условие поиска"],
   "Search value": [null, "Значение для поиска"],
   "Add criteria": [null, "Добавить условие поиска"],
+  "Reset sorting": [null, "Сбросить сортировку"],
   "Set ordering mode": [null, "Установить сортировку по столбцу"],
   "Move ordering up": [null, "Переместить сортировку по столбцу вверх"],
   "Move ordering down": [null, "Переместить сортировку по столбцу вниз"],

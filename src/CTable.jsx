@@ -675,6 +675,10 @@ class CTable extends Component {
 
     this.state.topline_buttons.filter(x => x.name == "back").forEach(x => x.enabled = self.state.table_path.length > 0);
 
+    this.state.topline_buttons.filter(x => x.name == "enter").forEach(x => {
+      x.enabled = false;
+    });
+
     if(sel_count == 1 && this.state.table_subtables.length > 0) {
         this.state.table_subtables.forEach(function (t,i){
           self.state.topline_buttons.filter(x => x.name == "enter").forEach((x,j) => {
@@ -685,10 +689,6 @@ class CTable extends Component {
             }
           });
         });
-    } else {
-        self.state.topline_buttons.filter(x => x.name == "enter").forEach(x => {
-            x.enabled = false;
-          });
     }
 
     if((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !getCTablesJWT()){
