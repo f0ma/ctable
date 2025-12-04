@@ -1148,7 +1148,7 @@ class CPageTable extends Component {
       class: "section  pt-0 pl-0 pr-0 pb-0"
     }, h("div", {
       class: "ctable-scroll-main-table pl-3 pr-3",
-      style: sty("max-width", self.props.width + 2 + "em", self.props.editorShow ? "max-height" : "", self.props.editorShow ? "60vh" : ""),
+      style: sty("max-width", self.props.width + 2 + "em", self.props.editorShow ? "max-height" : "", self.props.editorShow ? "60vh" : "", !self.props.editorShow ? "margin-bottom" : "", !self.props.editorShow ? "40vh" : ""),
       onScroll: self.props.onTableXScroll
     }, h("table", {
       class: "ctable-main-table",
@@ -4305,6 +4305,7 @@ class CTable extends Component {
       });
       Promise.all(table_option_p).then(x => {
         this.setState({}, () => {
+          this.scrollToSelectedLine();
           this.enablePanelButtons();
         });
       });
@@ -4729,6 +4730,14 @@ class CTable extends Component {
     });
     this.setState({});
   }
+  scrollToSelectedLine() {
+    this.setState({}, () => {
+      var sel0 = this.state.table_row_status.map((x, i) => x.selected == true ? i : null).filter(x => x != null);
+      if (sel0.length > 0) document.querySelector('.ctable-scroll-main-table tr[data-rowindex="' + sel0[0] + '"]').scrollIntoView({
+        block: "center"
+      });
+    });
+  }
   onTableSelectDropdownClick() {
     this.setState({
       table_select_menu_active: !this.state.table_select_menu_active
@@ -4811,7 +4820,7 @@ class CTable extends Component {
             this.showError(e);
             this.setState({
               progress: false
-            });
+            }, this.scrollToSelectedLine);
           });
         });
       } else {
@@ -4829,7 +4838,7 @@ class CTable extends Component {
               this.showError(e);
               this.setState({
                 progress: false
-              });
+              }, this.scrollToSelectedLine);
             });
           });
         }, () => {});
@@ -4863,7 +4872,7 @@ class CTable extends Component {
       editor_show: false,
       editor_changes: [],
       editor_operation: ''
-    });
+    }, this.scrollToSelectedLine);
   }
 
   /**

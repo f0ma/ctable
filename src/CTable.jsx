@@ -341,7 +341,8 @@ class CTable extends Component {
 
       Promise.all(table_option_p).then( x => {
           this.setState({}, () => {
-            this.enablePanelButtons()
+            this.scrollToSelectedLine();
+            this.enablePanelButtons();
           });
       });
     }).catch((e) => {this.showError(e); this.setState({progress: false});});
@@ -711,6 +712,14 @@ class CTable extends Component {
     this.setState({});
   }
 
+  scrollToSelectedLine(){
+    this.setState({}, ()=>{
+      var sel0 = this.state.table_row_status.map((x,i) => x.selected == true ? i : null ).filter(x => x != null);
+      if(sel0.length > 0)
+        document.querySelector('.ctable-scroll-main-table tr[data-rowindex="'+sel0[0]+'"]').scrollIntoView({block:"center"});
+    });
+  }
+
   onTableSelectDropdownClick(){
     this.setState({table_select_menu_active: !this.state.table_select_menu_active});
   }
@@ -774,7 +783,7 @@ class CTable extends Component {
             this.reloadData();
           }).catch((e) => {
             this.showError(e);
-            this.setState({progress: false});
+            this.setState({progress: false}, this.scrollToSelectedLine);
           });
         });
 
@@ -785,7 +794,7 @@ class CTable extends Component {
               this.setState({editor_show: false});  this.reloadData();
             }).catch((e) => {
               this.showError(e);
-              this.setState({progress: false});
+              this.setState({progress: false}, this.scrollToSelectedLine);
             });
           });
         }, ()=>{});
@@ -811,7 +820,7 @@ class CTable extends Component {
   }
 
   onCancelClick(){
-    this.setState({editor_show: false, editor_changes: [], editor_operation: ''});
+    this.setState({editor_show: false, editor_changes: [], editor_operation: ''}, this.scrollToSelectedLine);
   }
 
   /**
