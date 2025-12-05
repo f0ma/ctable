@@ -33,6 +33,7 @@ class CTable extends Component {
     this.onTableSelectDropdownClick = this.onTableSelectDropdownClick.bind(this);
     this.onTableSelectDropdownBlur = this.onTableSelectDropdownBlur.bind(this);
     this.onTableSelectClick = this.onTableSelectClick.bind(this);
+    this.onLinkClick = this.onLinkClick.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onEditorChanges = this.onEditorChanges.bind(this);
@@ -734,6 +735,11 @@ class CTable extends Component {
     this.loadTable(tbl.name, null);
   }
 
+  onLinkClick(x){
+    var href = unwind_button_or_link(x).href;
+    window.location=href;
+  }
+
   onAuthDropdownClick(){
     this.setState({auth_menu_active: !this.state.auth_menu_active});
   }
@@ -1015,7 +1021,7 @@ class CTable extends Component {
                     )}
                     <hr class="dropdown-divider" />
                     {self.state.links.map(x =>
-                      <a class="dropdown-item" href={x.url}><span class="material-symbols-outlined-small">link</span> {x.label}</a>
+                      <a class="dropdown-item" href={x.url} onMouseDown={this.onLinkClick} ><span class="material-symbols-outlined-small">link</span> {x.label}</a>
                     )}
                   </div>
                 </div>
