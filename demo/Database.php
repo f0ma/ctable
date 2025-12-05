@@ -31,7 +31,9 @@ function connect_to_database() {
 }
 
 function client_config() {
-    return ["jwt_token"=>"server-key-update-in-production", "uploads_directory"=>"uploads", "jwt_expires"=> 24*60*60, "jwt_renew" => 12*60*60, "jwt_path" => "/"];
+    return ["jwt_token"=>"server-key-update-in-production", "uploads_directory"=>"uploads",
+           "jwt_expires"=> 24*60*60, "jwt_renew" => 12*60*60, "jwt_path" => "/",
+           "links_list"=>[["url"=>"https://google.com", "label"=>"Ссылка"]] ];
 }
 
 function client_login($username, $password){

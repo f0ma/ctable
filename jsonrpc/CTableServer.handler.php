@@ -174,7 +174,8 @@ class CTableServer extends JsonRPCHandler {
     }
 
     public function links() {
-        return [["url"=>"https://google.com", "label"=>"Ссылка вот"]];
+        $config = client_config();
+        return $config["links_list"];
     }
 
     public function columns($table_name) {
