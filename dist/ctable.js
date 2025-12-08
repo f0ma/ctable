@@ -2243,15 +2243,15 @@ class CMultiLinkEditor extends Component {
       value: self.state.options_input,
       onInput: self.onOptionsInputChange,
       id: this.state.input_id
-    }))), !self.state.options_current ? "" : Object.keys(self.state.options_current).map(x => h("div", {
+    }))), h("div", {
       class: "dropdown-content",
-      style: "overflow: auto; max-height: 12em;",
-      title: self.state.options_current[x] + " (" + x + ")"
-    }, h("a", {
+      style: "overflow: auto; max-height: 12em;"
+    }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
       class: "dropdown-item",
+      title: self.state.options_current[x] + " (" + x + ")",
       "data-value": x,
       onClick: self.onAddLink
-    }, self.state.options_current[x])))));
+    }, self.state.options_current[x])) : "")));
   }
 }
 ctable_register_class("CMultiLinkEditor", CMultiLinkEditor);
