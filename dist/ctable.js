@@ -2466,8 +2466,9 @@ class CLinkEditor extends Component {
       "aria-haspopup": "true",
       "aria-controls": "dropdown-menu",
       onClick: this.onSelectDropdownClick,
+      title: self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value,
       style: "width:100%;justify-content:left;min-height: 2.5em;"
-    }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) + ' (' + self.state.editor_value + ')' : self.state.editor_value), h("span", {
+    }, h("span", null, self.state.options_history && self.state.editor_value in self.state.options_history ? String(self.state.options_history[self.state.editor_value]) : self.state.editor_value), h("span", {
       class: "icon is-small",
       style: "position: absolute; right: 1em;"
     }, h("span", {
@@ -2492,7 +2493,7 @@ class CLinkEditor extends Component {
       class: "dropdown-item",
       "data-value": x,
       onClick: self.onSelectItem
-    }, self.state.options_current[x], " (", x, ")")) : "")));
+    }, self.state.options_current[x])) : "")));
   }
 }
 ctable_register_class("CLinkEditor", CLinkEditor);

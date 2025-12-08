@@ -150,8 +150,8 @@ class CLinkEditor extends Component {
 
         return   <div class={cls("dropdown", self.state.select_dropdown_active ? "is-active is-hoverable" : "")} style="width:100%;">
                    <div class="dropdown-trigger" style="width:100%;">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} style="width:100%;justify-content:left;min-height: 2.5em;">
-                      <span>{ self.state.options_history && (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) + ' ('+self.state.editor_value+')' : self.state.editor_value }</span>
+                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onSelectDropdownClick} title={ self.state.options_history && (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) + ' ('+self.state.editor_value+')' : self.state.editor_value } style="width:100%;justify-content:left;min-height: 2.5em;">
+                      <span>{ self.state.options_history && (self.state.editor_value in self.state.options_history) ? String(self.state.options_history[self.state.editor_value]) : self.state.editor_value }</span>
                       <span class="icon is-small" style="position: absolute; right: 1em;"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                     </button>
                    </div>
@@ -162,7 +162,7 @@ class CLinkEditor extends Component {
                            </p>
                        </div>
                        <div class="dropdown-content" style="overflow: auto; max-height: 12em;">
-                           {self.state.options_current ? Object.keys(self.state.options_current).map(x => <a class="dropdown-item" data-value={x} onClick={self.onSelectItem}>{self.state.options_current[x]} ({x})</a>) : ""}
+                           {self.state.options_current ? Object.keys(self.state.options_current).map(x => <a class="dropdown-item" data-value={x} onClick={self.onSelectItem}>{self.state.options_current[x]}</a>) : ""}
                        </div>
                    </div>
                </div>;

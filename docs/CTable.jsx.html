@@ -61,6 +61,7 @@ class CTable extends Component {
     this.onTableSelectDropdownClick = this.onTableSelectDropdownClick.bind(this);
     this.onTableSelectDropdownBlur = this.onTableSelectDropdownBlur.bind(this);
     this.onTableSelectClick = this.onTableSelectClick.bind(this);
+    this.onLinkClick = this.onLinkClick.bind(this);
     this.onSaveClick = this.onSaveClick.bind(this);
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onEditorChanges = this.onEditorChanges.bind(this);
@@ -129,7 +130,6 @@ class CTable extends Component {
 
         {name:"reload", icon: "refresh", label:_("Reload"), enabled: true, style:"", icon_only:true, panel:0},
 
-        //{name:"filter", icon: "filter_alt", label:_("Filter"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"search", icon: "search", label:_("Search"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"sort", icon: "sort", label:_("Sorting"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"columns", icon: "list_alt", label:_("Columns"), enabled: true, style:"", icon_only:true, panel:0},
@@ -220,7 +220,7 @@ class CTable extends Component {
 
   resetSorting(){
     var self = this;
-    self.state.view_sorting = self.state.table_columns.map(x => {
+    self.state.view_sorting = self.state.table_columns.filter(q => q.sorting !== false).map(x => {
 
       var sorting = self.state.current_table.default_sorting.filter(y => x.name in y);
 
@@ -370,7 +370,8 @@ class CTable extends Component {
 
       Promise.all(table_option_p).then( x => {
           this.setState({}, () => {
-            this.enablePanelButtons()
+            this.scrollToSelectedLine();
+            this.enablePanelButtons();
           });
       });
     }).catch((e) => {this.showError(e); this.setState({progress: false});});
@@ -704,6 +705,10 @@ class CTable extends Component {
 
     this.state.topline_buttons.filter(x => x.name == "back").forEach(x => x.enabled = self.state.table_path.length > 0);
 
+    this.state.topline_buttons.filter(x => x.name == "enter").forEach(x => {
+      x.enabled = false;
+    });
+
     if(sel_count == 1 &amp;&amp; this.state.table_subtables.length > 0) {
         this.state.table_subtables.forEach(function (t,i){
           self.state.topline_buttons.filter(x => x.name == "enter").forEach((x,j) => {
@@ -714,10 +719,6 @@ class CTable extends Component {
             }
           });
         });
-    } else {
-        self.state.topline_buttons.filter(x => x.name == "enter").forEach(x => {
-            x.enabled = false;
-          });
     }
 
     if((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") &amp;&amp; !getCTablesJWT()){
@@ -740,6 +741,14 @@ class CTable extends Component {
     this.setState({});
   }
 
+  scrollToSelectedLine(){
+    this.setState({}, ()=>{
+      var sel0 = this.state.table_row_status.map((x,i) => x.selected == true ? i : null ).filter(x => x != null);
+      if(sel0.length > 0)
+        document.querySelector('.ctable-scroll-main-table tr[data-rowindex="'+sel0[0]+'"]').scrollIntoView({block:"center"});
+    });
+  }
+
   onTableSelectDropdownClick(){
     this.setState({table_select_menu_active: !this.state.table_select_menu_active});
   }
@@ -752,6 +761,11 @@ class CTable extends Component {
     var tbl = this.state.table_list.filter(y => y.name == unwind_button_or_link(x).dataset.label)[0];
     this.setState({table_select_menu_active: false, table_path_labels: [], table_path: []});
     this.loadTable(tbl.name, null);
+  }
+
+  onLinkClick(x){
+    var href = unwind_button_or_link(x).href;
+    window.location=href;
   }
 
   onAuthDropdownClick(){
@@ -803,7 +817,7 @@ class CTable extends Component {
             this.reloadData();
           }).catch((e) => {
             this.showError(e);
-            this.setState({progress: false});
+            this.setState({progress: false}, this.scrollToSelectedLine);
           });
         });
 
@@ -814,7 +828,7 @@ class CTable extends Component {
               this.setState({editor_show: false});  this.reloadData();
             }).catch((e) => {
               this.showError(e);
-              this.setState({progress: false});
+              this.setState({progress: false}, this.scrollToSelectedLine);
             });
           });
         }, ()=>{});
@@ -840,7 +854,7 @@ class CTable extends Component {
   }
 
   onCancelClick(){
-    this.setState({editor_show: false, editor_changes: [], editor_operation: ''});
+    this.setState({editor_show: false, editor_changes: [], editor_operation: ''}, this.scrollToSelectedLine);
   }
 
   /**
@@ -1035,7 +1049,7 @@ class CTable extends Component {
                     )}
                     &lt;hr class="dropdown-divider" />
                     {self.state.links.map(x =>
-                      &lt;a class="dropdown-item" href={x.url}>&lt;span class="material-symbols-outlined-small">link&lt;/span> {x.label}&lt;/a>
+                      &lt;a class="dropdown-item" href={x.url} onMouseDown={this.onLinkClick} >&lt;span class="material-symbols-outlined-small">link&lt;/span> {x.label}&lt;/a>
                     )}
                   &lt;/div>
                 &lt;/div>
@@ -1145,7 +1159,7 @@ class CTable extends Component {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Nov 29 2025 00:48:41 GMT+0300 (Москва, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Dec 08 2025 23:09:32 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>
