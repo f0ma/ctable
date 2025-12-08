@@ -1973,13 +1973,14 @@ class CTiledMultiLinkEditor extends Component {
       return h("div", {
         class: cls("button mr-2 mb-2", selectedids.includes(parseInt(x)) ? "is-info is-soft" : ""),
         "data-value": x,
-        onClick: self.onToggleLink
+        onClick: self.onToggleLink,
+        title: self.state.options_current[x] + " (" + x + ")"
       }, h("label", {
         class: "checkbox"
       }, h("input", {
         type: "checkbox",
         checked: selectedids.includes(parseInt(x))
-      }), " ", self.state.options_current[x], " (", x, ")"));
+      }), " ", self.state.options_current[x], " "));
     }) : "");
   }
 }
@@ -2244,12 +2245,13 @@ class CMultiLinkEditor extends Component {
       id: this.state.input_id
     }))), h("div", {
       class: "dropdown-content",
-      style: "overflow: auto; max-height: 12em;"
+      style: "overflow: auto; max-height: 12em;",
+      title: self.state.options_current[x] + " (" + x + ")"
     }, self.state.options_current ? Object.keys(self.state.options_current).map(x => h("a", {
       class: "dropdown-item",
       "data-value": x,
       onClick: self.onAddLink
-    }, self.state.options_current[x], " (", x, ")")) : "")));
+    }, self.state.options_current[x])) : "")));
   }
 }
 ctable_register_class("CMultiLinkEditor", CMultiLinkEditor);

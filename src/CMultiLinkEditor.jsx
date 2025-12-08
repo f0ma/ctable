@@ -196,8 +196,8 @@ class CMultiLinkEditor extends Component {
                                <input class="input" type="input" value={self.state.options_input} onInput={self.onOptionsInputChange} id={this.state.input_id}/>
                            </p>
                        </div>
-                       <div class="dropdown-content" style="overflow: auto; max-height: 12em;">
-                           {self.state.options_current ? Object.keys(self.state.options_current).map(x => <a class="dropdown-item" data-value={x} onClick={self.onAddLink}>{self.state.options_current[x]} ({x})</a>) : ""}
+                       <div class="dropdown-content" style="overflow: auto; max-height: 12em;" title={self.state.options_current[x] + " (" + x + ")"}>
+                           {self.state.options_current ? Object.keys(self.state.options_current).map(x => <a class="dropdown-item" data-value={x} onClick={self.onAddLink}>{self.state.options_current[x]}</a>) : ""}
                        </div>
                    </div>
                </div>;

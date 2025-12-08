@@ -148,7 +148,7 @@ class CTiledMultiLinkEditor extends Component {
 
         return  <div class={cls("input", self.state.editor_valid ? "" : "is-danger")} style="width:100%;display:flex;flex-wrap:wrap;height:unset;">
                     {self.state.options_current ? Object.keys(self.state.options_current).map(x => {
-                        return <div class={cls("button mr-2 mb-2", selectedids.includes(parseInt(x)) ? "is-info is-soft" : "")} data-value={x} onClick={self.onToggleLink}><label class="checkbox"><input type="checkbox" checked={selectedids.includes(parseInt(x))}/> {self.state.options_current[x]} ({x})</label></div>;
+                        return <div class={cls("button mr-2 mb-2", selectedids.includes(parseInt(x)) ? "is-info is-soft" : "")} data-value={x} onClick={self.onToggleLink} title={self.state.options_current[x] +  " ("+x+")"}><label class="checkbox"><input type="checkbox" checked={selectedids.includes(parseInt(x))}/> {self.state.options_current[x]} </label></div>;
 
                     }) : ""}
                 </div>;
