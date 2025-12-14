@@ -95,6 +95,12 @@ class CTable extends Component {
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
         {name:"enter", icon: "subdirectory_arrow_right", label:_("Enter"), enabled: false, style:"", icon_only:false, panel:1},
 
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+
         {name:"add", icon: "add", label:_("Add"), enabled: false, style:"is-primary", icon_only:false, panel:1},
         {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:false, panel:1},
         {name:"duplicate", icon: "content_copy", label:_("Duplicate"), enabled: false, style:"is-warning", icon_only:false, panel:1},
@@ -532,6 +538,31 @@ class CTable extends Component {
       return;
     }
 
+    if(tg.dataset['name'] == "action"){
+
+      var act = this.state.current_table.actions.filter(x => x.action == tg.dataset['action'])[0];
+      var self = this;
+
+      var keys = this.getAffectedKeys();
+      if (keys.length == 0)
+          keys = this.getAllKeys();
+
+      if(act.after == "download_file"){
+          this.props.server.CTableServer.action_download(act.action, this.full_table_path(), keys);
+      } else {
+        this.setState({progress: true});
+        this.props.server.CTableServer.action(act.action, this.full_table_path(), keys).then((r) => {
+          if(act.after == "reload_data"){
+            self.reloadData();
+            this.setState({progress: false});
+          }
+        }).catch((e) => {this.setState({progress: false});this.showError(e)});
+      }
+
+      return;
+    }
+
+
     if(this.state.current_table.auth_policy != "guest_all" && !getCTablesJWT()){
       this.setState({auth_panel_show:true});
       return;
@@ -591,6 +622,16 @@ class CTable extends Component {
     var affected_rows = this.state.table_rows.filter((x,i) => this.state.table_row_status[i].selected);
     var keys = this.state.table_columns.filter((x) => x.is_key).map((x) => x.name);
     var keys_values = affected_rows.map((x) => {
+      var res = {};
+      keys.forEach((k) => res[k] = x[k]);
+      return res;
+    });
+    return keys_values;
+  }
+
+  getAllKeys(){
+    var keys = this.state.table_columns.filter((x) => x.is_key).map((x) => x.name);
+    var keys_values = this.state.table_rows.map((x) => {
       var res = {};
       keys.forEach((k) => res[k] = x[k]);
       return res;
@@ -693,6 +734,7 @@ class CTable extends Component {
         });
     }
 
+
     if((self.state.current_table.auth_policy == "strict" || self.state.current_table.auth_policy == "guest_read") && !getCTablesJWT()){
       this.state.topline_buttons.filter(x => x.name == "add").forEach(x => x.enabled = false);
       this.state.topline_buttons.filter(x => x.name == "edit").forEach(x => x.enabled = false);
@@ -709,6 +751,28 @@ class CTable extends Component {
       if (x == "duplicate") this.state.topline_buttons.filter(x => x.name == "duplicate").forEach(x => x.enabled = false);
       if (x == "delete") this.state.topline_buttons.filter(x => x.name == "delete").forEach(x => x.enabled = false);
     });
+
+
+    self.state.topline_buttons.filter(x => x.name == "action").forEach(x => {
+        x.enabled = false;
+    });
+
+    if(self.state.current_table.actions){
+
+      self.state.topline_buttons.filter(x => x.name == "action").forEach((x,i) => {
+        if(i >= self.state.current_table.actions.length) return;
+        if(!getCTablesJWT() && self.state.current_table.actions[i].allow_guest) return;
+        x.label = self.state.current_table.actions[i].label;
+        x.action = self.state.current_table.actions[i].action;
+        x.icon = self.state.current_table.actions[i].icon;
+        x.style = self.state.current_table.actions[i].style;
+        if(self.state.current_table.actions[i].kind == "table") x.enabled = true;
+        if(self.state.current_table.actions[i].kind == "one_item" && sel_count == 1) x.enabled = true;
+        if(self.state.current_table.actions[i].kind == "items" && sel_count == 1) x.enabled = true;
+      });
+
+    }
+
 
     this.setState({});
   }
@@ -770,8 +834,10 @@ class CTable extends Component {
 
     if(this.state.editor_operation == 'add' && this.state.progress == false){
       this.setState({progress: true}, () => {
-        this.props.server.CTableServer.insert(this.full_table_path(), data_to_send).then(() => {
-          this.setState({editor_show: false}); this.reloadData();
+        this.props.server.CTableServer.insert(this.full_table_path(), data_to_send).then((x) => {
+          if(x) this.state.return_keys = x['insert'];
+          this.state.editor_show = false;
+          this.reloadData();
         }).catch((e) => {
           this.showError(e);
           this.setState({progress: false});
@@ -1077,7 +1143,7 @@ class CTable extends Component {
           <div class="ctable-button-row-left-low">
             {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
               <div class="has-text-centered m-1"  style="display:inline-block;">
-              <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} title={x.label} data-table={x.table}><span class="material-symbols-outlined">{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>
+              <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} title={x.label} data-table={x.table} data-action={x.action}><span class="material-symbols-outlined">{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>
               </div>
             )}
           </div>
@@ -1092,7 +1158,7 @@ class CTable extends Component {
               <div class="dropdown-menu" id="dropdown-menu-panel1" role="menu">
                 <div class="dropdown-content has-text-left">
                   {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
-                    <a class={cls("dropdown-item", "is-soft", x.style)} data-name={x.name} data-table={x.table} onMouseDown={this.topButtonClick}><span class="material-symbols-outlined-small">{x.icon}</span> {x.label}</a>
+                    <a class={cls("dropdown-item", "is-soft", x.style)} data-name={x.name} data-table={x.table} data-action={x.action} onMouseDown={this.topButtonClick}><span class="material-symbols-outlined-small">{x.icon}</span> {x.label}</a>
                   )}
                 </div>
               </div>

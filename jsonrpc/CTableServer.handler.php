@@ -203,7 +203,7 @@ class CTableServer extends JsonRPCHandler {
 
         $qhandler = new $this->table_classes[$target]();
 
-        $qhandler->insert($path, $data);
+        return $qhandler->insert($path, $data);
     }
 
     public function update($path, $keys, $data) {
@@ -211,9 +211,13 @@ class CTableServer extends JsonRPCHandler {
 
         $qhandler = new $this->table_classes[$target]();
 
+        $mr = [];
+
         foreach ($keys as $k){
-            $qhandler->update($path, $k, $data);
+            $mr[]= $qhandler->update($path, $k, $data);
         }
+
+        return $mr;
     }
 
     public function duplicate($path, $keys) {
@@ -232,8 +236,10 @@ class CTableServer extends JsonRPCHandler {
         $qhandler = new $this->table_classes[$target]();
 
         foreach ($keys as $k){
-            $qhandler->delete($path, $k);
+            $mr[]= $qhandler->delete($path, $k);
         }
+
+        return $mr;
 
     }
 
@@ -253,6 +259,24 @@ class CTableServer extends JsonRPCHandler {
 
         return $qhandler->download($path, $keys, $column, $index);
     }
+
+
+    public function action($action, $path, $keys) {
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        return $qhandler->{$action}($path, $keys);
+    }
+
+    public function action_download($action, $path, $keys) {
+        $target = end($path)["table"];
+
+        $qhandler = new $this->table_classes[$target]();
+
+        return $qhandler->{$action}($path, $keys);
+    }
+
 
     public function login($username, $password){
         $user_info = client_login($username, $password);

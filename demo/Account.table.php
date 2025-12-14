@@ -38,6 +38,8 @@ class Account {
     public function insert($path, $data) {
         $q = SQLYamlQuery::simple_insert("account", ["firstname", "lastname", "reg_date", "status", "image", "tags", "files"], $data);
         $q->execute($this->db);
+
+        return ["insert" => ["id" => $this->db->lastInsertId()]];
     }
 
     public function update($path, $keys, $data) {
@@ -49,6 +51,8 @@ class Account {
         //error_log(var_export($q->query, true));
 
         $q->execute($this->db);
+
+        return ["update" => $keys];
     }
 
     public function duplicate($path, $keys) {
@@ -85,5 +89,14 @@ class Account {
         $parts = explode(';', $row['files']);
         $file_info = explode(':',$parts[$index]);
         return ["file"=>$file_info[0], "size"=>$file_info[1], "name"=>$file_info[2]];
+    }
+
+    public function print_table($path, $keys){
+        $file = __DIR__ . "/demo.timestamp";
+        return ["file"=>$file, "size"=>filesize($file), "name"=>'demo.txt'];
+    }
+
+    public function take_action($path, $keys){
+        return [];
     }
 }

@@ -161,5 +161,25 @@
   "default_filtering": [
   ],
   "is_default": true,
-  "auth_policy":"guest_read"
+  "auth_policy":"guest_read",
+  "actions":[
+    {
+        "action": "print_table",
+        "label":"Print",
+        "kind": "table",
+        "allow_guest":true,
+        "after": "download_file",
+        "icon": "",
+        "style":""
+    },
+    {
+        "action": "take_action",
+        "label":"Action",
+        "kind": "one_item",
+        "allow_guest":false,
+        "after": "reload_data",
+        "icon": "",
+        "style":""
+    }
+  ]
 }

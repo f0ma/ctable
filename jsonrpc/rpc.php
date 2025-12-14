@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
 
     //error_log(var_export($respList, true));
 
-    if($respMethods[0] != "download"){
+    if($respMethods[0] != "download" && $respMethods[0] != "action_download"){
         header('Content-Type: application/json; charset=utf-8');
         if (count($respList) == 1){
             echo json_encode($respList[0]);
@@ -247,7 +247,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
     } else {
         $name = $respList[0]['result']['name'];
         $pre = substr($respList[0]['result']['file'], 0, 2);
-        $file = "uploads/".$pre."/".$respList[0]['result']['file'];
+        $file = "";
+
+        if(substr($respList[0]['result']['file'], 0, 1) == "/"){
+            $file = $respList[0]['result']['file'];
+        } else {
+            $file = "uploads/".$pre."/".$respList[0]['result']['file'];
+        }
+
         header("Content-type: application/octet-stream");
         header("Content-disposition: attachment; filename=".rawurlencode($name));
         readfile($file);
@@ -402,7 +409,7 @@ EOF;
         } else {
             $jsapi .= "jrpc.".$c." = {};\n";
             foreach($api[$c] as $m => $p){
-                if($m != "download") {
+                if($m != "download" && $m != "action_download") {
                     $jsapi .= $var_name.".".$c.".".$m." = function (".implode(",",$p).") {return ".$var_name.".call(\"".$c.".".$m."\",[".implode(",",$p)."]);};\n";
                 } else {
                     $jsapi .= $var_name.".".$c.".".$m." = function (".implode(",",$p).") {return ".$var_name.".call_download(\"".$c.".".$m."\",[".implode(",",$p)."]);};\n";
