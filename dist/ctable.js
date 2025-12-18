@@ -802,17 +802,17 @@ class CSelectCell extends Component {
         var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
         return h(Fragment, null, labels.length == 0 ? h("span", {
           class: "tag"
-        }, this.props.value) : h("span", {
+        }, "(", this.props.value, ")") : labels[0] !== null ? h("span", {
           class: "tag"
-        }, String(labels[0])));
+        }, String(labels[0])) : "");
       } else {
         return self.props.value.split(";").map(item => {
           var labels = self.props.column.options.filter(x => x.value == item).map(x => x.label);
           return h(Fragment, null, labels.length == 0 ? h("span", {
             class: "tag"
-          }, item) : h("span", {
+          }, "(", item, ")") : labels[0] !== null ? h("span", {
             class: "tag"
-          }, String(labels[0])));
+          }, String(labels[0])) : "");
         });
       }
     }

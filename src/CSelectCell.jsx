@@ -16,11 +16,11 @@ class CSelectCell extends Component {
         } else {
             if (self.props.column.single_select || self.props.column.single_select === undefined) {
                 var labels = self.props.column.options.filter(x => x.value == this.props.value).map(x => x.label);
-                return <>{labels.length == 0 ? <span class="tag">{this.props.value}</span> : <span class="tag">{String(labels[0])}</span>}</>
+                return <>{labels.length == 0 ? <span class="tag">({this.props.value})</span> : (labels[0] !== null ? <span class="tag">{String(labels[0])}</span> : "")}</>
             } else {
                 return self.props.value.split(";").map(item => {
                     var labels = self.props.column.options.filter(x => x.value == item).map(x => x.label);
-                    return <>{labels.length == 0 ? <span class="tag">{item}</span> : <span class="tag">{String(labels[0])}</span>}</>
+                    return <>{labels.length == 0 ? <span class="tag">({item})</span> : (labels[0] !== null ? <span class="tag">{String(labels[0])}</span> : "")}</>
                 })
             }
         }
