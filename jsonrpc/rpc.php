@@ -258,6 +258,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
         header("Content-type: application/octet-stream");
         header("Content-disposition: attachment; filename=".rawurlencode($name));
         readfile($file);
+
+        if($respList[0]['result']['cleanup']){
+            foreach($respList[0]['result']['cleanup'] as $fd){
+                if(is_file($fd)) unlink($fd);
+                if(is_dir($fd)) rmdir($fd);
+            }
+        }
+
     }
 
 
