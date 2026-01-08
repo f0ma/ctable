@@ -399,6 +399,7 @@ jrpc.call_download = function (method, params) {
         a.remove();
     });
     });
+    return fp;
 }
 
 EOF;
