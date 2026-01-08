@@ -548,7 +548,10 @@ class CTable extends Component {
           keys = this.getAllKeys();
 
       if(act.after == "download_file"){
-          this.props.server.CTableServer.action_download(act.action, this.full_table_path(), keys);
+        this.setState({progress: true});
+        this.props.server.CTableServer.action_download(act.action, this.full_table_path(), keys).then((r) => {
+            this.setState({progress: false});
+        }).catch((e) => {this.setState({progress: false});this.showError(e)});
       } else {
         this.setState({progress: true});
         this.props.server.CTableServer.action(act.action, this.full_table_path(), keys).then((r) => {

@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
 
     //error_log(var_export($respList, true));
 
-    if($respMethods[0] != "download" && $respMethods[0] != "action_download"){
+    if(($respMethods[0] != "download" && $respMethods[0] != "action_download") || isset($respList[0]['error']) ){
         header('Content-Type: application/json; charset=utf-8');
         if (count($respList) == 1){
             echo json_encode($respList[0]);
