@@ -51,7 +51,13 @@ class CTagsSearcher extends Component {
     if (self.state.search_value == null || self.state.search_value == ""){
       return <div class="input"></div>;
     } else if (self.props.column.cell_actor == "CTagsCell") {
-      var actived = self.state.search_value.split(";");
+
+      var actived = [];
+      if (Array.isArray(self.state.search_value))
+          actived = self.state.search_value
+      else
+          actived = self.state.search_value.split(";");
+
       var tags = self.props.column.options.filter(x => actived.includes(String(x[0])));
       return (
                 <div class="input" style="height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;">
@@ -65,7 +71,14 @@ class CTagsSearcher extends Component {
                 </div>
             );
     } else if (self.props.column.cell_actor == "CBoolCell") {
-      var actived = self.state.search_value.split(";");
+
+      var actived = [];
+      if (Array.isArray(self.state.search_value))
+          actived = self.state.search_value
+      else
+          actived = self.state.search_value.split(";");
+
+
       var tags = [{value: "1", label: _("Yes")},{value: "0", label: _("No")}].filter(x => actived.includes(x.value));
       //console.log(tags);
       //console.log(actived);
@@ -81,7 +94,13 @@ class CTagsSearcher extends Component {
           </div>
       );
     } else if (self.props.column.cell_actor == "CSelectCell") {
-      var actived = self.state.search_value.split(";");
+
+      var actived = [];
+      if (Array.isArray(self.state.search_value))
+          actived = self.state.search_value
+      else
+          actived = self.state.search_value.split(";");
+
       var tags = self.props.column.options.filter(x => actived.includes(String(x.value)));
       return (
           <div class="input" style="height: auto;flex-flow: wrap;row-gap: 0.4em; min-height: 2.5em; min-width: 5em;">
