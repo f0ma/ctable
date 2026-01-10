@@ -4582,14 +4582,15 @@ class CTable extends Component {
       return;
     }
     if (tg.dataset['name'] == "action") {
+      if (this.state.progress) return; // Do not allowed then progress is active
+
       var act = this.state.current_table.actions.filter(x => x.action == tg.dataset['action'])[0];
       var self = this;
       var keys = this.getAffectedKeys();
       if (keys.length == 0) keys = this.getAllKeys();
       if (act.after == "download_file") {
-        this.setState({
-          progress: true
-        });
+        this.state.progress = true;
+        this.setState({});
         this.props.server.CTableServer.action_download(act.action, this.full_table_path(), keys).then(r => {
           this.setState({
             progress: false
@@ -4601,9 +4602,8 @@ class CTable extends Component {
           this.showError(e);
         });
       } else {
-        this.setState({
-          progress: true
-        });
+        this.state.progress = true;
+        this.setState({});
         this.props.server.CTableServer.action(act.action, this.full_table_path(), keys).then(r => {
           if (act.after == "reload_data") {
             self.reloadData();
