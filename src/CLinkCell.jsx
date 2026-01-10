@@ -16,6 +16,8 @@ class CLinkCell extends Component {
 
         var view = "";
 
+        if (!(table in this.props.options))  return ""; //Options not downloaded yet
+
         if (this.props.value in this.props.options[table]){
             view = <span class={cls(this.props.column.cell_show_as_tag === false ? "" : "tag")} title={String(this.props.options[table][this.props.value]) + " (" + this.props.value + ")"}>{String(this.props.options[table][this.props.value])}</span>;
         } else {
