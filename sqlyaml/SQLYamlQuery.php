@@ -37,6 +37,7 @@ class SQLYamlQuery {
     public $query;
     private $codec;
     private $total_rows;
+    private $affected;
 
     static function simple_delete($table, $keys_should, $keys, $codec = YamlCodecSpyc::class){
         $query = <<<EOF
@@ -614,6 +615,10 @@ class SQLYamlQuery {
         return $this->total_rows;
     }
 
+    function affected_rows(){
+        return $this->affected;
+    }
+
     function top_level_query(){
         return array_keys($this->query)[0];
     }
@@ -624,7 +629,7 @@ class SQLYamlQuery {
         $sql = $this->sql();
         $this->vars = array_merge($this->vars, $vars);
 
-        //error_log($sql);
+        $this->affected = 0;
 
         $statment = $db->prepare($sql);
 
@@ -665,13 +670,15 @@ class SQLYamlQuery {
             $this->total_rows = 0;
         }
 
-        if($statment->rowCount() > 0 && $accept == 'not_affected')
+        $this->affected = $statment->rowCount();
+
+        if($this->affected > 0 && $accept == 'not_affected')
             throw new Exception('Query rowCount is not 0, but should be "not_affected"');
 
-        if($statment->rowCount() == 0 && $accept == 'affected')
+        if($this->affected == 0 && $accept == 'affected')
             throw new Exception('Query rowCount is 0, but should be "affected"');
 
-        if($statment->rowCount() != 1 && $accept == 'affected_one')
+        if($this->affected != 1 && $accept == 'affected_one')
             throw new Exception('Query rowCount != 1, but should be "affected_one"');
 
 
