@@ -99,6 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET["upload"])){
         $storage_name = NULL;
         $pre = NULL;
         $file = NULL;
+
+        if(!is_file($f['tmp_name'])){
+            throw new JsonRPCInvalidRequest("Can't upload file");
+        }
+
         while (1){
             $storage_name = md5(md5_file($f['tmp_name']).$f['name'].$f['tmp_name'].$cnt);
             $pre = substr($storage_name, 0, 2);
