@@ -495,11 +495,15 @@ class SQLYamlQuery {
             if($i > 0) {
                 $r.=", ";
             }
-            $r.=$this->visit(array_merge($path, ["order"]), array_keys($node[$i])[0]);
+            $key_sort = $this->visit(array_merge($path, ["order"]), array_keys($node[$i])[0]);
             if (array_values($node[$i])[0] == "asc") {
-                $r.=" ASC";
+                $r.=$key_sort." ASC";
+            } elseif (array_values($node[$i])[0] == "asc_null_last") {
+                $r.=$key_sort." IS NULL, ".$key_sort." ASC";
             } elseif (array_values($node[$i])[0] == "desc") {
-                $r.=" DESC";
+                $r.=$key_sort." DESC";
+            } elseif (array_values($node[$i])[0] == "desc_null_last") {
+                $r.=$key_sort." IS NULL, ".$key_sort." DESC";
             } else {
                 throw new Exception("Unknown sort order in ".implode(" ", $path));
             }
