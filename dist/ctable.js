@@ -5231,7 +5231,7 @@ class CTable extends Component {
       onMouseDown: this.onTableSelectClick
     }, h("span", {
       class: "material-symbols-outlined-small"
-    }, "lists"), " ", x.label)), h("hr", {
+    }, "view_list"), " ", x.label)), h("hr", {
       class: "dropdown-divider"
     }), self.state.links.map(x => h("a", {
       class: "dropdown-item",
@@ -5247,7 +5247,7 @@ class CTable extends Component {
       class: "material-symbols-outlined-small"
     }, "check_box"), "\xA0", x, "\xA0")), h(Fragment, null, h("span", {
       class: "material-symbols-outlined-small"
-    }, "lists"), "\xA0", self.state.current_table.label, "\xA0")))), h("td", {
+    }, "view_list"), "\xA0", self.state.current_table.label, "\xA0")))), h("td", {
       class: "has-text-right"
     }, h("div", {
       class: cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")

@@ -1090,7 +1090,7 @@ class CTable extends Component {
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
                     {self.state.table_list.filter(x => x.show_in_menu !== false).map(x =>
-                        <a class={cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : "")} data-label={x.name} onMouseDown={this.onTableSelectClick}><span class="material-symbols-outlined-small">lists</span> {x.label}</a>
+                        <a class={cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : "")} data-label={x.name} onMouseDown={this.onTableSelectClick}><span class="material-symbols-outlined-small">view_list</span> {x.label}</a>
                     )}
                     <hr class="dropdown-divider" />
                     {self.state.links.map(x =>
@@ -1106,7 +1106,7 @@ class CTable extends Component {
                 {self.state.table_path_labels.map(x =>
                   <><span class="material-symbols-outlined-small">check_box</span>&nbsp;{x}&nbsp;</>
                 )}
-                  <><span class="material-symbols-outlined-small">lists</span>&nbsp;{self.state.current_table.label}&nbsp;</>
+                  <><span class="material-symbols-outlined-small">view_list</span>&nbsp;{self.state.current_table.label}&nbsp;</>
                 </div>
               </div>
             </td>

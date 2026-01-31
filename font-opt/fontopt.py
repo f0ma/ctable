@@ -21,11 +21,14 @@ src = glob.glob("../src/*.jsx")
 #used in dynamic manner
 used_list = ["arrow_back","subdirectory_arrow_right","add","edit","content_copy",
              "delete","refresh","search","sort","list_alt","done","select_all",
-             "deselect","zoom_in","zoom_out","search"]
+             "deselect","zoom_in","zoom_out","search","view_list"]
 
 for filename in src:
     with open(filename) as f:
-        fnd = re.findall( r'<span class="material-symbols-outlined">(.*?)</span>', f.read())
+        ftext = f.read()
+        fnd1 = re.findall( r'<span class="material-symbols-outlined">(.*?)</span>', ftext)
+        fnd2 = re.findall( r'<span class="material-symbols-outlined-small">(.*?)</span>', ftext)
+        fnd = fnd1 + fnd2
         print(filename)
         print(fnd)
         for f in fnd:
