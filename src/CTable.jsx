@@ -114,7 +114,7 @@ class CTable extends Component {
 
         {name:"select_mode", icon: "done", label:_("Simple select"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"select_all", icon: "select_all", label:_("Select all"), enabled: true, style:"", icon_only:true, panel:0},
-        {name:"clear_all", icon: "remove_selection", label:_("Clear all"), enabled: true, style:"", icon_only:true, panel:0},
+        {name:"clear_all", icon: "deselect", label:_("Clear all"), enabled: true, style:"", icon_only:true, panel:0},
 
         {name:"zoom_in", icon: "zoom_in", label:_("Zoom In"), enabled: true, style:"", icon_only:true, panel:0},
         {name:"zoom_out", icon: "zoom_out", label:_("Zoom Out"), enabled: true, style:"", icon_only:true, panel:0},
@@ -1114,7 +1114,7 @@ class CTable extends Component {
               <div class={cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")}>
                 <div class="dropdown-trigger">
                   <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onAuthDropdownClick} onBlur={this.onAuthDropdownBlur}>
-                    <span class="icon"><span class="material-symbols-outlined">{getCTablesJWT() ? "account_box" : "person"}</span></span>
+                    <span class="icon">{getCTablesJWT() ? <span class="material-symbols-outlined">account_box</span> : <span class="material-symbols-outlined">person</span>}</span>
                     <span class="icon is-small"><span class="material-symbols-outlined">arrow_drop_down</span></span>
                   </button>
                 </div>

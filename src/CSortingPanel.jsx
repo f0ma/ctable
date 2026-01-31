@@ -83,7 +83,7 @@ class CSortingPanel extends Component {
             </div>
              {self.props.table.state.view_sorting.map(x => {
                return <div style="white-space: nowrap;">
-                          <button class="button is-small" data-column={x.name} onClick={self.onSortChange} title={_("Set ordering mode")}><span class="material-symbols-outlined">{x.sorting == "" ? "reorder" : ""}{x.sorting == "asc" ? "arrow_upward" : ""}{x.sorting == "desc" ? "arrow_downward" : ""}</span></button>&nbsp;
+                          <button class="button is-small" data-column={x.name} onClick={self.onSortChange} title={_("Set ordering mode")}>{x.sorting == "" ? <span class="material-symbols-outlined">reorder</span> : ""}{x.sorting == "asc" ? <span class="material-symbols-outlined">arrow_upward</span> : ""}{x.sorting == "desc" ? <span class="material-symbols-outlined">arrow_downward</span> : ""}</button>&nbsp;
                           <span class="ml-2 mr-2" style="min-width:10em; width:10em; display:inline-block; overflow: hidden;">{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}</span>
                           &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnUp} title={_("Move ordering up")}><span class="material-symbols-outlined">keyboard_arrow_up</span></button>
                           &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnDown} title={_("Move ordering down")}><span class="material-symbols-outlined">keyboard_arrow_down</span></button>

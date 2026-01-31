@@ -40,13 +40,13 @@ class CAuthPanel extends Component {
           <div class="field has-text-right mb-4">
             <p class="control has-icons-left has-icons-right">
               <input class="input" type="text" placeholder={_("Login")} onInput={self.onInputLogin}/>
-              <span class="icon is-small is-left"><span class="material-symbols-outlined">Face</span></span>
+              <span class="icon is-small is-left"><span class="material-symbols-outlined">face</span></span>
             </p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
               <input class="input" type="password" placeholder={_("Password")} onInput={self.onInputPassword}/>
-              <span class="icon is-small is-left"><span class="material-symbols-outlined">Key</span></span>
+              <span class="icon is-small is-left"><span class="material-symbols-outlined">key</span></span>
             </p>
           </div>
           <div class="buttons is-centered">

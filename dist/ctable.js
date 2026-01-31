@@ -2977,9 +2977,13 @@ class CSortingPanel extends Component {
         "data-column": x.name,
         onClick: self.onSortChange,
         title: _("Set ordering mode")
-      }, h("span", {
+      }, x.sorting == "" ? h("span", {
         class: "material-symbols-outlined"
-      }, x.sorting == "" ? "reorder" : "", x.sorting == "asc" ? "arrow_upward" : "", x.sorting == "desc" ? "arrow_downward" : "")), "\xA0", h("span", {
+      }, "reorder") : "", x.sorting == "asc" ? h("span", {
+        class: "material-symbols-outlined"
+      }, "arrow_upward") : "", x.sorting == "desc" ? h("span", {
+        class: "material-symbols-outlined"
+      }, "arrow_downward") : ""), "\xA0", h("span", {
         class: "ml-2 mr-2",
         style: "min-width:10em; width:10em; display:inline-block; overflow: hidden;"
       }, this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label), "\xA0", h("button", {
@@ -3071,7 +3075,7 @@ class CAuthPanel extends Component {
       class: "icon is-small is-left"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "Face")))), h("div", {
+    }, "face")))), h("div", {
       class: "field"
     }, h("p", {
       class: "control has-icons-left"
@@ -3084,7 +3088,7 @@ class CAuthPanel extends Component {
       class: "icon is-small is-left"
     }, h("span", {
       class: "material-symbols-outlined"
-    }, "Key")))), h("div", {
+    }, "key")))), h("div", {
       class: "buttons is-centered"
     }, h("button", {
       class: "button is-primary is-soft",
@@ -4107,7 +4111,7 @@ class CTable extends Component {
         panel: 0
       }, {
         name: "clear_all",
-        icon: "remove_selection",
+        icon: "deselect",
         label: _("Clear all"),
         enabled: true,
         style: "",
@@ -5257,9 +5261,11 @@ class CTable extends Component {
       onBlur: this.onAuthDropdownBlur
     }, h("span", {
       class: "icon"
-    }, h("span", {
+    }, getCTablesJWT() ? h("span", {
       class: "material-symbols-outlined"
-    }, getCTablesJWT() ? "account_box" : "person")), h("span", {
+    }, "account_box") : h("span", {
+      class: "material-symbols-outlined"
+    }, "person")), h("span", {
       class: "icon is-small"
     }, h("span", {
       class: "material-symbols-outlined"

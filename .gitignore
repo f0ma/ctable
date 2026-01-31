@@ -9,3 +9,7 @@ demo/Spyc.php
 lang/*~
 node_modules
 demo/uploads/*
+font-opt/*.ttf
+font-opt/*.otf
+font-opt/*.woff2
+font-opt/*.codepoints
