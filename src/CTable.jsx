@@ -331,6 +331,7 @@ class CTable extends Component {
       });
 
       this.state.table_options = {};
+      this.state.table_options_labels = {};
 
       var full_path = this.full_table_path();
 
@@ -338,8 +339,10 @@ class CTable extends Component {
         var q_path = deep_copy(full_path);
         q_path[q_path.length-1].table = link_columns_tables[i];
         return this.props.server.CTableServer.options(q_path, [["in", link_columns_table_columns[i], link_columns_values[i]]]).then(w =>{
-          this.state.table_options[link_columns_tables[i]] = {};
-          this.state.table_options_labels[link_columns_tables[i]] = w.label;
+          if (!this.state.table_options.hasOwnProperty(link_columns_tables[i])){
+            this.state.table_options[link_columns_tables[i]] = {};
+            this.state.table_options_labels[link_columns_tables[i]] = w.label;
+          }
           w.rows.forEach(q => {
             this.state.table_options[link_columns_tables[i]][q[link_columns_table_columns[i]]] = q[w.label];
           });

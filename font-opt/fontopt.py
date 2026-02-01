@@ -21,7 +21,7 @@ src = glob.glob("../src/*.jsx")
 #used in dynamic manner
 used_list = ["arrow_back","subdirectory_arrow_right","add","edit","content_copy",
              "delete","refresh","search","sort","list_alt","done","select_all",
-             "deselect","zoom_in","zoom_out","search","view_list"]
+             "deselect","zoom_in","zoom_out","search","view_list","done_all"]
 
 for filename in src:
     with open(filename) as f:
