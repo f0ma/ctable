@@ -124,7 +124,10 @@ class CTagsSearcher extends Component {
 
     if (self.state.search_value === undefined) return;
     if (self.props.column.cell_actor == "CTagsCell"){
-        var actived = self.state.search_value.split(";");
+        var actived = [];
+        if (this.state.search_value !== undefined && this.state.search_value !== null) {
+            actived = self.state.search_value.split(";");
+        }
         var tags = self.props.column.options.filter(x => !actived.includes(x[0]))
         return (
           <div class="field">
@@ -141,7 +144,10 @@ class CTagsSearcher extends Component {
           </div>
       );
     } else if (self.props.column.cell_actor == "CBoolCell") {
-        var actived = self.state.search_value.split(";");
+        var actived = [];
+        if (this.state.search_value !== undefined && this.state.search_value !== null) {
+            actived = self.state.search_value.split(";");
+        }
         var tags = [{value: 1, label: _("Yes")},{value: 0, label: _("No")}].filter(x => !actived.includes(x.value));
         return (
           <div class="field">
@@ -159,7 +165,11 @@ class CTagsSearcher extends Component {
         );
     } else if (self.props.column.cell_actor == "CSelectCell") {
         //console.log(self.state)
-        var actived = self.state.search_value.split(";");
+        var actived = [];
+        if (this.state.search_value !== undefined && this.state.search_value !== null) {
+            actived = self.state.search_value.split(";");
+        }
+
         var tags = self.props.column.options.filter(x => !actived.includes(x.value));
         return (
           <div class="field">

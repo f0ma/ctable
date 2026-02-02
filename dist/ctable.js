@@ -3526,7 +3526,10 @@ class CTagsSearcher extends Component {
 
     if (self.state.search_value === undefined) return;
     if (self.props.column.cell_actor == "CTagsCell") {
-      var actived = self.state.search_value.split(";");
+      var actived = [];
+      if (this.state.search_value !== undefined && this.state.search_value !== null) {
+        actived = self.state.search_value.split(";");
+      }
       var tags = self.props.column.options.filter(x => !actived.includes(x[0]));
       return h("div", {
         class: "field"
@@ -3543,7 +3546,10 @@ class CTagsSearcher extends Component {
         title: label.slice(0, self.props.column.max_length) + (label.length > 32 ? "..." : "")
       }, label)))));
     } else if (self.props.column.cell_actor == "CBoolCell") {
-      var actived = self.state.search_value.split(";");
+      var actived = [];
+      if (this.state.search_value !== undefined && this.state.search_value !== null) {
+        actived = self.state.search_value.split(";");
+      }
       var tags = [{
         value: 1,
         label: _("Yes")
@@ -3567,7 +3573,10 @@ class CTagsSearcher extends Component {
       }, x.label)))));
     } else if (self.props.column.cell_actor == "CSelectCell") {
       //console.log(self.state)
-      var actived = self.state.search_value.split(";");
+      var actived = [];
+      if (this.state.search_value !== undefined && this.state.search_value !== null) {
+        actived = self.state.search_value.split(";");
+      }
       var tags = self.props.column.options.filter(x => !actived.includes(x.value));
       return h("div", {
         class: "field"
@@ -3941,6 +3950,7 @@ class CTable extends Component {
       links: [],
       progress: true,
       last_row_clicked: null,
+      root_id: makeID(),
       topline_buttons: [{
         name: "back",
         icon: "arrow_back",
@@ -4177,6 +4187,12 @@ class CTable extends Component {
   }
   componentDidMount() {
     var self = this;
+    var root_div = document.getElementById(self.state.root_id);
+
+    //root_div.addEventListener("keydown", function (event) {
+    //  console.log("You pressed: " + event.key);
+    //});
+
     self.props.server.version().then(x => console.log(x));
     let tables_p = self.props.server.CTableServer.tables();
     let links_p = self.props.server.CTableServer.links();
@@ -5162,7 +5178,9 @@ class CTable extends Component {
   }
   render() {
     var self = this;
-    return h("div", null, h("div", {
+    return h("div", {
+      id: self.state.root_id
+    }, h("div", {
       class: cls("modal", self.state.ask_dialog_active ? "is-active" : "")
     }, h("div", {
       class: "modal-background",

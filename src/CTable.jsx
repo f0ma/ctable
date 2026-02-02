@@ -85,6 +85,8 @@ class CTable extends Component {
       links: [],
       progress: true,
       last_row_clicked: null,
+      root_id: makeID(),
+
       topline_buttons: [
 
         {name:"back", icon: "arrow_back", label:_("Go back"), enabled: false, style:"", icon_only:false, panel:1},
@@ -163,6 +165,12 @@ class CTable extends Component {
 
   componentDidMount() {
       var self = this;
+
+      var root_div = document.getElementById(self.state.root_id);
+
+      //root_div.addEventListener("keydown", function (event) {
+      //  console.log("You pressed: " + event.key);
+      //});
 
       self.props.server.version().then(x => console.log(x));
       let tables_p = self.props.server.CTableServer.tables();
@@ -1058,7 +1066,7 @@ class CTable extends Component {
 
   var self = this;
 
-  return <div>
+  return <div id={self.state.root_id}>
   <div class={cls("modal", self.state.ask_dialog_active ? "is-active" : "")}>
     <div class="modal-background" onClick={this.userResolveNo}></div>
     <div class="modal-content">
