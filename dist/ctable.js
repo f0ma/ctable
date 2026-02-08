@@ -1058,7 +1058,9 @@ class CHeaderTable extends Component {
   onHeaderClick(x) {
     var th = unwind_th(x);
     var colname = th.dataset["column"];
-    var col = this.props.columns.filter(y => y.name == colname)[0];
+    var cols = this.props.columns.filter(y => y.name == colname);
+    if (cols.length == 0) return;
+    var col = cols[0];
     if (col.sorting === false) return;
     var newcol = this.props.table.state.view_sorting;
     newcol.forEach(y => {
@@ -3244,6 +3246,11 @@ class CTextSearcher extends Comment {
     }
     this.props.onValueChange(line, Number(e.target.dataset['filterindex']));
   }
+  allowed_op(op) {
+    var ops = ["like_lr", "like_l", "like_r", "eq", "neq"];
+    if (ops.includes(op)) return op;
+    return "like_lr";
+  }
   render() {
     var self = this;
     return h("div", null, h("div", {
@@ -3260,7 +3267,7 @@ class CTextSearcher extends Comment {
     }))), h("div", {
       class: "select ml-2 mb-2"
     }, h("select", {
-      value: self.props.operator ? self.props.operator : "like_lr",
+      value: self.allowed_op(self.props.operator),
       "data-filterindex": self.props.index,
       onChange: self.props.onOperatorChange,
       title: _("Search kind")
@@ -3406,6 +3413,15 @@ class CTagsSearcher extends Component {
     this.setState({
       search_value: this.props.value ?? ""
     });
+  }
+  allowed_op(op) {
+    var ops = ["eq", "neq", "in", "not_in"];
+    if (this.props.column.editor_allow_null) {
+      ops.push("is_null");
+      ops.push("is_not_null");
+    }
+    if (ops.includes(op)) return op;
+    return "eq";
   }
   onRemoveTag(e) {
     var tag = unwind_button_or_link(e).dataset['tag'];
@@ -3610,7 +3626,7 @@ class CTagsSearcher extends Component {
     }))), h("div", {
       class: "select ml-2 mb-2"
     }, h("select", {
-      value: self.props.operator ?? "neq",
+      value: self.allowed_op(self.props.operator),
       "data-filterindex": self.props.index,
       onChange: self.props.onOperatorChange,
       title: _("Search kind")
@@ -3683,6 +3699,15 @@ class CLinkSearcher extends Component {
       options_current: base_options,
       options_input: ""
     });
+  }
+  allowed_op(op) {
+    var ops = ["eq", "neq", "in", "not_in"];
+    if (this.props.column.editor_allow_null) {
+      ops.push("is_null");
+      ops.push("is_not_null");
+    }
+    if (ops.includes(op)) return op;
+    return "eq";
   }
   getLocalOptions(props) {
     if (props && props.options && props.column && props.column.cell_link && props.options[props.column.cell_link]) {
@@ -3848,7 +3873,7 @@ class CLinkSearcher extends Component {
     }))), h("div", {
       class: "select ml-2 mb-2"
     }, h("select", {
-      value: self.props.operator ? self.props.operator : "eq",
+      value: self.allowed_op(self.props.operator),
       "data-filterindex": self.props.index,
       onChange: self.props.onOperatorChange,
       title: _("Search kind")

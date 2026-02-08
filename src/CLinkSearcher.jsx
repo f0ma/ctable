@@ -46,6 +46,19 @@ class CLinkSearcher extends Component {
         });
     }
 
+    allowed_op(op){
+        var ops = ["eq", "neq", "in", "not_in"];
+
+        if(this.props.column.editor_allow_null){
+            ops.push("is_null");
+            ops.push("is_not_null");
+        }
+
+        if(ops.includes(op))
+            return op;
+        return "eq";
+    }
+
     getLocalOptions(props) {
         if (props && props.options && props.column && props.column.cell_link && props.options[props.column.cell_link]) {
             return clone(props.options[props.column.cell_link]);
@@ -180,7 +193,7 @@ class CLinkSearcher extends Component {
                 </select>
             </div>
             <div class="select ml-2 mb-2">
-                <select value={self.props.operator ? self.props.operator : "eq"} data-filterindex={self.props.index} onChange={self.props.onOperatorChange} title={_("Search kind")}>
+                <select value={self.allowed_op(self.props.operator)} data-filterindex={self.props.index} onChange={self.props.onOperatorChange} title={_("Search kind")}>
                     <option value="eq">=</option>
                     <option value="neq">!=</option>
                     <option value="in">IN</option>

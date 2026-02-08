@@ -15,6 +15,13 @@ class CTextSearcher extends Comment {
         this.props.onValueChange(line, Number(e.target.dataset['filterindex']));
     }
 
+    allowed_op(op){
+        var ops = ["like_lr", "like_l", "like_r", "eq", "neq"];
+        if(ops.includes(op))
+            return op;
+        return "like_lr";
+    }
+
     render() {
         var self = this;
         return  <div>
@@ -26,7 +33,7 @@ class CTextSearcher extends Comment {
                         </select>
                     </div>
                     <div class="select ml-2 mb-2">
-                        <select value={self.props.operator ? self.props.operator : "like_lr"} data-filterindex={self.props.index} onChange={self.props.onOperatorChange} title={_("Search kind")}>
+                        <select value={self.allowed_op(self.props.operator)} data-filterindex={self.props.index} onChange={self.props.onOperatorChange} title={_("Search kind")}>
                             <option value="like_lr">…A…</option>
                             <option value="like_l">…A</option>
                             <option value="like_r">A…</option>
