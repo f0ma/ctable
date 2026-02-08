@@ -3117,6 +3117,7 @@ class CSearchPanel extends Component {
   onColumnChange(x) {
     var i = Number(x.target.dataset['filterindex']);
     this.props.table.state.view_filtering[i].column = x.target.value;
+    this.props.table.state.view_filtering[i].operator = "eq";
     this.props.table.setState({});
     this.props.table.onFilterChange();
   }
@@ -3125,7 +3126,7 @@ class CSearchPanel extends Component {
     this.props.table.state.view_filtering[i].operator = x.target.value;
     if (this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in') {
       if (!Array.isArray(this.props.table.state.view_filtering[i].value)) {
-        this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(";").map(x => x.trim());
+        this.props.table.state.view_filtering[i].value = String(this.props.table.state.view_filtering[i].value).split(";").map(x => x.trim());
       }
     } else {
       if (Array.isArray(this.props.table.state.view_filtering[i].value)) {
@@ -3139,7 +3140,7 @@ class CSearchPanel extends Component {
     this.props.table.state.view_filtering[index].value = value;
     if (this.props.table.state.view_filtering[index].operator == 'in' || this.props.table.state.view_filtering[index].operator == 'not_in') {
       if (!Array.isArray(this.props.table.state.view_filtering[index].value)) {
-        this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(";").map(x => x.trim());
+        this.props.table.state.view_filtering[index].value = String(this.props.table.state.view_filtering[index].value).split(";").map(x => x.trim());
       }
     } else {
       if (Array.isArray(this.props.table.state.view_filtering[index].value)) {
@@ -3337,6 +3338,15 @@ class CNumbersSearcher extends Component {
       }, () => self.props.onValueChange(this.state.search_value, Number(e.target.dataset['filterindex'])));
     }
   }
+  allowed_op(op) {
+    var ops = ["eq", "neq", "ge", "gt", "le", "lt", "in", "not_in"];
+    if (this.props.column.editor_allow_null) {
+      ops.push("is_null");
+      ops.push("is_not_null");
+    }
+    if (ops.includes(op)) return op;
+    return "eq";
+  }
   render() {
     var self = this;
     return h("div", null, h("div", {
@@ -3353,7 +3363,7 @@ class CNumbersSearcher extends Component {
     }))), h("div", {
       class: "select ml-2 mb-2"
     }, h("select", {
-      value: self.props.operator ? self.props.operator : "like_lr",
+      value: self.allowed_op(self.props.operator),
       "data-filterindex": self.props.index,
       onChange: self.props.onOperatorChange,
       title: _("Search kind")

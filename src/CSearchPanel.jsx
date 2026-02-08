@@ -14,6 +14,7 @@ class CSearchPanel extends Component {
     onColumnChange(x){
       var i = Number(x.target.dataset['filterindex']);
       this.props.table.state.view_filtering[i].column = x.target.value;
+      this.props.table.state.view_filtering[i].operator = "eq";
       this.props.table.setState({});
       this.props.table.onFilterChange();
     }
@@ -24,7 +25,7 @@ class CSearchPanel extends Component {
 
       if(this.props.table.state.view_filtering[i].operator == 'in' || this.props.table.state.view_filtering[i].operator == 'not_in'){
         if(!Array.isArray(this.props.table.state.view_filtering[i].value)){
-          this.props.table.state.view_filtering[i].value = this.props.table.state.view_filtering[i].value.split(";").map(x => x.trim());
+          this.props.table.state.view_filtering[i].value = String(this.props.table.state.view_filtering[i].value).split(";").map(x => x.trim());
         }
       } else {
         if(Array.isArray(this.props.table.state.view_filtering[i].value)){
@@ -41,7 +42,7 @@ class CSearchPanel extends Component {
 
       if(this.props.table.state.view_filtering[index].operator == 'in' || this.props.table.state.view_filtering[index].operator == 'not_in'){
         if(!Array.isArray(this.props.table.state.view_filtering[index].value)){
-          this.props.table.state.view_filtering[index].value = this.props.table.state.view_filtering[index].value.split(";").map(x => x.trim());
+          this.props.table.state.view_filtering[index].value = String(this.props.table.state.view_filtering[index].value).split(";").map(x => x.trim());
         }
       } else {
         if(Array.isArray(this.props.table.state.view_filtering[index].value)){
