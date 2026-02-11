@@ -786,7 +786,7 @@ class CTable extends Component {
         x.style = self.state.current_table.actions[i].style;
         if(self.state.current_table.actions[i].kind == "table") x.enabled = true;
         if(self.state.current_table.actions[i].kind == "one_item" && sel_count == 1) x.enabled = true;
-        if(self.state.current_table.actions[i].kind == "items" && sel_count == 1) x.enabled = true;
+        if(self.state.current_table.actions[i].kind == "items" && sel_count >= 1) x.enabled = true;
       });
 
     }
