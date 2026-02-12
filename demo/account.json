@@ -175,6 +175,7 @@
     {
         "action": "take_action",
         "label":"Action",
+        "ask":"Do nothing for item?",
         "kind": "one_item",
         "allow_guest":false,
         "after": "reload_data",

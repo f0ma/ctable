@@ -102,6 +102,11 @@ class CTable extends Component {
         {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
         {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
         {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
+        {name:"action", icon: "subdirectory_arrow_right", label:_("Action"), enabled: false, style:"", icon_only:false, panel:1},
 
         {name:"add", icon: "add", label:_("Add"), enabled: false, style:"is-primary", icon_only:false, panel:1},
         {name:"edit", icon: "edit", label:_("Edit"), enabled: false, style:"is-warning", icon_only:false, panel:1},
@@ -556,25 +561,38 @@ class CTable extends Component {
       var act = this.state.current_table.actions.filter(x => x.action == tg.dataset['action'])[0];
       var self = this;
 
-      var keys = this.getAffectedKeys();
-      if (keys.length == 0)
-          keys = this.getAllKeys();
+      var preform_action = () => {
 
-      if(act.after == "download_file"){
-        this.state.progress = true;
-        this.setState({});
-        this.props.server.CTableServer.action_download(act.action, this.full_table_path(), keys).then((r) => {
-            this.setState({progress: false});
-        }).catch((e) => {this.setState({progress: false});this.showError(e)});
-      } else {
-        this.state.progress = true;
-        this.setState({});
-        this.props.server.CTableServer.action(act.action, this.full_table_path(), keys).then((r) => {
-          if(act.after == "reload_data"){
-            self.reloadData();
-            this.setState({progress: false});
+          var keys = this.getAffectedKeys();
+          if (keys.length == 0)
+              keys = this.getAllKeys();
+
+          if(act.after == "download_file"){
+            this.state.progress = true;
+            this.setState({});
+            this.props.server.CTableServer.action_download(act.action, this.full_table_path(), keys).then((r) => {
+                this.setState({progress: false});
+            }).catch((e) => {this.setState({progress: false});this.showError(e)});
+          } else {
+            this.state.progress = true;
+            this.setState({});
+            this.props.server.CTableServer.action(act.action, this.full_table_path(), keys).then((r) => {
+              if(act.after == "reload_data"){
+                self.reloadData();
+                this.setState({progress: false});
+              }
+            }).catch((e) => {this.setState({progress: false});this.showError(e)});
           }
-        }).catch((e) => {this.setState({progress: false});this.showError(e)});
+
+      };
+
+      if(act.ask){
+        this.askUser(act.ask).then(()=>{
+          preform_action();
+        }, ()=>{});
+
+      } else {
+        preform_action();
       }
 
       return;

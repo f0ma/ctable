@@ -202,6 +202,10 @@ a.dropdown-item.is-danger.is-soft {
         color: rgb(102, 0, 20);
     }
 
+    .modal-background {
+        background-color: #B0B0B0CF;
+    }
+
 }
 
 .ctable-button-row-right{
