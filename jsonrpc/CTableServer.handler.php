@@ -153,13 +153,21 @@ class CTableServer extends JsonRPCHandler {
 
     function __construct(){
         foreach (glob("*.table.php") as $filename) {
-            list($class_name, $tail) = explode('.', $filename, 2);
-            if(!class_exists($class_name)){
-                require $filename;
+            try {
+                list($class_name, $tail) = explode('.', $filename, 2);
+                if(!class_exists($class_name)){
+                    require $filename;
+                }
+                $table_info = $class_name::load_table_config();
+
+                if(!$table_info) throw new Exception("Невалидный конфиг");
+
+                $this->table_configs[$table_info['name']] = $table_info;
+                $this->table_classes[$table_info['name']] = $class_name;
+            } catch (Throwable $exception) {
+                //skip syntax and config exceptions
             }
-            $table_info = $class_name::load_table_config();
-            $this->table_configs[$table_info['name']] = $table_info;
-            $this->table_classes[$table_info['name']] = $class_name;
+
         }
     }
 
