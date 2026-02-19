@@ -118,7 +118,7 @@ class CTagsEditor extends Component {
         if (self.state.editor_value === undefined) return;
 
         if (self.state.editor_value === null) {
-            return <div class="input"><span class="has-text-grey">NULL</span><span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span></div>;
+            return <div class="input"><span class="has-text-grey">NULL</span><span class="icon is-small is-left"><span class="material-symbols-outlined" translate="no">hide_source</span></span></div>;
         } else {
             var actived = self.state.editor_value.split(";");
             var tags = self.props.column.options.filter(x => actived.includes(x[0]));

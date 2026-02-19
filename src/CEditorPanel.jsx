@@ -62,10 +62,10 @@ class CEditorPanel extends Component {
           <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "40vh")} >
             <div class="field has-text-right mb-0">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-primary is-soft" disabled={!saveEnable} onClick={self.props.noSaveClick}><span class="material-symbols-outlined">save</span> {saveLabel}</button>
+                <button class="button is-small is-primary is-soft" disabled={!saveEnable} onClick={self.props.noSaveClick}><span class="material-symbols-outlined" translate="no">save</span> {saveLabel}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.noCancelClick}><span class="material-symbols-outlined">cancel</span> {_("Cancel")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.noCancelClick}><span class="material-symbols-outlined" translate="no">cancel</span> {_("Cancel")}</button>
               </div>
             </div>
 
@@ -75,10 +75,10 @@ class CEditorPanel extends Component {
 
             <div class="field has-text-right mt-5">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-primary is-soft" disabled={!saveEnable} onClick={self.props.noSaveClick}><span class="material-symbols-outlined">save</span> {saveLabel}</button>
+                <button class="button is-small is-primary is-soft" disabled={!saveEnable} onClick={self.props.noSaveClick}><span class="material-symbols-outlined" translate="no">save</span> {saveLabel}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.noCancelClick}><span class="material-symbols-outlined">cancel</span> {_("Cancel")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.noCancelClick}><span class="material-symbols-outlined" translate="no">cancel</span> {_("Cancel")}</button>
               </div>
             </div>
         </div>

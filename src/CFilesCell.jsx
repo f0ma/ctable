@@ -46,7 +46,7 @@ class CFilesCell extends Component {
 
         return <>{this.props.value === null ? <span class="has-text-grey">NULL</span> : files.map((x,i) => {
             return <button class="button is-small" title={x.name + " (" + self.size_to_text(x.size) + ")"} data-column={self.props.column.name} data-index={i} onClick={self.onDownloadClicked}>
-              <span class="material-symbols-outlined-small">download</span>
+              <span class="material-symbols-outlined-small" translate="no">download</span>
             </button>;
         })}</>;
     }

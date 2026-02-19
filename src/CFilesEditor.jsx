@@ -199,17 +199,17 @@ class CFilesEditor extends Component {
                        <label class="file-label">
                          <input class="file-input" type="file" data-index={i} onChange={self.onUploadChange} accept={self.props.column.editor_allowed_ext.join(',')}/>
                          <span class="file-cta">
-                           <span class="material-symbols-outlined">upload</span>
+                           <span class="material-symbols-outlined" translate="no">upload</span>
                          </span>
                          <span class="file-name" style="border-radius: 0; max-width:9em;">{x.name}</span>
                        </label>
                      </div>
                      {self.state.download_available[i] ?
                      <button class="button" style="border-radius: 0;" data-index={i} onClick={self.onDownloadClicked}>
-                         <span class="material-symbols-outlined">download</span>
+                         <span class="material-symbols-outlined" translate="no">download</span>
                      </button> : "" }
                      <button class="button" style="border-top-left-radius: 0; border-bottom-left-radius: 0;" data-index={i} onClick={self.onUploadDelete}>
-                         <span class="material-symbols-outlined">delete</span>
+                         <span class="material-symbols-outlined" translate="no">delete</span>
                      </button>
                      <br/>
                      </>;
@@ -221,7 +221,7 @@ class CFilesEditor extends Component {
                     <label class="file-label">
                       <input class="file-input" type="file"  data-index="-1" onChange={self.onUploadChange} />
                       <span class="file-cta">
-                        <span class="material-symbols-outlined">upload</span>
+                        <span class="material-symbols-outlined" translate="no">upload</span>
                       </span>
                       <span class="file-name" style="max-width:9em;">{_("Upload...")}</span>
                     </label>

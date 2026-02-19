@@ -110,7 +110,7 @@ class CDateEditor extends Component {
 
         return <div class={cls("control", self.state.editor_value === null ? "has-icons-left" : "")} oncteditortonull={self.onNullClicked} oncteditorreset={self.onResetClicked} oncteditorundo={self.onUndoClicked} oncteditorchanged={self.onOtherEditorChanged}>
             <input class={cls("input", self.state.editor_valid ? "" : "is-danger")} type="text" placeholder={self.state.editor_value === null ? "NULL" : self.props.column.editor_placeholder} value={self.state.editor_value} onInput={self.onInputChange}/>
-            {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : ""}
+            {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined" translate="no">hide_source</span></span> : ""}
         </div>;
     }
 }

@@ -300,7 +300,8 @@ class CBoolEditor extends Component {
     }, "NULL") : "")), self.state.editor_value === null ? h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "hide_source")) : "");
   }
 }
@@ -482,7 +483,8 @@ class CMultilineTextEditor extends Component {
     }), self.state.editor_value === null ? h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "hide_source")) : "", self.renderToolbar());
   }
 }
@@ -665,7 +667,8 @@ class CTagsEditor extends Component {
       }, "NULL"), h("span", {
         class: "icon is-small is-left"
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "hide_source")));
     } else {
       var actived = self.state.editor_value.split(";");
@@ -887,7 +890,8 @@ class CFilesCell extends Component {
         "data-index": i,
         onClick: self.onDownloadClicked
       }, h("span", {
-        class: "material-symbols-outlined-small"
+        class: "material-symbols-outlined-small",
+        translate: "no"
       }, "download"));
     }));
   }
@@ -1031,7 +1035,8 @@ class CDateEditor extends Component {
     }), self.state.editor_value === null ? h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "hide_source")) : "");
   }
 }
@@ -1115,11 +1120,14 @@ class CHeaderTable extends Component {
           title: x.label,
           onClick: self.onHeaderClick
         }, sorting == "asc" ? h("span", {
-          class: "material-symbols-outlined-small"
+          class: "material-symbols-outlined-small",
+          translate: "no"
         }, "arrow_upward") : "", sorting == "desc" ? h("span", {
-          class: "material-symbols-outlined-small"
+          class: "material-symbols-outlined-small",
+          translate: "no"
         }, "arrow_downward") : "", filtering ? h("span", {
-          class: "material-symbols-outlined-small"
+          class: "material-symbols-outlined-small",
+          translate: "no"
         }, "search") : "", " ", x.label))[0];
       }
     })))));
@@ -1319,7 +1327,8 @@ class CSelectEditor extends Component {
     }, "NULL") : "")), self.state.editor_value === null ? h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "hide_source")) : "");
   }
 }
@@ -1488,7 +1497,8 @@ class CLineEditor extends Component {
     }), self.state.editor_value === null ? h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "hide_source")) : "");
   }
 }
@@ -1730,7 +1740,8 @@ class CFilesEditor extends Component {
       }), h("span", {
         class: "file-cta"
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "upload")), h("span", {
         class: "file-name",
         style: "border-radius: 0; max-width:9em;"
@@ -1740,14 +1751,16 @@ class CFilesEditor extends Component {
         "data-index": i,
         onClick: self.onDownloadClicked
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "download")) : "", h("button", {
         class: "button",
         style: "border-top-left-radius: 0; border-bottom-left-radius: 0;",
         "data-index": i,
         onClick: self.onUploadDelete
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "delete")), h("br", null));
     }), self.props.column.editor_max_upload_count > comp.length ? h("div", null, h("div", {
       class: cls("file", "has-name", self.state.editor_valid ? "" : "is-danger"),
@@ -1762,7 +1775,8 @@ class CFilesEditor extends Component {
     }), h("span", {
       class: "file-cta"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "upload")), h("span", {
       class: "file-name",
       style: "max-width:9em;"
@@ -2231,7 +2245,8 @@ class CMultiLinkEditor extends Component {
       class: "icon is-small",
       style: "cursor: pointer;"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "add_box")))), h("div", {
       class: "dropdown-menu",
       role: "menu"
@@ -2478,7 +2493,8 @@ class CLinkEditor extends Component {
       class: "icon is-small",
       style: "position: absolute; right: 1em;"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "arrow_drop_down")))), h("div", {
       class: "dropdown-menu",
       role: "menu"
@@ -2606,7 +2622,8 @@ class CEditorFrame extends Component {
       tabindex: "-1",
       onClick: self.onNullClicked
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "hide_source"))) : "", typeof self.props.column.editor_default !== 'undefined' ? h("p", {
       class: "control"
     }, h("button", {
@@ -2614,7 +2631,8 @@ class CEditorFrame extends Component {
       tabindex: "-1",
       onClick: self.onResetClicked
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "restart_alt"))) : "", self.props.add || self.props.batch ? "" : h("p", {
       class: "control"
     }, h("button", {
@@ -2622,7 +2640,8 @@ class CEditorFrame extends Component {
       tabindex: "-1",
       onClick: self.onUndoClicked
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "undo")))), h("div", {
       class: "field ctable-editor-control"
     }, self.props.batch ? self.state.editor_enabled ? "" : h("div", {
@@ -2717,7 +2736,8 @@ class CEditorPanel extends Component {
       disabled: !saveEnable,
       onClick: self.props.noSaveClick
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "save"), " ", saveLabel)), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2725,7 +2745,8 @@ class CEditorPanel extends Component {
       class: "button is-small is-warning is-soft",
       onClick: self.props.noCancelClick
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "cancel"), " ", _("Cancel")))), self.props.columns.filter(x => x.editor_actor).filter(x => x.editor_hide_on === undefined || !x.editor_hide_on.includes(current_action)).map(x => {
       return h(CEditorFrame, {
         column: x,
@@ -2745,7 +2766,8 @@ class CEditorPanel extends Component {
       disabled: !saveEnable,
       onClick: self.props.noSaveClick
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "save"), " ", saveLabel)), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2753,7 +2775,8 @@ class CEditorPanel extends Component {
       class: "button is-small is-warning is-soft",
       onClick: self.props.noCancelClick
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "cancel"), " ", _("Cancel"))))));
   }
 }
@@ -2826,7 +2849,8 @@ class CColumnsPanel extends Component {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetColumns
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "refresh"), " ", _("Reset columns"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2834,7 +2858,8 @@ class CColumnsPanel extends Component {
       class: "button is-small is-soft",
       onClick: self.props.onCloseColumns
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "close"), " ", _("Close")))), self.props.table.state.view_columns.map(x => {
       return h("div", null, h("label", {
         class: "checkbox",
@@ -2850,14 +2875,16 @@ class CColumnsPanel extends Component {
         onClick: self.onColumnUp,
         title: _("Move column left")
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "keyboard_arrow_up")), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,
         onClick: self.onColumnDown,
         title: _("Move column right")
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "keyboard_arrow_down")));
     }), h("div", {
       class: "field has-text-right mt-5"
@@ -2868,7 +2895,8 @@ class CColumnsPanel extends Component {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetColumns
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "refresh"), " ", _("Reset columns"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2876,7 +2904,8 @@ class CColumnsPanel extends Component {
       class: "button is-small is-soft",
       onClick: self.props.onCloseColumns
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "close"), " ", _("Close"))))));
   }
 }
@@ -2962,7 +2991,8 @@ class CSortingPanel extends Component {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetSorting
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "refresh"), " ", _("Reset sorting"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -2970,7 +3000,8 @@ class CSortingPanel extends Component {
       class: "button is-small is-soft",
       onClick: self.props.onCloseSorting
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "close"), " ", _("Close")))), self.props.table.state.view_sorting.map(x => {
       return h("div", {
         style: "white-space: nowrap;"
@@ -2980,11 +3011,14 @@ class CSortingPanel extends Component {
         onClick: self.onSortChange,
         title: _("Set ordering mode")
       }, x.sorting == "" ? h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "reorder") : "", x.sorting == "asc" ? h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "arrow_upward") : "", x.sorting == "desc" ? h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "arrow_downward") : ""), "\xA0", h("span", {
         class: "ml-2 mr-2",
         style: "min-width:10em; width:10em; display:inline-block; overflow: hidden;"
@@ -2994,14 +3028,16 @@ class CSortingPanel extends Component {
         onClick: self.onColumnUp,
         title: _("Move ordering up")
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "keyboard_arrow_up")), "\xA0", h("button", {
         class: "button is-small",
         "data-column": x.name,
         onClick: self.onColumnDown,
         title: _("Move ordering down")
       }, h("span", {
-        class: "material-symbols-outlined"
+        class: "material-symbols-outlined",
+        translate: "no"
       }, "keyboard_arrow_down")));
     }), h("div", {
       class: "field has-text-right mt-5"
@@ -3012,7 +3048,8 @@ class CSortingPanel extends Component {
       class: "button is-small is-warning is-soft",
       onClick: self.props.onResetSorting
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "refresh"), " ", _("Reset sorting"))), h("div", {
       class: "has-text-centered m-2",
       style: "display:inline-block;"
@@ -3020,7 +3057,8 @@ class CSortingPanel extends Component {
       class: "button is-small is-soft",
       onClick: self.props.onCloseSorting
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "close"), " ", _("Close"))))));
   }
 }
@@ -3076,7 +3114,8 @@ class CAuthPanel extends Component {
     }), h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "face")))), h("div", {
       class: "field"
     }, h("p", {
@@ -3089,19 +3128,22 @@ class CAuthPanel extends Component {
     }), h("span", {
       class: "icon is-small is-left"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "key")))), h("div", {
       class: "buttons is-centered"
     }, h("button", {
       class: "button is-primary is-soft",
       submit: true
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "person"), h("span", null, _("Sign in"))), h("button", {
       class: "button is-warning is-soft",
       onClick: self.props.onCloseAuth
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "cancel"), h("span", null, _("Close")))))));
   }
 }
@@ -3181,7 +3223,8 @@ class CSearchPanel extends Component {
       class: "button is-small is-soft",
       onClick: self.props.onCloseSearch
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "close"), " ", _("Close")))), self.props.table.state.view_filtering.map((x, i) => {
       return h("div", null, h(CSearchFrame, {
         index: i,
@@ -3206,7 +3249,8 @@ class CSearchPanel extends Component {
       class: "button is-small is-soft",
       onClick: self.props.onCloseSearch
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "close"), " ", _("Close"))))));
   }
 }
@@ -3305,7 +3349,8 @@ class CTextSearcher extends Comment {
       onClick: self.props.onDeleteClick,
       title: _("Delete criteria")
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "delete"))));
   }
 }
@@ -3406,7 +3451,8 @@ class CNumbersSearcher extends Component {
       onClick: self.props.onDeleteClick,
       title: _("Delete criteria")
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "delete"))));
   }
 }
@@ -3663,7 +3709,8 @@ class CTagsSearcher extends Component {
       onClick: self.props.onDeleteClick,
       title: _("Delete criteria")
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "delete"))));
   }
 }
@@ -3843,7 +3890,8 @@ class CLinkSearcher extends Component {
     }), h("span", {
       class: "icon is-small"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "arrow_drop_down")))), h("div", {
       class: "dropdown-menu",
       role: "menu"
@@ -3908,7 +3956,8 @@ class CLinkSearcher extends Component {
       onClick: self.props.onDeleteClick,
       title: _("Delete criteria")
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "delete"))));
   }
 }
@@ -5319,11 +5368,13 @@ class CTable extends Component {
     }, h("span", {
       class: "icon"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "menu")), h("span", {
       class: "icon is-small"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "arrow_drop_down")))), h("div", {
       class: "dropdown-menu",
       id: "dropdown-menu",
@@ -5335,7 +5386,8 @@ class CTable extends Component {
       "data-label": x.name,
       onMouseDown: this.onTableSelectClick
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "view_list"), " ", x.label)), h("hr", {
       class: "dropdown-divider"
     }), self.state.links.map(x => h("a", {
@@ -5343,15 +5395,18 @@ class CTable extends Component {
       href: x.url,
       onMouseDown: this.onLinkClick
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "link"), " ", x.label)))))), h("td", null, h("div", {
       class: "ctable-top-panel-text"
     }, h("div", {
       style: "display:inline-block;white-space: nowrap;"
     }, self.state.table_path_labels.map(x => h(Fragment, null, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "check_box"), "\xA0", x, "\xA0")), h(Fragment, null, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "view_list"), "\xA0", self.state.current_table.label, "\xA0")))), h("td", {
       class: "has-text-right"
     }, h("div", {
@@ -5367,13 +5422,15 @@ class CTable extends Component {
     }, h("span", {
       class: "icon"
     }, getCTablesJWT() ? h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "account_box") : h("span", {
       class: "material-symbols-outlined"
     }, "person")), h("span", {
       class: "icon is-small"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "arrow_drop_down")))), h("div", {
       class: "dropdown-menu",
       id: "dropdown-menu",
@@ -5383,19 +5440,22 @@ class CTable extends Component {
     }, getCTablesJWT() ? h("a", {
       class: "dropdown-item is-soft"
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "person"), " ", getCTablesJWT().user, h("br", null), getCTablesJWT().label) : h("a", {
       class: "dropdown-item is-soft",
       onMouseDown: this.onAuthShow
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "login"), " ", _("Sign in")), h("hr", {
       class: "dropdown-divider"
     }), getCTablesJWT() ? h("a", {
       class: "dropdown-item is-soft",
       onMouseDown: self.onAuthLogout
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, "logout"), " ", _("Log out")) : ""))))))), h("div", {
       class: "ctable-command-panel"
     }, h("div", {
@@ -5413,11 +5473,13 @@ class CTable extends Component {
     }, h("span", {
       class: "icon"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "build")), h("span", {
       class: "icon is-small"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "arrow_drop_down")))), h("div", {
       class: "dropdown-menu",
       id: "dropdown-menu-panel0",
@@ -5430,7 +5492,8 @@ class CTable extends Component {
       onMouseDown: this.topButtonClick,
       "data-table": x.table
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, x.icon), " ", x.label))))), h("div", {
       class: "ctable-button-row-left-low"
     }, self.state.topline_buttons.filter(x => x.enabled && x.panel == 1).map(x => h("div", {
@@ -5444,7 +5507,8 @@ class CTable extends Component {
       "data-table": x.table,
       "data-action": x.action
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, x.icon), x.icon_only ? "" : " " + x.label)))), h("div", {
       class: "ctable-button-row-right has-text-right"
     }, h("div", {
@@ -5460,11 +5524,13 @@ class CTable extends Component {
     }, h("span", {
       class: "icon"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "more_vert")), h("span", {
       class: "icon is-small"
     }, h("span", {
-      class: "material-symbols-outlined"
+      class: "material-symbols-outlined",
+      translate: "no"
     }, "arrow_drop_down")))), h("div", {
       class: "dropdown-menu",
       id: "dropdown-menu-panel1",
@@ -5478,7 +5544,8 @@ class CTable extends Component {
       "data-action": x.action,
       onMouseDown: this.topButtonClick
     }, h("span", {
-      class: "material-symbols-outlined-small"
+      class: "material-symbols-outlined-small",
+      translate: "no"
     }, x.icon), " ", x.label)))))))), h(CHeaderTable, {
       width: self.state.width,
       fontSize: self.state.fontSize,

@@ -228,7 +228,7 @@ class CTagsSearcher extends Component {
                       {self.renderToolbar()}
                   </div>)}
                   <div class="ml-2 mb-2" style="display: inline-block;">
-                      <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick} title={_("Delete criteria")}><span class="material-symbols-outlined">delete</span></button>
+                      <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick} title={_("Delete criteria")}><span class="material-symbols-outlined" translate="no">delete</span></button>
                   </div>
               </div>
   }

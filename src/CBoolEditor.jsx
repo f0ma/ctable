@@ -98,7 +98,7 @@ class CBoolEditor extends Component {
               {self.props.column.editor_allow_null ? <option value="-1"  selected={self.state.editor_value === null}>NULL</option> : ""}
             </select>
           </div>
-          {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined">hide_source</span></span> : "" }
+          {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined" translate="no">hide_source</span></span> : "" }
         </div>;
     }
 }
