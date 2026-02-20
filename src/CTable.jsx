@@ -1112,18 +1112,18 @@ class CTable extends Component {
               <div class={cls("dropdown", self.state.table_select_menu_active ? "is-active" : "")}>
                 <div class="dropdown-trigger">
                   <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onTableSelectDropdownClick}  onBlur={this.onTableSelectDropdownBlur}>
-                    <span class="icon"><span class="material-symbols-outlined" translate="no">menu</span></span>
-                    <span class="icon is-small"><span class="material-symbols-outlined" translate="no">arrow_drop_down</span></span>
+                    <span class="icon"><span class="material-symbols-outlined" translate={false}>menu</span></span>
+                    <span class="icon is-small"><span class="material-symbols-outlined" translate={false}>arrow_drop_down</span></span>
                   </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
                     {self.state.table_list.filter(x => x.show_in_menu !== false).map(x =>
-                        <a class={cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : "")} data-label={x.name} onMouseDown={this.onTableSelectClick}><span class="material-symbols-outlined-small" translate="no">view_list</span> {x.label}</a>
+                        <a class={cls("dropdown-item", x.name == self.state.current_table.name ? "is-active" : "")} data-label={x.name} onMouseDown={this.onTableSelectClick}><span class="material-symbols-outlined-small" translate={false}>view_list</span> {x.label}</a>
                     )}
                     <hr class="dropdown-divider" />
                     {self.state.links.map(x =>
-                      <a class="dropdown-item" href={x.url} onMouseDown={this.onLinkClick} ><span class="material-symbols-outlined-small" translate="no">link</span> {x.label}</a>
+                      <a class="dropdown-item" href={x.url} onMouseDown={this.onLinkClick} ><span class="material-symbols-outlined-small" translate={false}>link</span> {x.label}</a>
                     )}
                   </div>
                 </div>
@@ -1133,9 +1133,9 @@ class CTable extends Component {
               <div class="ctable-top-panel-text">
                 <div style="display:inline-block;white-space: nowrap;">
                 {self.state.table_path_labels.map(x =>
-                  <><span class="material-symbols-outlined-small" translate="no">check_box</span>&nbsp;{x}&nbsp;</>
+                  <><span class="material-symbols-outlined-small" translate={false}>check_box</span>&nbsp;{x}&nbsp;</>
                 )}
-                  <><span class="material-symbols-outlined-small" translate="no">view_list</span>&nbsp;{self.state.current_table.label}&nbsp;</>
+                  <><span class="material-symbols-outlined-small" translate={false}>view_list</span>&nbsp;{self.state.current_table.label}&nbsp;</>
                 </div>
               </div>
             </td>
@@ -1143,15 +1143,15 @@ class CTable extends Component {
               <div class={cls("dropdown", "is-right", self.state.auth_menu_active ? "is-active" : "")}>
                 <div class="dropdown-trigger">
                   <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.onAuthDropdownClick} onBlur={this.onAuthDropdownBlur}>
-                    <span class="icon">{getCTablesJWT() ? <span class="material-symbols-outlined" translate="no">account_box</span> : <span class="material-symbols-outlined">person</span>}</span>
-                    <span class="icon is-small"><span class="material-symbols-outlined" translate="no">arrow_drop_down</span></span>
+                    <span class="icon">{getCTablesJWT() ? <span class="material-symbols-outlined" translate={false}>account_box</span> : <span class="material-symbols-outlined">person</span>}</span>
+                    <span class="icon is-small"><span class="material-symbols-outlined" translate={false}>arrow_drop_down</span></span>
                   </button>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content has-text-left">
-                    {getCTablesJWT() ? <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small" translate="no">person</span> {getCTablesJWT().user}<br/>{getCTablesJWT().label}</a> : <a class="dropdown-item is-soft" onMouseDown={this.onAuthShow}><span class="material-symbols-outlined-small" translate="no">login</span> {_("Sign in")}</a>}
+                    {getCTablesJWT() ? <a class="dropdown-item is-soft"><span class="material-symbols-outlined-small" translate={false}>person</span> {getCTablesJWT().user}<br/>{getCTablesJWT().label}</a> : <a class="dropdown-item is-soft" onMouseDown={this.onAuthShow}><span class="material-symbols-outlined-small" translate={false}>login</span> {_("Sign in")}</a>}
                     <hr class="dropdown-divider" />
-                    {getCTablesJWT() ? <a class="dropdown-item is-soft" onMouseDown={self.onAuthLogout}><span class="material-symbols-outlined-small" translate="no">logout</span> {_("Log out")}</a> : ""}
+                    {getCTablesJWT() ? <a class="dropdown-item is-soft" onMouseDown={self.onAuthLogout}><span class="material-symbols-outlined-small" translate={false}>logout</span> {_("Log out")}</a> : ""}
                   </div>
                 </div>
               </div>
@@ -1164,14 +1164,14 @@ class CTable extends Component {
           <div class={cls("dropdown", "is-left", self.state.panel0_menu_active ? "is-active" : "")}>
             <div class="dropdown-trigger">
               <button class="button is-small m-1" aria-haspopup="true" aria-controls="dropdown-menu-panel0" onClick={this.onPanel0DropdownClick} onBlur={this.onPanel0DropdownBlur}>
-                <span class="icon"><span class="material-symbols-outlined" translate="no">build</span></span>
-                <span class="icon is-small"><span class="material-symbols-outlined" translate="no">arrow_drop_down</span></span>
+                <span class="icon"><span class="material-symbols-outlined" translate={false}>build</span></span>
+                <span class="icon is-small"><span class="material-symbols-outlined" translate={false}>arrow_drop_down</span></span>
               </button>
             </div>
             <div class="dropdown-menu" id="dropdown-menu-panel0" role="menu">
               <div class="dropdown-content has-text-left">
                 {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 0).map(x =>
-                  <a class={cls("dropdown-item",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} data-table={x.table}><span class="material-symbols-outlined-small" translate="no">{x.icon}</span> {x.label}</a>
+                  <a class={cls("dropdown-item",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} data-table={x.table}><span class="material-symbols-outlined-small" translate={false}>{x.icon}</span> {x.label}</a>
                 )}
               </div>
             </div>
@@ -1179,7 +1179,7 @@ class CTable extends Component {
           <div class="ctable-button-row-left-low">
             {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
               <div class="has-text-centered m-1"  style="display:inline-block;">
-              <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} title={x.label} data-table={x.table} data-action={x.action}><span class="material-symbols-outlined" translate="no">{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>
+              <button class={cls("button","is-small","is-soft",x.style)} data-name={x.name} onMouseDown={this.topButtonClick} title={x.label} data-table={x.table} data-action={x.action}><span class="material-symbols-outlined" translate={false}>{x.icon}</span>{x.icon_only ? "" : " "+x.label}</button>
               </div>
             )}
           </div>
@@ -1187,14 +1187,14 @@ class CTable extends Component {
             <div class={cls("dropdown", "is-right", self.state.panel1_menu_active ? "is-active" : "")}>
               <div class="dropdown-trigger mb-1">
                 <button class={cls("button", "is-small", self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).length == 0 ? "is-hidden" : "")} aria-haspopup="true" aria-controls="dropdown-menu-panel1" onClick={this.onPanel1DropdownClick} onBlur={this.onPanel1DropdownBlur}>
-                  <span class="icon"><span class="material-symbols-outlined" translate="no">more_vert</span></span>
-                  <span class="icon is-small"><span class="material-symbols-outlined" translate="no">arrow_drop_down</span></span>
+                  <span class="icon"><span class="material-symbols-outlined" translate={false}>more_vert</span></span>
+                  <span class="icon is-small"><span class="material-symbols-outlined" translate={false}>arrow_drop_down</span></span>
                 </button>
               </div>
               <div class="dropdown-menu" id="dropdown-menu-panel1" role="menu">
                 <div class="dropdown-content has-text-left">
                   {self.state.topline_buttons.filter(x => x.enabled  && x.panel == 1).map(x =>
-                    <a class={cls("dropdown-item", "is-soft", x.style)} data-name={x.name} data-table={x.table} data-action={x.action} onMouseDown={this.topButtonClick}><span class="material-symbols-outlined-small" translate="no">{x.icon}</span> {x.label}</a>
+                    <a class={cls("dropdown-item", "is-soft", x.style)} data-name={x.name} data-table={x.table} data-action={x.action} onMouseDown={this.topButtonClick}><span class="material-symbols-outlined-small" translate={false}>{x.icon}</span> {x.label}</a>
                   )}
                 </div>
               </div>

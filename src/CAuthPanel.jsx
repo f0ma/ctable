@@ -40,21 +40,21 @@ class CAuthPanel extends Component {
           <div class="field has-text-right mb-4">
             <p class="control has-icons-left has-icons-right">
               <input class="input" type="text" placeholder={_("Login")} onInput={self.onInputLogin}/>
-              <span class="icon is-small is-left"><span class="material-symbols-outlined" translate="no">face</span></span>
+              <span class="icon is-small is-left"><span class="material-symbols-outlined" translate={false}>face</span></span>
             </p>
           </div>
           <div class="field">
             <p class="control has-icons-left">
               <input class="input" type="password" placeholder={_("Password")} onInput={self.onInputPassword}/>
-              <span class="icon is-small is-left"><span class="material-symbols-outlined" translate="no">key</span></span>
+              <span class="icon is-small is-left"><span class="material-symbols-outlined" translate={false}>key</span></span>
             </p>
           </div>
           <div class="buttons is-centered">
             <button class="button is-primary is-soft" submit>
-              <span class="material-symbols-outlined" translate="no">person</span><span>{_("Sign in")}</span>
+              <span class="material-symbols-outlined" translate={false}>person</span><span>{_("Sign in")}</span>
             </button>
             <button class="button is-warning is-soft" onClick={self.props.onCloseAuth}>
-              <span class="material-symbols-outlined" translate="no">cancel</span><span>{_("Close")}</span>
+              <span class="material-symbols-outlined" translate={false}>cancel</span><span>{_("Close")}</span>
             </button>
           </div>
         </form>

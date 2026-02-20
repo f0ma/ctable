@@ -91,13 +91,13 @@ class CEditorFrame extends Component {
         <label class="checkbox label"> {this.props.batch ? <input type="checkbox" checked={self.state.editor_enabled} onChange={self.onEnabledChanged}/> : "" } {self.props.column.label}:</label>
         </p>
         {self.props.column.editor_allow_null ? <p class="control">
-        <button class="button is-small" tabindex="-1" onClick={self.onNullClicked}><span class="material-symbols-outlined" translate="no">hide_source</span></button>
+        <button class="button is-small" tabindex="-1" onClick={self.onNullClicked}><span class="material-symbols-outlined" translate={false}>hide_source</span></button>
         </p> : "" }
         {typeof self.props.column.editor_default !== 'undefined' ? <p class="control">
-        <button class="button is-small" tabindex="-1" onClick={self.onResetClicked}><span class="material-symbols-outlined" translate="no">restart_alt</span></button>
+        <button class="button is-small" tabindex="-1" onClick={self.onResetClicked}><span class="material-symbols-outlined" translate={false}>restart_alt</span></button>
         </p> : "" }
         {self.props.add || self.props.batch ? "" : <p class="control">
-            <button class="button is-small" tabindex="-1" onClick={self.onUndoClicked}><span class="material-symbols-outlined" translate="no">undo</span></button>
+            <button class="button is-small" tabindex="-1" onClick={self.onUndoClicked}><span class="material-symbols-outlined" translate={false}>undo</span></button>
         </p>}
         </div>
         <div class="field ctable-editor-control">

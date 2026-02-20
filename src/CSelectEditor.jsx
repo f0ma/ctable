@@ -108,7 +108,7 @@ class CSelectEditor extends Component {
               {self.state.editor_value === null ? <option value={self.state.editor_value} selected>NULL</option> : ""}
             </select>
           </div>
-          {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined" translate="no">hide_source</span></span> : "" }
+          {self.state.editor_value === null ? <span class="icon is-small is-left"><span class="material-symbols-outlined" translate={false}>hide_source</span></span> : "" }
         </div>;
     }
 }

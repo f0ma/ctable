@@ -165,7 +165,7 @@ class CLinkSearcher extends Component {
                                 </div>
                             </div>;
                         })}
-                        <span class="icon is-small"><span class="material-symbols-outlined" translate="no">arrow_drop_down</span></span>
+                        <span class="icon is-small"><span class="material-symbols-outlined" translate={false}>arrow_drop_down</span></span>
                     </div>
                 </div>
                 <div class="dropdown-menu" role="menu">
@@ -204,7 +204,7 @@ class CLinkSearcher extends Component {
             </div>
             {self.renderValueSelector()}
             <div class="ml-2 mb-2" style="display: inline-block;">
-                <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick} title={_("Delete criteria")}><span class="material-symbols-outlined" translate="no">delete</span></button>
+                <button class="button is-danger is-soft" data-filterindex={self.props.index} onClick={self.props.onDeleteClick} title={_("Delete criteria")}><span class="material-symbols-outlined" translate={false}>delete</span></button>
             </div>
         </div>;
     }

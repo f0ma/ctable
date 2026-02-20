@@ -75,27 +75,27 @@ class CSortingPanel extends Component {
           <div class="ctable-editor-panel box" style={sty("width","min("+self.props.width+ "em,100%)", "min-height" , "40vh")} >
             <div class="field has-text-right mb-4">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}><span class="material-symbols-outlined" translate="no">refresh</span> {_("Reset sorting")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}><span class="material-symbols-outlined" translate={false}>refresh</span> {_("Reset sorting")}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-soft" onClick={self.props.onCloseSorting}><span class="material-symbols-outlined" translate="no">close</span> {_("Close")}</button>
+                <button class="button is-small is-soft" onClick={self.props.onCloseSorting}><span class="material-symbols-outlined" translate={false}>close</span> {_("Close")}</button>
               </div>
             </div>
              {self.props.table.state.view_sorting.map(x => {
                return <div style="white-space: nowrap;">
-                          <button class="button is-small" data-column={x.name} onClick={self.onSortChange} title={_("Set ordering mode")}>{x.sorting == "" ? <span class="material-symbols-outlined" translate="no">reorder</span> : ""}{x.sorting == "asc" ? <span class="material-symbols-outlined" translate="no">arrow_upward</span> : ""}{x.sorting == "desc" ? <span class="material-symbols-outlined" translate="no">arrow_downward</span> : ""}</button>&nbsp;
+                          <button class="button is-small" data-column={x.name} onClick={self.onSortChange} title={_("Set ordering mode")}>{x.sorting == "" ? <span class="material-symbols-outlined" translate={false}>reorder</span> : ""}{x.sorting == "asc" ? <span class="material-symbols-outlined" translate={false}>arrow_upward</span> : ""}{x.sorting == "desc" ? <span class="material-symbols-outlined" translate={false}>arrow_downward</span> : ""}</button>&nbsp;
                           <span class="ml-2 mr-2" style="min-width:10em; width:10em; display:inline-block; overflow: hidden;">{this.props.table.state.table_columns.filter(y => y.name == x.name)[0].label}</span>
-                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnUp} title={_("Move ordering up")}><span class="material-symbols-outlined" translate="no">keyboard_arrow_up</span></button>
-                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnDown} title={_("Move ordering down")}><span class="material-symbols-outlined" translate="no">keyboard_arrow_down</span></button>
+                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnUp} title={_("Move ordering up")}><span class="material-symbols-outlined" translate={false}>keyboard_arrow_up</span></button>
+                          &nbsp;<button class="button is-small" data-column={x.name} onClick={self.onColumnDown} title={_("Move ordering down")}><span class="material-symbols-outlined" translate={false}>keyboard_arrow_down</span></button>
                     </div>;
             })}
 
             <div class="field has-text-right mt-5">
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}><span class="material-symbols-outlined" translate="no">refresh</span> {_("Reset sorting")}</button>
+                <button class="button is-small is-warning is-soft" onClick={self.props.onResetSorting}><span class="material-symbols-outlined" translate={false}>refresh</span> {_("Reset sorting")}</button>
               </div>
               <div class="has-text-centered m-2"  style="display:inline-block;">
-                <button class="button is-small is-soft" onClick={self.props.onCloseSorting}><span class="material-symbols-outlined" translate="no">close</span> {_("Close")}</button>
+                <button class="button is-small is-soft" onClick={self.props.onCloseSorting}><span class="material-symbols-outlined" translate={false}>close</span> {_("Close")}</button>
               </div>
             </div>
         </div>
