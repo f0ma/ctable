@@ -2,18 +2,30 @@
   "name": "ctable",
   "version": "3.0.0",
   "description": "Advanced CRUD tables",
+  "main": "dist/ctable.js",
+  "style": "dist/ctable.css",
+  "scripts": {
+    "build": "npm run mkjs && npm run mkcss && npm run mkdocs",
+    "mkjs": "babel $npm_package_config_js --out-file dist/ctable.js -s",
+    "watch": "babel $npm_package_config_js --out-file dist/ctable.js -s -w",
+    "mkcss": "concat -o dist/ctable.css $npm_package_config_css",
+    "mkdocs": "jsdoc $npm_package_config_js -d docs",
+    "mkpo": "xgettext --output=lang/ctable.pot --language=JavaScript --keyword=N_:1,2 --from-code utf-8 $npm_package_config_js && msgmerge -U lang/ru.po lang/ctable.pot && po2json lang/ru.po lang/ru.json -f raw && concat -o lang/ru_lang.js lang/ru_head.js lang/ru.json lang/tail.js",
+    "mkdemo": "wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js -d demo/ && wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js.map -d demo/ && wget https://github.com/marella/material-symbols/raw/refs/heads/main/font/400/material-symbols-outlined.woff2 -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css.map -d demo/ && wget https://raw.githubusercontent.com/mustangostang/spyc/refs/heads/master/Spyc.php -d demo/"
+  },
+  "keywords": [
+    "crud",
+    "table",
+    "react",
+    "preact",
+    "data-grid"
+  ],
+  "author": "Stanislav Ivanov",
+  "license": "MIT",
+  "homepage": "https://github.com/f0ma/ctable",
   "config": {
     "js": "src/Header.jsx src/CBoolCell.jsx src/CBoolEditor.jsx src/CMultilineTextCell.jsx src/CMultilineTextEditor.jsx src/CTagsCell.jsx src/CTagsEditor.jsx src/CNumbersCell.jsx src/CPlainTextCell.jsx src/CSelectCell.jsx src/CDateCell.jsx src/CFilesCell.jsx src/CDateEditor.jsx src/CHeaderTable.jsx src/CPageTable.jsx src/CSelectEditor.jsx src/CLineEditor.jsx src/CFilesEditor.jsx src/CMultiLinkCell.jsx src/CTiledMultiLinkEditor.jsx src/CMultiLinkEditor.jsx src/CLinkCell.jsx src/CLinkEditor.jsx src/CEditorFrame.jsx src/CEditorPanel.jsx src/CColumnsPanel.jsx src/CSortingPanel.jsx src/CAuthPanel.jsx src/CSearchPanel.jsx src/CSearchFrame.jsx src/CTextSearcher.jsx src/CNumbersSearcher.jsx src/CTagsSearcher.jsx src/CLinkSearcher.jsx src/CTable.jsx lang/ru_lang.js",
     "css": "src/CTable.css"
-  },
-  "scripts": {
-    "build": "npm run mkjs && npm run mkcss && npm run mkdocs",
-    "mkjs": "babel $npm_package_config_js --out-file dist/ctable.js -s ",
-    "watch": "babel $npm_package_config_js --out-file dist/ctable.js -s -w",
-    "mkcss": "concat -o dist/ctable.css $npm_package_config_css",
-    "mkdocs": "jsdoc src/*.jsx -d docs",
-    "mkpo": "xgettext --output=lang/ctable.pot --language=JavaScript --keyword=N_:1,2 --from-code utf-8 src/*.jsx && msgmerge -U lang/ru.po lang/ctable.pot && po2json lang/ru.po lang/ru.json -f raw && concat -o lang/ru_lang.js lang/ru_head.js lang/ru.json lang/tail.js",
-    "mkdemo": "wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js -d demo/ && wget https://unpkg.com/preact@10.26.6/dist/preact.umd.js.map -d demo/ && wget https://github.com/marella/material-symbols/raw/refs/heads/main/font/400/material-symbols-outlined.woff2 -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css -d demo/ && wget https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.css.map -d demo/ && wget https://raw.githubusercontent.com/mustangostang/spyc/refs/heads/master/Spyc.php -d demo/"
   },
   "devDependencies": {
     "@babel/cli": "^7.27.2",

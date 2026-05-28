@@ -1,0 +1,17 @@
+arrow_back
+subdirectory_arrow_right
+add
+edit
+content_copy
+delete
+refresh
+search
+sort
+list_alt
+done
+select_all
+deselect
+zoom_in
+zoom_out
+view_list
+done_all

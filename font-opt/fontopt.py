@@ -1,50 +1,98 @@
 import glob
 import re
-import os
+import subprocess
+import sys
 
-source_font_file="MaterialIconsOutlined-Regular.otf"
-source_cp_file="MaterialIconsOutlined-Regular.codepoints"
+def main():
+    source_font_file = "MaterialIconsOutlined-Regular.otf"
+    source_cp_file = "MaterialIconsOutlined-Regular.codepoints"
+    output_file = "material-symbols-outlined.woff2"
 
-output_file="material-symbols-outlined.woff2"
+    cp_dict = {}
+    try:
+        with open(source_cp_file, 'r') as cpf:
+            for line in cpf:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    name, code = line.split()
+                    cp_dict[name] = code
+                except ValueError:
+                    # Skip lines that don't split into exactly two parts
+                    continue
+    except FileNotFoundError:
+        print(f"Error: CP file not found at {source_cp_file}", file=sys.stderr)
+        sys.exit(1)
 
-additional_icons = []
+    src_files = glob.glob("../src/*.jsx")
+    
+    used_icons = set()
+    
+    used_list = []
+    try:
+        with open("used_icons.txt", 'r') as f:
+            for line in f:
+                used_list.append(line.strip())
+    except FileNotFoundError:
+        print("Warning: used_icons.txt not found. Using an empty list for used_list.")
 
-cp_dict = {}
+    for filename in src_files:
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                text = f.read()
+                fnd1 = re.findall(r'<span class="material-symbols-outlined" .*?>(.*?)</span>', text)
+                fnd2 = re.findall(r'<span class="material-symbols-outlined-small" .*?>(.*?)</span>', text)
+                
+                found_icons = fnd1 + fnd2
+                
+                for icon in found_icons:
+                    if '{' in icon:
+                        continue
+                    used_icons.add(icon)
+        except FileNotFoundError:
+            print(f"Warning: File not found: {filename}", file=sys.stderr)
+        except Exception as e:
+            print(f"Error processing file {filename}: {e}", file=sys.stderr)
 
-with open(source_cp_file) as cpf:
-    for line in cpf:
-        name, code = line.strip().split()
-        cp_dict[name] = code
+    final_icons = list(used_list) + list(used_icons)
+    
+    print("Glyphs for extraction:")
+    print(final_icons)
 
-src = glob.glob("../src/*.jsx")
+    # Ensure all collected icons have a mapping
+    unicodes_list = ['5f-7a', '30-39']
 
-#used in dynamic manner
-used_list = ["arrow_back","subdirectory_arrow_right","add","edit","content_copy",
-             "delete","refresh","search","sort","list_alt","done","select_all",
-             "deselect","zoom_in","zoom_out","search","view_list","done_all"]
+    for icon in final_icons:
+        if icon in cp_dict:
+            unicodes_list.append(cp_dict[icon])
+        else:
+            print(f"Warning: Unicode code not found for icon: {icon}", file=sys.stderr)
 
-for filename in src:
-    with open(filename) as f:
-        ftext = f.read()
-        fnd1 = re.findall( r'<span class="material-symbols-outlined">(.*?)</span>', ftext)
-        fnd2 = re.findall( r'<span class="material-symbols-outlined-small">(.*?)</span>', ftext)
-        fnd = fnd1 + fnd2
-        print(filename)
-        print(fnd)
-        for f in fnd:
-            if '{' in f: continue # skip variables
-            used_list.append(f)
+    unicodes = ",".join(unicodes_list)
 
-used_list = list(set(used_list+ additional_icons))
+    fonttools_command = [
+        "fonttools", "subset", source_font_file, 
+        f"--unicodes={unicodes}", 
+        "--no-layout-closure", 
+        f"--output-file={output_file}",
+        "--flavor=woff2"
+    ]
 
-print("Glyphs for extraction:")
-print(used_list)
+    print("Full command:")
+    print(" ".join(fonttools_command))
 
-unicodes = ",".join(['5f-7a','30-39'] + [cp_dict[k] for k in used_list])
+    try:
+        subprocess.run(fonttools_command, check=True, capture_output=True, text=True)
+        print("Fontsubset successful.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during fonttools execution: Command failed with exit code {e.returncode}", file=sys.stderr)
+        print("Stdout:", e.stdout, file=sys.stderr)
+        print("Stderr:", e.stderr, file=sys.stderr)
+        sys.exit(1)
+    except FileNotFoundError:
+        print("Error: 'fonttools' command not found. Ensure fonttools is installed and in your PATH.", file=sys.stderr)
+        sys.exit(1)
 
-cmd = f'fonttools subset {source_font_file} --unicodes={unicodes} --no-layout-closure --output-file={output_file} --flavor=woff2'
-
-print("Full command:")
-print(cmd)
-
-os.system(cmd)
+if __name__ == "__main__":
+    main()
